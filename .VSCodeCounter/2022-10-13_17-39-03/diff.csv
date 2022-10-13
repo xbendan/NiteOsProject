@@ -1,0 +1,12 @@
+"filename", "language", "CMake", "comment", "blank", "total"
+"/home/umarin/source/niteOS/Thirdparty/libarchive/build/cmake/CheckFileOffsetBits.cmake", "CMake", 38, 0, 7, 45
+"/home/umarin/source/niteOS/Thirdparty/libarchive/build/cmake/CheckFuncs.cmake", "CMake", 46, 0, 4, 50
+"/home/umarin/source/niteOS/Thirdparty/libarchive/build/cmake/CheckHeaderDirent.cmake", "CMake", 28, 0, 5, 33
+"/home/umarin/source/niteOS/Thirdparty/libarchive/build/cmake/CheckTypeExists.cmake", "CMake", 36, 0, 7, 43
+"/home/umarin/source/niteOS/Thirdparty/libarchive/build/cmake/CreatePkgConfigFile.cmake", "CMake", 32, 0, 2, 34
+"/home/umarin/source/niteOS/Thirdparty/libarchive/build/cmake/FindLibGCC.cmake", "CMake", 18, 0, 5, 23
+"/home/umarin/source/niteOS/Thirdparty/libarchive/build/cmake/FindMbedTLS.cmake", "CMake", 9, 0, 5, 14
+"/home/umarin/source/niteOS/Thirdparty/libarchive/build/cmake/FindNettle.cmake", "CMake", 19, 0, 5, 24
+"/home/umarin/source/niteOS/Thirdparty/libarchive/build/cmake/FindPCREPOSIX.cmake", "CMake", 29, 0, 6, 35
+"/home/umarin/source/niteOS/Thirdparty/libarchive/build/cmake/LibarchiveCodeCoverage.cmake", "CMake", 62, 0, 7, 69
+"Total", "-", 317, 0, 53, 370

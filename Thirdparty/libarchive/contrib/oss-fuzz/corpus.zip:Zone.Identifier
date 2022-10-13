@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://www.linuxfromscratch.org/
+HostUrl=https://objects.githubusercontent.com/github-production-release-asset-2e65be/3219804/81bca479-fcc8-43c2-a7c8-e880ca61bfd6?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20221013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221013T093654Z&X-Amz-Expires=300&X-Amz-Signature=abdf32fc15a6c0b53c843f2c409de1453453354a66b67aa32ce331cc77c83c82&X-Amz-SignedHeaders=host&actor_id=62197026&key_id=0&repo_id=3219804&response-content-disposition=attachment%3B%20filename%3Dlibarchive-3.6.1.tar.xz&response-content-type=application%2Foctet-stream

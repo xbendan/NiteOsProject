@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://fmt.dev/
+HostUrl=https://objects.githubusercontent.com/github-production-release-asset-2e65be/7056202/b9ca08e8-ffe5-49c2-8463-d96e60310e06?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20220825%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220825T142040Z&X-Amz-Expires=300&X-Amz-Signature=851ddd68ba99bfd238796878038708afd75adf8bd2656f0296020fd1d8442018&X-Amz-SignedHeaders=host&actor_id=62197026&key_id=0&repo_id=7056202&response-content-disposition=attachment%3B%20filename%3Dfmt-9.0.0.zip&response-content-type=application%2Foctet-stream
