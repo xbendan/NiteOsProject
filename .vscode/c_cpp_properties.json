@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        },
+        {
+            "name": "elf_x64",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/Kernel/include"
+            ],
+            "defines": [],
+            "compilerPath": "/home/umarin/build/x86_64-elf/x86_64-elf/bin",
+            "cStandard": "gnu99",
+            "cppStandard": "gnu++98",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}

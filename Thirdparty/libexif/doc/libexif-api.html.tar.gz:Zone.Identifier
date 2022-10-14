@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://www.linuxfromscratch.org/
+HostUrl=https://objects.githubusercontent.com/github-production-release-asset-2e65be/112677643/7c283992-e0a6-45ce-b933-4847ee746a9b?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20221013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221013T121435Z&X-Amz-Expires=300&X-Amz-Signature=3813a73c5229b9c4537093ca5635cc0af63247aa7c635e72da492f58e50c8b59&X-Amz-SignedHeaders=host&actor_id=62197026&key_id=0&repo_id=112677643&response-content-disposition=attachment%3B%20filename%3Dlibexif-0.6.24.tar.bz2&response-content-type=application%2Foctet-stream
