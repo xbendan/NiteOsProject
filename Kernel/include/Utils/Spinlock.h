@@ -2,7 +2,7 @@ namespace Utils
 {
     typedef volatile int spinlock_t;
 
-    inline void acquireLock(spinlock_t *lock)
+    inline void AcquireLock(spinlock_t *lock)
     {
         int lockVal = 1; // From DPDK
         __asm__ volatile(
@@ -21,7 +21,7 @@ namespace Utils
                 : "memory");
     }
 
-    inline void releaseLock(spinlock_t *lock)
+    inline void ReleaseLock(spinlock_t *lock)
     {
         int unlockVal = 0;
         __asm__ volatile(
@@ -31,9 +31,10 @@ namespace Utils
                 : "memory");
     }
 
-    class InterruptRetainer
+    class Spinlock
     {
-        InterruptRetainer() {  }
-        ~InterruptRetainer() {  }
+        spinlock_t m_Lock;
+        Spinlock(spinlock_t& lock) : m_Lock(lock) { AcquireLock(&lock); }
+        ~Spinlock() { ReleaseLock(&lock); }
     }
 }

@@ -1,4 +1,4 @@
-#include <macros>
+#include <Macros>
 
 typedef uint16_t uid_t;
 
@@ -14,11 +14,11 @@ class UserProfile
 {
     char* m_Name;
     uid_t m_Uid;
-    enum UserAccountState m_State;
+    enum UserAccountState m_AccountState;
     struct
     {
-        uint32_t threads;
-        uint16_t processes;
-        uint32_t handles;
+        uint32_t m_Threads;
+        uint16_t m_Processes;
+        uint32_t m_Handles;
     };
 } profile_t;
