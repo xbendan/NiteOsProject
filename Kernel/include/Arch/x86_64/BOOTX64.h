@@ -798,86 +798,10 @@ struct stivale2_struct_tag_hhdm {
 
 #include <Init/BootInfo.h>
 
-void ParseMultiboot2Info(BootInfo *bootInfo, multiboot2_info_header_t *mb_info)
+namespace Boot
 {
+    void multiboot2(BootInfo *info, multiboot2_info_header_t *mbInfo);
+    void stivale2(BootInfo *info, stivale2_struct_t *stInfo);
 
-}
-
-void ParseStivale2Info(BootInfo *bootInfo, stivale2_struct_t *stInfo)
-{
-    struct stivale2_tag* tag = (struct stivale2_tag*)(stInfo->tags);
-    BootInfoMemory *memInfo = &bootInfo->mem;
-    while (tag)
-    {
-        switch (tag->identifier)
-        {
-        case STIVALE2_STRUCT_TAG_MEMMAP_ID:
-        {
-            struct stivale2_struct_tag_memmap *st2_mem_tag = (struct stivale2_struct_tag_memmap*)(tag);
-            for (uint64_t idx = 0; idx < st2_mem_tag->entries; idx++)
-            {
-                struct stivale2_mmap_entry *fromEntry = &st2_mem_tag->memmap[idx];
-                MemoryMapEntry *newEntry = &memInfo->m_MemoryMapEntries[memInfo->m_MemoryMapSize];
-
-                if (fromEntry->base > UINTPTR_MAX ||
-                    fromEntry->base + fromEntry->length > UINTPTR_MAX)
-                {
-                    continue;
-                }
-
-                memInfo->m_TotalSize += fromEntry->length;
-                newEntry->range.start = fromEntry->base;
-                newEntry->range.end = fromEntry->base + fromEntry->length;
-                switch (fromEntry->type)
-                {
-                case STIVALE2_MMAP_USABLE:
-                    memInfo->m_Usable += fromEntry->length;
-                    newEntry->m_Type = 0;
-                    break; 
-                case STIVALE2_MMAP_KERNEL_AND_MODULES:
-                    newEntry->m_Type = 5;
-                    break;
-                case STIVALE2_MMAP_ACPI_RECLAIMABLE:
-                    newEntry->m_Type = 2;
-                    break;
-                case STIVALE2_MMAP_ACPI_NVS:
-                    newEntry->m_Type = 3;
-                    break;
-                case STIVALE2_MMAP_BAD_MEMORY:
-                    newEntry->m_Type = 4;
-                    break;
-                default:
-                    newEntry->m_Type = 1;
-                    break;
-                }
-                memInfo->map_size++;
-            }
-            break;
-        }
-        case STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID:
-        {
-            struct stivale2_struct_tag_framebuffer *framebuffer_tag = (struct stivale2_struct_tag_framebuffer *) tag;
-            BootInfoGraphics *graphic = &bootInfo->m_Graphics;
-
-            graphic->m_Width = framebuffer_tag->framebuffer_width;
-            graphic->m_Height = framebuffer_tag->framebuffer_height;
-
-            graphic->m_BufferAddress = framebuffer_tag->framebuffer_addr;
-            graphic->m_Pitch = framebuffer_tag->framebuffer_pitch;
-            graphic->m_BytesPerPixel = framebuffer_tag->framebuffer_bpp;
-            break;
-        }
-        case STIVALE2_STRUCT_TAG_MODULES_ID:
-        {
-            break;
-        }
-        case STIVALE2_STRUCT_TAG_RSDP_ID:
-        {
-            break;
-        }
-        }
-        tag = (struct stivale2_tag*)(tag->next);
-    }
-
-    bootInfo->check = 0xDEADC0DE;
-}
+    void Start();
+} // namespace Boot

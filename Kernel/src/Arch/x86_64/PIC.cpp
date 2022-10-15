@@ -1,7 +1,7 @@
 #include <Arch/x86_64/Ports.h>
 #include <Arch/x86_64/PIC.h>
 
-namespace PIC
+namespace Firmware::PIC
 {
     void Initialize()
     {

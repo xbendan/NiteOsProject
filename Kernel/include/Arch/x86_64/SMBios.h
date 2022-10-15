@@ -1,6 +1,6 @@
 #include <macros.h>
 
-namespace SMBIOS
+namespace Firmware::SMBios
 {
     struct SMBIOS2EntryPoint
     {

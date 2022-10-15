@@ -55,7 +55,7 @@
 
 #define IO_RED_TBL_VECTOR(x) (x & 0xFF)
 
-namespace APIC
+namespace Firmware::APIC
 {
     namespace IO
     {
