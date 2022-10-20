@@ -204,7 +204,7 @@ typedef struct AcpiExtendedSdt
     uint64_t pointers[]; // (table.length - sizeof(table)) / 8
 } acpi_xsdt_t;
 
-namespace Firmware::ACPI
+namespace ACPI
 {
     extern uint8_t g_Processors[];
     extern int g_ProcessorCount;

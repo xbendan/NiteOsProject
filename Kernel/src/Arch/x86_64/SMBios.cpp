@@ -3,7 +3,7 @@
 #include <Address>
 #include <Kernel>
 
-namespace Firmware::SMBios
+namespace SMBios
 {
     const char* __smbios_SignatureL2 = "_SM_";
     const char* __smbios_SignatureL3 = "_SM3_";

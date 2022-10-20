@@ -1,20 +1,19 @@
 #include <Arch/x86_64/BOOTX64.h>
 #include <Arch/x86_64/ACPI.h>
+#include <Arch/x86_64/APIC.h>
 #include <Arch/x86_64/IRQ.h>
 #include <Arch/x86_64/CPU.h>
 #include <Arch/x86_64/GDT.h>
 #include <Arch/x86_64/IDT.h>
 #include <Arch/x86_64/PIC.h>
+#include <Arch/x86_64/PIT.h>
 #include <Arch/x86_64/PCI.h>
 #include <Arch/x86_64/SMBios.h>
 #include <Arch/x86_64/SMP.h>
 #include <Init/BootInfo.h>
 
-using namespace Firmware;
-
 namespace Boot
 {
-    using namespace Firmware;
     static BootInfo g_BootInfo;
 
     void multiboot2(BootInfo *info, multiboot2_info_header_t *mbInfo)
@@ -25,7 +24,7 @@ namespace Boot
     void stivale2(BootInfo *info, stivale2_struct_t *stInfo)
     {
         struct stivale2_tag* tag = (struct stivale2_tag*)(stInfo->tags);
-        BootInfoMemory *memInfo = &bootInfo->mem;
+        BootInfoMemory *memInfo = &g_BootInfo.m_Memory;
         while (tag)
         {
             switch (tag->identifier)
@@ -36,7 +35,7 @@ namespace Boot
                 for (uint64_t idx = 0; idx < st2_mem_tag->entries; idx++)
                 {
                     struct stivale2_mmap_entry *fromEntry = &st2_mem_tag->memmap[idx];
-                    MemoryMapEntry *newEntry = &memInfo->m_MemoryMapEntries[memInfo->m_MemoryMapSize];
+                    Memory::MemoryMapEntry *newEntry = &memInfo->m_MemoryMapEntries[memInfo->m_MemoryMapSize];
 
                     if (fromEntry->base > UINTPTR_MAX ||
                         fromEntry->base + fromEntry->length > UINTPTR_MAX)
@@ -45,38 +44,38 @@ namespace Boot
                     }
 
                     memInfo->m_TotalSize += fromEntry->length;
-                    newEntry->range.start = fromEntry->base;
-                    newEntry->range.end = fromEntry->base + fromEntry->length;
+                    newEntry->m_AddrStart = fromEntry->base;
+                    newEntry->m_AddrEnd = fromEntry->base + fromEntry->length;
                     switch (fromEntry->type)
                     {
                     case STIVALE2_MMAP_USABLE:
                         memInfo->m_Usable += fromEntry->length;
-                        newEntry->m_Type = 0;
+                        newEntry->m_Type = Memory::MemoryMapEntryTypeAvailable;
                         break; 
                     case STIVALE2_MMAP_KERNEL_AND_MODULES:
-                        newEntry->m_Type = 5;
+                        newEntry->m_Type = Memory::MemoryMapEntryTypeKernel;
                         break;
                     case STIVALE2_MMAP_ACPI_RECLAIMABLE:
-                        newEntry->m_Type = 2;
+                        newEntry->m_Type = Memory::MemoryMapEntryTypeAcpiReclaimable;
                         break;
                     case STIVALE2_MMAP_ACPI_NVS:
-                        newEntry->m_Type = 3;
+                        newEntry->m_Type = Memory::MemoryMapEntryTypeNvs;
                         break;
                     case STIVALE2_MMAP_BAD_MEMORY:
-                        newEntry->m_Type = 4;
+                        newEntry->m_Type = Memory::MemoryMapEntryTypeBadRam;
                         break;
                     default:
-                        newEntry->m_Type = 1;
+                        newEntry->m_Type = Memory::MemoryMapEntryTypeReserved;
                         break;
                     }
-                    memInfo->map_size++;
+                    memInfo->m_MemoryMapSize++;
                 }
                 break;
             }
             case STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID:
             {
                 struct stivale2_struct_tag_framebuffer *framebuffer_tag = (struct stivale2_struct_tag_framebuffer *) tag;
-                BootInfoGraphics *graphic = &bootInfo->m_Graphics;
+                BootInfoGraphics *graphic = &g_BootInfo.m_Graphics;
 
                 graphic->m_Width = framebuffer_tag->framebuffer_width;
                 graphic->m_Height = framebuffer_tag->framebuffer_height;
@@ -98,7 +97,7 @@ namespace Boot
             tag = (struct stivale2_tag*)(tag->next);
         }
 
-        bootInfo->check = 0xDEADC0DE;
+        g_BootInfo.m_Checksum = 0xDEADC0DE;
     }
 
     void Start()
@@ -116,7 +115,7 @@ namespace Boot
         Memory::Initialize();
 
         PIC::Initialize();
-        PIT::Initialize();
+        PIT::Initialize(1000);
 
         EnableInterrupts();
 
@@ -128,13 +127,12 @@ namespace Boot
         {
             PIC::Disable();
             APIC::Local::Initialize();
-            WriteLine("[Local APIC] OK!");
+            //WriteLine("[Local APIC] OK!");
 
             APIC::IO::Initialize();
-            WriteLine("[I/O APIC] OK!");
+            //WriteLine("[I/O APIC] OK!");
         }
-        else
-            WriteLine("[APIC] Not Present.");
+            //WriteLine("[APIC] Not Present.");
 
         SMBios::Initialize();
         SMP::Initialize();
@@ -143,12 +141,12 @@ namespace Boot
 
 extern "C" [[noreturn]] void kload_stivale2(void *ptr)
 {
-    if(addr == NULL)
+    if(ptr == NULL)
         __asm__("mov $0x32, %al");
 
     Boot::stivale2(
         &Boot::g_BootInfo,
-        (stivale2_struct_t*)(addr)
+        (stivale2_struct_t*)(ptr)
     );
     Boot::Start();
 

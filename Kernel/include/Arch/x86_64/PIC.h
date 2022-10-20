@@ -1,7 +1,7 @@
-namespace Firmware::PIC
+namespace PIC
 {
     void Initialize();
     void Disable();
-} // namespace Firmware::PIC
+} // namespace PIC
 
 void RestoreInterrupts(int i);

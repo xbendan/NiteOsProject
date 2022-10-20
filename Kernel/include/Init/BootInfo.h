@@ -9,7 +9,7 @@ struct BootInfoMemory
     uint64_t m_TotalSize;
     uint64_t m_Usable;
     size_t m_MemoryMapSize;
-    MemoryMapEntry m_MemoryMapEntries[MEMORY_MAP_LIMIT];
+    Memory::MemoryMapEntry m_MemoryMapEntries[MEMORY_MAP_LIMIT];
 };
 
 struct BootInfoGraphics

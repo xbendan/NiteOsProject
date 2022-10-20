@@ -2,10 +2,10 @@
 #include <Arch/x86_64/APIC.h>
 #include <Arch/x86_64/IRQ.h>
 
-int GetCpuNum()
+int ThisCPU()
 {
-    if(apicLocalPtr)
-        return apicLocalPtr[LOCAL_APIC_ID / 4] >> 24;
+    if(APIC::Local::basePtr)
+        return APIC::Local::basePtr[LOCAL_APIC_ID / 4] >> 24;
     else
         return 0;
 }
@@ -42,7 +42,7 @@ void SetCPULocal(cpu_info_t *cpu)
 
 cpu_info_t *GetCPULocal()
 {
-    InterruptsRetainer()
+    InterruptsRetainer();
     cpu_info_t *cpu;
     DisableInterrupts();
     asm volatile("swapgs; movq %%gs:0, %0; swapgs;"

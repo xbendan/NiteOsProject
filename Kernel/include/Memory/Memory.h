@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Init/BootInfo.h>
 #include <Macros>
 #define ARCH_PAGE_SIZE (4096)
 #define MEMORY_MAP_LIMIT 64
@@ -10,8 +9,6 @@ extern uint64_t KERNEL_END_ADDR;
 
 namespace Memory
 {
-    extern MemoryStatistic memStats;
-
     enum MemoryMapEntryType
     {
         MemoryMapEntryTypeAvailable = 0,
@@ -51,6 +48,8 @@ namespace Memory
         uint64_t cached;
         uint64_t allocated;
     };
+
+    extern MemoryStatistic memStats;
 
     void Initialize();
 } // namespace Memory

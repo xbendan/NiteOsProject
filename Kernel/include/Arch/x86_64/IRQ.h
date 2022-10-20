@@ -9,8 +9,9 @@ typedef void (*isr_t)(void*, registers_t*);
 
 void RegisterInterruptHandler(int num, isr_t func);
 
-class InterruptRetainer
+class InterruptsRetainer
 {
-    InterruptRetainer() { volatile asm("cli"); }
-    ~InterruptRetainer() { volatile asm("sti"); }
-}
+public:
+    InterruptsRetainer() { asm("cli"); }
+    ~InterruptsRetainer() { asm("sti"); }
+};

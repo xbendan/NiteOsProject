@@ -1,68 +1,139 @@
 #pragma once
 
+#include <Memory/KMalloc.h>
 #include <Utils/Spinlock.h>
 
 namespace Utils
 {
-    void ReleaseListNode(ListNode<T>* node)
+    typedef struct ListHead
     {
-        node->obj.~T();
-    }
+        ListHead *next = NULL, *prev = NULL;
+    } listhead_t;
 
     template <typename T> struct ListNode
     {
-        ListNode *next = NULL, *prev = NULL;
+        struct ListHead head;
         T obj;
-    }
+    };
 
-    template <typename T> class List
+    template <typename T> class LinkedList
     {
     public:
-        List()
+        LinkedList()
         {
-            m_Prev = NULL;
-            m_Next = NULL;
+            m_Front = NULL;
+            m_Back = NULL;
             m_Count = 0;
             m_Lock = 0;
         }
 
-        ~List()
+        ~LinkedList()
         {
-            ReleaseLock(&m_Lock);
-            
+            Utils::ReleaseLock(&m_Lock);
         }
 
-        List& operator=(const List& list)
+        LinkedList& operator=(const LinkedList& list)
         {
             
         }
 
         void Clear()
         {
-            AcquireLock(&m_Lock);
-            ListNode<T> *node = m_Prev;
-            while(node && node->m_Next)
+            Utils::AcquireLock(&m_Lock);
+            ListNode<T> *node = m_Front;
+            while(node && node->m_Back)
             {
-                ListNode<T> *n = node->m_Next;
+                ListNode<T> *n = node->m_Back;
 
                 node->obj.~T();
                 node = n;
             }
-            m_Prev = NULL;
-            m_Next = NULL;
-            m_Count = 0
-            ReleaseLock(&m_Lock);
+            m_Front = NULL;
+            m_Back = NULL;
+            m_Count = 0;
+            
+            Utils::ReleaseLock(&m_Lock);
         }
 
         T& Add(T&& obj)
         {
-            AcquireLock(&m_Lock);
-            ListNode<T> *node = kmalloc(sizeof(ListNode<T>))
+            Utils::AcquireLock(&m_Lock);
+            ListNode<T> *node = kmalloc(sizeof(ListNode<T>));
+
+            Utils::ReleaseLock(&m_Lock);
+        }
+
+        void Add(ListNode<T> *obj)
+        {
+            if (obj == NULL)
+                return;
+
+            Utils::AcquireLock(&m_Lock);
+
+            if(m_Count > 0)
+            {
+                obj->head.prev = m_Back;
+                m_Back->head.next = obj;
+            }
+            else
+            {
+                m_Front = obj;
+                m_Back = obj;
+            }
+
+            m_Count++;
+
+            Utils::ReleaseLock(&m_Lock);
+        }
+
+        void Insert(ListNode<T> *obj)
+        {
+
+        }
+
+        T* GetObject(uint32_t index)
+        {
+            if(index < 0 || index < m_Count || !m_Count)
+                return NULL;
+
+            ListNode<T> *current = m_Front;
+            for(unsigned i = 0; i < index && current->head.next; i++)
+                current = current->head.next;
+
+            return &current->obj;
         }
 
     private:
-        ListNode<T> *m_Prev, *m_Next;
+        ListNode<T> *m_Front, *m_Back;
         uint32_t m_Count;
-        volatile int m_Lock = 0;
-    }
+        volatile int m_Lock;
+    };
+
+    namespace List
+    {
+        void Remove(listhead_t *head)
+        {
+            listhead_t *prev = head->prev, *next = head->next;
+
+            if(prev != NULL) prev->next = next;
+            if(next != NULL) next->prev = prev;
+        }
+
+        void Append(listhead_t* current, listhead_t* node)
+        {
+            if(current == NULL || node == NULL)
+                return;
+            else
+            {
+                node->prev = current;
+                if(current->next != NULL)
+                {
+                    node->next = current->next;
+                    current->next->prev = node;
+                }
+                current->next = node;
+            }
+        }
+    } // namespace List
+    
 }

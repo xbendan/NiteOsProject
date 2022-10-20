@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-namespace Firmware::Ports
+namespace Ports
 {
     static inline uint8_t ReadByte8(uint16_t port)
     {

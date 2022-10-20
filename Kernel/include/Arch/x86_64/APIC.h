@@ -55,7 +55,7 @@
 
 #define IO_RED_TBL_VECTOR(x) (x & 0xFF)
 
-namespace Firmware::APIC
+namespace APIC
 {
     namespace IO
     {
@@ -64,17 +64,19 @@ namespace Firmware::APIC
         void WriteData64(uint32_t reg, uint64_t data);
         uint64_t ReadData64(uint32_t reg);
         void Initialize();
+        void Redirect(uint8_t irq, uint8_t vector, uint32_t delivery);
         void SetBase(uintptr_t newBase);
         void MapLegacyIRQ(uint8_t irq);
     } // namespace IO
     namespace Local
     {
-        extern volatile uint32_t *apicLocalPtr;
+        extern volatile uint32_t *basePtr;
         void WriteBase(uint64_t val);
         uint64_t ReadBase();
         void WriteData(uint32_t reg, uint32_t data);
         uint32_t ReadData(uint32_t reg);
         void StartTimer();
+        void SendIPI(uint8_t apicId, uint32_t dsh, uint32_t type, uint8_t vector);
         void Initialize();
     } // namespace Local
     

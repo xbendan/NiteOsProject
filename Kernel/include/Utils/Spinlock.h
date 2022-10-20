@@ -1,3 +1,5 @@
+#pragma once
+
 namespace Utils
 {
     typedef volatile int spinlock_t;
@@ -31,10 +33,18 @@ namespace Utils
                 : "memory");
     }
 
+    class ScopedSpinlock
+    {
+        spinlock_t m_Lock;
+        ScopedSpinlock(spinlock_t& lock) : m_Lock(lock) { AcquireLock(&m_Lock); }
+        ~ScopedSpinlock() { ReleaseLock(&m_Lock); }
+    };
+
     class Spinlock
     {
         spinlock_t m_Lock;
-        Spinlock(spinlock_t& lock) : m_Lock(lock) { AcquireLock(&lock); }
-        ~Spinlock() { ReleaseLock(&lock); }
-    }
+    public:
+        void Acquire() { AcquireLock(&m_Lock); }
+        void Release() { ReleaseLock(&m_Lock); }
+    };
 }

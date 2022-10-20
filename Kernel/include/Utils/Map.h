@@ -22,7 +22,7 @@ namespace Utils
             HashMap<K, T>* map;
 
             unsigned bucketIndex = 0;
-            List<KeyValuePair>* bucket;
+            LinkedList<KeyValuePair>* bucket;
 
             ListIterator<KeyValuePair> listIt;
         public:
@@ -83,14 +83,14 @@ namespace Utils
         };
 
         HashMap(){
-            buckets = new List<KeyValuePair>[bucketCount];
+            buckets = new LinkedList<KeyValuePair>[bucketCount];
             lock = 0;
         }
 
         HashMap(unsigned bCount){
             bucketCount = bCount;
 
-            buckets = new List<KeyValuePair>[bucketCount];
+            buckets = new LinkedList<KeyValuePair>[bucketCount];
             lock = 0;
         }
 
@@ -216,7 +216,7 @@ namespace Utils
             delete[](buckets);
         }
     private:
-        List<KeyValuePair>* buckets;
+        LinkedList<KeyValuePair>* buckets;
         unsigned bucketCount = 512;
 
         unsigned itemCount = 0;

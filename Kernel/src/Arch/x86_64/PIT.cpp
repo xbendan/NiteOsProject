@@ -1,9 +1,9 @@
 #include <Arch/x86_64/PIT.h>
 #include <Arch/x86_64/Ports.h>
 
-using namespace Firmware::Ports;
+using namespace Ports;
 
-namespace Firmware::PIT
+namespace PIT
 {
     void Initialize(uint32_t frequency)
     {
@@ -13,4 +13,4 @@ namespace Firmware::PIT
         WriteByte8(0x40, __divisor__ & 0xFF);
         WriteByte8(0x40, (__divisor__ >> 8) & 0xFF);
     }
-} // namespace Firmware::PIT
+} // namespace PIT

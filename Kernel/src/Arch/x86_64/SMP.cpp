@@ -3,8 +3,11 @@
 #include <Arch/x86_64/ACPI.h>
 #include <Memory/Memory.h>
 
+#include "smpdefines.inc"
+
 extern struct GlobalDescTablePointer g_Gdtr;
 extern struct InterruptDescTablePointer g_Idtr;
+struct CPUCore *cpus[MAX_CPU_AMOUNT];
 
 namespace SMP
 {
@@ -42,22 +45,3 @@ namespace SMP
         }
     }
 } // namespace SMP
-
-
-struct CPUCore *cpus[MAX_CPU_AMOUNT];
-
-void __smp_SetTrampoline()
-{
-    
-}
-
-void __smp_InitializeProcessor(uint16_t cpuId)
-{
-    
-    
-}
-
-void SMP_Initialize()
-{
-    
-}

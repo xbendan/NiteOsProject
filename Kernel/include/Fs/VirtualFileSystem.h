@@ -1,4 +1,4 @@
-#include <macros.h>
+#include <Macros>
 
 namespace Fs
 {
@@ -25,7 +25,7 @@ namespace Fs
         FileTypeDisk
     } file_type_t;
 
-    struct FsVolume
+    struct Volume
     {
         char *m_Name;
         enum FileSystemType m_FsType;
@@ -39,9 +39,9 @@ namespace Fs
 
     };
 
-    struct FsNode {};v
+    struct FsNode {};
 
-    struct FsFile
+    struct File
     {
         char *m_Name;
         uint8_t m_UUID[16];

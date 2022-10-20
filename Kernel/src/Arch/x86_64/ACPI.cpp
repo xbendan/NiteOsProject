@@ -5,7 +5,7 @@
 #include <Memory/Memory.h>
 #include <Kernel>
 
-namespace Firmware::ACPI
+namespace ACPI
 {
     const char *__acpi_Signature = "RSD PTR ";
     uint8_t g_Processors[256];
@@ -14,7 +14,7 @@ namespace Firmware::ACPI
     acpi_rsdt_t *acpiRsdtHeader;
     acpi_xsdt_t *acpiXsdtHeader;
     acpi_fadt_t *acpiFadt;
-    madt_iso_t *g_Isos[256];
+    MadtIso *g_Isos[256];
     uint8_t g_IsoAmount;
     pci_mcfg_t *pciMcfg;
 
@@ -51,6 +51,8 @@ namespace Firmware::ACPI
             if (memcmp(header->signature, str, 4) == 0 && _index++ == index)
                 return header;
         }
+
+        return NULL;
     }
 
     void Initialize()
@@ -59,7 +61,7 @@ namespace Firmware::ACPI
         {
             if (memcmp((void *)Memory::GetIOMapping(addr), __acpi_Signature, 8) == 0)
             {
-                acpiDesc = (acpi_xsdp_t *)(Memory::GetIOMapping(addr));
+                acpiDesc = (acpi_rsdp_t *)(Memory::GetIOMapping(addr));
                 goto INIT_ACPI_FOUND;
             }
         }
@@ -68,7 +70,7 @@ namespace Firmware::ACPI
         {
             if (memcmp((void *)Memory::GetIOMapping(addr), __acpi_Signature, 8) == 0)
             {
-                acpiDesc = (acpi_xsdp_t *)(Memory::GetIOMapping(addr));
+                acpiDesc = (acpi_rsdp_t *)(Memory::GetIOMapping(addr));
                 goto INIT_ACPI_FOUND;
             }
         }
@@ -77,7 +79,7 @@ namespace Firmware::ACPI
         {
             if (memcmp((void *)Memory::GetIOMapping(addr), __acpi_Signature, 8) == 0)
             {
-                acpiDesc = (acpi_xsdp_t *)(Memory::GetIOMapping(addr));
+                acpiDesc = (acpi_rsdp_t *)(Memory::GetIOMapping(addr));
                 goto INIT_ACPI_FOUND;
             }
         }
@@ -126,7 +128,7 @@ namespace Firmware::ACPI
                 madt_io_t *apicIo = (madt_io_t *)(entry);
 
                 if (!apicIo->gSib)
-                    Firmware::APIC::IO::SetBase(apicIo->address);
+                    APIC::IO::SetBase(apicIo->address);
             }
             case 2:
             {
