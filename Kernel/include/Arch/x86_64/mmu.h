@@ -153,7 +153,7 @@ namespace Memory::ManagementUnit
      * @param amount 
      * @param flags 
      */
-    void MapVirtualAddress(Pml4Set *map, uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags);
+    void MapVirtualMemory4K(VirtualPages *pageSpace, uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags);
     /**
      * @brief 
      * 
@@ -161,7 +161,7 @@ namespace Memory::ManagementUnit
      * @param pageSpace 
      * @return uintptr_t 
      */
-    uintptr_t Allocate4KPages(size_t amount, VirtualPages *pageSpace);
+    uintptr_t Allocate4KPages(VirtualPages *pageSpace, size_t amount);
     /**
      * @brief 
      * 
@@ -182,7 +182,7 @@ namespace Memory::ManagementUnit
      * @param virt 
      * @param amount 
      */
-    void KernelMapVirtualAddress(uint64_t phys, uint64_t virt, size_t amount);
+    void KernelMapVirtualMemory4K(uint64_t phys, uint64_t virt, size_t amount);
     /**
      * @brief 
      * 
@@ -191,7 +191,7 @@ namespace Memory::ManagementUnit
      * @param amount 
      * @param flags 
      */
-    void KernelMapVirtualAddress(uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags);
+    void KernelMapVirtualMemory4K(uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags);
     /**
      * @brief 
      * 

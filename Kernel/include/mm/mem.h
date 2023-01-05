@@ -39,11 +39,6 @@ namespace Memory {
     } memmap_entry_t;
 
     void Initialize();
-
-    uintptr_t KernelAllocate4KPages(size_t amount);
-    void KernelFree4KPages(void *ptr);
-    uintptr_t Allocate4KPages(size_t amount);
-    void Free4KPages(void *ptr)
 } // namespace Memory
 
 //void mem_value_commit(enum mem_stats_item item_num, int64_t change);

@@ -52,7 +52,7 @@ namespace Memory
             page_t *pageSpace = AllocatePages(4);
             if (pageSpace != NULL) {
                 uintptr_t pages = (pointer / ARCH_PAGE_SIZE * sizeof(pageframe_t)) + KERNEL_PHYSICAL_PAGES;
-                KernelMapVirtualAddress(pageSpace->addr, pages, 16, PAGE_FLAG_PRESENT | PAGE_FLAG_WRITABLE);
+                KernelMapVirtualMemory4K(pageSpace->addr, pages, 16, PAGE_FLAG_PRESENT | PAGE_FLAG_WRITABLE);
                 InitPages((page_t *) pages, pointer);
             } else {
                 /*
@@ -70,10 +70,10 @@ namespace Memory
                 */
 
                 uintptr_t virt = KernelAllocate4KPages(16);
-                KernelMapVirtualAddress(pointer, virt, 16, PAGE_FLAG_WRITABLE);
+                KernelMapVirtualMemory4K(pointer, virt, 16, PAGE_FLAG_WRITABLE);
                 InitPages((page_t *) virt, pointer);
                 AllocatePages(4);
-                KernelMapVirtualAddress(pointer, (pointer / ARCH_PAGE_SIZE * sizeof(pageframe_t)) + KERNEL_PHYSICAL_PAGES, 16, PAGE_FLAG_WRITABLE);
+                KernelMapVirtualMemory4K(pointer, (pointer / ARCH_PAGE_SIZE * sizeof(pageframe_t)) + KERNEL_PHYSICAL_PAGES, 16, PAGE_FLAG_WRITABLE);
             }
         }
     }
@@ -138,7 +138,7 @@ namespace Memory
                 if(allocSpace != NULL)
                 {
                     uint64_t pages = (addr / ARCH_PAGE_SIZE * sizeof(PageFrame)) + KERNEL_PHYSICAL_PAGES;
-                    KernelMapVirtualAddress(
+                    KernelMapVirtualMemory4K(
                         allocSpace->addr,
                         pages,
                         16,
@@ -318,7 +318,7 @@ extern "C" uint64_t kallocpg(size_t amount)
 
     uintptr_t physAddress = physicalPage->addr;
     uintptr_t virtAddress = Memory::KernelAllocate4KPages(amount);
-    Memory::KernelMapVirtualAddress(physAddress, virtAddress, amount, PAGE_FLAG_PRESENT | PAGE_FLAG_WRITABLE);
+    Memory::KernelMapVirtualMemory4K(physAddress, virtAddress, amount, PAGE_FLAG_PRESENT | PAGE_FLAG_WRITABLE);
     Proc::GetKernelProcess()->m_Pages += amount;
 }
 

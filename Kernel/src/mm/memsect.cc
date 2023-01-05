@@ -16,7 +16,7 @@ namespace Memory::Model
             uint64_t virt = ManagementUnit::KernelAllocate4KPages(amount), phys = MemblockAllocate(amount);
             if (phys && virt) {
                 sections[m_PageNum >> PAGE_SECTION_SHIFT].pages = virt;
-                ManagementUnit::KernelMapVirtualAddress(phys, virt, amount);
+                ManagementUnit::KernelMapVirtualMemory4K(phys, virt, amount);
             } else CallPanic("");
         }
     }

@@ -18,9 +18,11 @@
 typedef uint32_t tid_t;
 typedef uint16_t pid_t;
 
+using namespace Utils;
+
 namespace Proc
 {
-    enum TaskPriority
+    typedef enum TaskPriority
     {
         PriorityIdle = -1,
         PriorityLowest = 0,
@@ -29,36 +31,36 @@ namespace Proc
         PriorityHigh = 3,
         PriorityHighest = 4,
         PriorityRealTime = 5
-    };
+    } task_priority_t;
 
-    enum TaskState
+    typedef enum TaskState
     {
         TaskStateRunning = 0,
         TaskStateIdle = 1,
-    };
+    } task_state_t;
 
-    enum TaskType
+    typedef enum TaskType
     {
         TaskTypeSystemProcess = 0,
         TaskTypeSystemDriver = 1,
         TaskTypeApplication = 2,
         TaskTypeService = 3,
         TaskTypeBackground = 4
-    };
+    } task_type_t;
 
-    enum ThreadState
+    typedef enum ThreadState
     {
         ThreadStateAbolished = 0,
         ThreadStateRunning = 1,
         ThreadStateBlocked = 2
-    };
+    } thread_state_t;
 
-    struct Thread
+    typedef struct Thread
     {
         tid_t m_ThreadId;                  /* Thread ID, not duplicated in same progress */
-        //struct Process *m_Parent;    /* Parent process, indicates the owner of this thread */
-        Utils::Spinlock m_Lock;            /* Thread lock */
-        Utils::Spinlock m_StateLock;       /* Thread state lock */
+        proc_t *m_Parent;    /* Parent process, indicates the owner of this thread */
+        spinlock_t m_Lock;            /* Thread lock */
+        spinlock_t m_StateLock;       /* Thread state lock */
 
         struct
         {
@@ -71,14 +73,14 @@ namespace Proc
         void *m_KernelStack;
         void *m_KernelStackLimit;
 
-        struct RegisterContext m_Registers;  
-        struct RegisterContext m_LastSyscall;
+        registers_t m_Registers;  
+        registers_t m_LastSyscall;
 
         uint8_t m_ThreadPriority;       /* The priority when scheduling */
         uint8_t m_ThreadState;          /* Thread state */
-    };
+    } thread_t;
 
-    class Process
+    typedef class Process
     {
     public:
         Process(char *name, Fs::File *sourceFile, pid_t pid, Proc::Activity *activity, TaskType taskType)
@@ -125,9 +127,9 @@ namespace Proc
         //char *m_FileName;     /* Executable file name of this process */
         char *m_Package;      /* Package Name */
         pid_t m_ProcessId;    /* Process Id, 0~255 are reserved for kernel process */
-        TaskType m_Type;       /* Current process type */
-        Fs::File *m_FilePtr;         /* Pointer to the source file, can be NULL */
-        Activity *m_Activity;    /* Pointer to the Activity */
+        task_type_t m_Type;       /* Current process type */
+        Fs::file_t *m_FilePtr;         /* Pointer to the source file, can be NULL */
+        activity_t *m_Activity;    /* Pointer to the Activity */
         union
         { // Flags
             uint32_t __flag_size__;
@@ -152,34 +154,33 @@ namespace Proc
 
         struct
         {
-            Utils::Spinlock m_Lock;
-            Utils::Spinlock m_HandleLock;
+            spinlock_t m_Lock;
+            spinlock_t m_HandleLock;
         };
 
         uint32_t m_NextThreadId;
-        Thread *m_MainThread;
-        Utils::LinkedList<Thread> m_ChildrenThreadList;
+        thread_t *m_MainThread;
+        LinkedList<Thread> m_ChildrenThreadList;
 
         uintptr_t m_EntryPoint;
         uintptr_t m_Heap;
 
         /* Architecture Fields */
         #ifdef ARCH_X86_64
-        void *m_Pagemap;
-        uint64_t** m_VirtuaPagesBitmap;
+        Memory::ManagementUnit::VirtualPages *m_Pagemap;
         #elif ARCH_AARCH64
 
         #elif ARCH_RISCV
 
         #endif
-    };
+    } proc_t;
 
     /**
      * @brief Create a Process object
      * 
      * @return struct Process* Pointer to new process object
      */
-    Process *CreateProcess();
+    proc_t *CreateProcess();
 
     /**
      * @brief Create a process from existing file
@@ -187,7 +188,7 @@ namespace Proc
      * @param file Source file, must be executable
      * @return struct Process* Pointer to new process object
      */
-    Process *CreateELFProcess(Fs::File *file);
+    proc_t *CreateELFProcess(Fs::file_t *file);
 
     /**
      * @brief Create a Process object with full arguments
@@ -201,7 +202,7 @@ namespace Proc
      * @param file The file that the process created from
      * @return struct Process* Pointer to new process object
      */
-    Process *CreateProcessEx(Activity *activity, TaskType type, Fs::File *file, char *name);
+    proc_t *CreateProcessEx(activity_t *activity, task_type_t type, Fs::file_t *file, char *name);
 
     /**
      * @brief Create a new thread object of specific process
@@ -209,7 +210,7 @@ namespace Proc
      * @param process Parent process
      * @return struct Thread* Pointer to new thread
      */
-    Utils::ListNode<Thread> *CreateThread(Process *process);
+    ListNode<thread_t> *CreateThread(proc_t *process);
 
     /**
      * @brief Forcely kill a process and clean all resources
@@ -223,7 +224,7 @@ namespace Proc
      * 
      * @param process Process that will be killed
      */
-    void KillProcess(Process *process);
+    void KillProcess(proc_t *process);
 
     /**
      * @brief Send a message to terminate a process
@@ -239,5 +240,5 @@ namespace Proc
      * 
      * @param process 
      */
-    void TerminateProcess(Process *process);
+    void TerminateProcess(proc_t *process);
 } // namespace Process

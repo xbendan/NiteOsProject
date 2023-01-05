@@ -20,6 +20,29 @@
 
 using namespace Utils;
 
+static inline size_t ALIGN_PAGE(size_t x)
+{
+    x--;
+    x |= x >> 1;
+    x |= x >> 2;
+    x |= x >> 4;
+    x |= x >> 8;
+    x |= x >> 16;
+    return x += 1;
+}
+
+static inline uint8_t PAGE_ORDER(size_t size)
+{
+    uint8_t order = PAGE_MAX_ORDER;
+    size_t m_size = PAGE_MAX_SIZE / ARCH_PAGE_SIZE;
+    while (m_size > size)
+    {
+        m_size /= 2;
+        order--;
+    }
+    return order;
+}
+
 namespace Memory 
 {
     typedef struct PageFrame {
@@ -57,40 +80,22 @@ namespace Memory
         ZoneHighMem = 2
     } zonetype_t;
 
-    extern BuddyZone *zones;
+    extern buddyzone_t *zones;
 
     void BuddyInit();
-    page_t *Allocate4KPages(size_t amount);
-    void Free4KPages(uintptr_t address);
-    void Free4KPages(page_t *page);
+    page_t *AllocatePhysMemory4K(uint8_t order)
+    page_t *AllocatePhysMemory4K(size_t amount);
+    void FreePhysMemory4K(uintptr_t address);
+    void FreePhysMemory4K(page_t *page);
     void MarkPagesUsed(Range range);
     page_t* ExpandPage(page_t* pf);
     page_t* CombinePage(page_t *pf);
     void CombinePage(page_t *lpage, page_t *rpage);
 
-    static inline bool IsPageAligned(page_t* page) { return !((page->addr) % ((1 << page->order) * ARCH_PAGE_SIZE));
+    static inline bool IsPageAligned(page_t* page) { return !((page->addr) % ((1 << page->order) * ARCH_PAGE_SIZE)); }
+
+    page_t *KernelAllocate4KPages(size_t amount);
+    page_t *Allocate4KPages(size_t amount);
+    void Free4KPages(uintptr_t address);
+    void Free4KPages(page_t *page);
 } // namespace Memory
-
-
-static inline size_t ALIGN_PAGE(size_t x)
-{
-    x--;
-    x |= x >> 1;
-    x |= x >> 2;
-    x |= x >> 4;
-    x |= x >> 8;
-    x |= x >> 16;
-    return x += 1;
-}
-
-static inline uint8_t PAGE_ORDER(size_t size)
-{
-    uint8_t order = PAGE_MAX_ORDER;
-    size_t m_size = PAGE_MAX_SIZE / ARCH_PAGE_SIZE;
-    while (m_size > size)
-    {
-        m_size /= 2;
-        order--;
-    }
-    return order;
-}

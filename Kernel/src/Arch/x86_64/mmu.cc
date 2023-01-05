@@ -78,7 +78,7 @@ namespace Memory::ManagementUnit
         }
         kernelPdpts[0] = kernelPdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)];
 
-        KernelMapVirtualAddress(
+        KernelMapVirtualMemory4K(
             0x0, 
             KERNEL_VIRTUAL_BASE, 
             (&KERNEL_END_ADDR - &KERNEL_START_ADDR) / ARCH_PAGE_SIZE);
@@ -131,7 +131,7 @@ namespace Memory::ManagementUnit
         uint64_t kAddrStart = ALIGN_DOWN((uintptr_t) &KERNEL_START_ADDR, ARCH_PAGE_SIZE);
         uint64_t kPageAmount = (ALIGN_UP((uintptr_t) &KERNEL_END_ADDR, ARCH_PAGE_SIZE) - kAddrStart) / ARCH_PAGE_SIZE;
         
-        KernelMapVirtualAddress(
+        KernelMapVirtualMemory4K(
             kAddrStart - KERNEL_VIRTUAL_BASE,
             kAddrStart,
             kPageAmount,
@@ -206,7 +206,7 @@ namespace Memory::ManagementUnit
      * @param amount 
      * @param flags 
      */
-    void MapVirtualAddress(VmPages *map, uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags)
+    void MapVirtualMemory4K(VmPages *map, uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags)
     {
 
     }
@@ -236,11 +236,11 @@ namespace Memory::ManagementUnit
         VirtualPages *pageSpace
     );
     
-    void KernelMapVirtualAddress(uint64_t phys, uint64_t virt, size_t amount) {
-        KernelMapVirtualAddress(phys, virt, amount, PAGE_PRESENT | PAGE_WRITABLE);
+    void KernelMapVirtualMemory4K(uint64_t phys, uint64_t virt, size_t amount) {
+        KernelMapVirtualMemory4K(phys, virt, amount, PAGE_PRESENT | PAGE_WRITABLE);
     }
 
-    void KernelMapVirtualAddress(uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags)
+    void KernelMapVirtualMemory4K(uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags)
     {
         size_t pdptIndex, pdirIndex, pageIndex;
 
@@ -358,7 +358,7 @@ namespace Memory::ManagementUnit
      */
     void KernelFree4KPages(void* addr, uint64_t amount);
 
-    void MapVirtualAddress(
+    void MapVirtualMemory4K(
         VmPages *map,
         uint64_t phys,
         uint64_t virt,

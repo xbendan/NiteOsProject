@@ -23,7 +23,7 @@ namespace Fs
         FileTypeDirectory,
         FileTypeShortcut,
         FileTypeDisk
-    } file_type_t;
+    } filetype_t;
 
     struct Volume
     {
@@ -34,21 +34,21 @@ namespace Fs
         uint64_t m_SpaceUsed;
     };
 
-    struct FsPartition 
+    typedef struct FsPartition 
     {
 
-    };
+    } parition_t;
 
     struct FsNode {};
 
-    struct File
+    typedef struct File
     {
         char *m_Name;
         uint8_t m_UUID[16];
-        enum FileType m_Type;
+        filetype_t m_Type;
         uint64_t m_Size;
         uint64_t m_BytesTaken;
-    };
+    } file_t;
 
     void ount();
 } // namespace Fs
