@@ -2,13 +2,38 @@
 
 namespace Memory::Model
 {
-    memblock_t memblocks[MEMORY_MAP_LIMIT];
+    mem_block_t memblocks[MEMORY_MAP_LIMIT];
+
+    void MemblocksInit(bootmem_t *memdat) {
+        /* 
+         * Setup memory block from memory map entries as 
+         * early page frame allocating.
+         */
+        int blocks = 0;
+        for (int i = 0; i < memdat->m_MemoryMapSize; i++) {
+            memmap_entry_t *mapEntry = &(memdat->m_MemoryMapEntries[i]);
+            if (mapEntry->m_Type != MemoryMapEntryAvailable)
+                continue;
+            
+            uint64_t addrStart = ALIGN_UP(mapEntry->m_AddrStart, ARCH_PAGE_SIZE);
+            uint64_t addrEnd = ALIGN_DOWN(mapEntry->m_AddrEnd, ARCH_PAGE_SIZE);
+
+            if(addrEnd - addrStart < ARCH_PAGE_SIZE)
+                continue;
+
+            memblocks[blocks] = (mem_block_t) {
+                .m_PageNum = addrStart >> PAGE_SHIFT;
+                .m_Amount = (addrEnd - addrStart) / ARCH_PAGE_SIZE;
+            };
+            blocks++;
+        }
+    }
 
     void *MemblockAllocate(size_t amount) {
         int blockIndex = 0;
         void *ptr = nullptr;
         while (blockIndex < MEMORY_MAP_LIMIT && memblocks[blockIndex].pfn) {
-            memblock_t *memblock = &(memblocks[blockIndex]);
+            mem_block_t *memblock = &(memblocks[blockIndex]);
 
             if(memblock->amount < amount)
                 continue;

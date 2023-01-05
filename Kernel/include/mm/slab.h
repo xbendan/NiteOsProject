@@ -46,7 +46,7 @@ namespace Memory
     {
         Utils::Spinlock lock;
         uint64_t nr_partial;
-        Utils::LinkedList<PageFrame> partial;
+        Utils::LinkedList<page_t> partial;
     } slab_node_t;
 
     typedef struct SlabCache
@@ -72,6 +72,6 @@ namespace Memory
     uintptr_t kmalloc(uint32_t size);
     void kfree(uintptr_t addr);
     
-    slab_cpu_t *kmem_get_cpu(struct SlabCpuCache *cache);
-    slab_cache_t *kmem_find_cache(size_t size);
+    slab_cpu_t *FindCpuCache(struct SlabCpuCache *cache);
+    slab_cache_t *FindMemCache(size_t size);
 } // namespace Memory

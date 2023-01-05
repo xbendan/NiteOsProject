@@ -38,18 +38,6 @@ namespace Memory {
         enum MemoryMapEntryType m_Type;
     } memmap_entry_t;
 
-    namespace Model
-    {
-        typedef struct MemoryBlock {
-            uint64_t m_PageNum, amount;
-        } memblock_t;
-
-        extern memblock_t memblocks[MEMORY_MAP_LIMIT];
-
-        void *MemblockAllocate(size_t amount);
-        void InitializeMemblocks();
-    } // namespace Model
-    
     void Initialize();
 
     uintptr_t KernelAllocate4KPages(size_t amount);

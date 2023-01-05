@@ -5,4 +5,6 @@
 #define KERNEL_SPACE            0xFFFFFF8000000000
 #define KERNEL_PAGEMAPS         0xFFFFFF8000000000 // ~0xFFFFFF8FFFFFFFFF 64GiB
 
+#define LOWMEM_RESERVED         0x100000
+
 typedef uint64_t address_t

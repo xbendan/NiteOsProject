@@ -30,32 +30,32 @@ KERNEL_LDFLAGS = -nostdlib \
 	-z max-page-size=0x1000
 
 #ARCH_ASM_FILES_X64_IN 			:=  $(shell find ./Arch/x86_64 -name *.asm)
-#ARCH_C_FILES_X64_IN 			:=  $(shell find ./Arch/x86_64 -name *.cpp)
+#ARCH_C_FILES_X64_IN 			:=  $(shell find ./Arch/x86_64 -name *.cc)
 
 #ARCH_ASM_FILES_X64_OUT			:=  $(patsubst ./Arch/x86_64/%.asm, ./build/x86_64/%.o, $(ARCH_ASM_FILES_X64_IN))
-#ARCH_C_FILES_X64_OUT			:=  $(patsubst ./Arch/x86_64/%.cpp, ./build/x86_64/%.o, $(ARCH_C_FILES_X64_IN))
+#ARCH_C_FILES_X64_OUT			:=  $(patsubst ./Arch/x86_64/%.cc, ./build/x86_64/%.o, $(ARCH_C_FILES_X64_IN))
 
 #ARCH_x86_64_OUTPUT 				= 	$(ARCH_ASM_FILES_X64_OUT) $(ARCH_C_FILES_X64_OUT)
 
 KERNEL_INCLUDES = -Iinclude
 
-KERNEL_FILES_IN_CPP 			:= $(shell find ./src -name *.cpp)
+KERNEL_FILES_IN_CPP 			:= $(shell find ./src -name *.cc)
 KERNEL_FILES_IN_ASM				:= $(shell find ./src -name *.asm)
-KERNEL_FILES_OUT_CPP			:= $(patsubst ./src/%.cpp, ./build/kernel/%.o, $(KERNEL_FILES_IN_CPP))
+KERNEL_FILES_OUT_CPP			:= $(patsubst ./src/%.cc, ./build/kernel/%.o, $(KERNEL_FILES_IN_CPP))
 KERNEL_FILES_OUT_ASM 			:= $(patsubst ./src/%.asm, ./build/kernel/%.o, $(KERNEL_FILES_IN_ASM))
 
 #$(ARCH_ASM_FILES_X64_OUT): build/x86_64/%.o : Arch/x86_64/%.asm
 #	mkdir -p $(dir $@) && \
 #	$(NASM) $(patsubst build/x86_64/%.o, Arch/x86_64/%.asm, $@) -o $@
-#$(ARCH_C_FILES_X64_OUT): build/x86_64/%.o : Arch/x86_64/%.cpp
+#$(ARCH_C_FILES_X64_OUT): build/x86_64/%.o : Arch/x86_64/%.cc
 #	mkdir -p $(dir $@) && \
-#	$(CXX) $(KERNEL_INCLUDES) $(KERNEL_CFLAGS) -c $(patsubst build/x86_64/%.o, Arch/x86_64/%.cpp, $@) -o $@
+#	$(CXX) $(KERNEL_INCLUDES) $(KERNEL_CFLAGS) -c $(patsubst build/x86_64/%.o, Arch/x86_64/%.cc, $@) -o $@
 
 
 
-$(KERNEL_FILES_OUT_CPP): build/kernel/%.o : src/%.cpp  
+$(KERNEL_FILES_OUT_CPP): build/kernel/%.o : src/%.cc  
 	mkdir -p $(dir $@) && \
-	$(CXX) $(KERNEL_INCLUDES) $(KERNEL_CFLAGS) -c $(patsubst build/kernel/%.o, src/%.cpp, $@) -o $@
+	$(CXX) $(KERNEL_INCLUDES) $(KERNEL_CFLAGS) -c $(patsubst build/kernel/%.o, src/%.cc, $@) -o $@
 $(KERNEL_FILES_OUT_ASM): build/kernel/%.o : src/%.asm  
 	mkdir -p $(dir $@) && \
 	$(NASM) $(patsubst build/kernel/%.o, src/%.asm, $@) -o $@

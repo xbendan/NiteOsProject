@@ -14,93 +14,9 @@
 #define PAGE_MAX_SIZE (ARCH_PAGE_SIZE * PAGE_AMOUNT_PER_BLOCK)
 #define PAGE_MAX_ORDER 10
 #define PAGE_MIN_ORDER 0
+#define PFLAGS_ORDER 0x0F
+#define PFLAGS_FREE 0x10
 #define EQUALS_POWER_TWO(x) (!((x) & ((x) - 1)))
-
-namespace Memory
-{
-    /**
-     * @brief Buddy page is the main unit of buddy system
-     * It will be saved into the free area.
-     * The page size must equals to 2^N
-     */
-    typedef struct PageFrame
-    {
-        Utils::ListHead listnode;
-        struct
-        {
-            uint8_t order: 4;
-            bool free: 1;
-            bool kmem: 1;
-            uint16_t __ign: 10;
-        } __attribute__((packed));
-        struct
-        {
-            /*
-            union
-            {
-                lklist_node_t slablist;
-                struct
-                {
-                    void *next;
-                    int pages;
-                    int pobjects;
-                };
-            };
-            */
-            struct
-            {
-                uint32_t slab_inuse: 16;
-                uint32_t slab_objects: 15;
-                uint32_t slab_frozen: 1;
-            } __attribute__((packed));
-            struct SlabCache *slabCache;
-            void **freelist; 
-        };
-        Utils::Spinlock lock;
-        uintptr_t addr;
-    } page_t;
-
-    /**
-     * Each free area contains pages who have same size
-     * which means that you cannot save a 16K page and a 256K
-     * together.
-     */
-    struct PageList
-    {
-        /**
-         * This variable does not represents the whole list,
-         * any valid node in the actual list could be saved here
-         * but usually the first one
-         */
-        Utils::LinkedList<PageFrame *> dataList;
-        uint32_t count;
-    };
-
-    struct PageBlock
-    {   
-        /* nodes available, one equals to 16 MiB */
-        uint32_t count;
-        uintptr_t addr;
-        /**
-         * This array contains the areas struct
-         * The lowest is 0, equals to 4KiB (1 page)
-         * The highest is 12, equals to 16MiB (4096 pages)
-         */
-        Utils::LinkedList<PageFrame *> freelist[PAGE_MAX_ORDER + 1];
-    };
-
-    void LoadPageAllocator();
-    page_t* AllocatePages(uint8_t order);
-    void FreePages(uintptr_t addr);
-    void FreePages(page_t* pf);
-    void MarkPagesUsed(Range range);
-    page_t* GetPage(uintptr_t addr);
-    page_t* ExpandPage(page_t* pf);
-    page_t* CombinePage(page_t *pf);
-    void CombinePage(page_t *lpage, page_t *rpage);
-
-    static inline bool IsPageAligned(page_t* page) { return !((page->addr) % ((1 << page->order) * ARCH_PAGE_SIZE)); }
-} // namespace Memory
 
 using namespace Utils;
 
@@ -125,9 +41,21 @@ namespace Memory
     } page_t;
 
     typedef struct BuddyZone {
+        /**
+         * This array contains the areas struct
+         * The lowest is 0, equals to 4KiB (1 page)
+         * The highest is 10, equals to 4MiB (1024 pages)
+         */
         LinkedList<page_t> pageList[PAGE_MAX_ORDER + 1];
         uint64_t flags; 
+        spinlock_t lock;
     } buddyzone_t;
+
+    typedef enum BuddyZoneEnum {
+        ZoneDMA = 0,
+        ZoneNormal = 1,
+        ZoneHighMem = 2
+    } zonetype_t;
 
     extern BuddyZone *zones;
 

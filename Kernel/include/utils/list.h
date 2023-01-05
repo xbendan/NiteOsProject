@@ -10,11 +10,11 @@ namespace Utils
         ListHead *next = NULL, *prev = NULL;
     } listhead_t;
 
-    template <typename T> struct ListNode
+    typedef template <typename T> struct ListNode
     {
         struct ListHead head;
         T obj;
-    };
+    } listnode_t;
 
     template <typename T> class LinkedList
     {
