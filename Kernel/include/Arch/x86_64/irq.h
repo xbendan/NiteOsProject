@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Arch/x86_64/CPU.h>
+#include <Arch/x86_64/cpu.h>
 
 void DisableInterrupts();
 void EnableInterrupts();

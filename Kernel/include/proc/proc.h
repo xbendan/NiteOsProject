@@ -1,14 +1,14 @@
 #pragma once
 
-#include <Fs/VirtualFileSystem.h>
-#include <Process/Activity.h>
+#include <fs/vfs.h>
+#include <proc/activity.h>
 #include <utils/list.h>
-#include <Utils/Spinlock.h>
+#include <utils/spinlock.h>
 #include <macros>
 
 #ifdef ARCH_X86_64
-    #include <Arch/x86_64/CPU.h>
-    #include <Arch/x86_64/MMU.h>
+    #include <Arch/x86_64/cpu.h>
+    #include <Arch/x86_64/mmu.h>
 #elif ARCH_AARCH64
 
 #elif ARCH_RISCV

@@ -2,8 +2,8 @@
 
 #include <macros>
 #include <mm/mem.h>
-#include <Process/Process.h>
-#include <Utils/Range.h>
+#include <proc/proc.h>
+#include <utils/range.h>
 
 #define ARCH_PAGE_SIZE              (4096)
 #define PAGES_PER_TABLE             512

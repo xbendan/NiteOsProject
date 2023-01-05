@@ -1,11 +1,11 @@
 #pragma once
 
-#include <Memory/Page.h>
+#include <mm/page.h>
 #include <utils/list.h>
-#include <Utils/Spinlock.h>
+#include <utils/spinlock.h>
 #include <macros>
 #ifdef ARCH_X86_64
-    #include <Arch/x86_64/CPU.h>
+    #include <Arch/x86_64/cpu.h>
 #elif ARCH_AARCH64
     
 #elif ARCH_RISCV
