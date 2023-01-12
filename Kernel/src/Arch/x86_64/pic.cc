@@ -1,5 +1,5 @@
-#include <Arch/x86_64/Ports.h>
-#include <Arch/x86_64/PIC.h>
+#include <Arch/x86_64/ports.h>
+#include <Arch/x86_64/pic.h>
 
 using namespace Ports;
 

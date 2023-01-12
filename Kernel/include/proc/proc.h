@@ -19,9 +19,12 @@ typedef uint32_t tid_t;
 typedef uint16_t pid_t;
 
 using namespace Utils;
+using namespace Memory::ManagementUnit;
 
 namespace Proc
 {
+    struct Thread;
+
     typedef enum TaskPriority
     {
         PriorityIdle = -1,
@@ -54,31 +57,6 @@ namespace Proc
         ThreadStateRunning = 1,
         ThreadStateBlocked = 2
     } thread_state_t;
-
-    typedef struct Thread
-    {
-        tid_t m_ThreadId;                  /* Thread ID, not duplicated in same progress */
-        proc_t *m_Parent;    /* Parent process, indicates the owner of this thread */
-        spinlock_t m_Lock;            /* Thread lock */
-        spinlock_t m_StateLock;       /* Thread state lock */
-
-        struct
-        {
-            uint32_t esp0;
-            uint32_t ss0;
-        };
-
-        void *m_UserStack;
-        void *m_UserStackLimit;
-        void *m_KernelStack;
-        void *m_KernelStackLimit;
-
-        registers_t m_Registers;  
-        registers_t m_LastSyscall;
-
-        uint8_t m_ThreadPriority;       /* The priority when scheduling */
-        uint8_t m_ThreadState;          /* Thread state */
-    } thread_t;
 
     typedef class Process
     {
@@ -159,7 +137,7 @@ namespace Proc
         };
 
         uint32_t m_NextThreadId;
-        thread_t *m_MainThread;
+        Thread *m_MainThread;
         LinkedList<Thread> m_ChildrenThreadList;
 
         uintptr_t m_EntryPoint;
@@ -167,13 +145,38 @@ namespace Proc
 
         /* Architecture Fields */
         #ifdef ARCH_X86_64
-        Memory::ManagementUnit::VirtualPages *m_Pagemap;
+        Memory::ManagementUnit::pagemap_t *m_Pagemap;
         #elif ARCH_AARCH64
 
         #elif ARCH_RISCV
 
         #endif
     } proc_t;
+
+    typedef struct Thread
+    {
+        tid_t m_ThreadId;                  /* Thread ID, not duplicated in same progress */
+        proc_t *m_Parent;    /* Parent process, indicates the owner of this thread */
+        spinlock_t m_Lock;            /* Thread lock */
+        spinlock_t m_StateLock;       /* Thread state lock */
+
+        struct
+        {
+            uint32_t esp0;
+            uint32_t ss0;
+        };
+
+        void *m_UserStack;
+        void *m_UserStackLimit;
+        void *m_KernelStack;
+        void *m_KernelStackLimit;
+
+        registers_t m_Registers;  
+        registers_t m_LastSyscall;
+
+        uint8_t m_ThreadPriority;       /* The priority when scheduling */
+        uint8_t m_ThreadState;          /* Thread state */
+    } thread_t;
 
     /**
      * @brief Create a Process object

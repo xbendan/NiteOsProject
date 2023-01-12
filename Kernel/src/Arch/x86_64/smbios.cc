@@ -1,7 +1,7 @@
-#include <Arch/x86_64/SMBios.h>
-#include <Arch/x86_64/MMU.h>
-#include <Address>
-#include <Kernel>
+#include <Arch/x86_64/smbios.h>
+#include <Arch/x86_64/mmu.h>
+#include <address.h>
+#include <kern.h>
 
 namespace SMBios
 {
@@ -22,8 +22,8 @@ namespace SMBios
 
     void Initialize()
     {
-        uintptr_t address = 0xF0000 + KERNEL_IO_VIRTUAL_BASE;
-        while (address < 0x100000 + KERNEL_IO_VIRTUAL_BASE)
+        uintptr_t address = 0xF0000 + IO_VIRTUAL_BASE;
+        while (address < 0x100000 + IO_VIRTUAL_BASE)
         {
             if(memcmp((void *) address, __smbios_SignatureL2, 4)
                 && Checksum(address))

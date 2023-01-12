@@ -1,8 +1,8 @@
-#include <Arch/x86_64/SMP.h>
-#include <Arch/x86_64/CPU.h>
-#include <Arch/x86_64/ACPI.h>
+#include <Arch/x86_64/smp.h>
+#include <Arch/x86_64/cpu.h>
+#include <Arch/x86_64/acpi.h>
 #include <mm/mem.h>
-#include <Memory/KMalloc.h>
+#include <mm/slab.h>
 
 #include "Arch/x86_64/smpdefines.inc"
 

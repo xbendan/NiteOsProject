@@ -1,6 +1,6 @@
-#include <Arch/x86_64/CPU.h>
-#include <Arch/x86_64/APIC.h>
-#include <Arch/x86_64/IRQ.h>
+#include <Arch/x86_64/cpu.h>
+#include <Arch/x86_64/apic.h>
+#include <Arch/x86_64/irq.h>
 
 int ThisCPU()
 {

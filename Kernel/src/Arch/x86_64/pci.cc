@@ -1,4 +1,4 @@
-#include <Arch/x86_64/PCI.h>
+#include <Arch/x86_64/pci.h>
 
 namespace PCI
 {

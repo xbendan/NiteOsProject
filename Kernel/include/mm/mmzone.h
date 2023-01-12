@@ -15,21 +15,22 @@ namespace Memory::Model {
     } mem_section_t;
 
     typedef struct MemoryBlock {
-        uint64_t m_PageNum, m_Amount;
+        uint64_t m_AddrStart, m_AddrEnd;
     } mem_block_t;
-
-    inline mem_section_t *GetSection(uint64_t address) { 
-        return &((*sections)[address >> SECTION_SHIFT]);
-    }
-
-    inline page_t *GetPage(uint64_t address) { 
-        mem_section_t *sect = &((*sections)[address >> SECTION_SHIFT]);
-        uint32_t offset = (address >> PAGE_SHIFT) - sect->pageOffset;
-        return &(sect->pages[offset]);
-    }
 
     extern mem_block_t memblocks[MEMORY_MAP_LIMIT];
     extern mem_section_t sections[SPARSEMEM_LIMIT];
+
+    inline mem_section_t *GetSection(uint64_t address) { 
+        return &(sections[address >> SECTION_SHIFT]);
+    }
+
+    inline page_t *GetPage(uint64_t address) {
+        unsigned sid = address >> SECTION_SHIFT;
+        mem_section_t *sect = &(sections[sid]);
+        uint32_t offset = (address >> PAGE_SHIFT) - (sid * PAGES_PER_SECTION);
+        return &(sect->pages[offset]);
+    }
 
     void *MemblockAllocate(size_t amount);
     void MemblocksInit(bootmem_t *memdat);

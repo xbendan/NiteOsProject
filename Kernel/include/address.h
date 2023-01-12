@@ -7,4 +7,4 @@
 
 #define LOWMEM_RESERVED         0x100000
 
-typedef uint64_t address_t
+typedef uint64_t address_t;

@@ -1,9 +1,9 @@
-#include <Arch/x86_64/ACPI.h>
-#include <Arch/x86_64/APIC.h>
-#include <Arch/x86_64/MMU.h>
-#include <Arch/x86_64/IRQ.h>
+#include <Arch/x86_64/acpi.h>
+#include <Arch/x86_64/apic.h>
+#include <Arch/x86_64/mmu.h>
+#include <Arch/x86_64/irq.h>
 #include <mm/mem.h>
-#include <Kernel>
+#include <kern.h>
 
 namespace ACPI
 {
@@ -43,11 +43,11 @@ namespace ACPI
 
         int _index = 0;
         if (memcmp("DSDT", str, 4) == 0)
-            return (void *) Memory::GetIOMapping(acpiFadt->dsdt);
+            return (void *) Memory::ManagementUnit::GetIOMapping(acpiFadt->dsdt);
             
         for (int i = 0; i < entries; i++)
         {
-            acpi_header_t *header = (acpi_header_t *)(Memory::GetIOMapping(__acpi_GetEntry(i)));
+            acpi_header_t *header = (acpi_header_t *)(Memory::ManagementUnit::GetIOMapping(__acpi_GetEntry(i)));
             if (memcmp(header->signature, str, 4) == 0 && _index++ == index)
                 return header;
         }
@@ -59,27 +59,27 @@ namespace ACPI
     {
         for (uintptr_t addr = 0; addr <= 0x7BFF; addr += 16)
         {
-            if (memcmp((void *)Memory::GetIOMapping(addr), __acpi_Signature, 8) == 0)
+            if (memcmp((void *)Memory::ManagementUnit::GetIOMapping(addr), __acpi_Signature, 8) == 0)
             {
-                acpiDesc = (acpi_rsdp_t *)(Memory::GetIOMapping(addr));
+                acpiDesc = (acpi_rsdp_t *)(Memory::ManagementUnit::GetIOMapping(addr));
                 goto INIT_ACPI_FOUND;
             }
         }
 
         for (uintptr_t addr = 0x80000; addr <= 0x9FFFF; addr += 16)
         {
-            if (memcmp((void *)Memory::GetIOMapping(addr), __acpi_Signature, 8) == 0)
+            if (memcmp((void *)Memory::ManagementUnit::GetIOMapping(addr), __acpi_Signature, 8) == 0)
             {
-                acpiDesc = (acpi_rsdp_t *)(Memory::GetIOMapping(addr));
+                acpiDesc = (acpi_rsdp_t *)(Memory::ManagementUnit::GetIOMapping(addr));
                 goto INIT_ACPI_FOUND;
             }
         }
 
         for (uintptr_t addr = 0xE0000; addr <= 0xFFFFF; addr += 16)
         {
-            if (memcmp((void *)Memory::GetIOMapping(addr), __acpi_Signature, 8) == 0)
+            if (memcmp((void *)Memory::ManagementUnit::GetIOMapping(addr), __acpi_Signature, 8) == 0)
             {
-                acpiDesc = (acpi_rsdp_t *)(Memory::GetIOMapping(addr));
+                acpiDesc = (acpi_rsdp_t *)(Memory::ManagementUnit::GetIOMapping(addr));
                 goto INIT_ACPI_FOUND;
             }
         }
@@ -90,11 +90,11 @@ namespace ACPI
 
         if(acpiDesc->revision == 2)
         {
-            acpiRsdtHeader = ((acpi_rsdt_t *) Memory::GetIOMapping(((acpi_xsdp_t *) acpiDesc)->xsdtPtr));
-            acpiXsdtHeader = ((acpi_xsdt_t *) Memory::GetIOMapping(((acpi_xsdp_t *) acpiDesc)->xsdtPtr));
+            acpiRsdtHeader = ((acpi_rsdt_t *) Memory::ManagementUnit::GetIOMapping(((acpi_xsdp_t *) acpiDesc)->xsdtPtr));
+            acpiXsdtHeader = ((acpi_xsdt_t *) Memory::ManagementUnit::GetIOMapping(((acpi_xsdp_t *) acpiDesc)->xsdtPtr));
         }
         else
-            acpiRsdtHeader = ((acpi_rsdt_t *) Memory::GetIOMapping(acpiDesc->rsdtPtr));
+            acpiRsdtHeader = ((acpi_rsdt_t *) Memory::ManagementUnit::GetIOMapping(acpiDesc->rsdtPtr));
 
         memcpy(acpiOemId, acpiRsdtHeader->table.oemId, 6);
         acpiOemId[6] = 0;

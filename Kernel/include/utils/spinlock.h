@@ -2,9 +2,9 @@
 
 namespace Utils
 {
-    typedef volatile int spinlock_t;
+    // typedef volatile int spinlock_t;
 
-    inline void AcquireLock(spinlock_t *lock)
+    inline void AcquireLock(volatile int *lock)
     {
         int lockVal = 1; // From DPDK
         __asm__ volatile(
@@ -23,7 +23,7 @@ namespace Utils
                 : "memory");
     }
 
-    inline void ReleaseLock(spinlock_t *lock)
+    inline void ReleaseLock(volatile int *lock)
     {
         int unlockVal = 0;
         __asm__ volatile(
@@ -33,18 +33,17 @@ namespace Utils
                 : "memory");
     }
 
-    class ScopedSpinlock
-    {
-        spinlock_t m_Lock;
-        ScopedSpinlock(spinlock_t& lock) : m_Lock(lock) { AcquireLock(&m_Lock); }
+    class ScopedSpinlock final {
+        volatile int m_Lock;
+        ScopedSpinlock(volatile int& lock) : m_Lock(lock) { AcquireLock(&m_Lock); }
         ~ScopedSpinlock() { ReleaseLock(&m_Lock); }
     };
 
-    class Spinlock
+    typedef class Spinlock
     {
-        spinlock_t m_Lock;
+        volatile int m_Lock;
     public:
         void Acquire() { AcquireLock(&m_Lock); }
         void Release() { ReleaseLock(&m_Lock); }
-    };
+    } spinlock_t;
 }

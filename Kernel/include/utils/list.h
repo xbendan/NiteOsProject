@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Memory/KMalloc.h>
-#include <Utils/Spinlock.h>
+#include <mm/kmalloc.h>
+#include <utils/spinlock.h>
 
 namespace Utils
 {
@@ -10,11 +10,11 @@ namespace Utils
         ListHead *next = NULL, *prev = NULL;
     } listhead_t;
 
-    typedef template <typename T> struct ListNode
+    template <typename T> struct ListNode
     {
         struct ListHead head;
         T obj;
-    } listnode_t;
+    };
 
     template <typename T> class LinkedList
     {

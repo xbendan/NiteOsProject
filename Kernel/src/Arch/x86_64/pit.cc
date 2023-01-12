@@ -1,5 +1,5 @@
-#include <Arch/x86_64/PIT.h>
-#include <Arch/x86_64/Ports.h>
+#include <Arch/x86_64/pit.h>
+#include <Arch/x86_64/ports.h>
 
 using namespace Ports;
 

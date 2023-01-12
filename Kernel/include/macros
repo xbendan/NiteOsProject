@@ -5,10 +5,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-typedef u8 uint8_t;
-typedef u16 uint16_t;
-typedef u32 uint32_t;
-typedef u64 uint64_t;
 
 #define __INLINE__ __attribute__((always_inline)) inline
 #define __PACKED__ __attribute__((packed))
@@ -23,3 +19,5 @@ typedef u64 uint64_t;
 // ex: 9 with align = 8 -> 16
 // ex: 7 with align = 8 -> 8
 #define ALIGN_UP(__addr, __align) (((__addr) + (__align)-1) & ~((__align)-1))
+
+typedef __builtin_va_list va_list;

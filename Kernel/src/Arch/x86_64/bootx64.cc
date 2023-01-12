@@ -1,19 +1,19 @@
-#include <Arch/x86_64/BOOTX64.h>
-#include <Arch/x86_64/ACPI.h>
-#include <Arch/x86_64/APIC.h>
-#include <Arch/x86_64/IRQ.h>
-#include <Arch/x86_64/CPU.h>
-#include <Arch/x86_64/GDT.h>
-#include <Arch/x86_64/IDT.h>
-#include <Arch/x86_64/PIC.h>
-#include <Arch/x86_64/PIT.h>
-#include <Arch/x86_64/PCI.h>
-#include <Arch/x86_64/SMBios.h>
-#include <Arch/x86_64/SMP.h>
-#include <Init/BootInfo.h>
-#include <Kernel>
+#include <Arch/x86_64/boot.h>
+#include <Arch/x86_64/acpi.h>
+#include <Arch/x86_64/apic.h>
+#include <Arch/x86_64/irq.h>
+#include <Arch/x86_64/cpu.h>
+#include <Arch/x86_64/gdt.h>
+#include <Arch/x86_64/idt.h>
+#include <Arch/x86_64/pic.h>
+#include <Arch/x86_64/pit.h>
+#include <Arch/x86_64/pci.h>
+#include <Arch/x86_64/smbios.h>
+#include <Arch/x86_64/smp.h>
+#include <init/bootinfo.h>
+#include <kern.h>
 
-BootInfo g_BootInfo;
+BootInfo bootInfo;
 
 namespace Boot
 {
@@ -25,7 +25,7 @@ namespace Boot
     void stivale2(BootInfo *info, stivale2_struct_t *stInfo)
     {
         struct stivale2_tag* tag = (struct stivale2_tag*)(stInfo->tags);
-        BootInfoMemory *memInfo = &g_BootInfo.m_Memory;
+        BootInfoMemory *memInfo = &bootInfo.m_Memory;
         while (tag)
         {
             switch (tag->identifier)
@@ -76,7 +76,7 @@ namespace Boot
             case STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID:
             {
                 struct stivale2_struct_tag_framebuffer *framebuffer_tag = (struct stivale2_struct_tag_framebuffer *) tag;
-                BootInfoGraphics *graphic = &g_BootInfo.m_Graphics;
+                BootInfoGraphics *graphic = &bootInfo.m_Graphics;
 
                 graphic->m_Width = framebuffer_tag->framebuffer_width;
                 graphic->m_Height = framebuffer_tag->framebuffer_height;
@@ -98,12 +98,12 @@ namespace Boot
             tag = (struct stivale2_tag*)(tag->next);
         }
 
-        g_BootInfo.m_Checksum = 0xDEADC0DE;
+        bootInfo.m_Checksum = 0xDEADC0DE;
     }
 
     void Start()
     {
-        if(g_BootInfo.m_Checksum != 0xDEADC0DE)
+        if(bootInfo.m_Checksum != 0xDEADC0DE)
         {
             return;
         }
@@ -148,7 +148,7 @@ extern "C" [[noreturn]] void kload_stivale2(void *ptr)
         __asm__("mov $0x32, %al");
 
     Boot::stivale2(
-        &g_BootInfo,
+        &bootInfo,
         (stivale2_struct_t*)(ptr)
     );
     Boot::Start();

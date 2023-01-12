@@ -2,8 +2,8 @@
 
 #include <macros>
 #include <mm/mem.h>
-#include <proc/proc.h>
 #include <utils/range.h>
+#include <address.h>
 
 #define ARCH_PAGE_SIZE              (4096)
 #define PAGES_PER_TABLE             512
@@ -24,93 +24,29 @@
 #define PAGE_USER                   (1 << 2)
 #define PAGE_WRITETHROUGH           (1 << 3)
 #define PAGE_NOCACHE                (1 << 4)
+#define PAGE_SIZE                   (1 << 7)
 #define IS_PAGE_ALIGNED(addr)       (addr % ARCH_PAGE_SIZE == 0)
 
 namespace Memory::ManagementUnit
-{
-    /*
-    struct Pml4Entry
+{  
+    typedef uint64_t pml4e_t;
+    typedef uint64_t pdpte_t;
+    typedef uint64_t pde_t;
+    typedef uint64_t page_t;
+    typedef uint64_t page_flags_t;
+
+    using pml4_t = pml4e_t[PDPTS_PER_PML4]; /* 512GiB -> 256TiB */
+    using pdpt_t = pdpte_t[DIRS_PER_PDPT]; /* 1GiB -> 512GiB */
+    using pagedir_t = pde_t[TABLES_PER_DIR]; /* 2MiB -> 1GiB */
+    using pagetable_t = page_t[PAGES_PER_TABLE]; /* 4KiB -> 2MiB */
+
+    typedef struct VirtualPages
     {
-        bool present : 1;       // Must be 1
-        bool writable : 1;      // Page is readonly if set to 0, also called Read/Write bit
-        bool usr : 1;           // Everyone could access this page if it's not 0, or only supervisor allowed.
-        bool writeThrough : 1; // Write-Through cache is enabled when this bit is set
-        bool cache : 1;         // Disable cache if it's set to 1
-        bool access : 1;        // Is this page entry has been used.
-        int ign_6_11 : 6;       // Ignored
-        uint64_t address : 36;     // Physical Address
-        int ign_48_62 : 15;     // Ignored
-        bool disableExecution: 1;
-    } __attribute__((packed));
-
-    struct PdptEntry
-    {
-        bool present : 1;       // Must be 1
-        bool writable : 1;      // Page is readonly if set to 0, also called Read/Write bit
-        bool usr : 1;           // Everyone could access this page if it's not 0, or only supervisor allowed.
-        bool writeThrough : 1;  // Write-Through cache is enabled when this bit is set
-        bool cache : 1;         // Disable cache if it's set to 1
-        bool access : 1;        // Is this page entry has been used.
-        int ign_6 : 1;
-        int size : 1;
-        int ign_8_11 : 4;
-        uint64_t addr : 36;
-        int ign_48_62 : 15;
-        bool disableExec : 1;
-    } __attribute__((packed));
-
-    struct PdirEntry
-    {
-        bool present : 1;       // Must be 1
-        bool writable : 1;      // Page is readonly if set to 0, also called Read/Write bit
-        bool usr : 1;           // Everyone could access this page if it's not 0, or only supervisor allowed.
-        bool writeThrough : 1;  // Write-Through cache is enabled when this bit is set
-        bool cache : 1;         // Disable cache if it's set to 1
-        bool access : 1;        // Is this page entry has been used.
-        int ign_6 : 1;
-        int size : 1;
-        int ign_8_11 : 4;
-        uint64_t addr : 36;
-        int ign_48_62 : 15;
-        bool disableExec : 1;
-    } __attribute__((packed));
-
-    struct PageEntry
-    {
-        bool present : 1;      // Must be 1
-        bool writable : 1;     // Page is readonly if set to 0, also called Read/Write bit
-        bool usr : 1;          // Everyone could access this page if it's not 0, or only supervisor allowed.
-        bool writeThrough : 1; // Write-Through cache is enabled when this bit is set
-        bool cache : 1;        // Disable cache if it's set to 1
-        bool access : 1;       // Is this page entry has been used.
-        int dirty : 1;
-        int memType : 1;
-        int global : 1;
-        int ign_9_11 : 3;
-        uint64_t addr : 36;
-        int ign_48_57 : 10;
-        uint8_t key : 5;
-        bool disableExec : 1;
-    } __attribute__((packed));
-    */
-
-    typedef uint64_t Pml4Entry;
-    typedef uint64_t PdptEntry;
-    typedef uint64_t PdirEntry;
-    typedef uint64_t PageEntry;
-
-    using Pml4EntrySet = Pml4Entry[PDPTS_PER_PML4]; /* 512GiB -> 256TiB */
-    using PdptEntrySet = PdptEntry[DIRS_PER_PDPT]; /* 1GiB -> 512GiB */
-    using PdirEntrySet = PdirEntry[TABLES_PER_DIR]; /* 2MiB -> 1GiB */
-    using PageEntrySet = PageEntry[PAGES_PER_TABLE]; /* 4KiB -> 2MiB */
-
-    struct VirtualPages
-    {
-        pml4_t pml4;
-        PdptEntry *pdpts[PDPTS_PER_PML4];
-        PdirEntry **pageDirs[DIRS_PER_PDPT];
-        PageEntry ***pageTables[TABLES_PER_DIR];
-    };
+        pml4_t pml4 __attribute__((aligned(ARCH_PAGE_SIZE)));
+        pdpt_t pdpts __attribute__((aligned(ARCH_PAGE_SIZE)));
+        pagedir_t *pageDirs[DIRS_PER_PDPT] __attribute__((aligned(ARCH_PAGE_SIZE)));
+        pagetable_t **pageTables[DIRS_PER_PDPT] __attribute__((aligned(ARCH_PAGE_SIZE)));
+    } pagemap_t;
 
     /**
      * @brief Initialize kernel page map and virtual memory management
@@ -124,25 +60,18 @@ namespace Memory::ManagementUnit
      * @return true If the page is present (in the memory)
      * @return false If the page does not exist or be swapped into disks.
      */
-    bool IsPagePresent(Pml4Set *map, uint64_t addr);
+    bool IsPagePresent(pagemap_t *pagemap, uint64_t addr);
     /**
      * @brief Create a Pagemap object
      * 
-     * @return VirtualPages* 
+     * @return pagemap_t* 
      */
-    VirtualPages *CreatePagemap();
+    pagemap_t *CreatePagemap();
     /**
      * @brief 
      * 
      */
     void DestoryPagemap();
-    /**
-     * @brief 
-     * 
-     * @param address 
-     * @return uintptr_t 
-     */
-    uintptr_t GetIOMapping(address_t addr);
 
     /**
      * @brief 
@@ -153,7 +82,10 @@ namespace Memory::ManagementUnit
      * @param amount 
      * @param flags 
      */
-    void MapVirtualMemory4K(VirtualPages *pageSpace, uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags);
+    void MapVirtualMemory4K(pagemap_t *pagemap, uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags);
+    inline void MapVirtualMemory4K(pagemap_t *pagemap, uint64_t phys, uint64_t virt, size_t amount) {
+        MapVirtualMemory4K(pagemap, phys, virt, amount, PAGE_PRESENT | PAGE_WRITABLE | PAGE_USER);
+    }
     /**
      * @brief 
      * 
@@ -161,7 +93,7 @@ namespace Memory::ManagementUnit
      * @param pageSpace 
      * @return uintptr_t 
      */
-    uintptr_t Allocate4KPages(VirtualPages *pageSpace, size_t amount);
+    uintptr_t Allocate4KPages(pagemap_t *pagemap, size_t amount);
     /**
      * @brief 
      * 
@@ -169,12 +101,18 @@ namespace Memory::ManagementUnit
      * @param amount 
      * @param addressSpace 
      */
-    void Free4KPages(
-        uint64_t virt,
-        size_t amount,
-        VirtualPages *pageSpace
-    );
+    void Free4KPages(pagemap_t *pagemap, uint64_t virt, size_t amount);
 
+    /**
+     * @brief 
+     * 
+     * @param phys 
+     * @param virt 
+     * @param amount 
+     * @param flags 
+     */
+    void KernelMapVirtualMemory2M(uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags);
+#define KernelMapVirtualMemory2M(phys, virt, amount) KernelMapVirtualMemory2M(phys, virt, amount, PAGE_PRESENT | PAGE_WRITABLE);
     /**
      * @brief 
      * 
@@ -214,7 +152,7 @@ namespace Memory::ManagementUnit
      * @param addr 
      * @return uintptr_t 
      */
-    uintptr_t ConvertVirtToPhys(Pml4Set *pml4, uintptr_t addr);
+    uintptr_t ConvertVirtToPhys(pagemap_t *pagemap, uintptr_t addr);
 
     inline void SetPageAddress(uint64_t *page, uint64_t addr) { *page = (*page & ~PAGE_FRAME) | (addr & PAGE_FRAME); }
 
@@ -222,14 +160,19 @@ namespace Memory::ManagementUnit
 
     inline void SetPageFrame(uint64_t *page, uint64_t addr, uint64_t flags) { *page = (*page & ~PAGE_FRAME) | (addr & PAGE_FRAME) | flags; }
 
-    void LoadVirtualMemoryPages(Pml4Set *map);
-    Pml4Set *GetVirtualPages();
-    Pml4Set *GetKernelPages();
-    page_t *GetVirtualPageDesc(Pml4Set *map, uintptr_t addr);
+    inline uintptr_t GetIOMapping(uint64_t addr) {
+        if (addr > 0xFFFFFFFF) {
+            // CallPanic("Access IO address greater than 4GB");
+            return 0xFFFFFFFF;
+        }
+        return addr + IO_VIRTUAL_BASE;
+    }
+
+    extern pagemap_t kernelPagemap;
 } // namespace Memory
 
 extern "C" {
-Memory::Pml4Set* asmw_get_pagemap();
+Memory::ManagementUnit::pml4_t* asmw_get_pagemap();
 inline void asmi_load_paging(uintptr_t addr) { asm("mov %%rax, %%cr3" ::"a"((uint64_t)addr)); }
 inline void asmi_invlpg(uintptr_t addr) { asm volatile("invlpg (%0)"::"r"(addr)); }
 }

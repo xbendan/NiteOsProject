@@ -20,6 +20,7 @@
 uint8_t BLOCK_ORDER(size_t size);
 
 using namespace Utils;
+using namespace Memory;
 
 namespace Memory
 {
@@ -68,10 +69,10 @@ namespace Memory
         int reserved;
     } slab_cache_t;
 
-    void SlabInit();
-    uintptr_t kmalloc(uint32_t size);
-    void kfree(uintptr_t addr);
+    void KmallocInit();
+    uintptr_t KernelMemoryAllocate(uint32_t size);
+    void KernelMemoryFree(uintptr_t addr);
     
-    slab_cpu_t *FindCpuCache(struct SlabCpuCache *cache);
+    slab_cpu_t *FindCpuCache(slab_cache_t *cache);
     slab_cache_t *FindMemCache(size_t size);
 } // namespace Memory

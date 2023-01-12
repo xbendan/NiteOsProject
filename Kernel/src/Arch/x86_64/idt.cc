@@ -1,5 +1,5 @@
-#include <Arch/x86_64/IDT.h>
-#include <Arch/x86_64/CPU.h>
+#include <Arch/x86_64/idt.h>
+#include <Arch/x86_64/cpu.h>
 
 extern uintptr_t isr_tables[];
 static struct InterruptDescTableEntry g_IdtEntryList[IDT_ENTRY_COUNT];

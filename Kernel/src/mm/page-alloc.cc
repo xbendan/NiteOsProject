@@ -11,28 +11,30 @@ namespace Memory
 {
     using namespace Proc;
 
-    page_t *KernelAllocate4KPages(size_t amount) {
+    uintptr_t KernelAllocate4KPages(size_t amount) {
         amount = ALIGN_PAGE(amount);
-        page_t *page = Memory::AllocatePhysMemory4K(PAGE_ORDER(amount));
+        page_t *page = Memory::AllocatePhysMemory4K(amount);
         if(!page) {
-            return nullptr;
+            return 0x0;
         } else {
             uint64_t phys = page->addr, virt = ManagementUnit::KernelAllocate4KPages(amount);
-            ManagementUnit::KernelMapVirutalMemory4K(phys, virt, amount);
+            ManagementUnit::KernelMapVirtualMemory4K(phys, virt, amount);
             GetKernelProcess()->m_Pages += amount;
+            return virt;
         }
     }
 
-    page_t *Allocate4KPages(size_t amount) {
+    uintptr_t Allocate4KPages(size_t amount) {
         amount = ALIGN_PAGE(amount);
-        page_t *page = Memory::AllocatePhysMemory4K(PAGE_ORDER(amount));
+        page_t *page = Memory::AllocatePhysMemory4K(amount);
         if (!page) {
-            return nullptr;
+            return 0x0;
         } else {
             proc_t *proc = GetCurrentProcess();
-            uint64_t phys = page->addr, virt = ManagementUnit::Allocate4KPages(amount);
+            uint64_t phys = page->addr, virt = ManagementUnit::Allocate4KPages(proc->m_Pagemap, amount);
             ManagementUnit::MapVirtualMemory4K(proc->m_Pagemap, phys, virt, amount);
             proc->m_Pages += amount;
+            return virt;
         }
     }
 

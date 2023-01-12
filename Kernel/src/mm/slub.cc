@@ -1,12 +1,12 @@
-#include <Memory/Slub.h>
-#include <Process/Process.h>
-#include <Process/Scheduler.h>
+#include <mm/slab.h>
+#include <proc/proc.h>
+#include <proc/sched.h>
 #include <utils/list.h>
-#include <Kernel>
+#include <kern.h>
 
 #ifdef ARCH_X86_64
-#include <Arch/x86_64/MMU.h>
-#include <Arch/x86_64/CPU.h>
+#include <Arch/x86_64/mmu.h>
+#include <Arch/x86_64/cpu.h>
 #endif
 
 namespace Memory
@@ -16,138 +16,92 @@ namespace Memory
         256,    512,    768,    1024,   1536,   2048,   4096,   8192,
         sizeof(Proc::Thread)
     };
-    static SlabCache *g_cachePointers[SLAB_MAX_BLOCK_ORDER];
-    static Utils::LinkedList<SlabCache> g_cacheList;
+    slab_cache_t *caches[SLAB_MAX_BLOCK_ORDER];
 
-    void kmem_set_cache(struct SlabCache *cache, int order, uint64_t flags)
-    {
-        if(cache == NULL)
-        {
-            CallPanic("Invalid address");
+    void SetCache(slab_cache_t *cache, int order, uint64_t flags) {
+        if (cache == nullptr) {
             return;
         }
 
         int size = blockSize[size];
-
         cache->size = size;
         cache->flags = flags;
-        
-        if(ARCH_PAGE_SIZE % size != 0)
-        {
-            int amount = ARCH_PAGE_SIZE / size;
-            cache->reserved = ARCH_PAGE_SIZE - (amount * size);
+        cache->reserved = ARCH_PAGE_SIZE / size;
+
+        for (int i = 0; i < MAX_CPU_AMOUNT; i++) {
+            cache->cpu_slab[i].freelist = nullptr;
         }
 
-        for(size_t idx = 0; idx < MAX_CPU_AMOUNT; idx++)
-        {
-            cache->cpu_slab[idx].freelist = NULL;
+        for (int j = 0; j < MAX_NUMA_COUNT; j++) {
+            cache->node[j] = (slab_node_t *)(((uint64_t) cache) + (j * sizeof(slab_node_t)));
         }
 
-        for(size_t idx = 0; idx < MAX_NUMA_COUNT; idx++)
-            cache->node[idx] = (struct SlabMemoryNode *)(((uint64_t) cache) + (idx * sizeof(struct SlabMemoryNode)));
-
-        g_cacheList.Add(&cache->listnode);
-        g_cachePointers[order] = cache;
+        caches[order] = cache;
     }
 
-    void kmem_set_page(struct SlabCache *cache, PageFrame *page, uintptr_t virt)
-    {
-        page->kmem = true;
-        page->slabCache = cache;
+    void SetPageSlub(slab_cache_t *cache, page_t *page, uintptr_t virt) {
+        page->flags |= PFLAGS_KMEM;
+        page->slab_cache = cache;
         page->freelist = (void **) virt;
 
         page->slab_objects = ((ARCH_PAGE_SIZE - cache->reserved) / cache->size);
         page->slab_inuse = 0;
 
-        for(size_t idx = 0; idx < page->slab_objects - 1; idx++)
-            *((uint64_t *)(virt + (idx * cache->size))) = (uint64_t)(virt + ((idx + 1) * cache->size));
+        for (int i = 0; i < page->slab_objects - 1; i++) {
+            *((uint64_t *)(virt + (i * cache->size))) = (uint64_t)(virt + ((i + 1) * cache->size));
+        }
     }
 
-    /**
-     *
-     * 
-     */
-    PageFrame *SlabCache_alloc(struct SlabCache *cache)
-    {
-        uintptr_t virt = kallocpg(1);
-        if(virt == 0x0)
-            CallPanic("");
-        else
-        {
-            PageFrame *page = GetPage(ConvertVirtToPhys(Memory::GetKernelPages(), virt));
-            kmem_set_page(cache, page, virt);
+    page_t *SlubAllocate4KPage(slab_cache_t *cache) {
+        page_t *page = AllocatePhysMemory4K(1);
+        uintptr_t virt = KernelAllocate4KPages(1);
+        if (!virt || !page) {
+            CallPanic("Slub allocator failed to get page.");
+            return nullptr;
+        } else {
+            ManagementUnit::KernelMapVirtualMemory4K(page->addr, virt, 1);
+            SetPageSlub(cache, page, virt);
             return page;
         }
     }
 
-    struct SlabCpuCache *kmem_get_cpu(struct SlabCache *cache)
-    {
+    slab_cpu_t *SlubGetCPU(slab_cache_t *cache) {
         return &cache->cpu_slab[CPU_CORE_ID];
     }
 
-    struct SlabCache *kmem_find_cache(size_t size)
-    {
-        struct SlabCache *cache;
+    slab_cache_t *SlubGetCache(size_t size) {
+        slab_cache_t *cache;
+        if (size > SLAB_MAX_SIZE) {
+            return nullptr;
+        }
 
-        if(size > SLAB_MAX_SIZE)
-            return NULL;
-
-        for(int order = 0; order < 16; order++)
-        {
-            if(blockSize[order] > size)
-            {
-                cache = g_cachePointers[order];
+        for (int order = 0; order < 16; order++) {
+            if (blockSize[order] > size) {
+                cache = caches[order];
                 break;
             }
         }
-
         return cache;
     }
 
-    /**
-     * @brief 
-     * 
-     * @param cache 
-     * @return PageFrame* 
-     */
-    PageFrame *kmem_get_partial(struct SlabCache *cache)
-    {
-        struct SlabMemoryNode *node = cache->node[0];
-        struct PageFrame *page;
+    page_t *SlubGetPartial(slab_cache_t *cache) {
+        slab_node_t *node = cache->node[0];
+        page_t *page;
 
         node->lock.Acquire();
 
         page = node->partial.Count() ?
-                ((PageFrame *) node->partial.Extract()) :
-                SlabCache_alloc(cache);
-        
-        /*
-        if(node->nr_partial == 0)
-            page = SlabCache_alloc(cache);
-        else
-        {
-            PageFrame *page = (PageFrame *) node->partial.Extract();
-            node->nr_partial--;
-        }
-        */
+            ((page_t *) node->partial.Extract()) :
+            SlubAllocate4KPage(cache);
 
         node->lock.Release();
         return page;
     }
 
-    /**
-     * @brief 
-     * 
-     * @param slabCpu 
-     * @param page 
-     */
-    void kmem_fill_cpu_slab(struct SlabCpuCache *slabCpu, PageFrame *page)
-    {
-        //LinkedListRemove(&page->listnode);
+    page_t SlabFillCpuSlot(slab_cpu_t *slab_cpu, page_t *page) {
+        slab_cpu->freelist = page->freelist;
+        slab_cpu->page = page;
 
-        slabCpu->freelist = page->freelist;
-        slabCpu->page = page;
-        
         page->slab_frozen = true;
     }
 
@@ -173,116 +127,91 @@ namespace Memory
      * @param cache 
      * @return uintptr_t 
      */
-    uintptr_t allocobj(SlabCache *cache)
-    {
-        if (cache == NULL)
+    uintptr_t KernelMemoryAllocate(slab_cache_t *cache) {
+        if (!cache) {
             CallPanic("Null Pointer for cache while allocating kernel memory.");
-        
-        SlabCpuCache *slabCpu = kmem_get_cpu(cache);
-        Memory::PageFrame *page = slabCpu->page;
-        void **ptr;
+        }
 
-    FASTEST_PATH:
-        /*
-        * Try to use the object in cpu slab first
-        */
-        ptr = slabCpu->freelist;
+        slab_cpu_t *slab_cpu = SlubGetCPU(cache);
+        page_t *page = slab_cpu->page;
+        void **pointer;
 
+FastestPath:
+        /* Try to use the object in cpu slab first */
+        pointer = slab_cpu->freelist;
         /* (1) Fastest Path */
-        if(ptr != NULL) {
+        if (pointer) {
             /* Assign freelist point to the next object (might be NULL) */
-            page->freelist = slabCpu->freelist = (void **) *ptr;
+            page->freelist = slab_cpu->freelist = (void **) *pointer;
+            memset((void *) pointer, 0, cache->size);
 
             /* Check whether the objects in this page is running out */
-            if(++page->slab_inuse == page->slab_objects) {
-                kmem_fill_cpu_slab(slabCpu, page = kmem_get_partial(cache));
+            if (++page->slab_inuse == page->slab_objects) {
+                SlabFillCpuSlot(slab_cpu, page = SlubGetPartial(cache));
             }
-            return (uintptr_t) ptr;
-        }
-        else
-        {
+            return (uintptr_t) pointer;
+        } else {
             /* 
-            * If page pointer of cpu slab is pointing to NULL, ignore current [freelist]
-            * and [page], then assign new value from the shared cache pool [node]
-            */
-            //kmem_fill_cpu_slab(slabCpu, page = kmem_get_partial(cache));
+             * If page pointer of cpu slab is pointing to NULL, ignore current [freelist]
+             * and [page], then assign new value from the shared cache pool [node]
+             */
+            // SlabFillCpuSlot(slab_cpu, page = SlubGetPartial(cache));
         }
 
-    FAST_PATH:
         /* (2) Fast Path */
-        if(!slabCpu->partial.Count()) {
-            kmem_fill_cpu_slab(slabCpu, (PageFrame *) slabCpu->partial.Extract());
-            if(!slabCpu->partial.Count()) {
-                page = (PageFrame *) slabCpu->partial.First();
+        if(!slab_cpu->partial.Count()) {
+            SlabFillCpuSlot(slab_cpu, (page_t *) slab_cpu->partial.Extract());
+            if (!slab_cpu->partial.Count()) {
+                page = (page_t *) slab_cpu->partial.First();
 
-                ptr = page->freelist;
+                pointer = page->freelist;
                 page->freelist = (void **) *page->freelist;
 
-                if(++page->slab_inuse == page->slab_objects) {
-                    slabCpu->partial.Remove(&page->listnode);
+                if (++page->slab_inuse == page->slab_objects) {
+                    slab_cpu->partial.Remove(&page->lru);
                 }
-            }
-            else
-                goto FASTEST_PATH;
+                return (uintptr_t) pointer;
+            } else goto FastestPath;
         }
 
-    SLOW_PATH:
+SlowPath:
         /* (3) Slow Path */
-        struct SlabMemoryNode *node = cache->node[0];
-        if(node->nr_partial)
-        {
-            
+        slab_node_t *node = cache->node[0];
+        if (node->partial.Count()) {
+
         }
 
-    SLOWEST_PATH:
+SlowestPath:
         //page = SlabCache_alloc(cache);
-        kmem_fill_cpu_slab(slabCpu, page = SlabCache_alloc(cache));
-        ptr = page->freelist;
+        SlabFillCpuSlot(slab_cpu, page = SlubAllocate4KPage(cache));
+        pointer = page->freelist;
         page->freelist = (void **) *page->freelist;
         page->slab_inuse++;
 
-    RETURN_POINTER:
-        return (uintptr_t) ptr;
+        return (uintptr_t) pointer;
     }
 
-    /*
-    uintptr_t KernelAllocate(kstruct_index_t id)
-    {
-        if(id < SLAB_MAX_BLOCK_ORDER || id > 16)
-            CallPanic("Kernel Struct Index out of bound.");
-
-        return allocobj(g_cachePointers[id]);
-    }
-    */
-
-    void init_kmalloc()
-    {
-        for(size_t idx; idx < sizeof(blockSize) / 2; idx++) {
-            kmem_set_cache(
-                (SlabCache *) kallocpg(4),
-                idx,
-                0x0
-            );
+    void KmallocInit() {
+        for (int i = 0; i < sizeof(blockSize) / sizeof(uint16_t); i++) {
+            SetCache((slab_cache_t *) KernelAllocate4KPages(4), i, 0x0);
         }
     }
 
-    uintptr_t KernelAllocate(uint32_t size)
-    {
-        return allocobj(kmem_find_cache(size));
+    uintptr_t KernelMemoryAllocate(uint32_t size) {
+        return KernelMemoryAllocate(SlubGetCache(size));
     }
 
-    void KernelFree(uintptr_t addr)
-    {
+    void KernelMemoryFree(uintptr_t addr) {
 
     }
 } // namespace Memory
 
 extern "C" void *kmalloc(size_t size)
 {
-    Memory::KernelAllocate(size);
+    Memory::KernelMemoryAllocate(size);
 }
 
 extern "C" void kfree(void *ptr)
 {
-    Memory::KernelFree((uintptr_t) ptr);
+    Memory::KernelMemoryFree((uintptr_t) ptr);
 }

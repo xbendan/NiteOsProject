@@ -1,9 +1,9 @@
-#include <Arch/x86_64/APIC.h>
-#include <Arch/x86_64/ACPI.h>
-#include <Arch/x86_64/IRQ.h>
-#include <Arch/x86_64/PIC.h>
-#include <Arch/x86_64/MMU.h>
-#include <Kernel>
+#include <Arch/x86_64/apic.h>
+#include <Arch/x86_64/acpi.h>
+#include <Arch/x86_64/irq.h>
+#include <Arch/x86_64/pic.h>
+#include <Arch/x86_64/mmu.h>
+#include <kern.h>
 
 namespace APIC
 {
@@ -52,7 +52,7 @@ namespace APIC
                 return;
             }
 
-            virtualBase = Memory::GetIOMapping(base);
+            virtualBase = Memory::ManagementUnit::GetIOMapping(base);
             registerSelect = (uint32_t *)(virtualBase + IO_APIC_REGSEL);
             ioWindow = (uint32_t *)(virtualBase + IO_APIC_WIN);
 
@@ -122,7 +122,7 @@ namespace APIC
 
         void Initialize()
         {
-            basePtr = (uint32_t *) Memory::GetIOMapping(ReadBase());
+            basePtr = (uint32_t *) Memory::ManagementUnit::GetIOMapping(ReadBase());
             WriteBase(ReadBase() | (1UL << 11));
             WriteData(
                 LOCAL_APIC_SIVR,

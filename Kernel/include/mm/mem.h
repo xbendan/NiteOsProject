@@ -40,5 +40,3 @@ namespace Memory {
 
     void Initialize();
 } // namespace Memory
-
-//void mem_value_commit(enum mem_stats_item item_num, int64_t change);

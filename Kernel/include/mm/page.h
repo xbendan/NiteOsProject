@@ -14,8 +14,8 @@
 #define PAGE_MAX_SIZE (ARCH_PAGE_SIZE * PAGE_AMOUNT_PER_BLOCK)
 #define PAGE_MAX_ORDER 10
 #define PAGE_MIN_ORDER 0
-#define PFLAGS_ORDER 0x0F
-#define PFLAGS_FREE 0x10
+#define PFLAGS_FREE 1
+#define PFLAGS_KMEM (1 << 1)
 #define EQUALS_POWER_TWO(x) (!((x) & ((x) - 1)))
 
 using namespace Utils;
@@ -47,7 +47,8 @@ namespace Memory
 {
     typedef struct PageFrame {
         listhead_t lru;
-        uint16_t flags;
+        uint8_t order;
+        uint8_t flags;
         struct {
             uint32_t slab_inuse: 16;
             uint32_t slab_objects: 15;
@@ -55,8 +56,8 @@ namespace Memory
         } __attribute__((packed));
         union {
             uint64_t priv;
-            slab_cache_t *slab;
-            page_t *first;
+            void *slab_cache;
+            struct PageFrame *first;
         };
         void **freelist;
         spinlock_t lock;
@@ -74,28 +75,29 @@ namespace Memory
         spinlock_t lock;
     } buddyzone_t;
 
-    typedef enum BuddyZoneEnum {
-        ZoneDMA = 0,
-        ZoneNormal = 1,
-        ZoneHighMem = 2
-    } zonetype_t;
+    #define ZONE_NORMAL 1
+    // typedef enum BuddyZoneEnum {
+    //     ZoneDMA = 0,
+    //     ZoneNormal = 1,
+    //     ZoneHighMem = 2
+    // } zonetype_t;
 
-    extern buddyzone_t *zones;
+    extern buddyzone_t zones[3];
 
     void BuddyInit();
-    page_t *AllocatePhysMemory4K(uint8_t order)
+    // page_t *AllocatePhysMemory4K(uint8_t order);
     page_t *AllocatePhysMemory4K(size_t amount);
     void FreePhysMemory4K(uintptr_t address);
     void FreePhysMemory4K(page_t *page);
     void MarkPagesUsed(Range range);
-    page_t* ExpandPage(page_t* pf);
-    page_t* CombinePage(page_t *pf);
+    page_t* ExpandPage(page_t* page);
+    page_t* CombinePage(page_t *page);
     void CombinePage(page_t *lpage, page_t *rpage);
 
     static inline bool IsPageAligned(page_t* page) { return !((page->addr) % ((1 << page->order) * ARCH_PAGE_SIZE)); }
 
-    page_t *KernelAllocate4KPages(size_t amount);
-    page_t *Allocate4KPages(size_t amount);
+    uintptr_t KernelAllocate4KPages(size_t amount);
+    uintptr_t Allocate4KPages(size_t amount);
     void Free4KPages(uintptr_t address);
     void Free4KPages(page_t *page);
 } // namespace Memory

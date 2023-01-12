@@ -1,39 +1,40 @@
 #include <mm/page.h>
 #include <mm/mmzone.h>
+#include <kern.h>
 
 #ifdef ARCH_X86_64
-#include <Arch/x86_64/MMU.h>
+#include <Arch/x86_64/mmu.h>
 #endif
 
 using namespace Utils;
 
 namespace Memory {
-    buddyzone_t *zones;
+    buddyzone_t zones[3];
 
     void BuddyInit() {
-        zones = Model::MemblockAllocate(1);
-        memset(zones, 0, ARCH_PAGE_SIZE);
-        buddyzone_t *zone = &(zones[ZoneNormal]);
+        buddyzone_t *zone = &(zones[ZONE_NORMAL]);
 
         int index = 0;
-        while (Model::memblocks[index].m_Amount) {
-            mem_block_t *block = &(Model::memblocks[index]);
+        while (Model::memblocks[index].m_AddrStart) {
+            Model::mem_block_t *block = &(Model::memblocks[index]);
             
-            uint64_t addrStart = ALIGN_UP(block->m_PageNum * ARCH_PAGE_SIZE, PAGE_MAX_SIZE);
-            uint64_t addrEnd = ALIGN_DOWN((block->m_PageNum + block->m_Amount) * ARCH_PAGE_SIZE, PAGE_MAX_SIZE);
+            uint64_t addrStart = ALIGN_UP(block->m_AddrStart, PAGE_MAX_SIZE);
+            uint64_t addrEnd = ALIGN_DOWN(block->m_AddrEnd, PAGE_MAX_SIZE);
 
             for (; addrStart < addrEnd - PAGE_MAX_SIZE; addrStart += PAGE_MAX_SIZE) {
                 if(addrStart < LOWMEM_RESERVED) {
                     continue;
                 }
+
                 page_t *pages = Model::GetPage(addrStart);
-                if(pages) {
+                if (pages) {
                     for (size_t pageIndex = 0; pageIndex < PAGE_AMOUNT_PER_BLOCK; pageIndex++) {
                         pages[pageIndex].addr = addrStart + (pageIndex * ARCH_PAGE_SIZE);
                     }
                     pages->flags |= PAGE_MAX_ORDER;
-                    zone->pageList[PAGE_MAX_ORDER - 1].Add((listnode_t<page_t> *) pages);
+                    zone->pageList[PAGE_MAX_ORDER - 1].Add((ListNode<page_t> *) pages);
                 }
+                ////////
             }
         }
     }
@@ -42,7 +43,7 @@ namespace Memory {
         if (order > PAGE_MAX_ORDER || order < PAGE_MIN_ORDER) {
             return nullptr;
         }
-        buddyzone_t *zone = &(zones[ZoneNormal]);
+        buddyzone_t *zone = &(zones[ZONE_NORMAL]);
         page_t *page;
         uint8_t orderCopy = order;
 
@@ -55,11 +56,11 @@ namespace Memory {
             orderCopy++;
         }
 
-        if(pageList == nullptr) {
+        if(list == nullptr) {
             return nullptr;
         }
 
-        page = reinterpret_cast<page_t *>(pageList->Extract());
+        page = reinterpret_cast<page_t *>(list->Extract());
 
         while (orderCopy > order) {
             page = ExpandPage(page);
@@ -92,16 +93,16 @@ namespace Memory {
      */
     page_t* ExpandPage(page_t* page) {
         /* check whether it's possible to split it */
-        if(!(page->flags & PFLAGS_ORDER)) {
+        if(!(page->order)) {
             return nullptr;
         }
         page->lock.Acquire();
 
-        buddyzone_t zone = &(zones[ZoneNormal]);
+        buddyzone_t *zone = &(zones[ZONE_NORMAL]);
         /* Remove this page from upper order list */
-        zone->pageList[page->flags & PFLAGS_ORDER].Remove((listnode_t<page_t> *) page);
+        zone->pageList[page->order].Remove((ListNode<page_t> *) page);
         /* Decrease the order and find the lower tier list */
-        LinkedList<page_t> *freelist = &(zone->pageList[--page->order]);
+        LinkedList<page_t> *freelist = &(zone->pageList[--(page->order)]);
 
         /* Find another page descriptor and initialize it */
         page_t *newPage = reinterpret_cast<page_t *>(((uint64_t) page) + ((1 << page->order) * sizeof(page_t)));
@@ -110,7 +111,7 @@ namespace Memory {
         newPage->flags |= PFLAGS_FREE;
 
         /* Insert this page into the lower tier free list */
-        freelist->Add((listnode_t<page_t> *) newPage);
+        freelist->Add((ListNode<page_t> *) newPage);
 
         page->lock.Release();
 
@@ -125,19 +126,19 @@ namespace Memory {
      * @return page_t* pointer to new page
      */
     page_t* CombinePage(page_t *page) {
-        uint32_t orderSize = (1 << (page->flags & PFLAGS_ORDER)) * sizeof(page_t);
+        uint32_t orderSize = (1 << (page->order)) * sizeof(page_t);
         bool align = !(page->addr % orderSize);
-        buddyzone_t *zone = &(zones[ZoneNormal]);
+        buddyzone_t *zone = &(zones[ZONE_NORMAL]);
 
         page_t *newPage = reinterpret_cast<page_t *>(align ? page + orderSize : page - orderSize);
         if (newPage->flags & PFLAGS_FREE) {
             page_t *result = align ? page : newPage;
-            zone->pageList[newPage->flags & PFLAGS_ORDER].Remove((listnode_t<page_t> *) newPage);
-            zone->pageList[++result->order].Add((listnode_t<page_t> *) result);
+            zone->pageList[newPage->order].Remove((ListNode<page_t> *) newPage);
+            zone->pageList[++result->order].Add((ListNode<page_t> *) result);
 
             return result;
         } else {
-            zone->pageList[page->order].Add((listnode_t<page_t> *) page);
+            zone->pageList[page->order].Add((ListNode<page_t> *) page);
             return nullptr;
         }
     }

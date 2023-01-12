@@ -1,8 +1,8 @@
-#include <Kernel>
+#include <kern.h>
 
 extern "C" void DispatchInterrupts()
 {
-    MakeTripleFault();
+    // MakeTripleFault();
 }
 
 void EnableInterrupts() { asm("sti"); }

@@ -8,7 +8,7 @@
 #include <address.h>
 
 #ifdef ARCH_X86_64
-#include <Arch/x86_64/MMU.h>
+#include <Arch/x86_64/mmu.h>
 #endif
 
 namespace Memory
@@ -18,7 +18,7 @@ namespace Memory
     uint64_t stat[8];
 
     void Initialize() {
-        bootmem_t *mem = &bootInfo->m_Memory;
+        bootmem_t *mem = &bootInfo.m_Memory;
 
         stat[MEMVAL_TOTAL] = mem->m_TotalSize;
         stat[MEMVAL_AVAILABLE] = mem->m_Usable;
@@ -29,6 +29,7 @@ namespace Memory
         Model::MemsectsInit();
 
         BuddyInit();
-        SlabInit();
+        asm("hlt");
+        KmallocInit();
     }
 } // namespace Memory
