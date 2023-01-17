@@ -14,15 +14,18 @@ namespace Memory {
     void BuddyInit() {
         buddyzone_t *zone = &(zones[ZONE_NORMAL]);
 
+        using namespace Model;
+
         int index = 0;
-        while (Model::memblocks[index].m_AddrStart) {
-            Model::mem_block_t *block = &(Model::memblocks[index]);
-            
+        mem_block_t *block;
+        while (memblocks[index].m_AddrStart) {
+            block = &memblocks[index];
             uint64_t addrStart = ALIGN_UP(block->m_AddrStart, PAGE_MAX_SIZE);
             uint64_t addrEnd = ALIGN_DOWN(block->m_AddrEnd, PAGE_MAX_SIZE);
 
             for (; addrStart < addrEnd - PAGE_MAX_SIZE; addrStart += PAGE_MAX_SIZE) {
-                if(addrStart < LOWMEM_RESERVED) {
+                if(addrStart < LOWMEM_RESERVED || addrEnd < PAGE_MAX_ORDER) {
+                    MakeTripleFault();
                     continue;
                 }
 
@@ -34,8 +37,8 @@ namespace Memory {
                     pages->flags |= PAGE_MAX_ORDER;
                     zone->pageList[PAGE_MAX_ORDER - 1].Add((ListNode<page_t> *) pages);
                 }
-                ////////
             }
+            index++;
         }
     }
 

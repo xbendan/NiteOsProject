@@ -14,7 +14,7 @@ namespace Memory::Model
         }
 
         const size_t amount = 64 * PAGES_PER_SECTION / ARCH_PAGE_SIZE;
-        for (; addrStart < addrStart; addrStart += 0x40000000) {
+        for (; addrStart < addrEnd; addrStart += 0x40000000) {
             mem_section_t *section = &(sections[addrStart >> SECTION_SHIFT]);
             if (section->pages) {
                 continue;

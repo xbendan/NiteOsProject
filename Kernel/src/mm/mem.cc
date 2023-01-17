@@ -29,7 +29,6 @@ namespace Memory
         Model::MemsectsInit();
 
         BuddyInit();
-        asm("hlt");
         KmallocInit();
     }
 } // namespace Memory
