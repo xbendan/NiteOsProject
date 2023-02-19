@@ -193,7 +193,8 @@ SlowestPath:
 
     void KmallocInit() {
         for (int i = 0; i < sizeof(blockSize) / sizeof(uint16_t); i++) {
-            SetCache((slab_cache_t *) KernelAllocate4KPages(4), i, 0x0);
+            uint64_t addr = KernelAllocate4KPages(4);
+            SetCache((slab_cache_t *) addr, i, 0x0);
         }
     }
 

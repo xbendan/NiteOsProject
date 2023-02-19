@@ -30,5 +30,6 @@ namespace Memory
 
         BuddyInit();
         KmallocInit();
+        MakeTripleFault();
     }
 } // namespace Memory

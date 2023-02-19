@@ -2,6 +2,7 @@
 #include <proc/proc.h>
 #include <proc/sched.h>
 #include <macros>
+#include <kern.h>
 
 #ifdef ARCH_X86_64
 #include <Arch/x86_64/mmu.h>
@@ -19,7 +20,7 @@ namespace Memory
         } else {
             uint64_t phys = page->addr, virt = ManagementUnit::KernelAllocate4KPages(amount);
             ManagementUnit::KernelMapVirtualMemory4K(phys, virt, amount);
-            GetKernelProcess()->m_Pages += amount;
+            //GetKernelProcess()->m_Pages += amount;
             return virt;
         }
     }

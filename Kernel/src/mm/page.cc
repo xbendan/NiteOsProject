@@ -31,6 +31,7 @@ namespace Memory {
 
                 page_t *pages = Model::GetPage(addrStart);
                 if (pages) {
+                    memset(pages, 0, sizeof(page_t) * PAGE_AMOUNT_PER_BLOCK);
                     for (size_t pageIndex = 0; pageIndex < PAGE_AMOUNT_PER_BLOCK; pageIndex++) {
                         pages[pageIndex].addr = addrStart + (pageIndex * ARCH_PAGE_SIZE);
                     }
@@ -65,9 +66,8 @@ namespace Memory {
 
         page = reinterpret_cast<page_t *>(list->Extract());
 
-        while (orderCopy > order) {
+        while (orderCopy-- > order) {
             page = ExpandPage(page);
-            orderCopy--;
         }
         
         page->flags &= ~PFLAGS_FREE;
@@ -96,9 +96,10 @@ namespace Memory {
      */
     page_t* ExpandPage(page_t* page) {
         /* check whether it's possible to split it */
-        if(!(page->order)) {
+        if(!page || page->flags & PFLAGS_KMEM) {
             return nullptr;
         }
+        *((uint32_t *) 0xb8000 + (page->order * 2)) = 0xFFFFFFFF;
         page->lock.Acquire();
 
         buddyzone_t *zone = &(zones[ZONE_NORMAL]);
