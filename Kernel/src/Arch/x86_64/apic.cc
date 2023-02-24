@@ -94,6 +94,8 @@ namespace APIC
             uint64_t low;
             uint64_t high;
             asm("rdmsr" : "=a"(low), "=d"(high) : "c"(0x1B));
+
+            return (high << 32) | low;
         }
 
         void WriteData(uint32_t reg, uint32_t data)

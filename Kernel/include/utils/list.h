@@ -172,6 +172,8 @@ namespace Utils
                 }
                 else m_Front = m_Back = NULL;
             }
+            m_Count--;
+            
             return obj;
         }
 

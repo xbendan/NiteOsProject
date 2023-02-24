@@ -1,6 +1,7 @@
 #include <mm/slab.h>
 #include <proc/proc.h>
 #include <proc/sched.h>
+#include <drv/video.h>
 #include <utils/list.h>
 #include <kern.h>
 
@@ -30,6 +31,7 @@ namespace Memory
 
         for (int i = 0; i < MAX_CPU_AMOUNT; i++) {
             cache->cpu_slab[i].freelist = nullptr;
+            /////// HERE
         }
 
         for (int j = 0; j < MAX_NUMA_COUNT; j++) {
@@ -52,7 +54,7 @@ namespace Memory
         }
     }
 
-    page_t *SlubAllocate4KPage(slab_cache_t *cache) {
+    page_t *Request4KPage(slab_cache_t *cache) {
         page_t *page = AllocatePhysMemory4K(1);
         uintptr_t virt = KernelAllocate4KPages(1);
         if (!virt || !page) {
@@ -92,7 +94,7 @@ namespace Memory
 
         page = node->partial.Count() ?
             ((page_t *) node->partial.Extract()) :
-            SlubAllocate4KPage(cache);
+            Request4KPage(cache);
 
         node->lock.Release();
         return page;
@@ -183,7 +185,7 @@ SlowPath:
 
 SlowestPath:
         //page = SlabCache_alloc(cache);
-        SlabFillCpuSlot(slab_cpu, page = SlubAllocate4KPage(cache));
+        SlabFillCpuSlot(slab_cpu, page = Request4KPage(cache));
         pointer = page->freelist;
         page->freelist = (void **) *page->freelist;
         page->slab_inuse++;
@@ -193,7 +195,7 @@ SlowestPath:
 
     void KmallocInit() {
         for (int i = 0; i < sizeof(blockSize) / sizeof(uint16_t); i++) {
-            uint64_t addr = KernelAllocate4KPages(4);
+            uint64_t addr = Memory::KernelAllocate4KPages(1);
             SetCache((slab_cache_t *) addr, i, 0x0);
         }
     }

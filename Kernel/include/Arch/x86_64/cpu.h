@@ -62,7 +62,7 @@
 #define CPUID_EDX_PBE (1 << 31)
 
 #define CPU_CORE_ID ThisCPU()
-#define MAX_CPU_AMOUNT 256
+#define MAX_CPU_AMOUNT 64
 
 #define GDT_ENTRY_COUNT 5
 #define GDT_SEGMENT 0b00010000

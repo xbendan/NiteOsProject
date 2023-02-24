@@ -45,7 +45,8 @@ static inline uint8_t PAGE_ORDER(size_t size)
 
 namespace Memory 
 {
-    typedef struct PageFrame {
+    typedef struct PageFrame
+    {
         listhead_t lru;
         uint8_t order;
         uint8_t flags;
@@ -57,7 +58,7 @@ namespace Memory
         union {
             uint64_t priv;
             void *slab_cache;
-            struct PageFrame *first;
+            PageFrame *first;
         };
         void **freelist;
         spinlock_t lock;
@@ -85,7 +86,7 @@ namespace Memory
     extern buddyzone_t zones[3];
 
     void BuddyInit();
-    // page_t *AllocatePhysMemory4K(uint8_t order);
+    page_t *AllocatePhysMemory4KOrdered(uint8_t order);
     page_t *AllocatePhysMemory4K(size_t amount);
     void FreePhysMemory4K(uintptr_t address);
     void FreePhysMemory4K(page_t *page);

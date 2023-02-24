@@ -26,7 +26,8 @@ namespace SMP
     void Initialize()
     {
         cpus[0] = (cpu_info_t *) kmalloc(sizeof(cpu_info_t));
-
+        for (;;) asm("hlt");
+        
         *cpus[0] = (cpu_info_t)
         {
             .id = 0,

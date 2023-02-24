@@ -11,6 +11,7 @@
 #include <Arch/x86_64/smbios.h>
 #include <Arch/x86_64/smp.h>
 #include <init/bootinfo.h>
+#include <drv/video.h>
 #include <kern.h>
 
 BootInfo bootInfo;
@@ -113,6 +114,8 @@ namespace Boot
         GDT::Initialize();
         IDT::Initialize();
 
+        Video::Initialize();
+
         Memory::Initialize();
 
         PIC::Initialize();
@@ -127,14 +130,10 @@ namespace Boot
         if(cpuId.edx & CPUID_EDX_APIC)
         {
             PIC::Disable();
-            APIC::Local::Initialize();
-            //WriteLine("[Local APIC] OK!");
-
-            APIC::IO::Initialize();
-            //WriteLine("[I/O APIC] OK!");
+            
+            APIC::Initialize();
         }
             //WriteLine("[APIC] Not Present.");
-
         SMBios::Initialize();
         SMP::Initialize();
 
