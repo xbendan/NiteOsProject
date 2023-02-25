@@ -69,10 +69,12 @@ namespace Memory
         int reserved;
     } slab_cache_t;
 
-    void KmallocInit();
-    uintptr_t KernelMemoryAllocate(uint32_t size);
-    void KernelMemoryFree(uintptr_t addr);
+    page_t *Request4KPageMapped(slab_cache_t *cache, uint64_t *addrVirt);
+    page_t *Request4KPage(slab_cache_t *cache);
+    void SetPageSlub(slab_cache_t *cache, page_t *page, uintptr_t virt);
     
-    slab_cpu_t *FindCpuCache(slab_cache_t *cache);
-    slab_cache_t *FindMemCache(size_t size);
+    slab_cpu_t *SlubGetCPU(slab_cache_t *cache);
+    slab_cache_t *SlubGetCache(size_t size);
+    page_t *SlubGetPartial(slab_cache_t *cache);
+    page_t SlabFillCpuSlot(slab_cpu_t *slab_cpu, page_t *page);
 } // namespace Memory

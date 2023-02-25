@@ -124,16 +124,30 @@ namespace Boot
         EnableInterrupts();
 
         CPUIDInfo cpuId = CPUID();
+        // Check hardware features
+        {
+            Video::WriteText("Checking hardware features...");
+
+            if (!(cpuId.edx & CPUID_EDX_MSR)) {
+                CallPanic("This processor doesn't support MSR (Model Specific Registers).");
+            }
+
+            if (!(cpuId.ecx & CPUID_ECX_SSE3)) {
+                CallPanic("This processor doesn't support SSE3!");
+            }
+
+            if (!(cpuId.edx & CPUID_EDX_APIC)) {
+                CallPanic("This processor doesn't support APIC (Advanced Programmable Interrupt Controller)!");
+            }
+
+            Video::WriteText("OK!");
+        }
 
         ACPI::Initialize();
         // APIC
-        if(cpuId.edx & CPUID_EDX_APIC)
-        {
-            PIC::Disable();
-            
-            APIC::Initialize();
-        }
-            //WriteLine("[APIC] Not Present.");
+        PIC::Disable();
+        APIC::Initialize();
+
         SMBios::Initialize();
         SMP::Initialize();
 

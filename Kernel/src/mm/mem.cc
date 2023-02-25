@@ -29,7 +29,7 @@ namespace Memory
         Model::MemblocksInit(mem);
         Model::MemsectsInit();
 
-        BuddyInit();        
+        BuddyInit();
         KmallocInit();
     }
 } // namespace Memory

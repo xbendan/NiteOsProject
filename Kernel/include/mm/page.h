@@ -18,6 +18,10 @@
 #define PFLAGS_KMEM (1 << 1)
 #define EQUALS_POWER_TWO(x) (!((x) & ((x) - 1)))
 
+// 1   2   4   8
+// 16  32  64  128
+// 256 512 1024
+
 using namespace Utils;
 
 static inline size_t ALIGN_PAGE(size_t x)

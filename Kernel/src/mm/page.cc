@@ -42,7 +42,7 @@ namespace Memory {
                     }
                     
                     pages->order = PAGE_MAX_ORDER;
-                    zone->pageList[PAGE_MAX_ORDER - 1].Add((ListNode<page_t> *) pages);
+                    zone->pageList[PAGE_MAX_ORDER].Add((ListNode<page_t> *) pages);
                 }
             }
             index++;

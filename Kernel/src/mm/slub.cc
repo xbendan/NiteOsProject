@@ -1,7 +1,9 @@
 #include <mm/slab.h>
+#include <mm/kmalloc.h>
 #include <proc/proc.h>
 #include <proc/sched.h>
 #include <drv/video.h>
+#include <libkern/objects.h>
 #include <utils/list.h>
 #include <kern.h>
 
@@ -30,8 +32,10 @@ namespace Memory
         cache->reserved = ARCH_PAGE_SIZE / size;
 
         for (int i = 0; i < MAX_CPU_AMOUNT; i++) {
-            cache->cpu_slab[i].freelist = nullptr;
-            /////// HERE
+            uint64_t addrVirt = 0;
+            page_t *page = Request4KPageMapped(cache, &addrVirt);
+            
+            cache->cpu_slab[i].freelist = (void **) addrVirt;
         }
 
         for (int j = 0; j < MAX_NUMA_COUNT; j++) {
@@ -54,17 +58,35 @@ namespace Memory
         }
     }
 
+    page_t *Request4KPageMapped(slab_cache_t *cache, uint64_t *addrVirt)
+    {
+        page_t *page = Request4KPage(cache);
+        uintptr_t _addrVirt = ManagementUnit::KernelAllocate4KPages(1);
+        ManagementUnit::KernelMapVirtualMemory4K(page->addr, _addrVirt, 1);
+
+        if (!Objects::IsNull(addrVirt)) {
+            *addrVirt = _addrVirt;
+        }
+
+        SetPageSlub(cache, page, _addrVirt);
+
+        return page;
+    }
+
+    uint32_t r_count = 0;
+
     page_t *Request4KPage(slab_cache_t *cache) {
         page_t *page = AllocatePhysMemory4K(1);
-        uintptr_t virt = KernelAllocate4KPages(1);
-        if (!virt || !page) {
+
+        if (Objects::IsNull(page)) {
             CallPanic("Slub allocator failed to get page.");
-            return nullptr;
-        } else {
-            ManagementUnit::KernelMapVirtualMemory4K(page->addr, virt, 1);
-            SetPageSlub(cache, page, virt);
-            return page;
         }
+
+        r_count++;
+        if (r_count >= 1000)
+        Video::WriteText("Slub page allocated.");
+
+        return page;
     }
 
     slab_cpu_t *SlubGetCPU(slab_cache_t *cache) {
@@ -94,7 +116,7 @@ namespace Memory
 
         page = node->partial.Count() ?
             ((page_t *) node->partial.Extract()) :
-            Request4KPage(cache);
+            Request4KPageMapped(cache, nullptr);
 
         node->lock.Release();
         return page;
@@ -185,7 +207,7 @@ SlowPath:
 
 SlowestPath:
         //page = SlabCache_alloc(cache);
-        SlabFillCpuSlot(slab_cpu, page = Request4KPage(cache));
+        SlabFillCpuSlot(slab_cpu, page = Request4KPageMapped(cache, nullptr));
         pointer = page->freelist;
         page->freelist = (void **) *page->freelist;
         page->slab_inuse++;
@@ -209,9 +231,9 @@ SlowestPath:
     }
 } // namespace Memory
 
-extern "C" void *kmalloc(size_t size)
+extern "C" uintptr_t kmalloc(size_t size)
 {
-    Memory::KernelMemoryAllocate(size);
+    return Memory::KernelMemoryAllocate(size);
 }
 
 extern "C" void kfree(void *ptr)

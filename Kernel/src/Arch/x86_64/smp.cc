@@ -2,7 +2,7 @@
 #include <Arch/x86_64/cpu.h>
 #include <Arch/x86_64/acpi.h>
 #include <mm/mem.h>
-#include <mm/slab.h>
+#include <mm/kmalloc.h>
 
 #include "Arch/x86_64/smpdefines.inc"
 
@@ -26,7 +26,6 @@ namespace SMP
     void Initialize()
     {
         cpus[0] = (cpu_info_t *) kmalloc(sizeof(cpu_info_t));
-        for (;;) asm("hlt");
         
         *cpus[0] = (cpu_info_t)
         {
@@ -45,5 +44,7 @@ namespace SMP
             if(ACPI::g_Processors[i] != 0)
                 SetProcessor(ACPI::g_Processors[i]);
         }
+
+        for (;;) asm("hlt");
     }
 } // namespace SMP

@@ -18,7 +18,6 @@ namespace Memory
         page_t *page = Memory::AllocatePhysMemory4K(amount);
 
         if (page != nullptr) {
-            Video::WriteText("Memory allocated.");
             uint64_t phys = page->addr;
             uint64_t virt = ManagementUnit::KernelAllocate4KPages(amount);
             ManagementUnit::KernelMapVirtualMemory4K(phys, virt, amount);
@@ -31,15 +30,19 @@ namespace Memory
     uintptr_t Allocate4KPages(size_t amount) {
         amount = ALIGN_PAGE(amount);
         page_t *page = Memory::AllocatePhysMemory4K(amount);
-        if (!page) {
-            return 0x0;
-        } else {
+
+        if (page != nullptr) {
             proc_t *proc = GetCurrentProcess();
-            uint64_t phys = page->addr, virt = ManagementUnit::Allocate4KPages(proc->m_Pagemap, amount);
+            uint64_t phys = page->addr;
+            uint64_t virt = ManagementUnit::Allocate4KPages(proc->m_Pagemap, amount);
+
             ManagementUnit::MapVirtualMemory4K(proc->m_Pagemap, phys, virt, amount);
             proc->m_Pages += amount;
+
             return virt;
         }
+
+        return 0x0;
     }
 
     void Free4KPages(uintptr_t address);

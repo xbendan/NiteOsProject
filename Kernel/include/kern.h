@@ -1,6 +1,6 @@
-void CallPanic(const char* text);
+[[noreturn]] void CallPanic(const char* text);
 
-void MakeTripleFault();
+[[noreturn]] void MakeTripleFault();
 
 void KernelInitialize();
 
