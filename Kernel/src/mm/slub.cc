@@ -19,6 +19,7 @@ namespace Memory
         256,    512,    768,    1024,   1536,   2048,   4096,   8192,
         sizeof(Proc::Thread)
     };
+    const uint16_t blockArrayLength = sizeof(blockSize) / sizeof(uint16_t);
     slab_cache_t *caches[SLAB_MAX_BLOCK_ORDER];
 
     void SetCache(slab_cache_t *cache, int order, uint64_t flags) {
@@ -81,11 +82,7 @@ namespace Memory
         if (Objects::IsNull(page)) {
             CallPanic("Slub allocator failed to get page.");
         }
-
-        r_count++;
-        if (r_count >= 1000)
-        Video::WriteText("Slub page allocated.");
-
+        
         return page;
     }
 
@@ -151,7 +148,7 @@ namespace Memory
      * @param cache 
      * @return uintptr_t 
      */
-    uintptr_t KernelMemoryAllocate(slab_cache_t *cache) {
+    uintptr_t AllocateKernelObject(slab_cache_t *cache) {
         if (!cache) {
             CallPanic("Null Pointer for cache while allocating kernel memory.");
         }
@@ -215,28 +212,18 @@ SlowestPath:
         return (uintptr_t) pointer;
     }
 
-    void KmallocInit() {
-        for (int i = 0; i < sizeof(blockSize) / sizeof(uint16_t); i++) {
-            uint64_t addr = Memory::KernelAllocate4KPages(1);
-            SetCache((slab_cache_t *) addr, i, 0x0);
+    void SlubInit() {
+        for (int i = 0; i < blockArrayLength; i++) {
+            uint64_t address = Memory::KernelAllocate4KPages(1);
+            SetCache(reinterpret_cast<slab_cache_t *>(address), i, 0);
         }
     }
 
-    uintptr_t KernelMemoryAllocate(uint32_t size) {
-        return KernelMemoryAllocate(SlubGetCache(size));
+    uintptr_t AllocateKernelObject(uint32_t size) {
+        return AllocateKernelObject(SlubGetCache(size));
     }
 
-    void KernelMemoryFree(uintptr_t addr) {
+    void FreeKernelObject(uintptr_t addr) {
 
     }
 } // namespace Memory
-
-extern "C" uintptr_t kmalloc(size_t size)
-{
-    return Memory::KernelMemoryAllocate(size);
-}
-
-extern "C" void kfree(void *ptr)
-{
-    Memory::KernelMemoryFree((uintptr_t) ptr);
-}

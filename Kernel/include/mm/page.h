@@ -6,6 +6,7 @@
 #include <utils/spinlock.h>
 #include <utils/range.h>
 
+// #if (defined(__x86_64__))
 #ifdef ARCH_X86_64
 #include <Arch/x86_64/mmu.h>
 #endif

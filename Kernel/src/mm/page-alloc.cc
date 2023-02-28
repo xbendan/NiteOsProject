@@ -1,4 +1,5 @@
 #include <mm/page.h>
+#include <mm/kmalloc.h>
 #include <proc/proc.h>
 #include <proc/sched.h>
 #include <drv/video.h>
@@ -45,7 +46,12 @@ namespace Memory
         return 0x0;
     }
 
-    void Free4KPages(uintptr_t address);
-    void Free4KPages(page_t *page);
+    void Free4KPages(uintptr_t address) {
+
+    }
+
+    void Free4KPages(page_t *page) {
+
+    }
 } // namespace Memory
  

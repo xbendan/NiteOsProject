@@ -43,10 +43,15 @@ namespace Ports
                     : "a"(data), "d"(port));
     }
 
-    static inline void WriteDword16(uint16_t port, uint32_t data)
+    static inline void WriteDword32(uint16_t port, uint32_t data)
     {
         asm volatile("outl %0, %1"
                     :
                     : "a"(data), "d"(port));
+    }
+
+    static inline void IoWait() 
+    {
+        WriteByte8(0x80, 0);
     }
 } // namespace Ports

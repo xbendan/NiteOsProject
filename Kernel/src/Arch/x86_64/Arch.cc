@@ -10,3 +10,14 @@ void MakeTripleFault()
     WriteByte8(0x64, 0xFE);
     asm("hlt");
 }
+
+namespace System
+{
+    void Halt() {
+        asm("cli");
+        while (true)
+            asm("hlt");
+    }
+} // namespace System
+
+

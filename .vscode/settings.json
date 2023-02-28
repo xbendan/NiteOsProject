@@ -3,7 +3,8 @@
         "bootinfo": "c",
         "address": "cpp",
         "macros": "cpp",
-        "kernel": "cpp"
+        "kernel": "cpp",
+        "*.inc": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

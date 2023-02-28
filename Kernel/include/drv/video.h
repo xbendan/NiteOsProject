@@ -4,6 +4,7 @@ namespace Video
 {
     void Initialize();
 
+    void Newline();
     void ClearScreen();
     void WriteChar(char c);
     void WriteText(const char *str, size_t len);

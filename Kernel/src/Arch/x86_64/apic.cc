@@ -3,7 +3,11 @@
 #include <Arch/x86_64/irq.h>
 #include <Arch/x86_64/pic.h>
 #include <Arch/x86_64/mmu.h>
+#include <Arch/x86_64/cpu.h>
+#include <drv/video.h>
 #include <kern.h>
+
+void SpuriousInterruptHandler(void *, registers_t * regs) { Video::WriteText("Spurious interrupted."); }
 
 namespace APIC
 {
@@ -78,13 +82,15 @@ namespace APIC
         
         void MapLegacyIRQ(uint8_t irq);
     } // namespace IO
+
     namespace Local
     {
-        volatile uint32_t *basePtr;
+        uintptr_t localPhysApicBase;
+        volatile uint32_t *localApicBase;
 
         void WriteBase(uint64_t val)
         {
-            uint64_t low = val & 0xFFFFFFFF;
+            uint64_t low = val & 0xFFFFFFFF | 0x800;
             uint64_t high = val >> 32;
             asm("wrmsr" ::"a"(low), "d"(high), "c"(0x1B));
         }
@@ -95,17 +101,17 @@ namespace APIC
             uint64_t high;
             asm("rdmsr" : "=a"(low), "=d"(high) : "c"(0x1B));
 
-            return (high << 32) | low;
+            return ((high & 0x0f) << 32) | (low & 0xfffff000);
         }
 
         void WriteData(uint32_t reg, uint32_t data)
         {
-            *((volatile uint32_t*)(basePtr + reg)) = data;
+            *((volatile uint32_t*)(localApicBase + reg)) = data;
         }
 
         uint32_t ReadData(uint32_t reg)
         {
-            return *((volatile uint32_t*)(basePtr + reg));
+            return *((volatile uint32_t*)(localApicBase + reg));
         }
 
         void StartTimer()
@@ -113,34 +119,60 @@ namespace APIC
 
         }
 
-        void SendIPI(uint8_t apicId, uint32_t dsh, uint32_t type, uint8_t vector)
-        {
-            uint32_t high = ((uint32_t) apicId) << 24;
-            uint32_t low = dsh | type | ICR_VECTOR(vector);
+        void SendIPI(uint8_t apicId, uint32_t vector) {
+            WriteData(LOCAL_APIC_ICR_HIGH, ((uint32_t) apicId) << 24);
+            WriteData(LOCAL_APIC_ICR_LOW, vector);
 
-            WriteData(LOCAL_APIC_ICR_HIGH, high);
-            WriteData(LOCAL_APIC_ICR_LOW, low);
+            while ((ReadData((uint32_t) LOCAL_APIC_ICR_LOW) & LOCAL_APIC_ICR_PENDING) != 0);
+        }
+
+        void SendIPI(uint8_t apicId, uint32_t dsh, uint32_t type, uint8_t vector) {
+            SendIPI(apicId, dsh | type | ICR_VECTOR(vector));
+        }
+        
+        void Enable() {
+            // WriteBase(ReadBase() | (1UL << 11));
+            WriteData(LOCAL_APIC_SIVR, ReadData(LOCAL_APIC_SIVR) | 0x1ff);
         }
 
         void Initialize()
         {
-            basePtr = (uint32_t *) Memory::ManagementUnit::GetIOMapping(ReadBase());
-            WriteBase(ReadBase() | (1UL << 11));
-            WriteData(
-                LOCAL_APIC_SIVR,
-                ReadData(LOCAL_APIC_SIVR) | 0x100
-            );
+            if (!localPhysApicBase) {
+                CallPanic("Local APIC base not found.");
+            }
+
+            localApicBase = (uint32_t *) Memory::ManagementUnit::GetIOMapping(localPhysApicBase);
+            RegisterInterruptHandler(0xff, SpuriousInterruptHandler);
+
+            Enable();
         }
+
+        void EndOfInterrupt() { WriteData(LOCAL_APIC_EOI, 0); }
     } // namespace Local
+
+    namespace Timer
+    {
+        uint32_t EstimateBusSpeed() {
+            Local::WriteData(LOCAL_APIC_LVT_TIMER, 0x10000);
+            Local::WriteData(LOCAL_APIC_TIMER_DIVIDE, 0x3);
+            Local::WriteData(LOCAL_APIC_LVT_TIMER, 0x0);
+
+            uint32_t val = 0xffffffff;
+            Local::WriteData(LOCAL_APIC_TIMER_INITIAL_COUNT, val);
+            
+        }
+    } // namespace Timer
+    
     
     void Initialize()
     {
-        DisableInterrupts();
+        //InterruptsRetainer();
+
+        WriteMsr(ModelSpecificRegisters::MSR_APIC, 
+                (ReadMsr(ModelSpecificRegisters::MSR_APIC) | 0x800) & ~(LOCAL_APIC_ENABLE));
 
         PIC::Disable();
         Local::Initialize();
         IO::Initialize();
-
-        EnableInterrupts();
     }
 } // namespace APIC

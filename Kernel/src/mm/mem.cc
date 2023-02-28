@@ -30,6 +30,6 @@ namespace Memory
         Model::MemsectsInit();
 
         BuddyInit();
-        KmallocInit();
+        SlubInit();
     }
 } // namespace Memory

@@ -7,26 +7,35 @@ namespace PIC
 {
     void Initialize()
     {
-        WriteByte8(0x20, 0x11);
-        WriteByte8(0xA0, 0x11);
+        WriteByte8(0x20, 0x11); IoWait();
+        WriteByte8(0xA0, 0x11); IoWait();
 
-        WriteByte8(0x21, 0x20);
-        WriteByte8(0xA1, 0x28);
+        WriteByte8(0x21, 0x20); IoWait();
+        WriteByte8(0xA1, 0x28); IoWait();
 
-        WriteByte8(0x21, 0x04);
-        WriteByte8(0xA1, 0x02);
+        WriteByte8(0x21, 0x04); IoWait();
+        WriteByte8(0xA1, 0x02); IoWait();
 
-        WriteByte8(0x21, 0x01);
-        WriteByte8(0xA1, 0x01);
+        WriteByte8(0x21, 0x01); IoWait();
+        WriteByte8(0xA1, 0x01); IoWait();
 
-        WriteByte8(0x21, 0x0);
-        WriteByte8(0xA1, 0x0);
+        WriteByte8(0x21, 0x00); IoWait();
+        WriteByte8(0xA1, 0x00); IoWait();
     }
 
     void Disable()
     {
+        WriteByte8(0x20, 0x11); IoWait();
+        WriteByte8(0xA0, 0x11); IoWait();
+        WriteByte8(0x21, 0x20); IoWait();// Remap IRQs on both PICs to 0xF0-0xF8
+        WriteByte8(0xA1, 0x28); IoWait();
+        WriteByte8(0x21, 0x04); IoWait();
+        WriteByte8(0xA1, 0x02); IoWait();
+        WriteByte8(0x21, 0x01); IoWait();
+        WriteByte8(0xA1, 0x01); IoWait();
+
+        WriteByte8(0x21, 0xFF); // Mask all interrupts
         WriteByte8(0xA1, 0xFF);
-        WriteByte8(0x21, 0xFF);
     }
 } // namespace PIC
 

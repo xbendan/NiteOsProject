@@ -1,5 +1,7 @@
+#include <Arch/x86_64/mmu.h>
 #include <macros>
 #include <utils/list.h>
+#include <drv/video.h>
 
 enum AcpiTableNameDefinition
 {
@@ -19,18 +21,18 @@ typedef struct AcpiHeader
     uint32_t creatorRevision;
 } __attribute__((packed)) acpi_header_t;
 
-typedef struct AcpiMadt
-{
-    acpi_header_t header;
-    uint32_t address;
-    uint32_t flags;
-} __attribute__((packed)) acpi_madt_t;
-
 typedef struct AcpiMadtEntry
 {
     uint8_t type;
     uint8_t length;
 } __attribute__((packed)) madt_entry_t;
+
+typedef struct AcpiMadt : public AcpiHeader
+{
+    uint32_t address;
+    uint32_t flags;
+    madt_entry_t entries[];
+} __attribute__((packed)) acpi_madt_t;
 
 typedef struct MadtLocalApic
 {
@@ -40,44 +42,40 @@ typedef struct MadtLocalApic
     uint32_t flags;
 } __attribute__((packed)) madt_local_t;
 
-typedef struct MadtIoApic
+typedef struct MadtIoApic : public AcpiMadtEntry
 {
-    madt_entry_t entry;
     uint8_t apicId;
     uint8_t reserved;
     uint32_t address;
     uint32_t gSib;
 } __attribute__((packed)) madt_io_t;
 
-typedef struct MadtIso
+typedef struct MadtIso : public AcpiMadtEntry
 {
-    madt_entry_t entry;
     uint8_t busSource;
     uint8_t irqSource;
     uint32_t gSi;
     uint16_t flags;
 } __attribute__((packed)) madt_iso_t;
 
-typedef struct MadtNmi
+typedef struct MadtNmi : public AcpiMadtEntry
 {
-    madt_entry_t entry;
     uint8_t processorId;
     uint16_t flags;
     uint8_t lInt;
 } __attribute__((packed)) madt_nmi_t;
 
-struct AcpiGenericAddressStructure
+typedef struct AcpiGenericAddressStructure
 {
-    uint8_t address_space;
-    uint8_t bit_width;
-    uint8_t bit_offset;
-    uint8_t access_size;
+    uint8_t addressSpace;
+    uint8_t bitWidth;
+    uint8_t bitOffset;
+    uint8_t accessSize;
     uint64_t address;
-};
+} acpi_gas_t;
 
-typedef struct AcpiFadt
+typedef struct AcpiFadt : public AcpiHeader
 {
-    acpi_header_t header;
     uint32_t firmware_control;
     uint32_t dsdt;
 
@@ -123,7 +121,8 @@ typedef struct AcpiFadt
     struct AcpiGenericAddressStructure reset_reg;
 
     uint8_t reset_value;
-    uint8_t __reserved__3[3];
+    uint16_t arm_boot_arch;
+    uint8_t fadt_minor_version;
 
     uint64_t x_firmware_control;
     uint64_t x_dsdt;
@@ -138,9 +137,8 @@ typedef struct AcpiFadt
     struct AcpiGenericAddressStructure x_gpe1_block;
 } acpi_fadt_t;
 
-typedef struct MadtAddressOverride
+typedef struct MadtAddressOverride : public AcpiMadtEntry
 {
-    madt_entry_t entry;
     uint16_t reserved;
     uint64_t address;
 } madt_address_override_t;
@@ -154,12 +152,26 @@ struct PciMcfgBaseAddress
     uint32_t __reserved__;
 };
 
-typedef struct PciMcfg
+typedef struct PciMcfg : public AcpiHeader
 {
-    acpi_header_t header;
     uint64_t __reserved__;
     struct PciMcfgBaseAddress bases[];
 } pci_mcfg_t;
+
+typedef struct AcpiHpet : public AcpiHeader
+{
+    uint8_t hardwareRevisionId;
+    uint8_t info;
+    uint16_t pciVendorId;
+    uint8_t addressSpaceId;
+    uint8_t registerBitWidth;
+    uint8_t registerBitOffset;
+    uint8_t reserved;
+    uint64_t address;
+    uint8_t hpetNumber;
+    uint16_t minimumTick;
+    uint8_t pageProtection;
+} acpi_hpet_t;
 
 typedef struct AcpiRootSystemDescPtr
 {
@@ -211,11 +223,23 @@ namespace ACPI
     extern madt_iso_t *g_Isos[256];
     extern uint8_t g_IsoAmount;
 
+    extern acpi_fadt_t *acpiFadt;
+    extern acpi_hpet_t *acpiHpet;
+    extern pci_mcfg_t *pciMcfg;
+
     void Initialize();
     void *FindTable(const char* str, int index);
 
     void SetRsdpTable(acpi_xsdt_t *pointer);
     void Reset();
+
+    namespace Timer
+    {
+        extern uint32_t *timerTicks;
+        void Initialize();
+        void Sleep(uint64_t microsecs);
+    } // namespace Timer
+    
 } // namespace ACPI
 
 

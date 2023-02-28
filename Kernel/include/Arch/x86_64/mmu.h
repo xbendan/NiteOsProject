@@ -4,6 +4,7 @@
 #include <mm/mem.h>
 #include <utils/range.h>
 #include <address.h>
+#include <kern.h>
 
 #define ARCH_PAGE_SIZE              (4096)
 #define PAGES_PER_TABLE             512
@@ -162,7 +163,7 @@ namespace Memory::ManagementUnit
 
     inline uintptr_t GetIOMapping(uint64_t addr) {
         if (addr > 0xFFFFFFFF) {
-            // CallPanic("Access IO address greater than 4GB");
+            CallPanic("Access IO address greater than 4GB");
             return 0xFFFFFFFF;
         }
         return addr + IO_VIRTUAL_BASE;

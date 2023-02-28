@@ -2,6 +2,8 @@
 
 #include <macros>
 
+#define LOCAL_APIC_ENABLE (1 << 10)
+
 #define LOCAL_APIC_ID 0x20 // APIC ID Register
 #define LOCAL_APIC_VERSION 0x30 // APIC Version Register
 #define LOCAL_APIC_TPR 0x80 // Task Priority Register 
@@ -27,7 +29,10 @@
 #define LOCAL_APIC_TIMER_INITIAL_COUNT 0x380 // Timer Initial Count Register
 #define LOCAL_APIC_TIMER_CURRENT_COUNT 0x390 // Timer Current Count Register
 #define LOCAL_APIC_TIMER_DIVIDE 0x3E0 // Timer Divide Configuration Register
+#define LOCAL_APIC_ICR_PENDING 0x1000
 #define LOCAL_APIC_NMI ((4 << 8))
+
+#define LOCAL_APIC_BASE 0xFFFFFFFFFF000
 
 #define ICR_VECTOR(x) (x & 0xFF)
 #define ICR_MESSAGE_TYPE_FIXED 0
@@ -70,15 +75,24 @@ namespace APIC
     } // namespace IO
     namespace Local
     {
-        extern volatile uint32_t *basePtr;
+        extern uintptr_t localPhysApicBase;
+        extern volatile uint32_t *localApicBase;
         void WriteBase(uint64_t val);
         uint64_t ReadBase();
         void WriteData(uint32_t reg, uint32_t data);
         uint32_t ReadData(uint32_t reg);
         void StartTimer();
+        void SendIPI(uint8_t apicId, uint32_t vector);
         void SendIPI(uint8_t apicId, uint32_t dsh, uint32_t type, uint8_t vector);
+        void Enable();
         void Initialize();
+        void EndOfInterrupt();
     } // namespace Local
+
+    namespace Timer
+    {
+        
+    }
     
     void Initialize();
 } // namespace APIC

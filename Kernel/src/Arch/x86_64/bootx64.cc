@@ -10,8 +10,10 @@
 #include <Arch/x86_64/pci.h>
 #include <Arch/x86_64/smbios.h>
 #include <Arch/x86_64/smp.h>
+#include <Arch/x86_64/hpet.h>
 #include <init/bootinfo.h>
 #include <drv/video.h>
+#include <timer.h>
 #include <kern.h>
 
 BootInfo bootInfo;
@@ -121,8 +123,6 @@ namespace Boot
         PIC::Initialize();
         PIT::Initialize(1000);
 
-        EnableInterrupts();
-
         CPUIDInfo cpuId = CPUID();
         // Check hardware features
         {
@@ -143,15 +143,26 @@ namespace Boot
             Video::WriteText("OK!");
         }
 
+        Video::WriteText("Initializing ACPI.");
         ACPI::Initialize();
+        EnableInterrupts();
+
+        Video::WriteText("ACPI Sleeping.");
+
+        ACPI::Timer::Sleep(1000);
         // APIC
-        PIC::Disable();
+        Video::WriteText("Initializing Local and I/O APIC.");
+        for(;;)asm("hlt");
         APIC::Initialize();
 
+        EnableInterrupts();
+
+        HPET::Initialize();
+        
         SMBios::Initialize();
         SMP::Initialize();
 
-        MakeTripleFault();
+        for (;;) asm("hlt");
     }
 } // namespace Boot
 

@@ -2,8 +2,11 @@
 #include <Arch/x86_64/apic.h>
 #include <Arch/x86_64/mmu.h>
 #include <Arch/x86_64/irq.h>
+#include <Arch/x86_64/ports.h>
+#include <drv/video.h>
 #include <mm/mem.h>
 #include <kern.h>
+#include <system.h>
 
 namespace ACPI
 {
@@ -13,27 +16,23 @@ namespace ACPI
     acpi_rsdp_t *acpiDesc;
     acpi_rsdt_t *acpiRsdtHeader;
     acpi_xsdt_t *acpiXsdtHeader;
-    acpi_fadt_t *acpiFadt;
     MadtIso *g_Isos[256];
     uint8_t g_IsoAmount;
+
+    acpi_fadt_t *acpiFadt;
+    acpi_hpet_t *acpiHpet;
     pci_mcfg_t *pciMcfg;
 
     char acpiOemId[7];
 
-    uintptr_t __acpi_GetEntry(uint32_t index)
-    {
-        if (acpiDesc->revision == 2)
-            return acpiXsdtHeader->pointers[index];
-        else
-            return acpiRsdtHeader->pointers[index];
-    }
+    uint32_t *acpiTimerBlock;
 
     void *FindTable(const char *str, int index)
     {
         int entries = 0;
         if (!acpiDesc)
         {
-            return NULL;
+            return nullptr;
         }
 
         if (acpiDesc->revision == 2)
@@ -41,18 +40,28 @@ namespace ACPI
         else
             entries = (acpiRsdtHeader->table.length - sizeof(acpi_header_t)) / sizeof(uint32_t);
 
+        auto getEntry = [](unsigned index) -> uintptr_t {
+            if (acpiDesc->revision == 2)
+                return acpiXsdtHeader->pointers[index];
+            else
+                return acpiRsdtHeader->pointers[index];
+        };
+
         int _index = 0;
+
         if (memcmp("DSDT", str, 4) == 0)
             return (void *) Memory::ManagementUnit::GetIOMapping(acpiFadt->dsdt);
-            
+
         for (int i = 0; i < entries; i++)
         {
-            acpi_header_t *header = (acpi_header_t *)(Memory::ManagementUnit::GetIOMapping(__acpi_GetEntry(i)));
-            if (memcmp(header->signature, str, 4) == 0 && _index++ == index)
+            uintptr_t entry = getEntry(i);
+            acpi_header_t *header = (acpi_header_t *)(Memory::ManagementUnit::GetIOMapping(entry));
+            if (memcmp(header->signature, str, 4) == 0 && _index++ == index) {
                 return header;
+            }
         }
 
-        return NULL;
+        return nullptr;
     }
 
     void Initialize()
@@ -99,20 +108,21 @@ namespace ACPI
         memcpy(acpiOemId, acpiRsdtHeader->table.oemId, 6);
         acpiOemId[6] = 0;
 
-        acpiFadt = (acpi_fadt_t *)(FindTable("FACP", 0));
-
-        DisableInterrupts();
         acpi_madt_t *madt = (acpi_madt_t *)(FindTable("APIC", 0));
-        uintptr_t madtEnd = ((uintptr_t)madt) + madt->header.length;
-        uintptr_t madtEntry = ((uintptr_t)madt) + sizeof(acpi_madt_t);
+        APIC::Local::localPhysApicBase = madt->address;
+        
+        uintptr_t madtEntriesEnd = ((uintptr_t)madt) + madt->length;
+        uintptr_t madtEntries = (uintptr_t) &madt->entries;
 
-        while (madtEntry < madtEnd)
+        while (madtEntries < madtEntriesEnd)
         {
-            madt_entry_t *entry = (madt_entry_t *)(madtEntry);
+            madt_entry_t *entry = (madt_entry_t *)(madtEntries);
             switch (entry->type)
             {
             case 0:
             {
+                Video::WriteText("Processor found.");
+
                 madt_local_t *apicLocal = (madt_local_t *)(entry);
                 if (apicLocal->flags & 0x3)
                 {
@@ -125,10 +135,14 @@ namespace ACPI
             }
             case 1:
             {
+                Video::WriteText("I/O APIC address set.");
+
                 madt_io_t *apicIo = (madt_io_t *)(entry);
 
                 if (!apicIo->gSib)
                     APIC::IO::SetBase(apicIo->address);
+                
+                break;
             }
             case 2:
             {
@@ -142,21 +156,85 @@ namespace ACPI
             }
             case 4:
             {
+                Video::WriteText("NMI");
                 break;
             }
-            case 5:
+            case 5: /* Local APIC address override */
             {
+                Video::WriteText("APIC Address Override");
                 break;
             }
             default:
                 break;
             }
 
-            madtEntry += entry->length;
+            madtEntries += entry->length;
         }
 
         pciMcfg = (pci_mcfg_t *)(FindTable("MCFG", 0));
+        acpiFadt = (acpi_fadt_t *)(FindTable("FACP", 0));
+        acpiHpet = static_cast<acpi_hpet_t *>(FindTable("HPET", 0));
 
-        EnableInterrupts();
+        Timer::Initialize();
+    }
+
+    namespace Timer
+    {
+        uint32_t *timerTicks;
+
+        void Initialize() {
+            acpi_gas_t *xpm_timer = &acpiFadt->x_pmt_timer_block;
+            uint64_t _acpiTimerBlock = xpm_timer->address ?
+                    xpm_timer->address :
+                    acpiFadt->pmt_timer_block;
+
+            System::Out("%u, %x", xpm_timer->address, acpiFadt->x_pmt_timer_block.address);
+            
+            switch (acpiFadt->x_pmt_timer_block.addressSpace) {
+                case 0: {
+                    uint64_t pmtVirt = Memory::ManagementUnit::KernelAllocate4KPages(1);
+                    uint64_t pmtPhys = ALIGN_DOWN(_acpiTimerBlock, ARCH_PAGE_SIZE);
+                    uint16_t offset = _acpiTimerBlock - pmtPhys;
+                    
+                    Memory::ManagementUnit::KernelMapVirtualMemory4K(pmtPhys, pmtVirt, 1);
+                    timerTicks = reinterpret_cast<uint32_t *>(pmtVirt + offset);
+                    break;
+                }
+                case 1:
+                    break;
+                default:
+                    CallPanic("Not implemented");
+                    break;
+            }
+            System::Out("%u", *timerTicks);
+            System::Halt();
+        }
+
+        void Sleep(uint64_t microsecs) {
+            if (acpiFadt->pmt_timer_length != 4) {
+                return;
+            }
+
+            uint64_t clock = 3579545 * microsecs / 1000000;
+            uint64_t counter = 0;
+            uint64_t last = *timerTicks;
+            uint64_t current = 0;
+
+            while (counter < clock) {
+                current = *timerTicks;
+                if (current < last) {
+                    bool isAcpiTimer32Bit = (acpiFadt->flags >> 8) & 0x1;
+                    counter += (isAcpiTimer32Bit ? 0x100000000ul : 0x1000000) + current - last;
+                } else {
+                    counter += current - last;
+                    System::Out("Update new value: %u", *timerTicks);
+                }
+                last = current;
+                asm("hlt");
+            }
+    } // namespace Timer
+    
+
+    
     }
 }

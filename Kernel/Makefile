@@ -78,7 +78,7 @@ build: $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM)
 
 .PHONY: run
 run:
-	qemu-system-x86_64.exe -smp cpus=2,cores=2 -cdrom F:/niteOS/${TARGET}/nite.iso -m 512m
+	qemu-system-x86_64.exe -smp 4 -cdrom F:/niteOS/${TARGET}/nite.iso -m 512m
 
 .PHONY: clean
 clean:

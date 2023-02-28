@@ -1,4 +1,5 @@
 #include <proc/proc.h>
+#include <mm/kmalloc.h>
 
 namespace Proc
 {

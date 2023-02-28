@@ -4,8 +4,8 @@
 
 int ThisCPU()
 {
-    if(APIC::Local::basePtr)
-        return APIC::Local::basePtr[LOCAL_APIC_ID / 4] >> 24;
+    if(APIC::Local::localApicBase)
+        return APIC::Local::localApicBase[LOCAL_APIC_ID / 4] >> 24;
     else
         return 0;
 }
@@ -31,22 +31,23 @@ cpuid_info_t CPUID()
     return info;
 }
 
-void SetCPULocal(cpu_info_t *cpu)
+void SetCPULocal(processor_t *cpu)
 {
     cpu->self = cpu;
-    asm volatile("wrmsr" ::"a"((uintptr_t)cpu & 0xFFFFFFFF) /*Value low*/,
-                 "d"(((uintptr_t)cpu >> 32) & 0xFFFFFFFF) /*Value high*/, "c"(0xC0000102) /*Set Kernel GS Base*/);
-    asm volatile("wrmsr" ::"a"((uintptr_t)cpu & 0xFFFFFFFF) /*Value low*/,
-                 "d"(((uintptr_t)cpu >> 32) & 0xFFFFFFFF) /*Value high*/, "c"(0xC0000101) /*Set Kernel GS Base*/);
+    WriteMsr(MSR_KERN_GS_BASE, (uintptr_t) cpu);
+    WriteMsr(MSR_GS_BASE, (uintptr_t) cpu);
+    // asm volatile("wrmsr" ::"a"((uintptr_t)cpu & 0xFFFFFFFF) /*Value low*/,
+    //              "d"(((uintptr_t)cpu >> 32) & 0xFFFFFFFF) /*Value high*/, "c"(MSR_KERN_GS_BASE) /*Set Kernel GS Base*/);
+    // asm volatile("wrmsr" ::"a"((uintptr_t)cpu & 0xFFFFFFFF) /*Value low*/,
+    //              "d"(((uintptr_t)cpu >> 32) & 0xFFFFFFFF) /*Value high*/, "c"(MSR_GS_BASE) /*Set Kernel GS Base*/);
 }
 
-cpu_info_t *GetCPULocal()
+processor_t *GetCPULocal()
 {
     InterruptsRetainer();
-    cpu_info_t *cpu;
+    processor_t *cpu;
     DisableInterrupts();
     asm volatile("swapgs; movq %%gs:0, %0; swapgs;"
                  : "=r"(cpu)); // CPU info is 16-byte aligned as per liballoc alignment
-    EnableInterrupts();
     return cpu;
 }

@@ -24,12 +24,22 @@ intrid%2:
     jmp _commonInterrupt
 %endmacro
 
+%macro IPI 1
+global ipi%1
+ipi%1:
+	push 0
+    push %1
+    jmp _commonInterrupt
+%endmacro
+
 %macro INTR_SYSCALL 1
 intrid%1:
     push 0
     push %1
     jmp _commonInterrupt
 %endmacro
+
+section .text
 
 %macro _PUSHA_ 0
     push rax
@@ -117,6 +127,12 @@ INTR_NO_ERR 29
 INTR_ERR   30
 INTR_NO_ERR 31
 
+%assign num 48
+%rep 256-48
+    IPI num
+%assign num (num + 1)
+%endrep
+
 IRQ 0, 32
 IRQ 1, 33
 IRQ 2, 34
@@ -188,6 +204,11 @@ isr_tables:
     INTR_NAME 45
     INTR_NAME 46
     INTR_NAME 47
+%assign num 48
+%rep 256-48
+    dq ipi%+ num
+%assign num (num + 1)
+%endrep
 
-    INTR_NAME 127
-    INTR_NAME 128
+    ; INTR_NAME 127
+    ; INTR_NAME 128

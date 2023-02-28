@@ -6,3 +6,4 @@ void KernelInitialize();
 
 void Shutdown();
 void Sleep();
+void Halt();
