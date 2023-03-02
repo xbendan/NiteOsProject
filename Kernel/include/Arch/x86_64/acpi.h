@@ -34,9 +34,8 @@ typedef struct AcpiMadt : public AcpiHeader
     madt_entry_t entries[];
 } __attribute__((packed)) acpi_madt_t;
 
-typedef struct MadtLocalApic
+typedef struct MadtLocalApic : public AcpiMadtEntry
 {
-    madt_entry_t entry;
     uint8_t processorId;
     uint8_t apicId;
     uint32_t flags;
@@ -233,9 +232,11 @@ namespace ACPI
     void SetRsdpTable(acpi_xsdt_t *pointer);
     void Reset();
 
+    uint32_t GetRemapIRQ(uint32_t irq);
+
     namespace Timer
     {
-        extern uint32_t *timerTicks;
+        extern uint16_t timerTicks;
         void Initialize();
         void Sleep(uint64_t microsecs);
     } // namespace Timer

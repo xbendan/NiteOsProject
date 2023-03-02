@@ -26,7 +26,6 @@ namespace Memory {
 
             for (; addrStart < addrEnd - PAGE_MAX_SIZE; addrStart += PAGE_MAX_SIZE) {
                 if(addrStart < LOWMEM_RESERVED || addrEnd < PAGE_MAX_ORDER) {
-                    MakeTripleFault();
                     continue;
                 }
 

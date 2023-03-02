@@ -2,8 +2,7 @@
 #include <Arch/x86_64/hpet.h>
 #include <Arch/x86_64/ports.h>
 #include <libkern/objects.h>
-#include <drv/video.h>
-
+#include <system.h>
 namespace HPET
 {
     uint64_t clock;
@@ -27,12 +26,12 @@ namespace HPET
         Write(0xf0, 0);
         Write(0x10, 1);
 
-        Video::WriteText("HPET Initialized.");
+        System::Out("HPET Initialized.");
     }
 
     void Wait(uint64_t ms) {
         ticks = 0;
         uint64_t futureTicks = ticks + (ms * 10000000000000) / clock;
-        while (ticks < futureTicks) asm("pause");
+        while (ticks < futureTicks) asm("nop");
     }
 } // namespace HPET

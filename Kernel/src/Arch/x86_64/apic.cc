@@ -4,10 +4,10 @@
 #include <Arch/x86_64/pic.h>
 #include <Arch/x86_64/mmu.h>
 #include <Arch/x86_64/cpu.h>
-#include <drv/video.h>
+#include <system.h>
 #include <kern.h>
 
-void SpuriousInterruptHandler(void *, registers_t * regs) { Video::WriteText("Spurious interrupted."); }
+void SpuriousInterruptHandler(void *, registers_t * regs) { System::Out("Spurious interrupted."); }
 
 namespace APIC
 {
@@ -48,8 +48,7 @@ namespace APIC
             return low | ((uint64_t)(high) << 32);
         }
 
-        void Initialize()
-        {
+        void Initialize() {
             if(!base)
             {
                 CallPanic("No I/O APIC base address.");
@@ -66,12 +65,16 @@ namespace APIC
             for (int i = 0; i < ACPI::g_IsoAmount; i++)
             {
                 MadtIso *iso = ACPI::g_Isos[i];
-                Redirect(iso->gSi, iso->irqSource + 0x20, 0);
+                // Redirect(iso->gSi, iso->irqSource + 0x20, 0);
+                System::Out("Interrupt Override found, source=%u, interrupt=%u", iso->irqSource, iso->gSi);
             }
         }
 
-        void Redirect(uint8_t irq, uint8_t vector, uint32_t delivery)
-        {
+        void Redirect(
+            uint8_t         irq, 
+            uint8_t         vector, 
+            uint32_t        delivery
+        ) {
             WriteData64(IO_APIC_RED_TABLE_ENT(irq), delivery | vector);
         }
 
@@ -80,13 +83,17 @@ namespace APIC
             base = newBase;
         }
         
-        void MapLegacyIRQ(uint8_t irq);
+        void MapLegacyIRQ(uint8_t irq) {
+            uint8_t index = ACPI::GetRemapIRQ(irq);
+            WriteData64(IO_APIC_RED_TABLE_START + (index * 2), irq);
+            System::Out("Map legacy IRQ index=%u, irq=%u", index, irq);
+        }
     } // namespace IO
 
     namespace Local
     {
         uintptr_t localPhysApicBase;
-        volatile uint32_t *localApicBase;
+        uintptr_t localApicBase;
 
         void WriteBase(uint64_t val)
         {
@@ -104,19 +111,17 @@ namespace APIC
             return ((high & 0x0f) << 32) | (low & 0xfffff000);
         }
 
-        void WriteData(uint32_t reg, uint32_t data)
-        {
-            *((volatile uint32_t*)(localApicBase + reg)) = data;
+        void WriteData(
+            uint32_t        reg, 
+            uint32_t        data
+        ) {
+            *((volatile uint32_t *)(localApicBase + reg)) = data;
         }
 
-        uint32_t ReadData(uint32_t reg)
-        {
-            return *((volatile uint32_t*)(localApicBase + reg));
-        }
-
-        void StartTimer()
-        {
-
+        uint32_t ReadData(
+            uint32_t        reg
+        ) {
+            return *((volatile uint32_t *)(localApicBase + reg));
         }
 
         void SendIPI(uint8_t apicId, uint32_t vector) {
@@ -131,8 +136,7 @@ namespace APIC
         }
         
         void Enable() {
-            // WriteBase(ReadBase() | (1UL << 11));
-            WriteData(LOCAL_APIC_SIVR, ReadData(LOCAL_APIC_SIVR) | 0x1ff);
+            WriteData(LOCAL_APIC_SIVR, 0x1ff);
         }
 
         void Initialize()
@@ -141,10 +145,19 @@ namespace APIC
                 CallPanic("Local APIC base not found.");
             }
 
-            localApicBase = (uint32_t *) Memory::ManagementUnit::GetIOMapping(localPhysApicBase);
-            RegisterInterruptHandler(0xff, SpuriousInterruptHandler);
+            localApicBase = Memory::ManagementUnit::GetIOMapping(localPhysApicBase);
+
+            WriteMsr(ModelSpecificRegisters::MSR_APIC, 
+                ReadMsr(ModelSpecificRegisters::MSR_APIC) | 0x800 & ~(LOCAL_APIC_ENABLE));
+
+            System::Out("%X", ReadBase());
 
             Enable();
+            PIC::Disable();
+
+            Timer::Initialize(1000, 0x20);
+
+            RegisterInterruptHandler(0xff, SpuriousInterruptHandler);
         }
 
         void EndOfInterrupt() { WriteData(LOCAL_APIC_EOI, 0); }
@@ -152,6 +165,10 @@ namespace APIC
 
     namespace Timer
     {
+        volatile uint32_t Ticks() {
+            return Local::ReadData(LOCAL_APIC_TIMER_CURRENT_COUNT);
+        }
+
         uint32_t EstimateBusSpeed() {
             Local::WriteData(LOCAL_APIC_LVT_TIMER, 0x10000);
             Local::WriteData(LOCAL_APIC_TIMER_DIVIDE, 0x3);
@@ -159,7 +176,26 @@ namespace APIC
 
             uint32_t val = 0xffffffff;
             Local::WriteData(LOCAL_APIC_TIMER_INITIAL_COUNT, val);
+
+            ACPI::Timer::Sleep(100000);
+
+            Local::WriteData(LOCAL_APIC_LVT_TIMER, 0x10000);
+            uint64_t busFreq = val - Local::ReadData(LOCAL_APIC_TIMER_CURRENT_COUNT);
             
+            return busFreq;
+        }
+
+        void Initialize(uint64_t hertz, uint32_t irq) {
+            Local::WriteData(LOCAL_APIC_LVT_TIMER, 0x00020000 | irq);
+            Local::WriteData(LOCAL_APIC_TIMER_DIVIDE, 0x3);
+            Local::WriteData(LOCAL_APIC_TIMER_INITIAL_COUNT, EstimateBusSpeed() / 16 / hertz);
+
+            IO::MapLegacyIRQ(0x20);
+
+            for (int i = 0; i < 4; i++) {
+                System::Out("%u", Local::ReadData(0X390));
+                ACPI::Timer::Sleep(100000);
+            }
         }
     } // namespace Timer
     
@@ -171,7 +207,6 @@ namespace APIC
         WriteMsr(ModelSpecificRegisters::MSR_APIC, 
                 (ReadMsr(ModelSpecificRegisters::MSR_APIC) | 0x800) & ~(LOCAL_APIC_ENABLE));
 
-        PIC::Disable();
         Local::Initialize();
         IO::Initialize();
     }

@@ -12,11 +12,12 @@ SMP_TRAMPOLINE_STACK equ SMP_TRAMPOLINE_DATA_ADDR + 0x28
 SMP_TRAMPOLINE_ENTRY2 equ SMP_TRAMPOLINE_DATA_ADDR + 0x30
 SMP_MAGIC equ 0xB33F
 
-section .data
-SMPTrampolineStart:
+section .text
 bits 16
+SMPTrampolineStart:
 
-mov word [0xb8000], 0x4f52
+mov al, "1"
+mov byte [0xb8000], al
 
 cli
 cld

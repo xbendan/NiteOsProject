@@ -46,9 +46,13 @@ stivale2header:
     dq kload_stivale2
     dq stack_top
     dq 0
-    dq 0                ; Do NOT set framebuffer here.
+    dq stivale2tag_smp                ; Do NOT set framebuffer here.
 
 section .data
+stivale2tag_smp:
+    dq 0x1ab015085f3273df
+    dq 0
+    dq 1
 stivale2linearframebuffer:
     dq 0xc75c9fa92a44c4db
     dq stivale2framebufferWctag

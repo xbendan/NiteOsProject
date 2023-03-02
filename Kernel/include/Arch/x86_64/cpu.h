@@ -197,7 +197,9 @@ typedef struct ProcessorCore
     struct Process *idleProcess;
 } processor_t;
 
-static inline uintptr_t ReadMsr(uintptr_t msr) {
+static inline uintptr_t ReadMsr(
+    uintptr_t       msr
+) {
     uint32_t low, high;
     asm volatile("rdmsr"
                  : "=a"(low), "=d"(high)
@@ -205,12 +207,23 @@ static inline uintptr_t ReadMsr(uintptr_t msr) {
     return ((uintptr_t) high << 32) | low;
 }
 
-static inline void WriteMsr(uintptr_t msr, uintptr_t value) {
+static inline void WriteMsr(
+    uint32_t        msr, 
+    uint64_t        value
+) {
     uint32_t low = value & 0xFFFFFFFF;
     uint32_t high = value >> 32;
     asm volatile("wrmsr"
                  :
                  : "c"(msr), "a"(low), "d"(high));
+}
+
+static inline bool isIntEnabled() {
+    uint64_t flags;
+    asm volatile("pushf\n\t"
+                 "pop %o"
+                 : "=g"(flags));
+    return flags & (1 << 9);
 }
 
 enum ModelSpecificRegisters {

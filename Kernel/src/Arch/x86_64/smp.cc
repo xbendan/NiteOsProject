@@ -7,6 +7,7 @@
 #include <mm/kmalloc.h>
 #include <drv/video.h>
 #include <timer.h>
+#include <system.h>
 
 #include "Arch/x86_64/smpdefines.inc"
 
@@ -54,7 +55,7 @@ namespace SMP
         doneInit = true;
 
         asm("sti");
-        // Video::WriteText("Processor initialized.");
+        Video::WriteText("Processor initialized.");
 
         for (;;)
             asm volatile("pause");
@@ -79,14 +80,14 @@ namespace SMP
 
         Video::WriteText("APIC signal sending");
 
-        //APIC::Local::SendIPI(ACPI::g_Processors[cpuId], ICR_DSH_DEST, ICR_MESSAGE_TYPE_INIT, 0);
-        APIC::Local::SendIPI(ACPI::g_Processors[cpuId], 0x4500);
-        Timer::Sleep(50);
+        APIC::Local::SendIPI(ACPI::g_Processors[cpuId], ICR_DSH_DEST, ICR_MESSAGE_TYPE_INIT, 0);
+        // APIC::Local::SendIPI(ACPI::g_Processors[cpuId], 0x4500);
+        ACPI::Timer::Sleep(50000);
 
         while (*smpMagicValue != 0xB33F) {
             // APIC::Local::SendIPI(ACPI::g_Processors[cpuId], 0x4601);
             APIC::Local::SendIPI(ACPI::g_Processors[cpuId], ICR_DSH_DEST, ICR_MESSAGE_TYPE_STARTUP, (SMP_TRAMPOLINE_ENTRY >> 12));
-            Timer::Sleep(200);
+            ACPI::Timer::Sleep(2000000);
         }
         Video::WriteText("APIC signal sent.");
         
@@ -114,9 +115,11 @@ namespace SMP
 
         memcpy((void *) SMP_TRAMPOLINE_ENTRY, &SMPTrampolineStart, ((uint64_t) &SMPTrampolineEnd) - ((uint64_t) &SMPTrampolineStart));
         
+        System::Out("%u", ACPI::g_Processors[1]);
         for(int i = 0; i < ACPI::g_ProcessorCount; i++)
         {
             if(ACPI::g_Processors[i] != 0 && i != ThisCPU()) {
+                System::Out("Initializing CPU %u", ACPI::g_Processors[i]);
                 InitializeProcessorCore(ACPI::g_Processors[i]);
             }
         }

@@ -3,7 +3,7 @@
 #include <Arch/x86_64/cpu.h>
 #include <Arch/x86_64/irq.h>
 #include <kern.h>
-#include <drv/video.h>
+#include <system.h>
 
 void EnableInterrupts() { asm("sti"); }
 void DisableInterrupts() { asm("cli"); }
@@ -14,15 +14,10 @@ extern "C" void* DispatchInterrupts(void *rsp)
 {
     registers_t *context = reinterpret_cast<registers_t *>(rsp);
 
+    System::Out("Interrupt: %u", context->intno);
+
     if (context->intno >= 32) {
         APIC::Local::EndOfInterrupt();
-        // Video::WriteChar('X');
-    }
-
-    if (context->intno < 14) {
-        Video::WriteChar('L');
-        asm("cli");
-        asm("hlt");
     }
 
     if (interruptHandlers[context->intno]) {
@@ -31,14 +26,14 @@ extern "C" void* DispatchInterrupts(void *rsp)
 
     }
 
-    RestoreInterrupts(context->intno);
+    // RestoreInterrupts(context->intno);
 
     return rsp;
 }
 
 void RegisterInterruptHandler(int num, isr_t func) {
     if (interruptHandlers[num] != 0) {
-        Video::WriteText("The interrupt handler already exists.");
+        System::Out("The interrupt handler already exists.");
         return;
     }
 

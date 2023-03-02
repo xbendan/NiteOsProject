@@ -121,26 +121,24 @@ namespace ACPI
             {
             case 0:
             {
-                Video::WriteText("Processor found.");
-
                 madt_local_t *apicLocal = (madt_local_t *)(entry);
                 if (apicLocal->flags & 0x3)
                 {
-                    if (apicLocal->apicId == 0)
-                        break;
-
-                    g_Processors[g_ProcessorCount++] = apicLocal->apicId;
+                    if (apicLocal->apicId != 0) {
+                        g_Processors[g_ProcessorCount++] = apicLocal->apicId;
+                        System::Out("[ACPI] Processor found. APIC ID=%u, Flags=%u", apicLocal->apicId, apicLocal->flags);
+                    }
                 }
                 break;
             }
             case 1:
             {
-                Video::WriteText("I/O APIC address set.");
-
                 madt_io_t *apicIo = (madt_io_t *)(entry);
 
-                if (!apicIo->gSib)
+                if (!apicIo->gSib) {
+                    System::Out("[ACPI] I/O APIC address set to %x", apicIo->address);
                     APIC::IO::SetBase(apicIo->address);
+                }
                 
                 break;
             }
@@ -156,12 +154,18 @@ namespace ACPI
             }
             case 4:
             {
-                Video::WriteText("NMI");
+                MadtNmi *nmi = reinterpret_cast<MadtNmi *>(entry);
+                System::Out("[ACPI] Non-maskable interrupt, lInt=%x", nmi->lInt);
                 break;
             }
             case 5: /* Local APIC address override */
             {
-                Video::WriteText("APIC Address Override");
+                System::Out("[ACPI] APIC Address Override");
+                break;
+            }
+            case 9: /* Processor Local x2APIC */ {
+                System::Out("[ACPI] x2APIC detected.");
+
                 break;
             }
             default:
@@ -178,36 +182,46 @@ namespace ACPI
         Timer::Initialize();
     }
 
+    uint32_t GetRemapIRQ(uint32_t irq) {
+        for (int i = 0; i < g_IsoAmount; i++) {
+            madt_iso_t *iso = g_Isos[i];
+            if (iso->irqSource == irq) {
+                return iso->gSi;
+            }
+        }
+        return irq;
+    }
+
     namespace Timer
     {
-        uint32_t *timerTicks;
+        uint16_t timerTicks;
 
         void Initialize() {
             acpi_gas_t *xpm_timer = &acpiFadt->x_pmt_timer_block;
-            uint64_t _acpiTimerBlock = xpm_timer->address ?
-                    xpm_timer->address :
+            uint64_t _acpiTimerBlock = 
+                    // xpm_timer->address ?
+                    // xpm_timer->address :
                     acpiFadt->pmt_timer_block;
-
-            System::Out("%u, %x", xpm_timer->address, acpiFadt->x_pmt_timer_block.address);
             
             switch (acpiFadt->x_pmt_timer_block.addressSpace) {
                 case 0: {
-                    uint64_t pmtVirt = Memory::ManagementUnit::KernelAllocate4KPages(1);
-                    uint64_t pmtPhys = ALIGN_DOWN(_acpiTimerBlock, ARCH_PAGE_SIZE);
-                    uint16_t offset = _acpiTimerBlock - pmtPhys;
+                    // uint64_t pmtVirt = Memory::ManagementUnit::KernelAllocate4KPages(1);
+                    // uint64_t pmtPhys = ALIGN_DOWN(_acpiTimerBlock, ARCH_PAGE_SIZE);
+                    // uint16_t offset = _acpiTimerBlock - pmtPhys;
                     
-                    Memory::ManagementUnit::KernelMapVirtualMemory4K(pmtPhys, pmtVirt, 1);
-                    timerTicks = reinterpret_cast<uint32_t *>(pmtVirt + offset);
+                    // Memory::ManagementUnit::KernelMapVirtualMemory4K(pmtPhys, pmtVirt, 1);
+                    // timerTicks = reinterpret_cast<uint32_t *>(pmtVirt + offset);
+                    timerTicks = acpiFadt->pmt_timer_block;
                     break;
                 }
                 case 1:
                     break;
                 default:
-                    CallPanic("Not implemented");
+                    System::Out("Not implemented %u, Reset to default", acpiFadt->x_pmt_timer_block.addressSpace);
+                    timerTicks = acpiFadt->pmt_timer_block;
+                    //CallPanic("Not implemented");
                     break;
             }
-            System::Out("%u", *timerTicks);
-            System::Halt();
         }
 
         void Sleep(uint64_t microsecs) {
@@ -217,24 +231,20 @@ namespace ACPI
 
             uint64_t clock = 3579545 * microsecs / 1000000;
             uint64_t counter = 0;
-            uint64_t last = *timerTicks;
+            uint64_t last = Ports::ReadDword32(timerTicks);
             uint64_t current = 0;
 
             while (counter < clock) {
-                current = *timerTicks;
+                current = Ports::ReadDword32(timerTicks);
                 if (current < last) {
                     bool isAcpiTimer32Bit = (acpiFadt->flags >> 8) & 0x1;
                     counter += (isAcpiTimer32Bit ? 0x100000000ul : 0x1000000) + current - last;
                 } else {
                     counter += current - last;
-                    System::Out("Update new value: %u", *timerTicks);
                 }
                 last = current;
-                asm("hlt");
+                asm("nop");
             }
+        } 
     } // namespace Timer
-    
-
-    
-    }
 }

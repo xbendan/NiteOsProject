@@ -76,12 +76,11 @@ namespace APIC
     namespace Local
     {
         extern uintptr_t localPhysApicBase;
-        extern volatile uint32_t *localApicBase;
+        extern uintptr_t localApicBase;
         void WriteBase(uint64_t val);
         uint64_t ReadBase();
         void WriteData(uint32_t reg, uint32_t data);
         uint32_t ReadData(uint32_t reg);
-        void StartTimer();
         void SendIPI(uint8_t apicId, uint32_t vector);
         void SendIPI(uint8_t apicId, uint32_t dsh, uint32_t type, uint8_t vector);
         void Enable();
@@ -91,7 +90,8 @@ namespace APIC
 
     namespace Timer
     {
-        
+        volatile uint32_t Ticks();
+        void Initialize(uint64_t hertz, uint32_t irq);
     }
     
     void Initialize();

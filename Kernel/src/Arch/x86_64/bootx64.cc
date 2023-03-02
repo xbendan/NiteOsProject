@@ -15,6 +15,7 @@
 #include <drv/video.h>
 #include <timer.h>
 #include <kern.h>
+#include <system.h>
 
 BootInfo bootInfo;
 
@@ -121,12 +122,12 @@ namespace Boot
         Memory::Initialize();
 
         PIC::Initialize();
-        PIT::Initialize(1000);
+        // PIT::Initialize(1000);
 
         CPUIDInfo cpuId = CPUID();
         // Check hardware features
         {
-            Video::WriteText("Checking hardware features...");
+            System::Out("Checking hardware features...");
 
             if (!(cpuId.edx & CPUID_EDX_MSR)) {
                 CallPanic("This processor doesn't support MSR (Model Specific Registers).");
@@ -140,19 +141,11 @@ namespace Boot
                 CallPanic("This processor doesn't support APIC (Advanced Programmable Interrupt Controller)!");
             }
 
-            Video::WriteText("OK!");
+            System::Out("OK!");
         }
 
-        Video::WriteText("Initializing ACPI.");
         ACPI::Initialize();
-        EnableInterrupts();
-
-        Video::WriteText("ACPI Sleeping.");
-
-        ACPI::Timer::Sleep(1000);
         // APIC
-        Video::WriteText("Initializing Local and I/O APIC.");
-        for(;;)asm("hlt");
         APIC::Initialize();
 
         EnableInterrupts();
@@ -160,7 +153,7 @@ namespace Boot
         HPET::Initialize();
         
         SMBios::Initialize();
-        SMP::Initialize();
+        // SMP::Initialize();
 
         for (;;) asm("hlt");
     }
