@@ -115,13 +115,15 @@ namespace APIC
             uint32_t        reg, 
             uint32_t        data
         ) {
-            *((volatile uint32_t *)(localApicBase + reg)) = data;
+            ((volatile uint32_t *) localApicBase)[reg] = data;
+            //*((volatile uint32_t *)(localApicBase + reg)) = data;
         }
 
         uint32_t ReadData(
             uint32_t        reg
         ) {
-            return *((volatile uint32_t *)(localApicBase + reg));
+            return ((volatile uint32_t *) localApicBase)[reg];
+            //return *((volatile uint32_t *)(localApicBase + reg));
         }
 
         void SendIPI(uint8_t apicId, uint32_t vector) {
