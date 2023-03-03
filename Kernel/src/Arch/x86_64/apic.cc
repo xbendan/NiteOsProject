@@ -155,7 +155,7 @@ namespace APIC
             System::Out("%X", ReadBase());
 
             Enable();
-            PIC::Disable();
+            // PIC::Disable();
 
             Timer::Initialize(1000, 0x20);
 

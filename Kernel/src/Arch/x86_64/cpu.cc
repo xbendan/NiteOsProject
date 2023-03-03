@@ -4,8 +4,9 @@
 
 int ThisCPU()
 {
-    if(APIC::Local::localApicBase)
-        return APIC::Local::localApicBase[LOCAL_APIC_ID / 4] >> 24;
+    uintptr_t apicBase = APIC::Local::localApicBase;
+    if(apicBase)
+        return ((uint32_t *) apicBase)[LOCAL_APIC_ID / 4] >> 24;
     else
         return 0;
 }

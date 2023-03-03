@@ -5,7 +5,7 @@
 #include <mm/mem.h>
 #include <mm/page.h>
 #include <mm/kmalloc.h>
-#include <drv/video.h>
+#include <driver/video.h>
 #include <timer.h>
 #include <system.h>
 

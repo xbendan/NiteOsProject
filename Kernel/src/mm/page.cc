@@ -1,6 +1,6 @@
 #include <mm/page.h>
 #include <mm/mmzone.h>
-#include <drv/video.h>
+#include <driver/video.h>
 #include <kern.h>
 
 #ifdef ARCH_X86_64

@@ -3,7 +3,7 @@
 #include <mm/page.h>
 #include <mm/slab.h>
 #include <mm/mmzone.h>
-#include <drv/video.h>
+#include <driver/video.h>
 #include <proc/sched.h>
 #include <kern.h>
 #include <address.h>

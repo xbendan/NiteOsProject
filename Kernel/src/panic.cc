@@ -1,5 +1,5 @@
 #include <kern.h>
-#include <drv/video.h>
+#include <driver/video.h>
 
 void CallPanic(const char* text)
 {

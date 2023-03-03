@@ -1,7 +1,7 @@
 #include <Arch/x86_64/mmu.h>
 #include <macros>
 #include <utils/list.h>
-#include <drv/video.h>
+#include <driver/video.h>
 
 enum AcpiTableNameDefinition
 {

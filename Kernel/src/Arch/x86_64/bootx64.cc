@@ -12,7 +12,7 @@
 #include <Arch/x86_64/smp.h>
 #include <Arch/x86_64/hpet.h>
 #include <init/bootinfo.h>
-#include <drv/video.h>
+#include <driver/video.h>
 #include <timer.h>
 #include <kern.h>
 #include <system.h>
@@ -122,7 +122,7 @@ namespace Boot
         Memory::Initialize();
 
         PIC::Initialize();
-        // PIT::Initialize(1000);
+        PIT::Initialize(1000);
 
         CPUIDInfo cpuId = CPUID();
         // Check hardware features

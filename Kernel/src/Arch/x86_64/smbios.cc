@@ -11,22 +11,21 @@ namespace SMBios
     int g_SmbiosVersion = -1;
     void *SmbiosInfo;
 
-    bool Checksum(uint64_t addr)
-    {
-        int length = *((uint8_t *)(addr + 0x5));
-        uint8_t checksum = 0;
-        for(int i = 0; i < length; i++)
-            checksum += *((uint8_t *)(addr + i));
-        return !checksum;
-    }
-
     void Initialize()
     {
         uintptr_t address = 0xF0000 + IO_VIRTUAL_BASE;
+
+        auto checksum = [](uint64_t addr) -> bool {
+            uint8_t _checksum = 0;
+            for(int i = 0; i < *((uint8_t *)(addr + 0x5)); i++)
+                _checksum += *((uint8_t *)(addr + i));
+            return !_checksum;
+        };
+
         while (address < 0x100000 + IO_VIRTUAL_BASE)
         {
             if(memcmp((void *) address, __smbios_SignatureL2, 4)
-                && Checksum(address))
+                && checksum(address))
             {
                 g_SmbiosVersion = 2;
                 SmbiosInfo = (void *) address;
@@ -34,7 +33,7 @@ namespace SMBios
             }
 
             if(memcmp((void *) address, __smbios_SignatureL3, 5)
-                && Checksum(address))
+                && checksum(address))
             {
                 g_SmbiosVersion = 3;
                 SmbiosInfo = (void *) address;

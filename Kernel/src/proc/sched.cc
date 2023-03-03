@@ -1,5 +1,6 @@
 #include <proc/proc.h>
 #include <mm/kmalloc.h>
+#include <libkern/objects.h>
 
 namespace Proc
 {
@@ -41,11 +42,11 @@ namespace Proc
     }
 
     Process *CreateELFProcess(Fs::File *file) {
-        return CreateProcessEx(NULL, TaskTypeBackground, file, file->m_Name);
+        return CreateProcessEx(NULL, TaskTypeBackground, file, file->name);
     }
 
     Process *CreateProcessEx(Activity *activity, TaskType type, Fs::File *file, char *name) {
-        Process *newProc = (Process *) kmalloc(sizeof(struct Process));
+        Process *newProc = (Process *) kmalloc(sizeof(Process));
 
         *newProc = Process(name, file, GetNextPID(), activity, type);
 
@@ -95,8 +96,8 @@ namespace Proc
 
     Utils::ListNode<Thread> *CreateThread(Process *proc)
     {
-        if (proc == NULL)
-            return NULL;
+        if (Objects::IsNull(proc))
+            return nullptr;
 
         Utils::ListNode<Thread> *newThread = reinterpret_cast<Utils::ListNode<Thread> *>(kmalloc(sizeof(Utils::ListNode<Thread>)));
 

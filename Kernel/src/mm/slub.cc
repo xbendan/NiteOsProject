@@ -2,7 +2,7 @@
 #include <mm/kmalloc.h>
 #include <proc/proc.h>
 #include <proc/sched.h>
-#include <drv/video.h>
+#include <driver/video.h>
 #include <libkern/objects.h>
 #include <utils/list.h>
 #include <kern.h>

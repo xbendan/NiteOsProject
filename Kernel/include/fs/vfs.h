@@ -64,7 +64,7 @@ namespace Fs
     File *ListFiles(const char *dir);
     bool Create(const char *path);
     bool Delete(const char *path);
-    uint8_t[] ReadBytes(const char *path);
-    void WriteBytes(const char *path, uint8_t[] content);
+    uint8_t* ReadBytes(const char *path);
+    void WriteBytes(const char *path, uint8_t *content);
 
 } // namespace Fs
