@@ -1,3 +1,5 @@
+#include <utils/list.h>
+
 enum DeviceType
 {
     DeviceTypeAudio,
@@ -15,14 +17,33 @@ enum DeviceType
     DeviceTypeSecurity,
     DeviceTypeProcessor,
     DeviceTypePrinter,
-    DeviceTypeSystemDevices
+    DeviceTypeSystemDevices,
+
+    DeviceTypeUnknown
 };
 
-struct Device
+enum DeviceBus
 {
-    char *m_Name;                   /* Name of the device */
-    enum DeviceType m_Type;         /* Device Type*/
-    struct Device *m_Dependence;    /* Device that this device depends on */
+    DeviceBusSoftware,
+    DeviceBusPCI,
+    DeviceBusUSB,
+
+    DeviceBusUnknown
+};
+
+class Device
+{
+    char *m_Name;
+    DeviceType m_Type;
+    DeviceBus m_DeviceBus;
+    uint64_t m_DeviceId;
+
+    LinkedList<Device *> m_Dependencies; /* Device that this device depends on */
+
+public:
+    Device(const char *name)
+      : m_Name(name),
+        m_Type()
 };
 
 struct Device *GetDevice(const char *str);

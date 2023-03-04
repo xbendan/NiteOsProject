@@ -95,6 +95,8 @@
 #define PCI_INTERRUPT_PIN 0x3d
 #define PCI_INTERRUPT_LINE 0x3c
 
+#define PCI_PACKAGE_ADDRESS(bus, slot, func, offset) ((bus << 16 | slot << 11 | func << 8 | offset & 0xFC | 0x80000000))
+
 namespace PCI
 {
     struct MSICapability
@@ -156,6 +158,12 @@ namespace PCI
         bool msiCapable;
     };
 
+    enum PCIVendors
+    {
+        VendorAMD = 0x1022,
+        VendorIntel = 0x8086
+    };
+
     enum ConfigurationAccessMode
     {
         Legacy,   // PCI
@@ -169,12 +177,12 @@ namespace PCI
     void SetDevice(PCIDevice *info, uint8_t bus, uint8_t slot, uint8_t func);
     void SetDeviceFromInfo(const PCIInfo *info);
 
-    void ReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
     uint32_t ConfigReadDword(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
     uint16_t ConfigReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
-    void ConfigWriteWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint16_t data);
-
     uint8_t ConfigReadByte(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
+
+    void ConfigWriteDword(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint32_t data);
+    void ConfigWriteWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint16_t data);
     void ConfigWriteByte(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint8_t data);
 
     bool CheckDevice(uint8_t bus, uint8_t device, uint8_t func);

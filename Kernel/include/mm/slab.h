@@ -19,7 +19,6 @@
 
 uint8_t BLOCK_ORDER(size_t size);
 
-using namespace Utils;
 using namespace Memory;
 
 namespace Memory
@@ -40,14 +39,14 @@ namespace Memory
         */
         void **freelist;
         page_t *page;
-        Utils::LinkedList<page_t> partial;
+        LinkedList<page_t> partial;
     } slab_cpu_t;
 
     typedef struct SlabMemoryNode
     {
-        Utils::Spinlock lock;
+        Spinlock lock;
         uint64_t nr_partial;
-        Utils::LinkedList<page_t> partial;
+        LinkedList<page_t> partial;
     } slab_node_t;
 
     typedef struct SlabCache

@@ -1,10 +1,6 @@
 #pragma once
 
-namespace Utils
-{
-    // typedef volatile int spinlock_t;
-
-    inline void AcquireLock(volatile int *lock)
+inline void AcquireLock(volatile int *lock)
     {
         int lockVal = 1; // From DPDK
         __asm__ volatile(
@@ -33,17 +29,16 @@ namespace Utils
                 : "memory");
     }
 
-    class ScopedSpinlock final {
+class ScopedSpinlock final {
         volatile int m_Lock;
         ScopedSpinlock(volatile int& lock) : m_Lock(lock) { AcquireLock(&m_Lock); }
         ~ScopedSpinlock() { ReleaseLock(&m_Lock); }
     };
 
-    typedef class Spinlock
+typedef class Spinlock
     {
         volatile int m_Lock;
     public:
         void Acquire() { AcquireLock(&m_Lock); }
         void Release() { ReleaseLock(&m_Lock); }
     } spinlock_t;
-}

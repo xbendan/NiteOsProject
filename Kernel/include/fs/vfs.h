@@ -1,3 +1,4 @@
+#include <dev/device.h>
 #include <utils/list.h>
 #include <macros>
 
@@ -42,23 +43,31 @@ namespace Fs
         uint64_t m_SpaceUsed;
     };
 
-    typedef struct FsPartition 
+    struct Partition 
     {
 
-    } parition_t;
+    };
+    class DiskDevice : public Device
+    {
+    private:
+        uint32_t m_BlockSize;
+    public:
+        LinkedList<Partition> m_Partitions;
 
-    struct FsNode {};
+        virtual size_t Read(size_t sector, size_t size, uint8_t *buffer);
+        virtual size_t Write(size_t sector, size_t size, uint8_t *buffer);
+    };
 
     typedef struct File
     {
-        char *name;
-        uint8_t uuid[16];
-        filetype_t type;
-        uint64_t size;
-        uint64_t bytesTaken;
-        uint64_t flags;
+        char *m_Name;
+        uint8_t m_UUID[16];
+        filetype_t m_Type;
+        uint64_t m_Size;
+        uint64_t m_BytesTaken;
+        uint64_t m_Flags;
     } file_t;
-
+    
     void Mount(Volume *volume);
 
     File *ListFiles(const char *dir);

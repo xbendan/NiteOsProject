@@ -7,8 +7,6 @@
 #include <Arch/x86_64/mmu.h>
 #endif
 
-using namespace Utils;
-
 namespace Memory {
     buddyzone_t zones[3];
 

@@ -1,4 +1,5 @@
 #include <Arch/x86_64/pci.h>
+#include <Arch/x86_64/ports.h>
 
 namespace PCI
 {
@@ -35,19 +36,86 @@ namespace PCI
         }
     }
 
+    using namespace Ports;
+
     void SetDevice(PCIDevice *info, uint8_t bus, uint8_t slot, uint8_t func);
     void SetDeviceFromInfo(const PCIInfo *info);
 
-    void ReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
-    uint32_t ConfigReadDword(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
-    uint16_t ConfigReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
-    void ConfigWriteWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint16_t data);
+    uint32_t ConfigReadDword(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset)
+    {
+        WriteDword32(0xCF8, PCI_PACKAGE_ADDRESS(bus, slot, func, offset));
 
-    uint8_t ConfigReadByte(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
-    void ConfigWriteByte(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint8_t data);
+        return ReadDword32(0xCFC);
+    }
 
-    bool CheckDevice(uint8_t bus, uint8_t device, uint8_t func);
-    bool FindDevice(uint16_t deviceID, uint16_t vendorID);
+    uint16_t ConfigReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset)
+    {
+        WriteDword32(0xCF8, PCI_PACKAGE_ADDRESS(bus, slot, func, offset));
+
+        return (uint16_t)((ReadDword32(0xCFC) >> (offset & 2) * 8) & 0xFFFF);
+    }
+
+    uint8_t ConfigReadByte(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset) 
+    {
+        WriteDword32(0xCF8, PCI_PACKAGE_ADDRESS(bus, slot, func, offset));
+
+        return (uint8_t)((ReadDword32(0xCFC) >> (offset & 2) * 8) & 0xFF);
+    }
+
+    void ConfigWriteDword(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint32_t data)
+    {
+        WriteDword32(0xCF8, PCI_PACKAGE_ADDRESS(bus, slot, func, offset));
+        WriteDword32(0xCFC, data);
+    }
+
+    void ConfigWriteWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint16_t data)
+    {
+        WriteDword32(0xCF8, PCI_PACKAGE_ADDRESS(bus, slot, func, offset));
+        WriteDword32(0xCFC, (ReadDword32(0xCFC) & (~(0xFFFF << ((offset & 2) * 8)))) |
+                (static_cast<uint32_t>(data) << ((offset & 2) * 8)));
+    }
+
+    void ConfigWriteByte(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint8_t data)
+    {
+        WriteDword32(0xCF8, PCI_PACKAGE_ADDRESS(bus, slot, func, offset));
+        WriteDword32(0xCFC, (ReadDword32(0xCFC) & (~(0xFF << ((offset & 3) * 8)))) |
+                (static_cast<uint32_t>(data) << ((offset & 3) * 8)));
+    }
+
+    uint16_t GetVendor(uint8_t bus, uint8_t slot, uint8_t func) {
+        uint16_t vendor;
+
+        vendor = ConfigReadWord(bus, slot, func, PCIVendorID);
+        return vendor;
+    }
+
+    uint16_t GetDeviceID(uint8_t bus, uint8_t slot, uint8_t func) {
+        uint16_t id;
+
+        id = ConfigReadWord(bus, slot, func, PCIDeviceID);
+        return id;
+    }
+
+    uint8_t GetClassCode(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCI_CLASS_CODE); }
+
+    uint8_t GetSubclass(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCI_SUB_CLASS); }
+
+    uint8_t GetProgIf(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCI_PROG_IF); }
+
+    uint8_t GetHeaderType(uint8_t bus, uint8_t slot, uint8_t func) {
+        return PCI::ConfigReadByte(bus, slot, func, PCI_HEADER_TYPE);
+    }
+
+    bool CheckDevice(uint8_t bus, uint8_t device, uint8_t func)
+    {
+        return !(GetVendor(bus, device, func) == 0xFFFF);
+    }
+
+    bool FindDevice(uint16_t deviceID, uint16_t vendorID)
+    {
+
+    }
+    
     bool FindGenericDevice(uint16_t classCode, uint16_t subclass);
 
     void EnumerateDevice(uint16_t deviceID, uint16_t vendorID, void(*func)(const PCIInfo *info));

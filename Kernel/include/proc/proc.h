@@ -18,7 +18,6 @@
 typedef uint32_t tid_t;
 typedef uint16_t pid_t;
 
-using namespace Utils;
 using namespace Memory::ManagementUnit;
 
 namespace Task
@@ -146,8 +145,8 @@ namespace Task
 
         struct
         {
-            spinlock_t m_Lock;
-            spinlock_t m_HandleLock;
+            Spinlock m_Lock;
+            Spinlock m_HandleLock;
         };
 
         uint32_t m_NextThreadId;

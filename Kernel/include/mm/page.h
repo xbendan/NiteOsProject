@@ -23,8 +23,6 @@
 // 16  32  64  128
 // 256 512 1024
 
-using namespace Utils;
-
 static inline size_t ALIGN_PAGE(size_t x)
 {
     x--;
@@ -66,7 +64,7 @@ namespace Memory
             PageFrame *first;
         };
         void **freelist;
-        spinlock_t lock;
+        Spinlock lock;
         uint64_t addr;
     } page_t;
 
@@ -78,7 +76,7 @@ namespace Memory
          */
         LinkedList<page_t> pageList[PAGE_MAX_ORDER + 1];
         uint64_t flags; 
-        spinlock_t lock;
+        Spinlock lock;
     } buddyzone_t;
 
     #define ZONE_NORMAL 1

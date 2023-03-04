@@ -36,20 +36,20 @@ namespace Task
         // InitLock(&newProc->m_Lock);
         // InitLock(&newProc->m_HandleLock);
 
-        Utils::ListNode<Thread> *thread = CreateThread(proc);
+        ListNode<Thread> *thread = CreateThread(proc);
         proc->m_MainThread = &thread->obj;
         proc->m_ChildrenThreadList.Add(thread);
 
         return proc;
     }
 
-    Utils::ListNode<Thread> *CreateThread(
+    ListNode<Thread> *CreateThread(
         Process                        *proc
     ) {
         if (Objects::IsNull(proc))
             return nullptr;
 
-        Utils::ListNode<Thread> *thread = reinterpret_cast<Utils::ListNode<Thread> *>(kmalloc(sizeof(Utils::ListNode<Thread>)));
+        ListNode<Thread> *thread = reinterpret_cast<ListNode<Thread> *>(kmalloc(sizeof(ListNode<Thread>)));
 
         thread->obj = (Thread){
             .m_ThreadId = proc->m_NextThreadId++,
