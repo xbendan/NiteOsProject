@@ -93,7 +93,7 @@ namespace ACPI
             }
         }
 
-        CallPanic("[ERR] No ACPI table found.");
+        System::Panic("No ACPI table found.");
 
     INIT_ACPI_FOUND:
 
@@ -219,7 +219,6 @@ namespace ACPI
                 default:
                     System::Out("Not implemented %u, Reset to default", acpiFadt->x_pmt_timer_block.addressSpace);
                     timerTicks = acpiFadt->pmt_timer_block;
-                    //CallPanic("Not implemented");
                     break;
             }
         }

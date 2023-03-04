@@ -51,7 +51,7 @@ namespace APIC
         void Initialize() {
             if(!base)
             {
-                CallPanic("No I/O APIC base address.");
+                System::Panic("No I/O APIC base address found.");
                 return;
             }
 
@@ -144,7 +144,7 @@ namespace APIC
         void Initialize()
         {
             if (!localPhysApicBase) {
-                CallPanic("Local APIC base not found.");
+                System::Panic("Local APIC base not found.");
             }
 
             localApicBase = Memory::ManagementUnit::GetIOMapping(localPhysApicBase);

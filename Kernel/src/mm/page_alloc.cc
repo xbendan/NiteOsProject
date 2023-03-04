@@ -12,7 +12,7 @@
 
 namespace Memory
 {
-    using namespace Proc;
+    using namespace Task;
 
     uintptr_t KernelAllocate4KPages(size_t amount) {
         amount = ALIGN_PAGE(amount);
@@ -33,7 +33,7 @@ namespace Memory
         page_t *page = Memory::AllocatePhysMemory4K(amount);
 
         if (page != nullptr) {
-            proc_t *proc = GetCurrentProcess();
+            Process *proc = GetCurrentProcess();
             uint64_t phys = page->addr;
             uint64_t virt = ManagementUnit::Allocate4KPages(proc->m_Pagemap, amount);
 

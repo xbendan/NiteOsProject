@@ -181,6 +181,11 @@ typedef struct CPUIDInfo
     uint32_t ecx, edx;
 } cpuid_info_t;
 
+namespace Task {
+    class Process;
+    struct Thread;
+}
+
 typedef struct ProcessorCore
 {
     struct ProcessorCore *self;
@@ -192,9 +197,9 @@ typedef struct ProcessorCore
 
     tss_t tss __attribute__((aligned(16)));
 
-    struct Thread *currentThread;
-    struct Thread *idleThread;
-    struct Process *idleProcess;
+    Task::Thread *currentThread;
+    Task::Thread *idleThread;
+    Task::Process *idleProcess;
 } processor_t;
 
 static inline uintptr_t ReadMsr(

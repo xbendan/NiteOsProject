@@ -44,6 +44,6 @@ namespace SMBios
         }
 
         if(g_SmbiosVersion == -1)
-            CallPanic("[SMBIOS] No SMBIOS found!");
+            System::Panic("No SMBIOS found!");
     }
 }

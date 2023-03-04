@@ -50,7 +50,7 @@ namespace Memory {
 
     page_t *AllocatePhysMemory4KOrdered(uint8_t order) {
         if (order > PAGE_MAX_ORDER || order < PAGE_MIN_ORDER) {
-            CallPanic("Invalid page order.");
+            System::Panic("Invalid page order %u.", order);
             return nullptr;
         }
         

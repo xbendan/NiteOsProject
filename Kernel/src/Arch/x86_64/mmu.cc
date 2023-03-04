@@ -242,7 +242,7 @@ namespace Memory::ManagementUnit
             }
         }
 
-        CallPanic("Kernel Out of Virtual Memory!");
+        System::Panic("Kernel Out of Virtual Memory!");
     }
 
     /**

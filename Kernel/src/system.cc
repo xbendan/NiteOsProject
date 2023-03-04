@@ -11,4 +11,19 @@ namespace System
         va_end(args);
         Video::Newline();
     }
+
+    [[noreturn]] void Panic(const char *fmt, ...) {
+        Video::ClearScreen();
+        
+        va_list args;
+        va_start(args, fmt);
+        vprintf(fmt, args);
+        va_end(args);
+
+        asm("cli; hlt;");
+    }
+
+    void EntryPoint() {
+        
+    }
 } // namespace System

@@ -6,3 +6,8 @@ namespace Objects
         return Equals(a, b) && memcmp(a, b, size);
     } 
 } // namespace Objects
+
+namespace Integers
+{
+    
+}

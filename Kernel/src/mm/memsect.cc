@@ -26,7 +26,7 @@ namespace Memory::Model
                 section->pages = reinterpret_cast<page_t *>(virt);
                 ManagementUnit::KernelMapVirtualMemory4K(phys, virt, amount);
             } else {
-                CallPanic("");
+                System::Panic("");
             }
         }
     }

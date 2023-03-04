@@ -17,7 +17,7 @@ namespace Memory
     const uint16_t blockSize[] = {
         8,      16,     32,     48,     64,     96,     128,    192, 
         256,    512,    768,    1024,   1536,   2048,   4096,   8192,
-        sizeof(Proc::Thread)
+        sizeof(Task::Thread)
     };
     const uint16_t blockArrayLength = sizeof(blockSize) / sizeof(uint16_t);
     slab_cache_t *caches[SLAB_MAX_BLOCK_ORDER];
@@ -80,7 +80,7 @@ namespace Memory
         page_t *page = AllocatePhysMemory4K(1);
 
         if (Objects::IsNull(page)) {
-            CallPanic("Slub allocator failed to get page.");
+            System::Panic("Slub allocator failed to get page.");
         }
         
         return page;
@@ -150,7 +150,7 @@ namespace Memory
      */
     uintptr_t AllocateKernelObject(slab_cache_t *cache) {
         if (!cache) {
-            CallPanic("Null Pointer for cache while allocating kernel memory.");
+            System::Panic("Null Pointer for cache while allocating kernel memory.");
         }
 
         slab_cpu_t *slab_cpu = SlubGetCPU(cache);

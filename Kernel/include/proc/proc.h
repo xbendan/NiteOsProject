@@ -21,7 +21,7 @@ typedef uint16_t pid_t;
 using namespace Utils;
 using namespace Memory::ManagementUnit;
 
-namespace Proc
+namespace Task
 {
     struct Thread;
 
@@ -58,10 +58,10 @@ namespace Proc
         ThreadStateBlocked = 2
     } thread_state_t;
 
-    typedef class Process
+    class Process
     {
     public:
-        Process(char *name, Fs::File *sourceFile, pid_t pid, Proc::Activity *activity, TaskType taskType)
+        Process(char *name, Fs::File *sourceFile, pid_t pid, Activity *activity, TaskType taskType)
           : m_Name(name),
             m_FilePtr(sourceFile),
             m_ProcessId(pid),
@@ -95,6 +95,20 @@ namespace Proc
 
         }
 
+        /**
+         * @brief Send a message to terminate a process
+         * 
+         * This function will insert a message of terminating to the message 
+         * queue of targeting process. It generally tells the process to stop
+         * working and save all changes. Resources will be released manually
+         * by the process, so it's safe to stop a processunless the process 
+         * cannot handle this message. In that situation, sending a terminate 
+         * message won't do anything, call @code {.c}
+         * KillProcess(struct Process *process)
+         * @endcode instead.
+         * 
+         * @param process 
+         */
         void Terminate(int stopCode)
         {
 
@@ -151,14 +165,14 @@ namespace Proc
         #elif ARCH_RISCV
 
         #endif
-    } proc_t;
+    };
 
-    typedef struct Thread
+    struct Thread
     {
         tid_t m_ThreadId;                  /* Thread ID, not duplicated in same progress */
-        proc_t *m_Parent;    /* Parent process, indicates the owner of this thread */
-        spinlock_t m_Lock;            /* Thread lock */
-        spinlock_t m_StateLock;       /* Thread state lock */
+        Process *m_Parent;    /* Parent process, indicates the owner of this thread */
+        Spinlock m_Lock;            /* Thread lock */
+        Spinlock m_StateLock;       /* Thread state lock */
 
         struct
         {
@@ -167,23 +181,37 @@ namespace Proc
         };
 
         void *m_UserStack;
-        void *m_UserStackLimit;
+        void *m_UserStackBase;
         void *m_KernelStack;
-        void *m_KernelStackLimit;
+        void *m_KernelStackBase;
 
         registers_t m_Registers;  
         registers_t m_LastSyscall;
 
-        uint8_t m_ThreadPriority;       /* The priority when scheduling */
-        uint8_t m_ThreadState;          /* Thread state */
-    } thread_t;
+        TaskPriority m_ThreadPriority;       /* The priority when scheduling */
+        TaskState m_ThreadState = TaskState::TaskStateRunning;          /* Thread state */
+
+        uint32_t m_TimeSlice = 0;
+
+        Thread(Process *process, tid_t id)
+          : m_Parent(process),
+            m_ThreadId(id),
+            m_ThreadState(TaskStateRunning) { }
+    };
 
     /**
      * @brief Create a Process object
      * 
      * @return struct Process* Pointer to new process object
      */
-    proc_t *CreateProcess();
+    Process *CreateProcess();
+
+    /**
+     * @brief Create a Idle Process object
+     * 
+     * @return Process* 
+     */
+    Process *CreateIdleProcess();
 
     /**
      * @brief Create a process from existing file
@@ -191,7 +219,8 @@ namespace Proc
      * @param file Source file, must be executable
      * @return struct Process* Pointer to new process object
      */
-    proc_t *CreateELFProcess(Fs::file_t *file);
+    Process *CreateELFProcess(
+        Fs::file_t                     *file);
 
     /**
      * @brief Create a Process object with full arguments
@@ -205,7 +234,11 @@ namespace Proc
      * @param file The file that the process created from
      * @return struct Process* Pointer to new process object
      */
-    proc_t *CreateProcessEx(activity_t *activity, task_type_t type, Fs::file_t *file, char *name);
+    Process *CreateProcessEx(
+        activity_t                     *activity, 
+        task_type_t                     type, 
+        Fs::file_t                     *file, 
+        char                           *name);
 
     /**
      * @brief Create a new thread object of specific process
@@ -213,7 +246,8 @@ namespace Proc
      * @param process Parent process
      * @return struct Thread* Pointer to new thread
      */
-    ListNode<thread_t> *CreateThread(proc_t *process);
+    ListNode<Thread> *CreateThread(
+        Process                        *process);
 
     /**
      * @brief Forcely kill a process and clean all resources
@@ -227,21 +261,6 @@ namespace Proc
      * 
      * @param process Process that will be killed
      */
-    void KillProcess(proc_t *process);
-
-    /**
-     * @brief Send a message to terminate a process
-     * 
-     * This function will insert a message of terminating to the message 
-     * queue of targeting process. It generally tells the process to stop
-     * working and save all changes. Resources will be released manually
-     * by the process, so it's safe to stop a processunless the process 
-     * cannot handle this message. In that situation, sending a terminate 
-     * message won't do anything, call @code {.c}
-     * KillProcess(struct Process *process)
-     * @endcode instead.
-     * 
-     * @param process 
-     */
-    void TerminateProcess(proc_t *process);
+    void KillProcess(
+        Process                        *process);
 } // namespace Process

@@ -13,6 +13,7 @@
 #include <Arch/x86_64/hpet.h>
 #include <init/bootinfo.h>
 #include <driver/video.h>
+#include <proc/proc.h>
 #include <timer.h>
 #include <kern.h>
 #include <system.h>
@@ -130,19 +131,20 @@ namespace Boot
             System::Out("Checking hardware features...");
 
             if (!(cpuId.edx & CPUID_EDX_MSR)) {
-                CallPanic("This processor doesn't support MSR (Model Specific Registers).");
+                System::Panic("This processor doesn't support MSR (Model Specific Registers).");
             }
 
             if (!(cpuId.ecx & CPUID_ECX_SSE3)) {
-                CallPanic("This processor doesn't support SSE3!");
+                System::Panic("This processor doesn't support SSE3!");
             }
 
             if (!(cpuId.edx & CPUID_EDX_APIC)) {
-                CallPanic("This processor doesn't support APIC (Advanced Programmable Interrupt Controller)!");
+                System::Panic("This processor doesn't support APIC (Advanced Programmable Interrupt Controller)!");
             }
 
             System::Out("OK!");
         }
+        System::Out("Process size: %u", sizeof(Task::Thread));
 
         ACPI::Initialize();
         // APIC
@@ -154,6 +156,8 @@ namespace Boot
         
         SMBios::Initialize();
         // SMP::Initialize();
+
+        System::EntryPoint();
 
         for (;;) asm("hlt");
     }

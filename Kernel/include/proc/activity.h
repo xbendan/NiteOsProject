@@ -2,7 +2,7 @@
 
 #include <utils/list.h> 
 
-namespace Proc
+namespace Task
 {
     typedef struct Activity
     {
@@ -16,7 +16,8 @@ namespace Proc
      * @param name 
      * @return activity_t* 
      */
-    Activity *NewActivity(const char* name);
-} // namespace Proc
+    Activity *CreateActivity(
+        const char*                     name);
+}
 
 

@@ -1,3 +1,5 @@
+#include <macros>
+
 namespace System
 {
     void Out(const char* fmt, ...);
@@ -5,5 +7,7 @@ namespace System
     void Reboot();
     void Shutdown();
     void Halt();
-    void Panic(const char *msg, ...);
+    [[noreturn]] void Panic(const char *msg, ...);
+
+    void EntryPoint();
 } // namespace System
