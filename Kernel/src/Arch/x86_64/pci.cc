@@ -85,14 +85,14 @@ namespace PCI
     uint16_t GetVendor(uint8_t bus, uint8_t slot, uint8_t func) {
         uint16_t vendor;
 
-        vendor = ConfigReadWord(bus, slot, func, PCIVendorID);
+        vendor = ConfigReadWord(bus, slot, func, PCI_VENDOR_ID);
         return vendor;
     }
 
     uint16_t GetDeviceID(uint8_t bus, uint8_t slot, uint8_t func) {
         uint16_t id;
 
-        id = ConfigReadWord(bus, slot, func, PCIDeviceID);
+        id = ConfigReadWord(bus, slot, func, PCI_DEVICE_ID);
         return id;
     }
 
@@ -115,7 +115,7 @@ namespace PCI
     {
 
     }
-    
+
     bool FindGenericDevice(uint16_t classCode, uint16_t subclass);
 
     void EnumerateDevice(uint16_t deviceID, uint16_t vendorID, void(*func)(const PCIInfo *info));
@@ -123,6 +123,6 @@ namespace PCI
 
     void Initialize()
     {
-
+        
     }
 } // namespace PCI

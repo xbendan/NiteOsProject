@@ -22,8 +22,9 @@ namespace System
 
         asm("cli; hlt;");
     }
-
-    void EntryPoint() {
-        
-    }
 } // namespace System
+
+void KernelInit()
+{
+    
+}

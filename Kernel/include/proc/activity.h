@@ -4,20 +4,42 @@
 
 namespace Task
 {
-    typedef struct Activity
+    class Process;
+
+    class Activity
     {
-        char *m_Name;
-        uint16_t m_ProcessCount;
-    } activity_t;
+        const char *m_Name;
+        const char *m_Description;
+        LinkedList<Process *> m_ChildrenProcessList;
 
-    /**
-     * @brief 
-     * 
-     * @param name 
-     * @return activity_t* 
-     */
-    Activity *CreateActivity(
-        const char*                     name);
+    public:
+        Activity(
+            const char                 *name,
+            Process                    *proc);
+
+        Activity(
+            Process                    *proc);
+        
+        /**
+         * @brief Add process to this activity
+         * If the process already owned an activity, this function
+         * do nothing and return.
+         * 
+         * @param proc 
+         */
+        void Add(
+            Process                    *proc);
+        
+        /**
+         * Get the activity of process, if it doesn't exist. This 
+         * function will create one and return it.
+         * 
+         * @param proc 
+         * @return Activity* 
+         */
+        static Activity *CreateIfNull(
+            Process                    &proc);
+    };
+
+    extern Activity g_SystemActivity;
 }
-
-

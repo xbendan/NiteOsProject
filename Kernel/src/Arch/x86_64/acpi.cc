@@ -158,14 +158,12 @@ namespace ACPI
                 System::Out("[ACPI] Non-maskable interrupt, lInt=%x", nmi->lInt);
                 break;
             }
-            case 5: /* Local APIC address override */
-            {
+            case 5: /* Local APIC address override */ {
                 System::Out("[ACPI] APIC Address Override");
                 break;
             }
             case 9: /* Processor Local x2APIC */ {
                 System::Out("[ACPI] x2APIC detected.");
-
                 break;
             }
             default:

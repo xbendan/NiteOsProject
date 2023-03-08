@@ -33,7 +33,7 @@ enum DeviceBus
 
 class Device
 {
-    char *m_Name;
+    const char *m_Name;
     DeviceType m_Type;
     DeviceBus m_DeviceBus;
     uint64_t m_DeviceId;
@@ -43,7 +43,7 @@ class Device
 public:
     Device(const char *name)
       : m_Name(name),
-        m_Type()
+        m_Type() { }
 };
 
-struct Device *GetDevice(const char *str);
+Device *GetDevice(const char *str);

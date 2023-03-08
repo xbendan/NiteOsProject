@@ -2,6 +2,7 @@
 
 #include <mm/kmalloc.h>
 #include <utils/spinlock.h>
+#include <libkern/objects.h>
 
 typedef struct ListHead
 {
@@ -11,8 +12,11 @@ typedef struct ListHead
 template <typename T>
 struct ListNode
 {
-    struct ListHead head;
+    ListNode<T> *prev, *next;
     T obj;
+
+    ListNode(T object)
+      : obj(object) { }
 };
 
 template <typename T>
@@ -47,8 +51,8 @@ public:
             node->obj.~T();
             node = n;
         }
-        m_Front = NULL;
-        m_Back = NULL;
+        m_Front = nullptr;
+        m_Back = nullptr;
         m_Count = 0;
 
         m_Lock.Release();
@@ -70,15 +74,15 @@ public:
 
     void Add(ListNode<T> *obj)
     {
-        if (obj == NULL)
+        if (obj == nullptr)
             return;
 
         m_Lock.Acquire();
 
         if (m_Count > 0)
         {
-            obj->head.prev = &m_Back->head;
-            m_Back->head.next = &obj->head;
+            obj->prev = m_Back;
+            m_Back->next = obj;
         }
         else
         {
@@ -90,44 +94,52 @@ public:
         m_Lock.Release();
     }
 
+    ListNode<T> *Add(T& obj)
+    {
+        ListNode<T> *node = new ListNode<T>(obj);
+        Add(node);
+        return node;
+    }
+
     void InsertAt(ListNode<T> *obj, uint32_t index)
     {
     }
 
     void Remove(ListHead *head)
     {
-        ListHead *prev = head->prev, *next = head->next;
-
-        if (prev != NULL)
-            prev->next = next;
-        if (next != NULL)
-            next->prev = prev;
-
-        if (head == &m_Front->head)
-        {
-            m_Front = (ListNode<T> *)next;
-        }
-        if (head == &m_Back->head)
-        {
-            m_Back = (ListNode<T> *)prev;
-        }
+        Remove(reinterpret_cast<ListNode<T> *>(head));
     }
 
     void Remove(ListNode<T> *obj)
     {
-        if (m_Count && Contains(obj))
-            Remove(&obj->head);
+        if (m_Count && Contains(obj)) {
+            ListNode<T> *_prev = obj->prev;
+            ListNode<T> *_next = obj->next;
+
+            if (!Objects::IsNull(_prev))
+                _prev->next = _next;
+            if (!Objects::IsNull(_next))
+                _next->prev = _prev;
+
+            if (Objects::Equals(obj, m_Front))
+                m_Front = _next;
+            if (Objects::Equals(obj, m_Back))
+                m_Back = _prev;
+
+            m_Count--;
+        }
     }
 
     void Remove(uint32_t index)
     {
+        Remove(Get(index));
     }
 
     bool Contains(ListNode<T> *obj)
     {
-        while (obj->head.prev != NULL)
+        while (obj->prev != nullptr)
         {
-            obj = (ListNode<T> *)obj->head.prev;
+            obj = obj->prev;
             if (obj == m_Front)
                 return true;
         }
@@ -136,6 +148,21 @@ public:
 
     bool Contains(T *t)
     {
+        T *item = First();
+        do {
+            if (Objects::Equals(&item->obj, t)) {
+                return true;
+            }
+
+            item = item->next;
+        }
+        while (!Objects::IsNull(item));
+        return false;
+    }
+
+    void ForEach()
+    {
+        
     }
 
     uint32_t Count()
@@ -149,8 +176,8 @@ public:
             return NULL;
 
         ListNode<T> *current = m_Front;
-        for (unsigned i = 0; i < index && current->head.next; i++)
-            current = current->head.next;
+        for (unsigned i = 0; i < index && current->next; i++)
+            current = current->next;
 
         return &current->obj;
     }
@@ -168,9 +195,9 @@ public:
             obj = First();
             if (m_Count > 1)
             {
-                m_Front = reinterpret_cast<ListNode<T> *>(obj->head.next);
-                m_Front->head.prev = NULL;
-                obj->head.next = NULL;
+                m_Front = reinterpret_cast<ListNode<T> *>(obj->next);
+                m_Front->prev = NULL;
+                obj->next = NULL;
             }
             else
                 m_Front = m_Back = NULL;

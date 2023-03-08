@@ -144,7 +144,7 @@ namespace Boot
 
             System::Out("OK!");
         }
-        System::Out("Process size: %u", sizeof(Task::Thread));
+        System::Out("Process size: %u", sizeof(Task::Process));
 
         ACPI::Initialize();
         // APIC
@@ -157,7 +157,7 @@ namespace Boot
         SMBios::Initialize();
         // SMP::Initialize();
 
-        System::EntryPoint();
+        KernelInit();
 
         for (;;) asm("hlt");
     }

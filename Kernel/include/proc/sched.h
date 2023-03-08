@@ -1,5 +1,6 @@
 #include <proc/proc.h>
 #include <libkern/ref.h>
+#include <utils/ArrayList.h>
 
 #define MAX_PROCESS_AMOUNT 65536
 
@@ -10,7 +11,7 @@ namespace Task
         /* PID 0 = Kernel, it will never be assigned */
         pid_t m_NextPID = 1;
         Process *m_IdleProcess;
-        Process *m_ProcessList[MAX_PROCESS_AMOUNT];
+        SizedArrayList<Process *, MAX_PROCESS_AMOUNT> m_ProcessList;
         uint64_t m_TimeSlice;
 
     public:
@@ -44,12 +45,30 @@ namespace Task
             return m_ProcessList[id];
         }
 
+        bool Register(Process *process)
+        {
+            Process **processInList = &m_ProcessList[process->m_ProcessId];
+
+            if (!Objects::IsNull(*processInList)
+                && *processInList != process)
+            {
+                return false;
+            }
+
+            *processInList = process;
+
+            process->Start();
+            return true;
+        }
+
         /**
          * @brief Create a Process object
          * 
-         * @return struct Process* Pointer to new process object
+         * @return Process* Pointer to new process object
          */
-        Process *CreateProcess();
+        Process *CreateProcess(
+            const char                 *name,
+                  Activity             *activity);
 
         /**
          * @brief Create a Idle Process object
@@ -65,7 +84,7 @@ namespace Task
          * @return struct Process* Pointer to new process object
          */
         Process *CreateELFProcess(
-            Fs::file_t                     *file);
+            Fs::File                 *file);
 
         /**
          * @brief Create a Process object with full arguments
@@ -80,10 +99,10 @@ namespace Task
          * @return struct Process* Pointer to new process object
          */
         Process *CreateProcessEx(
-            activity_t                     *activity, 
-            task_type_t                     type, 
-            Fs::file_t                     *file, 
-            char                           *name);
+            const char                       *name,
+                  Activity                   *activity, 
+                  TaskType                    type, 
+                  Fs::File                   *file);
 
         /**
          * @brief Create a new thread object of specific process
@@ -95,6 +114,7 @@ namespace Task
             Process                        *process);
     };
 
+    extern Process g_KernelProcess;
     extern Scheduler *g_Scheduler;
 
     Process *GetCurrentProcess();

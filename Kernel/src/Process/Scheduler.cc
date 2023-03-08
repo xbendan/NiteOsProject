@@ -1,6 +1,9 @@
 #include <proc/proc.h>
+#include <proc/sched.h>
+#include <proc/activity.h>
 #include <mm/kmalloc.h>
 #include <libkern/objects.h>
+#include <utils/ArrayList.h>
 
 #if defined(ARCH_X86_64)
 
@@ -10,9 +13,13 @@
 
 namespace Task
 {
-    Process g_kernelProcess = Process();
-
-    Process *processList[65536]; /* Max of 65536 */
+    Process g_KernelProcess(
+        "atrikrnl",
+        nullptr,
+        0,
+        &g_SystemActivity,
+        TaskType::TaskTypeSystemProcess
+    );
     Scheduler *g_Scheduler;
 
     Process* GetCurrentProcess() {
@@ -26,6 +33,8 @@ namespace Task
     void Initialize()
     {
         g_Scheduler = new Scheduler();
+        
+        g_Scheduler->Register(&g_KernelProcess);
     }
 
     void Schedule()

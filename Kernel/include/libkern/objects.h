@@ -1,3 +1,5 @@
+#pragma once
+
 namespace Objects
 {
     static inline bool IsNull(void *ptr) { return ptr == nullptr; }
