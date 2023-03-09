@@ -5,6 +5,11 @@
 
 namespace Task
 {
+    void Scheduler::Schedule()
+    {
+
+    }
+
     Process *Scheduler::CreateProcess(
         const char                     *name,
         Activity                       *activity

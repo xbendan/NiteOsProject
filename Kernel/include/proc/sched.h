@@ -37,10 +37,6 @@ namespace Task
             return _next;
         }
 
-        void Schedule() {
-
-        }
-
         Process *GetProcessById(pid_t id) {
             return m_ProcessList[id];
         }
@@ -60,6 +56,10 @@ namespace Task
             process->Start();
             return true;
         }
+
+        void Tick();
+
+        void Schedule();
 
         /**
          * @brief Create a Process object
@@ -118,7 +118,4 @@ namespace Task
     extern Scheduler *g_Scheduler;
 
     Process *GetCurrentProcess();
-    
-    void Initialize();
-    void Schedule();
 }

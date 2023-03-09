@@ -1,3 +1,5 @@
+#include <proc/sched.h>
+#include <proc/proc.h>
 #include <libkern/printf.h>
 #include <driver/video.h>
 #include <macros>
@@ -24,7 +26,11 @@ namespace System
     }
 } // namespace System
 
-void KernelInit()
+using namespace Task;
+
+[[noreturn]] void KernelInit()
 {
-    
+    (g_Scheduler = Scheduler())->Register(&g_KernelProcess);
+
+    for (;;) asm("hlt");
 }

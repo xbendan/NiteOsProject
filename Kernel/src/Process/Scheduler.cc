@@ -18,8 +18,7 @@ namespace Task
         nullptr,
         0,
         &g_SystemActivity,
-        TaskType::TaskTypeSystemProcess
-    );
+        TaskType::TaskTypeSystemProcess);
     Scheduler *g_Scheduler;
 
     Process* GetCurrentProcess() {
@@ -28,17 +27,5 @@ namespace Task
         return Objects::IsNull(currentThread) ?
                 nullptr :
                 currentThread->m_Parent;
-    }
-    
-    void Initialize()
-    {
-        g_Scheduler = new Scheduler();
-        
-        g_Scheduler->Register(&g_KernelProcess);
-    }
-
-    void Schedule()
-    {
-        
     }
 }

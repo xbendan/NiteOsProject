@@ -46,4 +46,9 @@ public:
         m_Type() { }
 };
 
+class DeviceProvider
+{
+
+};
+
 Device *GetDevice(const char *str);
