@@ -42,13 +42,14 @@ namespace Memory::ManagementUnit
     using pagedir_t = pde_t[TABLES_PER_DIR]; /* 2MiB -> 1GiB */
     using pagetable_t = page_t[PAGES_PER_TABLE]; /* 4KiB -> 2MiB */
 
-    typedef struct VirtualPages
+    struct VirtualPages
     {
         pml4_t pml4 __attribute__((aligned(ARCH_PAGE_SIZE)));
         pdpt_t pdpts __attribute__((aligned(ARCH_PAGE_SIZE)));
         pagedir_t *pageDirs[DIRS_PER_PDPT] __attribute__((aligned(ARCH_PAGE_SIZE)));
         pagetable_t **pageTables[DIRS_PER_PDPT] __attribute__((aligned(ARCH_PAGE_SIZE)));
-    } pagemap_t;
+        uint64_t pml4Phys;
+    };
 
     /**
      * @brief Initialize kernel page map and virtual memory management
@@ -62,13 +63,13 @@ namespace Memory::ManagementUnit
      * @return true If the page is present (in the memory)
      * @return false If the page does not exist or be swapped into disks.
      */
-    bool IsPagePresent(pagemap_t *pagemap, uint64_t addr);
+    bool IsPagePresent(VirtualPages *pagemap, uint64_t addr);
     /**
      * @brief Create a Pagemap object
      * 
-     * @return pagemap_t* 
+     * @return VirtualPages* 
      */
-    pagemap_t *CreatePagemap();
+    VirtualPages *CreatePagemap();
     /**
      * @brief 
      * 
@@ -84,8 +85,8 @@ namespace Memory::ManagementUnit
      * @param amount 
      * @param flags 
      */
-    void MapVirtualMemory4K(pagemap_t *pagemap, uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags);
-    inline void MapVirtualMemory4K(pagemap_t *pagemap, uint64_t phys, uint64_t virt, size_t amount) {
+    void MapVirtualMemory4K(VirtualPages *pagemap, uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags);
+    inline void MapVirtualMemory4K(VirtualPages *pagemap, uint64_t phys, uint64_t virt, size_t amount) {
         MapVirtualMemory4K(pagemap, phys, virt, amount, PAGE_PRESENT | PAGE_WRITABLE | PAGE_USER);
     }
     /**
@@ -95,7 +96,7 @@ namespace Memory::ManagementUnit
      * @param pageSpace 
      * @return uintptr_t 
      */
-    uintptr_t Allocate4KPages(pagemap_t *pagemap, size_t amount);
+    uintptr_t Allocate4KPages(VirtualPages *pagemap, size_t amount);
     /**
      * @brief 
      * 
@@ -103,7 +104,7 @@ namespace Memory::ManagementUnit
      * @param amount 
      * @param addressSpace 
      */
-    void Free4KPages(pagemap_t *pagemap, uint64_t virt, size_t amount);
+    void Free4KPages(VirtualPages *pagemap, uint64_t virt, size_t amount);
 
     /**
      * @brief 
@@ -154,7 +155,7 @@ namespace Memory::ManagementUnit
      * @param addr 
      * @return uintptr_t 
      */
-    uintptr_t ConvertVirtToPhys(pagemap_t *pagemap, uintptr_t addr);
+    uintptr_t ConvertVirtToPhys(VirtualPages *pagemap, uintptr_t addr);
 
     inline void SetPageAddress(uint64_t *page, uint64_t addr) { *page = (*page & ~PAGE_FRAME) | (addr & PAGE_FRAME); }
 
@@ -170,7 +171,7 @@ namespace Memory::ManagementUnit
         return addr + IO_VIRTUAL_BASE;
     }
 
-    extern pagemap_t kernelPagemap;
+    extern VirtualPages kernelPagemap;
 } // namespace Memory
 
 extern "C" {

@@ -61,6 +61,8 @@ namespace Task
 
         void Schedule();
 
+        void SwitchThread(Thread *newThread);
+
         /**
          * @brief Create a Process object
          * 

@@ -186,16 +186,16 @@ namespace Task {
     struct Thread;
 }
 
-typedef struct ProcessorCore
+typedef struct Processor
 {
-    struct ProcessorCore *self;
+    Processor *self;
     uint64_t id;
     
     void *gdt;
-    struct GlobalDescTablePointer gdtPtr;
-    struct InterruptDescTablePointer idtPtr;
+    GlobalDescTablePointer gdtPtr;
+    InterruptDescTablePointer idtPtr;
 
-    tss_t tss __attribute__((aligned(16)));
+    TaskStateSegment tss __attribute__((aligned(16)));
 
     Task::Thread *currentThread;
     Task::Thread *idleThread;
@@ -223,7 +223,7 @@ static inline void WriteMsr(
                  : "c"(msr), "a"(low), "d"(high));
 }
 
-static inline bool isIntEnabled() {
+static inline bool IsIntEnabled() {
     uint64_t flags;
     asm volatile("pushf\n\t"
                  "pop %o"

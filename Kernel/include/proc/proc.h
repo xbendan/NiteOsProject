@@ -15,7 +15,7 @@
 #endif
 
 typedef uint32_t tid_t;
-typedef uint16_t pid_t;
+typedef uint32_t pid_t;
 
 using namespace Memory::ManagementUnit;
 
@@ -121,13 +121,18 @@ namespace Task
         uintptr_t m_Heap;
 
         /* Architecture Fields */
-        #ifdef ARCH_X86_64
-        Memory::ManagementUnit::pagemap_t *m_Pagemap;
+        #ifdef ARCH_X86_64 
+        Memory::ManagementUnit::VirtualPages *m_Pagemap;
         #elif ARCH_AARCH64
 
         #elif ARCH_RISCV
 
         #endif
+    };
+
+    struct ThreadBlocker
+    {
+
     };
 
     struct Thread
@@ -147,6 +152,8 @@ namespace Task
         void *m_UserStackBase;
         void *m_KernelStack;
         void *m_KernelStackBase;
+
+        uint64_t m_FsBase;
 
         registers_t m_Registers;  
         registers_t m_LastSyscall;

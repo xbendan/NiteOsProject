@@ -3,11 +3,17 @@
 #include <proc/activity.h>
 #include <libkern/objects.h>
 
+#ifdef ARCH_X86_64
+    #include <Arch/x86_64/cpu.h>
+#endif
+
 namespace Task
 {
     void Scheduler::Schedule()
     {
+        ProcessorCore *cpu = GetCPULocal();
 
+        if ()
     }
 
     Process *Scheduler::CreateProcess(

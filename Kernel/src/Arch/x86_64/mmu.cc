@@ -13,7 +13,7 @@
 
 namespace Memory::ManagementUnit
 {
-    pagemap_t   kernelPagemap;
+    VirtualPages   kernelPagemap;
 
     pml4_t      kernelPages __attribute__((aligned(ARCH_PAGE_SIZE)));
     pdpt_t      kernelPdpts __attribute__((aligned(ARCH_PAGE_SIZE)));
@@ -55,7 +55,7 @@ namespace Memory::ManagementUnit
         asm("mov %%rax, %%cr3" ::"a"((address_t)&kernelPages - KERNEL_VIRTUAL_BASE));
     }
 
-    bool IsPagePresent(pagemap_t *pagemap, uint64_t addr) {
+    bool IsPagePresent(VirtualPages *pagemap, uint64_t addr) {
         if (!pagemap)
             return false;
 
@@ -83,9 +83,9 @@ namespace Memory::ManagementUnit
         return false;
     }
 
-    pagemap_t *CreatePagemap()
+    VirtualPages *CreatePagemap()
     {
-        pagemap_t *pagemap = reinterpret_cast<pagemap_t *>(Memory::KernelAllocate4KPages(4));
+        VirtualPages *pagemap = reinterpret_cast<VirtualPages *>(Memory::KernelAllocate4KPages(4));
         SetPageFrame(&(pagemap->pml4[0]), ConvertVirtToPhys(&kernelPagemap, (uint64_t)&pagemap->pdpts), 0x3);
         SetPageFrame(&(pagemap->pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]), (uint64_t)&kernelPdpts - KERNEL_VIRTUAL_BASE, 0x3);
 
@@ -107,7 +107,7 @@ namespace Memory::ManagementUnit
      * @param amount 
      * @param flags 
      */
-    void MapVirtualMemory4K(pagemap_t *pagemap, uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags) {
+    void MapVirtualMemory4K(VirtualPages *pagemap, uint64_t phys, uint64_t virt, size_t amount, page_flags_t flags) {
 
     }
 
@@ -118,7 +118,7 @@ namespace Memory::ManagementUnit
      * @param pagemap 
      * @return uintptr_t 
      */
-    uintptr_t Allocate4KPages(pagemap_t *pagemap, size_t amount) {
+    uintptr_t Allocate4KPages(VirtualPages *pagemap, size_t amount) {
         return 0x0;
     }
 
@@ -129,7 +129,7 @@ namespace Memory::ManagementUnit
      * @param amount 
      * @param addressSpace 
      */
-    void Free4KPages(pagemap_t *pagemap, uint64_t virt, size_t amount) {
+    void Free4KPages(VirtualPages *pagemap, uint64_t virt, size_t amount) {
 
     }
     
@@ -255,7 +255,7 @@ namespace Memory::ManagementUnit
 
     }
 
-    uintptr_t ConvertVirtToPhys(pagemap_t *pagemap, uintptr_t virt) {
+    uintptr_t ConvertVirtToPhys(VirtualPages *pagemap, uintptr_t virt) {
         uint64_t phys = 0;
         size_t pml4Index = PML4_GET_INDEX(virt), pdptIndex = PDPT_GET_INDEX(virt), pdirIndex = PDIR_GET_INDEX(virt), pageIndex = PAGE_GET_INDEX(virt);
 
