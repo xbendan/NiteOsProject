@@ -1,8 +1,8 @@
 #pragma once
 
 #include <fs/vfs.h>
-#include <utils/list.h>
-#include <utils/spinlock.h>
+#include <Utils/LinkedList.h>
+#include <Utils/Spinlock.h>
 #include <macros>
 
 #ifdef ARCH_X86_64
@@ -23,6 +23,7 @@ namespace Task
 {
     struct Thread;
     class Activity;
+    class Scheduler;
 
     enum TaskPriority
     {
@@ -55,12 +56,14 @@ namespace Task
     class Process
     {
     public:
+        Process();
         Process(
-            const char                 *name, 
-            Fs::File                   *sourceFile, 
-            pid_t                       pid, 
-            Activity                   *activity, 
-            TaskType                    taskType);
+            const char                 *name,
+            Fs::File                   *file,
+            uint32_t                    processId,
+            Activity                   *activity,
+            TaskType                    type);
+        ~Process();
 
         void Start();
         void Suspend();
@@ -88,7 +91,7 @@ namespace Task
         const char *m_Package;      /* Package Name */
         pid_t m_ProcessId;    /* Process Id, 0~255 are reserved for kernel process */
         TaskType m_Type;       /* Current process type */
-        Fs::File *m_FilePtr;         /* Pointer to the source file, can be NULL */
+        Fs::File *m_FileSource;         /* Pointer to the source file, can be NULL */
         Activity *m_Activity;    /* Pointer to the Activity */
         struct
         {

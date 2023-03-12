@@ -10,4 +10,4 @@ namespace System
     [[noreturn]] void Panic(const char *msg, ...);
 } // namespace System
 
-void KernelInit();
+[[noreturn]] void KernelInit();

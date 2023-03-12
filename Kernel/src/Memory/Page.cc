@@ -1,5 +1,5 @@
-#include <mm/page.h>
-#include <mm/mmzone.h>
+#include <Mem/Page.h>
+#include <Mem/MemZone.h>
 #include <driver/video.h>
 #include <kern.h>
 
@@ -8,10 +8,10 @@
 #endif
 
 namespace Memory {
-    buddyzone_t zones[3];
+    BuddyZone zones[3];
 
     void BuddyInit() {
-        buddyzone_t *zone = &(zones[ZONE_NORMAL]);
+        BuddyZone *zone = &(zones[ZONE_NORMAL]);
 
         using namespace Model;
 
@@ -52,7 +52,7 @@ namespace Memory {
             return nullptr;
         }
         
-        buddyzone_t *zone = &(zones[ZONE_NORMAL]);
+        BuddyZone *zone = &(zones[ZONE_NORMAL]);
         page_t *page;
         uint8_t orderCopy = order;
 
@@ -107,7 +107,7 @@ namespace Memory {
         }
         // page->lock.Acquire();
 
-        buddyzone_t *zone = &(zones[ZONE_NORMAL]);
+        BuddyZone *zone = &(zones[ZONE_NORMAL]);
         /* Remove this page from upper order list */
         zone->pageList[page->order].Remove((ListNode<page_t> *) page);
         /* Decrease the order and find the lower tier list */
@@ -137,7 +137,7 @@ namespace Memory {
     page_t* CombinePage(page_t *page) {
         uint32_t orderSize = (1 << (page->order)) * sizeof(page_t);
         bool align = !(page->addr % orderSize);
-        buddyzone_t *zone = &(zones[ZONE_NORMAL]);
+        BuddyZone *zone = &(zones[ZONE_NORMAL]);
 
         page_t *newPage = reinterpret_cast<page_t *>(align ? page + orderSize : page - orderSize);
         if (newPage->flags & PFLAGS_FREE) {

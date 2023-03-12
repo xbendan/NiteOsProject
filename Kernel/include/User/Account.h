@@ -1,5 +1,5 @@
-#include <proc/proc.h>
-#include <utils/list.h>
+#include <Proc/Process.h>
+#include <Utils/LinkedList.h>
 #include <resource.h>
 #include <macros>
 

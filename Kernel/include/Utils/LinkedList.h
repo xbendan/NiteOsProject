@@ -1,8 +1,9 @@
 #pragma once
 
-#include <mm/kmalloc.h>
-#include <utils/spinlock.h>
+#include <Mem/KMemAlloc.h>
+#include <Utils/Spinlock.h>
 #include <libkern/objects.h>
+#include <system.h>
 
 typedef struct ListHead
 {
@@ -77,7 +78,7 @@ public:
         if (obj == nullptr)
             return;
 
-        m_Lock.Acquire();
+        // m_Lock.Acquire();
 
         if (m_Count > 0)
         {
@@ -91,10 +92,10 @@ public:
         }
         m_Count++;
 
-        m_Lock.Release();
+        // m_Lock.Release();
     }
 
-    ListNode<T> *Add(T& obj)
+    ListNode<T> *Add(T obj)
     {
         ListNode<T> *node = new ListNode<T>(obj);
         Add(node);

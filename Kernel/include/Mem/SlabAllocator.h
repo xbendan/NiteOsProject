@@ -1,8 +1,8 @@
 #pragma once
 
-#include <mm/page.h>
-#include <utils/list.h>
-#include <utils/spinlock.h>
+#include <Mem/Page.h>
+#include <Utils/LinkedList.h>
+#include <Utils/Spinlock.h>
 #include <macros>
 #ifdef ARCH_X86_64
     #include <Arch/x86_64/cpu.h>

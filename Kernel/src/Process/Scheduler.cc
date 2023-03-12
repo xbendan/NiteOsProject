@@ -1,9 +1,9 @@
-#include <proc/proc.h>
-#include <proc/sched.h>
-#include <proc/activity.h>
-#include <mm/kmalloc.h>
+#include <Proc/Process.h>
+#include <Proc/Scheduler.h>
+#include <Proc/Activity.h>
+#include <Mem/KMemAlloc.h>
 #include <libkern/objects.h>
-#include <utils/ArrayList.h>
+#include <Utils/ArrayList.h>
 
 #if defined(ARCH_X86_64)
 
@@ -19,7 +19,7 @@ namespace Task
         0,
         &g_SystemActivity,
         TaskType::TaskTypeSystemProcess);
-    Scheduler *g_Scheduler;
+    Scheduler g_Scheduler = Scheduler();
 
     Process* GetCurrentProcess() {
         Thread *currentThread = GetCPULocal()->currentThread;

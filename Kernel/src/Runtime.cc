@@ -1,5 +1,8 @@
-#include <mm/kmalloc.h>
+#include <Mem/KMemAlloc.h>
 #include <macros>
+#include <system.h>
+
+inline void *operator new(size_t, void *p) { return p; }
 
 void *operator new(size_t size) { return (void *) Memory::AllocateKernelObject(size); }
 

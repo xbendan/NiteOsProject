@@ -1,7 +1,8 @@
-#include <proc/sched.h>
-#include <proc/proc.h>
+#include <Proc/Scheduler.h>
+#include <Proc/Process.h>
 #include <libkern/printf.h>
 #include <driver/video.h>
+#include <Mem/Page.h>
 #include <macros>
 
 namespace System
@@ -22,7 +23,7 @@ namespace System
         vprintf(fmt, args);
         va_end(args);
 
-        asm("cli; hlt;");
+        for (;;) asm("cli; hlt;");
     }
 } // namespace System
 
@@ -30,7 +31,7 @@ using namespace Task;
 
 [[noreturn]] void KernelInit()
 {
-    (g_Scheduler = Scheduler())->Register(&g_KernelProcess);
-
+    g_Scheduler.m_IdleProcess = g_Scheduler.CreateIdleProcess();
+    System::Out("%u", sizeof(Scheduler));
     for (;;) asm("hlt");
 }

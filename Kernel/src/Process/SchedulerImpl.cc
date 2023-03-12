@@ -1,7 +1,7 @@
-#include <proc/proc.h>
-#include <proc/sched.h>
-#include <proc/activity.h>
+#include <Proc/Scheduler.h>
+#include <Proc/Activity.h>
 #include <libkern/objects.h>
+#include <Mem/KMemAlloc.h>
 
 #ifdef ARCH_X86_64
     #include <Arch/x86_64/cpu.h>
@@ -9,11 +9,48 @@
 
 namespace Task
 {
+    Scheduler::Scheduler()
+    {
+        
+    }
+
+    Scheduler::~Scheduler()
+    {
+
+    }
+
+    uint32_t Scheduler::NextPID()
+    {
+        uint32_t _next;
+
+        do {
+            _next = m_NextPID++;
+        } while (!Objects::IsNull(GetProcessById(_next)));
+
+        return _next;
+    }
+
+    bool Scheduler::Register(Process *process)
+    {
+        Process **processInList = &(this->m_ProcessList[process->m_ProcessId]);
+
+        if (!Objects::IsNull(*processInList)
+            && *processInList != process)
+        {
+            return false;
+        }
+
+        *processInList = process;
+
+        process->Start();
+        return true;
+    }
+
     void Scheduler::Schedule()
     {
-        ProcessorCore *cpu = GetCPULocal();
+        Processor *cpu = GetCPULocal();
 
-        if ()
+        //if ()
     }
 
     Process *Scheduler::CreateProcess(
@@ -42,7 +79,6 @@ namespace Task
     ) {
         Process *proc = new Process(name, file, this->NextPID(), activity, type);
         Register(proc);
-
         return proc;
     }
 

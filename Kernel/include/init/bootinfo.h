@@ -1,7 +1,6 @@
 #pragma once
 
-#include <mm/mem.h>
-#include <utils/range.h>
+#include <Mem/Memory.h>
 #include <macros>
 
 typedef struct BootInfoMemory

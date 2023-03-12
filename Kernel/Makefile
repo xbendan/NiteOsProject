@@ -10,7 +10,6 @@ KERNEL_CFLAGS = -ffreestanding \
 	-D__DEBUG__ \
 	-O2 \
 	-std=c++11 \
-	-g \
 	-static \
 	-mcmodel=large \
 	-Wno-unused-function \
@@ -24,6 +23,7 @@ KERNEL_CFLAGS = -ffreestanding \
 	-mgeneral-regs-only \
 	-z max-page-size=0x1000 \
 	-nostdlib
+# -g
 
 KERNEL_LDFLAGS = -nostdlib \
 	-O2 \

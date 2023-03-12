@@ -13,7 +13,7 @@
 #include <Arch/x86_64/hpet.h>
 #include <init/bootinfo.h>
 #include <driver/video.h>
-#include <proc/proc.h>
+#include <Proc/Process.h>
 #include <timer.h>
 #include <kern.h>
 #include <system.h>
@@ -144,7 +144,6 @@ namespace Boot
 
             System::Out("OK!");
         }
-        System::Out("Process size: %u", sizeof(Task::Process));
 
         ACPI::Initialize();
         // APIC

@@ -1,5 +1,5 @@
 #include <Arch/x86_64/cpu.h>
-#include <mm/page.h>
+#include <Mem/Page.h>
 
 extern "C" void load_tss(uint64_t addr, uint64_t gdt, uint8_t selector);
 

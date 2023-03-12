@@ -2,9 +2,9 @@
 #include <Arch/x86_64/cpu.h>
 #include <Arch/x86_64/acpi.h>
 #include <Arch/x86_64/apic.h>
-#include <mm/mem.h>
-#include <mm/page.h>
-#include <mm/kmalloc.h>
+#include <Mem/Memory.h>
+#include <Mem/Page.h>
+#include <Mem/KMemAlloc.h>
 #include <driver/video.h>
 #include <timer.h>
 #include <system.h>
@@ -61,7 +61,7 @@ namespace SMP
             asm volatile("pause");
     }
 
-    void InitializeProcessorCore(uint16_t cpuId)
+    void InitializeProcessor(uint16_t cpuId)
     {
         cpus[cpuId] = (processor_t *) kmalloc(sizeof(processor_t));
 
@@ -120,7 +120,7 @@ namespace SMP
         {
             if(ACPI::g_Processors[i] != 0 && i != ThisCPU()) {
                 System::Out("Initializing CPU %u", ACPI::g_Processors[i]);
-                InitializeProcessorCore(ACPI::g_Processors[i]);
+                InitializeProcessor(ACPI::g_Processors[i]);
             }
         }
 

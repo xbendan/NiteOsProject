@@ -1,10 +1,9 @@
 #pragma once
 
 #include <macros>
-#include <mm/mem.h>
-#include <utils/list.h>
-#include <utils/spinlock.h>
-#include <utils/range.h>
+#include <Mem/Memory.h>
+#include <Utils/LinkedList.h>
+#include <Utils/Spinlock.h>
 
 // #if (defined(__x86_64__))
 #ifdef ARCH_X86_64
@@ -68,7 +67,7 @@ namespace Memory
         uint64_t addr;
     } page_t;
 
-    typedef struct BuddyZone {
+    struct BuddyZone {
         /**
          * This array contains the areas struct
          * The lowest is 0, equals to 4KiB (1 page)
@@ -77,7 +76,7 @@ namespace Memory
         LinkedList<page_t> pageList[PAGE_MAX_ORDER + 1];
         uint64_t flags; 
         Spinlock lock;
-    } buddyzone_t;
+    };
 
     #define ZONE_NORMAL 1
     // typedef enum BuddyZoneEnum {
@@ -86,14 +85,14 @@ namespace Memory
     //     ZoneHighMem = 2
     // } zonetype_t;
 
-    extern buddyzone_t zones[3];
+    extern BuddyZone zones[3];
 
     void BuddyInit();
     page_t *AllocatePhysMemory4KOrdered(uint8_t order);
     page_t *AllocatePhysMemory4K(size_t amount);
     void FreePhysMemory4K(uintptr_t address);
     void FreePhysMemory4K(page_t *page);
-    void MarkPagesUsed(Range range);
+    void MarkPagesUsed(uint64_t addrStart, uint64_t addrEnd);
     page_t* ExpandPage(page_t* page);
     page_t* CombinePage(page_t *page);
     void CombinePage(page_t *lpage, page_t *rpage);

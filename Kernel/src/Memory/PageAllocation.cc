@@ -1,7 +1,7 @@
-#include <mm/page.h>
-#include <mm/kmalloc.h>
-#include <proc/proc.h>
-#include <proc/sched.h>
+#include <Mem/Page.h>
+#include <Mem/KMemAlloc.h>
+#include <Proc/Process.h>
+#include <Proc/Scheduler.h>
 #include <driver/video.h>
 #include <macros>
 #include <kern.h>

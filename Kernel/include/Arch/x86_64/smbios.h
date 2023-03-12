@@ -110,7 +110,7 @@ namespace SMBios
         uint8_t ECFMinorRelease;
         uint16_t ExtendedRomSize;
 
-    }
+    };
 
     struct SmbiosSystemInformation : public SmbiosTypeHeader
     {

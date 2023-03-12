@@ -1,6 +1,6 @@
-#include <proc/proc.h>
+#include <Proc/Process.h>
 #include <libkern/ref.h>
-#include <utils/ArrayList.h>
+#include <Utils/ArrayList.h>
 
 #define MAX_PROCESS_AMOUNT 65536
 
@@ -10,52 +10,22 @@ namespace Task
     private:
         /* PID 0 = Kernel, it will never be assigned */
         pid_t m_NextPID = 1;
-        Process *m_IdleProcess;
         SizedArrayList<Process *, MAX_PROCESS_AMOUNT> m_ProcessList;
         uint64_t m_TimeSlice;
 
     public:
-        uint16_t m_Processes = 0;
-        uint64_t m_Threads = 0;
+        Process *m_IdleProcess;
 
-        Scheduler()
-          : m_IdleProcess(CreateIdleProcess()) {
-            
-        }
+        Scheduler();
+        ~Scheduler();
 
-        ~Scheduler() {
-
-        }
-
-        pid_t NextPID() {
-            pid_t _next;
-
-            do {
-                _next = m_NextPID++;
-            } while (Objects::IsNull(GetProcessById(_next)));
-
-            return _next;
-        }
+        pid_t NextPID();
 
         Process *GetProcessById(pid_t id) {
             return m_ProcessList[id];
         }
 
-        bool Register(Process *process)
-        {
-            Process **processInList = &m_ProcessList[process->m_ProcessId];
-
-            if (!Objects::IsNull(*processInList)
-                && *processInList != process)
-            {
-                return false;
-            }
-
-            *processInList = process;
-
-            process->Start();
-            return true;
-        }
+        bool Register(Process *process);
 
         void Tick();
 
@@ -117,7 +87,7 @@ namespace Task
     };
 
     extern Process g_KernelProcess;
-    extern Scheduler *g_Scheduler;
+    extern Scheduler g_Scheduler;
 
     Process *GetCurrentProcess();
 }

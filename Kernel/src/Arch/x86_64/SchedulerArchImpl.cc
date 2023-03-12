@@ -1,6 +1,6 @@
 #include <Arch/x86_64/cpu.h>
-#include <proc/sched.h>
-#include <proc/proc.h>
+#include <Proc/Scheduler.h>
+#include <Proc/Process.h>
 
 namespace Task
 {
@@ -9,7 +9,8 @@ namespace Task
         Processor *cpu = GetCPULocal();
 
         cpu->currentThread = newThread;
-        cpu->tss.rsp[0] = newThread->m_KernelStack;
+        cpu->tss.rsp[0] = reinterpret_cast<uint64_t>(newThread->m_KernelStack);
+        
         WriteMsr(0xC0000100 /* Fs Base */, newThread->m_FsBase);
         
         asm volatile(

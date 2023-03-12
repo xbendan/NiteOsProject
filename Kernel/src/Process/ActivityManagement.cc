@@ -1,5 +1,5 @@
-#include <proc/activity.h>
-#include <proc/sched.h>
+#include <Proc/Activity.h>
+#include <Proc/Scheduler.h>
 
 namespace Task
 {

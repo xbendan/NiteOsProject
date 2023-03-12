@@ -1,5 +1,6 @@
-#include <proc/activity.h>
-#include <proc/proc.h>
+#include <Proc/Activity.h>
+#include <Proc/Process.h>
+#include <system.h>
 #include <macros>
 
 namespace Task
@@ -13,7 +14,7 @@ namespace Task
 
     Activity::Activity(
         Process                    *proc
-    ) : m_Name(proc->m_Name) { 
+    ) : m_Name(proc->m_Name) {
         Add(proc);
     }
 
@@ -23,18 +24,18 @@ namespace Task
         if (!Objects::IsNull(proc->m_Activity) || Objects::Equals(proc->m_Activity, this)) {
             return;
         }
-
+        
         this->m_ChildrenProcessList.Add(proc);
     }
 
     Activity *Activity::CreateIfNull(
-        Process                        &proc
+        Process                        *proc
     ) {
-        if (Objects::IsNull(proc.m_Activity))
+        if (Objects::IsNull(proc->m_Activity))
         {
-            proc.m_Activity = new Activity(&proc);
+            proc->m_Activity = new Activity(proc);
         }
         
-        return proc.m_Activity;
+        return proc->m_Activity;
     }
 } // namespace Task

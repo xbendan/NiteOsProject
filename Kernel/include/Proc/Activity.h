@@ -1,6 +1,6 @@
 #pragma once
 
-#include <utils/list.h> 
+#include <Utils/LinkedList.h> 
 
 namespace Task
 {
@@ -38,7 +38,7 @@ namespace Task
          * @return Activity* 
          */
         static Activity *CreateIfNull(
-            Process                    &proc);
+            Process                    *proc);
     };
 
     extern Activity g_SystemActivity;

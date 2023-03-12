@@ -1,11 +1,12 @@
-#include <mm/slab.h>
-#include <mm/kmalloc.h>
-#include <proc/proc.h>
-#include <proc/sched.h>
+#include <Mem/SlabAllocator.h>
+#include <Mem/KMemAlloc.h>
+#include <Proc/Process.h>
+#include <Proc/Scheduler.h>
 #include <driver/video.h>
 #include <libkern/objects.h>
-#include <utils/list.h>
+#include <Utils/LinkedList.h>
 #include <kern.h>
+#include <system.h>
 
 #ifdef ARCH_X86_64
 #include <Arch/x86_64/mmu.h>
@@ -74,8 +75,6 @@ namespace Memory
         return page;
     }
 
-    uint32_t r_count = 0;
-
     page_t *Request4KPage(slab_cache_t *cache) {
         page_t *page = AllocatePhysMemory4K(1);
 
@@ -93,6 +92,7 @@ namespace Memory
     slab_cache_t *SlubGetCache(size_t size) {
         slab_cache_t *cache;
         if (size > SLAB_MAX_SIZE) {
+            System::Out("Size %u is greater than max size.", size);
             return nullptr;
         }
 
@@ -209,6 +209,7 @@ SlowestPath:
         page->freelist = (void **) *page->freelist;
         page->slab_inuse++;
 
+        System::Out("KObjAlloc");
         return (uintptr_t) pointer;
     }
 

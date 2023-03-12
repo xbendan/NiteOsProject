@@ -1,10 +1,10 @@
 #include <Arch/x86_64/idt.h>
 #include <Arch/x86_64/mmu.h>
-#include <mm/mem.h>
-#include <mm/kmalloc.h>
-#include <mm/page.h>
-#include <proc/sched.h>
-#include <utils/spinlock.h>
+#include <Mem/Memory.h>
+#include <Mem/KMemAlloc.h>
+#include <Mem/Page.h>
+#include <Proc/Scheduler.h>
+#include <Utils/Spinlock.h>
 #include <address.h>
 #include <kern.h>
 

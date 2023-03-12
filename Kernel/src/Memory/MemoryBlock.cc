@@ -1,5 +1,5 @@
-#include <mm/mem.h>
-#include <mm/mmzone.h>
+#include <Mem/Memory.h>
+#include <Mem/MemZone.h>
 
 namespace Memory::Model
 {

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <init/bootinfo.h>
-#include <mm/page.h>
-#include <mm/mem.h>
+#include <Mem/Page.h>
+#include <Mem/Memory.h>
 #include <macros>
 
 #define SPARSEMEM_LIMIT 256

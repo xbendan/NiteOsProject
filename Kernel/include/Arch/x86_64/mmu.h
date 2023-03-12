@@ -1,8 +1,7 @@
 #pragma once
 
 #include <macros>
-#include <mm/mem.h>
-#include <utils/range.h>
+#include <Mem/Memory.h>
 #include <address.h>
 #include <kern.h>
 #include <system.h>
