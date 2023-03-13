@@ -11,7 +11,7 @@
 #include <Arch/x86_64/smbios.h>
 #include <Arch/x86_64/smp.h>
 #include <Arch/x86_64/hpet.h>
-#include <init/bootinfo.h>
+#include <Init/BootInfo.h>
 #include <driver/video.h>
 #include <Proc/Process.h>
 #include <timer.h>

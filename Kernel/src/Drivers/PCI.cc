@@ -1,5 +1,4 @@
-#include <Arch/x86_64/pci.h>
-#include <Arch/x86_64/ports.h>
+#include <Drivers/PCI.h>
 
 namespace PCI
 {
@@ -17,14 +16,9 @@ namespace PCI
 
     uint32_t MsiCapGetData(MSICapability *msiCap)
     {
-        if (msiCap->msiControl & PCI_CAP_MSI_CONTROL_64)
-        {
-            return msiCap->data64;
-        }
-        else
-        {
-            return msiCap->data;
-        }
+        return msiCap->msiControl & PCI_CAP_MSI_CONTROL_64
+                ? msiCap->data64
+                : msiCap->data;
     }
 
     void MsiCapSetAddress(MSICapability *msiCap, int cpu)

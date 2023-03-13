@@ -285,6 +285,4 @@ namespace PCI
             ) | PCI_CMD_BUS_MASTER
         );
     }
-
-    void Initialize();
 } // namespace PCI

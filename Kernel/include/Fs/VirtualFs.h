@@ -26,13 +26,13 @@ namespace Fs
         VolumeTypeRemoteDisk
     };
 
-    typedef enum FileType
+    enum FileType
     {
         FileTypeFile,
         FileTypeDirectory,
         FileTypeShortcut,
         FileTypeDisk
-    } filetype_t;
+    };
 
     struct Volume
     {
@@ -58,15 +58,15 @@ namespace Fs
         virtual size_t Write(size_t sector, size_t size, uint8_t *buffer);
     };
 
-    typedef struct File
+    struct File
     {
         char *m_Name;
         uint8_t m_UUID[16];
-        filetype_t m_Type;
+        FileType m_Type;
         uint64_t m_Size;
         uint64_t m_BytesTaken;
         uint64_t m_Flags;
-    } file_t;
+    };
     
     void Mount(Volume *volume);
 

@@ -78,7 +78,7 @@ public:
         if (obj == nullptr)
             return;
 
-        // m_Lock.Acquire();
+        m_Lock.Acquire();
 
         if (m_Count > 0)
         {
@@ -92,7 +92,7 @@ public:
         }
         m_Count++;
 
-        // m_Lock.Release();
+        m_Lock.Release();
     }
 
     ListNode<T> *Add(T obj)

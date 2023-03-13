@@ -1,4 +1,4 @@
-#include <init/bootinfo.h>
+#include <Init/BootInfo.h>
 #include <Mem/Memory.h>
 #include <Mem/Page.h>
 #include <Mem/SlabAllocator.h>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <fs/vfs.h>
+#include <Fs/VirtualFs.h>
 #include <Utils/LinkedList.h>
 #include <Utils/Spinlock.h>
 #include <macros>

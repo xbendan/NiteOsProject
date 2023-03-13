@@ -1,6 +1,6 @@
 #pragma once
 
-#include <init/bootinfo.h>
+#include <Init/BootInfo.h>
 #include <Mem/Page.h>
 #include <Mem/Memory.h>
 #include <macros>

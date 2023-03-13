@@ -1,6 +1,6 @@
 #include <Arch/x86_64/ports.h>
 #include <Arch/x86_64/acpi.h>
-#include <init/bootinfo.h>
+#include <Init/BootInfo.h>
 #include <kern.h>
 
 using namespace Ports;

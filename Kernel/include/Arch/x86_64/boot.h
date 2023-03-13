@@ -796,7 +796,7 @@ struct stivale2_struct_tag_hhdm {
 
 #endif
 
-#include <init/bootinfo.h>
+#include <Init/BootInfo.h>
 
 namespace Boot
 {

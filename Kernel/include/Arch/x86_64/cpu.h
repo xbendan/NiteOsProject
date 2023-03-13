@@ -251,8 +251,4 @@ int ThisCPU();
 
 namespace TSS {
     void Initialize(tss_t* tss, void* gdt);
-
-    inline void SetKernelStack(tss_t* tss, uint64_t stack){
-        tss->rsp[0] = stack;
-    }
 }
