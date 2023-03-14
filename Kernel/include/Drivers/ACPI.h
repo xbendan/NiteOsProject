@@ -1,6 +1,6 @@
 #include <Arch/x86_64/mmu.h>
-#include <Utils/LinkedList.h>
 #include <macros>
+#include <Utils/LinkedList.h>
 
 enum AcpiTableNameDefinition
 {
@@ -143,17 +143,17 @@ typedef struct MadtAddressOverride : public AcpiMadtEntry
 
 struct PciMcfgBaseAddress
 {
-    uint64_t Base;
+    uint64_t base;
     uint16_t SegmentGroupNumber;
-    uint8_t BusStart;
-    uint8_t BusEnd;
+    uint8_t pci_bus_start;
+    uint8_t pci_bus_end;
     uint32_t __reserved__;
 };
 
 typedef struct PciMcfg : public AcpiHeader
 {
     uint64_t __reserved__;
-    PciMcfgBaseAddress BaseAddresses[];
+    struct PciMcfgBaseAddress bases[];
 } pci_mcfg_t;
 
 typedef struct AcpiHpet : public AcpiHeader

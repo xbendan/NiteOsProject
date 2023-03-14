@@ -1,6 +1,5 @@
 #include <Mem/Page.h>
 #include <Mem/MemZone.h>
-#include <driver/video.h>
 #include <kern.h>
 
 #ifdef ARCH_X86_64

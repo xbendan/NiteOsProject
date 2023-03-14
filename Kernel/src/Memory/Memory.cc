@@ -3,7 +3,6 @@
 #include <Mem/Page.h>
 #include <Mem/SlabAllocator.h>
 #include <Mem/MemZone.h>
-#include <driver/video.h>
 #include <Proc/Scheduler.h>
 #include <kern.h>
 #include <address.h>

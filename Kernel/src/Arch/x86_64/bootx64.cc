@@ -7,12 +7,11 @@
 #include <Arch/x86_64/idt.h>
 #include <Arch/x86_64/pic.h>
 #include <Arch/x86_64/pit.h>
-#include <Arch/x86_64/pci.h>
 #include <Arch/x86_64/smbios.h>
 #include <Arch/x86_64/smp.h>
 #include <Arch/x86_64/hpet.h>
 #include <Init/BootInfo.h>
-#include <driver/video.h>
+#include <Drivers/video.h>
 #include <Proc/Process.h>
 #include <timer.h>
 #include <kern.h>

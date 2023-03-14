@@ -10,13 +10,15 @@ private:
     uint64_t m_Capacity;
     size_t m_ObjectSize = sizeof(T);
     bool m_ExpandDisabled;
+    uint16_t m_ExpandSize;
 
 public:
     ArrayList() { }
 
-    ArrayList(uint64_t capacity, bool disableExpand)
+    ArrayList(uint64_t capacity, bool disableExpand, uint16_t sizeToExpand = 16)
       : m_Capacity(capacity),
-        m_ExpandDisabled(disableExpand)
+        m_ExpandDisabled(disableExpand),
+        m_ExpandSize(sizeToExpand)
     {
 
     }
@@ -24,6 +26,11 @@ public:
     T& operator[](int index)
     {
         return array[index < m_Count ? index : 0];
+    }
+
+    void EnsureCapacity()
+    {
+        
     }
 
     bool Contains(T& obj)

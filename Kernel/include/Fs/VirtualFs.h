@@ -1,4 +1,4 @@
-#include <dev/device.h>
+#include <Device/Device.h>
 #include <Utils/LinkedList.h>
 #include <macros>
 

@@ -1,7 +1,7 @@
 #include <libkern/printf.h>
 #include <libkern/sprintf.h>
 #include <macros>
-#include <driver/video.h>
+#include <Drivers/video.h>
 
 void puts(const char *msg) {
     const char *p = msg;

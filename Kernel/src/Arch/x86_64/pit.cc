@@ -2,7 +2,6 @@
 #include <Arch/x86_64/ports.h>
 #include <Arch/x86_64/cpu.h>
 #include <Arch/x86_64/irq.h>
-#include <driver/video.h>
 #include <timer.h>
 
 using namespace Ports;

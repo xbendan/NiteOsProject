@@ -1,4 +1,5 @@
 #include <Drivers/PCI.h>
+#include <Arch/x86_64/ports.h>
 
 namespace PCI
 {
@@ -79,25 +80,25 @@ namespace PCI
     uint16_t GetVendor(uint8_t bus, uint8_t slot, uint8_t func) {
         uint16_t vendor;
 
-        vendor = ConfigReadWord(bus, slot, func, PCI_VENDOR_ID);
+        vendor = ConfigReadWord(bus, slot, func, PCIVendorID);
         return vendor;
     }
 
     uint16_t GetDeviceID(uint8_t bus, uint8_t slot, uint8_t func) {
         uint16_t id;
 
-        id = ConfigReadWord(bus, slot, func, PCI_DEVICE_ID);
+        id = ConfigReadWord(bus, slot, func, PCIDeviceID);
         return id;
     }
 
-    uint8_t GetClassCode(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCI_CLASS_CODE); }
+    uint8_t GetClassCode(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCIClassCode); }
 
-    uint8_t GetSubclass(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCI_SUB_CLASS); }
+    uint8_t GetSubclass(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCISubclass); }
 
-    uint8_t GetProgIf(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCI_PROG_IF); }
+    uint8_t GetProgIf(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCIProgIF); }
 
     uint8_t GetHeaderType(uint8_t bus, uint8_t slot, uint8_t func) {
-        return PCI::ConfigReadByte(bus, slot, func, PCI_HEADER_TYPE);
+        return ConfigReadByte(bus, slot, func, PCIHeaderType);
     }
 
     bool CheckDevice(uint8_t bus, uint8_t device, uint8_t func)
@@ -110,12 +111,17 @@ namespace PCI
 
     }
 
-    bool FindGenericDevice(uint16_t classCode, uint16_t subclass);
+    bool FindGenericDevice(uint16_t classCode, uint16_t subclass)
+    {
 
-    void EnumerateDevice(uint16_t deviceID, uint16_t vendorID, void(*func)(const PCIInfo *info));
-    void EnumerateGenericDevice(uint8_t classCode, uint8_t subclass, void(*func)(const PCIInfo *info));
+    }
 
-    void Initialize()
+    void EnumerateDevice(uint16_t deviceID, uint16_t vendorID, void(*func)(const PCIInfo *info))
+    {
+
+    }
+
+    void EnumerateGenericDevice(uint8_t classCode, uint8_t subclass, void(*func)(const PCIInfo *info))
     {
         
     }

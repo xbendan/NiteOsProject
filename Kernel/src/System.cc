@@ -1,7 +1,7 @@
 #include <Proc/Scheduler.h>
 #include <Proc/Process.h>
 #include <libkern/printf.h>
-#include <driver/video.h>
+#include <Drivers/video.h>
 #include <Mem/Page.h>
 #include <macros>
 

@@ -5,7 +5,6 @@
 #include <Mem/Memory.h>
 #include <Mem/Page.h>
 #include <Mem/KMemAlloc.h>
-#include <driver/video.h>
 #include <timer.h>
 #include <system.h>
 
@@ -55,7 +54,7 @@ namespace SMP
         doneInit = true;
 
         asm("sti");
-        Video::WriteText("Processor initialized.");
+        System::Out("Processor initialized.");
 
         for (;;)
             asm volatile("pause");
@@ -78,7 +77,7 @@ namespace SMP
 
         asm volatile("mov %%cr3, %%rax" : "=a"(*smpRegisterCR3));
 
-        Video::WriteText("APIC signal sending");
+        System::Out("APIC signal sending");
 
         APIC::Local::SendIPI(ACPI::g_Processors[cpuId], ICR_DSH_DEST, ICR_MESSAGE_TYPE_INIT, 0);
         // APIC::Local::SendIPI(ACPI::g_Processors[cpuId], 0x4500);
@@ -89,7 +88,7 @@ namespace SMP
             APIC::Local::SendIPI(ACPI::g_Processors[cpuId], ICR_DSH_DEST, ICR_MESSAGE_TYPE_STARTUP, (SMP_TRAMPOLINE_ENTRY >> 12));
             ACPI::Timer::Sleep(2000000);
         }
-        Video::WriteText("APIC signal sent.");
+        System::Out("APIC signal sent.");
         
 
         while (!doneInit)
@@ -124,7 +123,7 @@ namespace SMP
             }
         }
 
-        Video::WriteText("SMP initialized.");
+        System::Out("SMP initialized.");
         for (;;) asm("hlt");
     }
 } // namespace SMP

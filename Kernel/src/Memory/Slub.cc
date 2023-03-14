@@ -2,7 +2,6 @@
 #include <Mem/KMemAlloc.h>
 #include <Proc/Process.h>
 #include <Proc/Scheduler.h>
-#include <driver/video.h>
 #include <libkern/objects.h>
 #include <Utils/LinkedList.h>
 #include <kern.h>

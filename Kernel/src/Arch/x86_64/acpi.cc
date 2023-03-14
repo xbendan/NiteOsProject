@@ -3,7 +3,6 @@
 #include <Arch/x86_64/mmu.h>
 #include <Arch/x86_64/irq.h>
 #include <Arch/x86_64/ports.h>
-#include <driver/video.h>
 #include <Mem/Memory.h>
 #include <kern.h>
 #include <system.h>
