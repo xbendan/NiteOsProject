@@ -5,22 +5,25 @@
 
 enum DeviceType
 {
-    DeviceTypeAudio,
     DeviceTypeBattery,
     DeviceTypeBluetooth,
-    DeviceTypeFsDriveDevice,
-    DeviceTypeFsDriveController,
+    DeviceTypeDiskDrive,
+    DeviceTypeDiskController,
     DeviceTypeDisplayAdapter,
     DeviceTypeDisplayMonitor,
-    DeviceTypeUSBDevice,
-    DeviceTypeUSBController,
-    DeviceTypePCIDevice,
-    DeviceTypePCIController,
+    DeviceTypeFirmware,
+    DeviceTypeHumanInterfaceDevice,
+    DeviceTypeKeyboard,
+    DeviceTypeMultimedia,
     DeviceTypeNetworkAdapter,
-    DeviceTypeSecurity,
-    DeviceTypeProcessor,
+    DeviceTypePortable,
+    DeviceTypePointerDevice,
     DeviceTypePrinter,
+    DeviceTypeSecurity,
+    DeviceTypeSoftwareDevice,
+    DeviceTypeProcessor,
     DeviceTypeSystemDevices,
+    DeviceTypeUSBController,
 
     DeviceTypeUnknown
 };
@@ -35,6 +38,7 @@ enum DeviceBus
 };
 
 class DeviceProvider;
+class DeviceController;
 
 namespace Fs { struct File; }
 
@@ -47,6 +51,7 @@ public:
     uint64_t m_DeviceId;
     Fs::File *m_DriverSource;
 
+    DeviceController *m_Controller;
     DeviceProvider *m_Provider;
     struct
     {
@@ -59,9 +64,10 @@ public:
     Device(const char *name) : Device(name, DeviceBus::DeviceBusUnknown, DeviceType::DeviceTypeUnknown) {}
     Device(DeviceBus bus, DeviceType type): Device(nullptr, bus, type) {}
 
-    // virtual void Disconnect();
-    // virtual void Enable();
-    // virtual void Disable();
+    virtual void Connect();
+    virtual void Disconnect();
+    virtual void Enable();
+    virtual void Disable();
 };
 
 class DeviceProvider
@@ -72,9 +78,16 @@ public:
     virtual Device *FindName(const char *str);
 };
 
-Device *GetDevice(const char *str);
-Device *GetDevice(uint64_t id);
-DeviceProvider *GetProvider(DeviceBus bus);
-Device **EnumerateDevice(DeviceType type);
+namespace DeviceManagement
+{
+    Device *GetDevice(const char *str);
+    Device *GetDevice(uint64_t id);
+    DeviceProvider *GetProvider(DeviceBus bus);
+    Device **EnumerateDevice(DeviceType type);
+}
+
+
 
 extern SizedArrayList<DeviceProvider *, 4> g_DeviceProviders;
+extern SizedArrayList<LinkedList<Device *>, DeviceType::DeviceTypeUnknown + 1> g_DeviceLists;
+

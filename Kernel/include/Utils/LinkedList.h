@@ -208,6 +208,9 @@ public:
         return obj;
     }
 
+    // inline T& operator*() const { return Get(pos); }
+    // inline T* operator->() const { return Get(pos); }
+
 private:
     ListNode<T> *m_Front, *m_Back;
     uint32_t m_Count;

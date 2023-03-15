@@ -105,24 +105,4 @@ namespace PCI
     {
         return !(GetVendor(bus, device, func) == 0xFFFF);
     }
-
-    bool FindDevice(uint16_t deviceID, uint16_t vendorID)
-    {
-
-    }
-
-    bool FindGenericDevice(uint16_t classCode, uint16_t subclass)
-    {
-
-    }
-
-    void EnumerateDevice(uint16_t deviceID, uint16_t vendorID, void(*func)(const PCIInfo *info))
-    {
-
-    }
-
-    void EnumerateGenericDevice(uint8_t classCode, uint8_t subclass, void(*func)(const PCIInfo *info))
-    {
-        
-    }
 } // namespace PCI

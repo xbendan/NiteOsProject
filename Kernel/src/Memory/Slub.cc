@@ -15,8 +15,8 @@
 namespace Memory
 {
     const uint16_t blockSize[] = {
-        8,      16,     32,     48,     64,     96,     128,    192, 
-        256,    512,    768,    1024,   1536,   2048,   4096,   8192,
+        8,      16,     24,     32,     48,     64,     96,     128, 
+        192,    256,    512,    768,    1024,   1536,   2048,   4096,
         sizeof(Task::Thread)
     };
     const uint16_t blockArrayLength = sizeof(blockSize) / sizeof(uint16_t);
@@ -220,7 +220,9 @@ SlowestPath:
     }
 
     uintptr_t AllocateKernelObject(uint32_t size) {
-        return AllocateKernelObject(SlubGetCache(size));
+        return (size > ARCH_PAGE_SIZE)
+            ? Memory::Allocate4KPages(ALIGN_UP(size, ARCH_PAGE_SIZE) / ARCH_PAGE_SIZE)
+            : AllocateKernelObject(SlubGetCache(size));
     }
 
     void FreeKernelObject(uintptr_t addr) {

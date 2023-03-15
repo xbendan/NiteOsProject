@@ -1,3 +1,5 @@
+#pragma once
+
 #include <macros>
 #include <Device/Device.h>
 #include <Arch/x86_64/acpi.h>
@@ -134,6 +136,14 @@ namespace PCI
         };
     } __attribute__((packed));
 
+    uint32_t ConfigReadDword(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
+    uint16_t ConfigReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
+    uint8_t ConfigReadByte(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
+
+    void ConfigWriteDword(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint32_t data);
+    void ConfigWriteWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint16_t data);
+    void ConfigWriteByte(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint8_t data);
+
     struct PCIInfo
     {
         uint16_t m_DeviceID;
@@ -146,17 +156,23 @@ namespace PCI
         uint8_t m_ClassCode;
         uint8_t m_SubClass;
         uint8_t m_ProgIf;
+
+        PCIInfo(uint8_t bus, uint8_t slot, uint8_t func, uint8_t classCode, uint8_t subclass)
+          : m_Bus(bus),
+            m_Slot(slot),
+            m_Func(func),
+            m_DeviceID(ConfigReadWord(bus, slot, func, PCIDeviceID)),
+            m_VendorID(ConfigReadWord(bus, slot, func, PCIVendorID)),
+            m_ClassCode(classCode),
+            m_SubClass(subclass),
+            m_ProgIf(ConfigReadByte(bus, slot, func, PCIProgIF)) {}
+
+        PCIInfo(uint8_t bus, uint8_t slot, uint8_t func)
+          : PCIInfo(bus, slot, func, ConfigReadByte(bus, slot, func, PCIClassCode), ConfigReadByte(bus, slot, func, PCISubclass)) {}
+        
     };
 
-    uint32_t ConfigReadDword(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
-    uint16_t ConfigReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
-    uint8_t ConfigReadByte(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
-
-    void ConfigWriteDword(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint32_t data);
-    void ConfigWriteWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint16_t data);
-    void ConfigWriteByte(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint8_t data);
-
-    class PCIDevice : public Device, PCIInfo
+    class PCIDevice : public Device, public PCIInfo
     {
     private:
         uint8_t m_MsiPtr;
@@ -164,7 +180,11 @@ namespace PCI
         bool m_IsMsiCapable;
 
     public:
-        PCIDevice(uint8_t bus, uint8_t slot, uint8_t func);
+        PCIDevice(uint8_t bus, uint8_t slot, uint8_t func, uint8_t classCode, uint8_t subclass);
+        PCIDevice(PCIInfo& deviceInfo)
+          : PCIDevice(deviceInfo.m_Bus, deviceInfo.m_Slot, deviceInfo.m_Func, deviceInfo.m_ClassCode, deviceInfo.m_SubClass) {}
+        PCIDevice(uint8_t bus, uint8_t slot, uint8_t func)
+          : PCIDevice(bus, slot, func, ConfigReadByte(bus, slot, func, PCIClassCode), ConfigReadByte(bus, slot, func, PCISubclass)) {}
         ~PCIDevice();
 
         inline uintptr_t GetBaseAddressRegister(uint8_t idx) {
@@ -224,33 +244,35 @@ namespace PCI
         PciMcfg *m_McfgTable;
         ConfigurationAccessMode m_AccessMode;
 
+    public:
         // Remember change to ArrayList
-        LinkedList<PCIDevice *> m_DeviceList;
+        LinkedList<PCIInfo> m_DeviceList;
         LinkedList<PciMcfgBaseAddress *> m_EnhancedBaseAddressList;
 
         PCIDeviceProvider();
         ~PCIDeviceProvider();
 
         Device *FindName(const char *str);
-        PCIDevice *ConnectDevice(PCIDevice *device);
-        PCIDevice *ConnectDevice(int bus, int slot, int func);
+        PCIInfo ConnectDevice(int bus, int slot, int func);
 
+        void SetDevice(PCIDevice *info, uint8_t bus, uint8_t slot, uint8_t func);
+        void SetDevice(const PCIInfo *info);
 
+        bool CheckDevice(uint8_t bus, uint8_t device, uint8_t func);
+        PCIInfo *FindDevice(uint16_t deviceID, uint16_t vendorID);
+        PCIInfo *FindGenericDevice(uint16_t classCode, uint16_t subclass);
+
+        void EnumerateDevice(uint16_t deviceID, uint16_t vendorID, void (*consumer)(PCIInfo& deviceInfo));
+        void EnumerateGenericDevice(uint8_t classCode, uint8_t subclass, void (*consumer)(PCIInfo& deviceInfo));
+    };
+
+    struct PCIClass
+    {
+        const char *desc;
+        void (*builder)(uint8_t bus, uint8_t slot, uint8_t func);
     };
 
     void MsiCapSetData(MSICapability* msiCap, uint32_t dat);
     uint32_t MsiCapGetData(MSICapability* msiCap);
     void MsiCapSetAddress(MSICapability* msiCap, int cpu);
-
-    void SetDevice(PCIDevice *info, uint8_t bus, uint8_t slot, uint8_t func);
-    void SetDeviceFromInfo(const PCIInfo *info);
-
-    bool CheckDevice(uint8_t bus, uint8_t device, uint8_t func);
-    bool FindDevice(uint16_t deviceID, uint16_t vendorID);
-    bool FindGenericDevice(uint16_t classCode, uint16_t subclass);
-
-    void EnumerateDevice(uint16_t deviceID, uint16_t vendorID, void(*func)(const PCIInfo *info));
-    void EnumerateGenericDevice(uint8_t classCode, uint8_t subclass, void(*func)(const PCIInfo *info));
-
-    extern const char *g_ClassCodes[][];
 } // namespace PCI
