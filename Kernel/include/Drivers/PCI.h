@@ -187,6 +187,9 @@ namespace PCI
           : PCIDevice(bus, slot, func, ConfigReadByte(bus, slot, func, PCIClassCode), ConfigReadByte(bus, slot, func, PCISubclass)) {}
         ~PCIDevice();
 
+        virtual void Enable();
+        virtual void Disable();
+
         inline uintptr_t GetBaseAddressRegister(uint8_t idx) {
             if (idx < 0 || idx > 5) {
                 return 0x0;
@@ -253,7 +256,7 @@ namespace PCI
         ~PCIDeviceProvider();
 
         Device *FindName(const char *str);
-        PCIInfo ConnectDevice(int bus, int slot, int func);
+        PCIInfo ConnectDevice(uint8_t bus, uint8_t slot, uint8_t func);
 
         void SetDevice(PCIDevice *info, uint8_t bus, uint8_t slot, uint8_t func);
         void SetDevice(const PCIInfo *info);

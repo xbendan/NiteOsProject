@@ -208,6 +208,8 @@ public:
         return obj;
     }
 
+    T& operator[](int index) { return *Get(index); }
+
     // inline T& operator*() const { return Get(pos); }
     // inline T* operator->() const { return Get(pos); }
 

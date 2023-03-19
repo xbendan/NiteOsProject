@@ -1,9 +1,56 @@
 #include <Device/Device.h>
+#include <Drivers/PCI.h>
 #include <Fs/Disk.h>
 #include <Utils/LinkedList.h>
 #include <macros>
 
-namespace AHCI {
+#define AHCI_BASE       0x400000
+
+#define AHCI_GHC_HR (1 << 0) // HBA Reset
+#define AHCI_GHC_IE (1 << 1) // Interrupt enable
+#define AHCI_GHC_ENABLE (1 << 31)
+
+#define AHCI_CAP_S64A (1 << 31) // 64-bit addressing
+#define AHCI_CAP_NCQ (1 << 30) // Support for Native Command Queueing?
+#define AHCI_CAP_SSS (1 << 27) // Supports staggered Spin-up?
+#define AHCI_CAP_FBSS (1 << 16) // FIS-based switching supported?
+#define AHCI_CAP_SSC (1 << 14) // Slumber state capable?
+#define AHCI_CAP_PSC (1 << 13) // Partial state capable
+#define AHCI_CAP_SALP (1 << 26) // Supports aggressive link power management
+
+#define AHCI_CAP2_NVMHCI (1 << 1) // NVMHCI Present
+#define AHCI_CAP2_BOHC (1 << 0) // BIOS/OS Handoff
+
+#define AHCI_BOHC_BIOS_BUSY (1 << 4) // BIOS Busy
+#define AHCI_BOHC_OS_OWNERSHIP (1 << 3) // OS Ownership Change
+
+#define ATA_CMD_READ_DMA_EX     0x25
+#define ATA_CMD_WRITE_DMA_EX    0x35
+#define ATA_CMD_IDENTIFY        0xec
+#define ATA_DEV_BUSY 0x80
+#define ATA_DEV_DRQ 0x08
+
+#define	SATA_SIG_SATA	0x00000101	// SATA drive
+#define	SATA_SIG_ATAPI	0xEB140101	// SATAPI drive
+#define	SATA_SIG_SEMB	0xC33C0101	// Enclosure management bridge
+#define	SATA_SIG_PM	    0x96690101	// Port multiplier
+
+#define AHCI_DEV_NULL 0
+#define AHCI_DEV_SATA 1
+#define AHCI_DEV_SEMB 2
+#define AHCI_DEV_PM 3
+#define AHCI_DEV_SATAPI 4
+
+#define HBA_PORT_IPM_ACTIVE 1
+#define HBA_PORT_DET_PRESENT 3
+
+#define HBA_PxCMD_ST    0x0001
+#define HBA_PxCMD_FRE   0x0010
+#define HBA_PxCMD_FR    0x4000
+#define HBA_PxCMD_CR    0x8000
+
+namespace AHCI 
+{
     enum FisRegisters
     {
         FisTypeRegH2D = 0x27, // Register FIS - host to device
@@ -185,7 +232,7 @@ namespace AHCI {
 
         uint8_t Vendor[0x100 - 0xA0];
 
-        HBAPortRegisters ports;
+        HBAPortRegisters Ports[];
     } hba_mem_t;
 
     typedef volatile struct HBAFrameInformation
@@ -206,29 +253,105 @@ namespace AHCI {
         uint8_t __reserved__[0x100 - 0xA0];
     } hba_fis_t;
 
-    class SerialATADiskDevice : public DiskDevice
+    struct HBACommandHeader
     {
-
-        SerialATADiskDevice();
-        ~SerialATADiskDevice();
+        // DW0
+        uint8_t  CFL:5;		// Command FIS length in DWORDS, 2 ~ 16
+        uint8_t  A:1;		// ATAPI
+        uint8_t  W:1;		// Write, 1: H2D, 0: D2H
+        uint8_t  P:1;		// Prefetchable
+    
+        uint8_t  R:1;		// Reset
+        uint8_t  B:1;		// BIST
+        uint8_t  C:1;		// Clear busy upon R_OK
+        uint8_t  __reserved__0:1;		// Reserved
+        uint8_t  PMP:4;		// Port multiplier port
+    
+        uint16_t PRDTL;		// Physical region descriptor table length in entries
+    
+        // DW1
+        volatile
+        uint32_t PRDBC;		// Physical region descriptor byte count transferred
+    
+        // DW2, 3
+        uint32_t CTBA;		// Command table descriptor base address
+        uint32_t CTBAU;		// Command table descriptor base address upper 32 bits
+    
+        // DW4 - 7
+        uint32_t __reserved__1[4];	// Reserved
     };
 
-    class SATAController
+    struct HBAPhysicalRegionEntry
+    {
+        uint32_t DBA;
+        uint32_t DBAU;
+        uint32_t __reserved__0;
+
+        uint32_t DBC: 22;
+        uint32_t __reserved__1: 9;
+        uint32_t i: 1;
+    };
+    
+
+    struct HBACommandTable
+    {
+        uint8_t CFIS[64];
+        uint8_t ACMD[16];
+        uint8_t __reserved__[48];
+        HBAPhysicalRegionEntry PRDT[1];
+    };
+
+    class AHCIControllerDevice;
+
+    class SATADiskDevice : public DiskDevice
     {
     private:
-        LinkedList<SerialATADiskDevice> m_DiskList;
+        HBAPortRegisters *m_PortRegs;
+        HBAMemoryRegisters *m_MemoryRegs;
+        int m_Status = 0;
+
+        HBACommandHeader *m_CommandList;
+        HBACommandTable *m_CommandTable[8];
+        HBAFrameInformation *m_FrameInfos;
+
     public:
-        SATAController(/* args */);
-        ~SATAController();
+        SATADiskDevice(int port, HBAPortRegisters *portRegs, AHCIControllerDevice *controllerDevice);
+        ~SATADiskDevice();
+
+        virtual void Enable();
+        virtual void Disable();
+
+        int Access(uint64_t lba, uint32_t count, uintptr_t physBuffer, int write);
+
+        virtual int Read(uint64_t lba, uint32_t count, void *buffer);
+        virtual int Write(uint64_t lba, uint32_t count, void *buffer);
+
+        inline int Status() { return m_Status; }
+        int FindCommandSlot();
+
+        void StartCommand();
+        void StopCommand();
     };
-    
-    // SATAController::SATAController(/* args */)
-    // {
-    // }
-    
-    // SATAController::~SATAController()
-    // {
-    // }
+
+    class AHCIControllerDevice : public PCI::PCIDevice
+    {
+    private:
+        LinkedList<SATADiskDevice *> m_DiskList;
+        uint64_t m_AddrBase;
+        uint64_t m_AddrVirt;
+        HBAMemoryRegisters *m_HBA;
+
+    public:
+        uint64_t m_clbPhys, m_fbPhys, m_ctbaPhys;
+
+        AHCIControllerDevice(PCI::PCIInfo deviceInfo);
+        ~AHCIControllerDevice();
+
+        inline HBAMemoryRegisters *MemoryRegisters() { return m_HBA; }
+
+        virtual void Enable();
+        virtual void Disable();
+    };
 
     void Initialize();
 }

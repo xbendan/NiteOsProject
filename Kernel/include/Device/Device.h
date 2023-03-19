@@ -64,10 +64,8 @@ public:
     Device(const char *name) : Device(name, DeviceBus::DeviceBusUnknown, DeviceType::DeviceTypeUnknown) {}
     Device(DeviceBus bus, DeviceType type): Device(nullptr, bus, type) {}
 
-    virtual void Connect();
-    virtual void Disconnect();
-    virtual void Enable();
-    virtual void Disable();
+    virtual void Enable() = 0;
+    virtual void Disable() = 0;
 };
 
 class DeviceProvider
@@ -80,14 +78,11 @@ public:
 
 namespace DeviceManagement
 {
+    extern SizedArrayList<DeviceProvider *, 4> g_DeviceProviders;
+    extern SizedArrayList<LinkedList<Device *>, DeviceType::DeviceTypeUnknown + 1> g_DeviceLists;
+
     Device *GetDevice(const char *str);
     Device *GetDevice(uint64_t id);
     DeviceProvider *GetProvider(DeviceBus bus);
-    Device **EnumerateDevice(DeviceType type);
+    void EnumerateDevice(DeviceType type);
 }
-
-
-
-extern SizedArrayList<DeviceProvider *, 4> g_DeviceProviders;
-extern SizedArrayList<LinkedList<Device *>, DeviceType::DeviceTypeUnknown + 1> g_DeviceLists;
-

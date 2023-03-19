@@ -221,7 +221,7 @@ SlowestPath:
 
     uintptr_t AllocateKernelObject(uint32_t size) {
         return (size > ARCH_PAGE_SIZE)
-            ? Memory::Allocate4KPages(ALIGN_UP(size, ARCH_PAGE_SIZE) / ARCH_PAGE_SIZE)
+            ? Allocate4KPages(ALIGN_UP(size, ARCH_PAGE_SIZE) / ARCH_PAGE_SIZE)
             : AllocateKernelObject(SlubGetCache(size));
     }
 

@@ -206,8 +206,10 @@ namespace APIC
     {
         //InterruptsRetainer();
 
-        WriteMsr(ModelSpecificRegisters::MSR_APIC, 
-                (ReadMsr(ModelSpecificRegisters::MSR_APIC) | 0x800) & ~(LOCAL_APIC_ENABLE));
+        
+
+        // WriteMsr(ModelSpecificRegisters::MSR_APIC, 
+        //         (ReadMsr(ModelSpecificRegisters::MSR_APIC) | 0x800) & ~(LOCAL_APIC_ENABLE));
 
         Local::Initialize();
         IO::Initialize();

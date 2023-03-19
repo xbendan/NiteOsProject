@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Arch/x86_64/mmu.h>
 #include <Utils/LinkedList.h>
 #include <macros>

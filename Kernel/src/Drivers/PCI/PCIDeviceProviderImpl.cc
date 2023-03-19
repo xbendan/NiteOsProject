@@ -33,9 +33,9 @@ namespace PCI
             {
                 if (CheckDevice(i, j, 0))
                 {
-                    PCIInfo deviceInfo = ConnectDevice(i, j, 0);
+                    ConnectDevice(i, j, 0);
 
-                    if (device->HeaderType() & 0x80) {
+                    if (ConfigReadWord(i, j, 0, PCIHeaderType) & 0x80) {
                         for (int k = 1; k < 8; k++) { // Func
                             if (CheckDevice(i, j, k)) {
                                 ConnectDevice(i, j, k);
@@ -71,7 +71,14 @@ namespace PCI
 
     PCIInfo *PCIDeviceProvider::FindGenericDevice(uint16_t classCode, uint16_t subclass)
     {
-        for (PCIInfo& deviceInfo : m_DeviceList)
+        for (int i = 0; i < m_DeviceList.Count(); i++)
+        {
+            PCIInfo *deviceInfo = &m_DeviceList[i];
+            if (deviceInfo->m_ClassCode == classCode && deviceInfo->m_SubClass == subclass)
+                return deviceInfo;
+        }
+
+        return nullptr;
     }
 
     void PCIDeviceProvider::EnumerateDevice(uint16_t deviceID, uint16_t vendorID, void(*consumer)(PCIInfo& deviceInfo))

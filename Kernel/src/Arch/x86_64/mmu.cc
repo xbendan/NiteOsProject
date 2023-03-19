@@ -3,6 +3,7 @@
 #include <Mem/Memory.h>
 #include <Mem/KMemAlloc.h>
 #include <Mem/Page.h>
+#include <Mem/MMIO.h>
 #include <Proc/Scheduler.h>
 #include <Utils/Spinlock.h>
 #include <address.h>
@@ -281,3 +282,10 @@ namespace Memory::ManagementUnit
 
     }
 } // namespace Memory
+
+namespace Memory
+{
+    uint64_t GetIOMapping(uint64_t address) {
+        return Memory::ManagementUnit::GetIOMapping(address);
+    }
+}

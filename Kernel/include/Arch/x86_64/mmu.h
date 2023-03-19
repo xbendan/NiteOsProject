@@ -173,6 +173,7 @@ namespace Memory::ManagementUnit
     extern VirtualPages kernelPagemap;
 } // namespace Memory
 
+
 extern "C" {
 Memory::ManagementUnit::pml4_t* asmw_get_pagemap();
 inline void asmi_load_paging(uintptr_t addr) { asm("mov %%rax, %%cr3" ::"a"((uint64_t)addr)); }
