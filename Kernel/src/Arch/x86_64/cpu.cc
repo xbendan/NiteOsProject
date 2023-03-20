@@ -1,10 +1,11 @@
 #include <Arch/x86_64/cpu.h>
-#include <Arch/x86_64/apic.h>
 #include <Arch/x86_64/irq.h>
+
+#include <Drivers/APIC.h>
 
 int ThisCPU()
 {
-    uintptr_t apicBase = APIC::Local::localApicBase;
+    uintptr_t apicBase = APIC::Local::BaseVirtIO;
     if(apicBase)
         return ((uint32_t *) apicBase)[LOCAL_APIC_ID / 4] >> 24;
     else

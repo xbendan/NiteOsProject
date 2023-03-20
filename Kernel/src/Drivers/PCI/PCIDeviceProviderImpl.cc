@@ -1,22 +1,22 @@
 #include <Device/Device.h>
-#include <Drivers/PCI.h>
-#include <Drivers/AHCI.h>
-#include <system.h>
+#include <Drivers/Bus/PCI.h>
+#include <Drivers/Storage/AHCI.h>
+#include <System.h>
 
 namespace PCI
 {
     PCIDeviceProvider::PCIDeviceProvider()
     {
         m_DeviceList = LinkedList<PCIInfo>();
-        m_EnhancedBaseAddressList = LinkedList<PciMcfgBaseAddress *>();
+        m_EnhancedBaseAddressList = LinkedList<MCFGAddress *>();
 
-        m_McfgTable = ACPI::pciMcfg;
+        m_McfgTable = ACPI::g_MCFG;
         if (m_McfgTable) 
         {
             m_AccessMode = ConfigurationAccessMode::Enhanced;
-            for (unsigned i = 0; i < (m_McfgTable->length - sizeof(PciMcfg)) / sizeof(PciMcfgBaseAddress); i++)
+            for (unsigned i = 0; i < (m_McfgTable->Length - sizeof(MCFG)) / sizeof(MCFGAddress); i++)
             {
-                PciMcfgBaseAddress *base = &m_McfgTable->BaseAddresses[i];
+                MCFGAddress *base = &m_McfgTable->BaseAddresses[i];
                 if (base->SegmentGroupNumber)
                 {
                     System::Out("No support for PCI express segments %u", base->SegmentGroupNumber);

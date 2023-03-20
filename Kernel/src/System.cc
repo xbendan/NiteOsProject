@@ -1,8 +1,10 @@
 #include <Proc/Scheduler.h>
 #include <Proc/Process.h>
-#include <libkern/printf.h>
 #include <Drivers/video.h>
 #include <Mem/Page.h>
+#include <Timer.h>
+
+#include <libkern/printf.h>
 #include <macros>
 
 namespace System
@@ -27,11 +29,12 @@ namespace System
     }
 } // namespace System
 
+Timer *g_Timers[5];
+
 using namespace Task;
 
 [[noreturn]] void KernelInit()
 {
     g_Scheduler.m_IdleProcess = g_Scheduler.CreateIdleProcess();
-    System::Out("%u", sizeof(Scheduler));
     for (;;) asm("hlt");
 }

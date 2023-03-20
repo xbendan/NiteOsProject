@@ -1,4 +1,4 @@
-#include <Drivers/PCI.h>
+#include <Drivers/Bus/PCI.h>
 #include <Arch/x86_64/ports.h>
 
 namespace PCI

@@ -1,5 +1,3 @@
-#pragma once
-
 #include <macros>
 
 #define LOCAL_APIC_ENABLE (1 << 10)
@@ -75,8 +73,9 @@ namespace APIC
     } // namespace IO
     namespace Local
     {
-        extern uintptr_t localPhysApicBase;
-        extern uintptr_t localApicBase;
+        extern uintptr_t BasePhys;
+        extern uintptr_t BaseVirtIO;
+
         void WriteBase(uint64_t val);
         uint64_t ReadBase();
         void WriteData(uint32_t reg, uint32_t data);
@@ -88,11 +87,5 @@ namespace APIC
         void EndOfInterrupt();
     } // namespace Local
 
-    namespace Timer
-    {
-        volatile uint32_t Ticks();
-        void Initialize(uint64_t hertz, uint32_t irq);
-    }
-    
     void Initialize();
 } // namespace APIC

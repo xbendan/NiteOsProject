@@ -5,7 +5,7 @@
 #include <libkern/objects.h>
 #include <Utils/LinkedList.h>
 #include <kern.h>
-#include <system.h>
+#include <System.h>
 
 #ifdef ARCH_X86_64
 #include <Arch/x86_64/mmu.h>

@@ -1,3 +1,3 @@
 #include <macros>
 
-struct ValueRange { uint64_t Start, End; }
+struct ValueRange { uint64_t Start, End; };

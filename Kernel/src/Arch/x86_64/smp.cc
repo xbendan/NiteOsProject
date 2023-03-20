@@ -1,14 +1,13 @@
-#include <Arch/x86_64/smp.h>
-#include <Arch/x86_64/cpu.h>
-#include <Arch/x86_64/acpi.h>
-#include <Arch/x86_64/apic.h>
+#include <Drivers/ACPI.h>
+#include <Drivers/APIC.h>
 #include <Mem/Memory.h>
 #include <Mem/Page.h>
 #include <Mem/KMemAlloc.h>
-#include <timer.h>
-#include <system.h>
+#include <System.h>
 
 #include "Arch/x86_64/smpdefines.inc"
+#include <Arch/x86_64/smp.h>
+#include <Arch/x86_64/cpu.h>
 
 extern void *SMPTrampolineStart;
 extern void *SMPTrampolineEnd;
@@ -81,12 +80,13 @@ namespace SMP
 
         APIC::Local::SendIPI(ACPI::g_Processors[cpuId], ICR_DSH_DEST, ICR_MESSAGE_TYPE_INIT, 0);
         // APIC::Local::SendIPI(ACPI::g_Processors[cpuId], 0x4500);
-        ACPI::Timer::Sleep(50000);
+        g_Timers[TimerACPI]->Sleep(50000);
+        // ACPI::Timer::Sleep(50000);
 
         while (*smpMagicValue != 0xB33F) {
             // APIC::Local::SendIPI(ACPI::g_Processors[cpuId], 0x4601);
             APIC::Local::SendIPI(ACPI::g_Processors[cpuId], ICR_DSH_DEST, ICR_MESSAGE_TYPE_STARTUP, (SMP_TRAMPOLINE_ENTRY >> 12));
-            ACPI::Timer::Sleep(2000000);
+            g_Timers[TimerACPI]->Sleep(2000000);
         }
         System::Out("APIC signal sent.");
         
@@ -99,6 +99,8 @@ namespace SMP
 
     void Initialize()
     {
+        
+
         cpus[0] = (processor_t *) kmalloc(sizeof(processor_t));
         
         *cpus[0] = (processor_t)
@@ -114,8 +116,7 @@ namespace SMP
 
         memcpy((void *) SMP_TRAMPOLINE_ENTRY, &SMPTrampolineStart, ((uint64_t) &SMPTrampolineEnd) - ((uint64_t) &SMPTrampolineStart));
         
-        System::Out("%u", ACPI::g_Processors[1]);
-        for(int i = 0; i < ACPI::g_ProcessorCount; i++)
+        for(int i = 0; i < ACPI::g_Processors.Length(); i++)
         {
             if(ACPI::g_Processors[i] != 0 && i != ThisCPU()) {
                 System::Out("Initializing CPU %u", ACPI::g_Processors[i]);
@@ -124,6 +125,6 @@ namespace SMP
         }
 
         System::Out("SMP initialized.");
-        for (;;) asm("hlt");
+        // for (;;) asm("hlt");
     }
 } // namespace SMP

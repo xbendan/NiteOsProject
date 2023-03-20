@@ -1,6 +1,6 @@
 #include <Mem/KMemAlloc.h>
 #include <macros>
-#include <system.h>
+#include <System.h>
 
 inline void *operator new(size_t, void *p) { return p; }
 

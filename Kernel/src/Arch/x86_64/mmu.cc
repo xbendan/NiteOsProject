@@ -48,7 +48,7 @@ namespace Memory::ManagementUnit
         for (int i = 0; i < 4; i++) {
             SetPageFrame(&(kernelPdpts[PDPT_GET_INDEX(IO_VIRTUAL_BASE) + i]), ((address_t)&(ioMappings[i])) - KERNEL_VIRTUAL_BASE, 0x3);
             for (int j = 0; j < TABLES_PER_DIR; j++) {
-                SetPageFrame(&ioMappings[i][j], (PAGE_SIZE_1G * i + PAGE_SIZE_2M * j), 0x83);
+                SetPageFrame(&ioMappings[i][j], (PAGE_SIZE_1G * i + PAGE_SIZE_2M * j), (PAGE_PRESENT | PAGE_WRITABLE | PAGE_SIZE | PAGE_NOCACHE));
             }
         }
         kernelPdpts[0] = kernelPdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)];

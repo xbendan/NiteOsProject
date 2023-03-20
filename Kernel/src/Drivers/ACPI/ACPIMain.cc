@@ -1,22 +1,29 @@
 #include <Drivers/ACPI.h>
 #include <Mem/MMIO.h>
-#include <system.h>
+#include <System.h>
+
+#include <Utils/LinkedList.h>
+#include <Utils/Range.h>
 
 #include <macros>
 
 namespace ACPI
 {
-    RootSystemDescriptionPointer *rsdp;
+    SizedArrayList<uint8_t, 256> g_Processors = SizedArrayList<uint8_t, 256>();
+    SizedArrayList<MADTInterruptOverride *, 256> g_InterruptOverrides = SizedArrayList<MADTInterruptOverride *, 256>();
 
+    RootSystemDescriptionPointer *rsdp;
     RootSystemDescriptionTable *rsdt;
     ExtendedSystemDescriptionTable *xsdt;
-
-    char g_OemId[6];
+    MADT *g_MADT;
+    FADT *g_FADT;
+    HPET *g_HPET;
+    MCFG *g_MCFG;
 
     ACPITable *FindTableByName(const char *str, int index)
     {
         if (memcmp("DSDT", str, 4) == 0)
-            return (void *) Memory::GetIOMapping(acpiFadt->DSDT);
+            return (ACPITable *) Memory::GetIOMapping(g_FADT->DSDT);
 
         if (!rsdp)
         {
@@ -35,7 +42,7 @@ namespace ACPI
                 xsdt->Pointers[i] :
                 rsdt->Pointers[i];
             ACPITable *header = reinterpret_cast<ACPITable *>(Memory::GetIOMapping(entry));
-            if (memcmp(header->signature, str, 4) == 0 && ++_index == index) {
+            if (memcmp(header->Signature, str, 4) == 0 && _index++ == index) {
                 return header;
             }
         }
@@ -48,16 +55,16 @@ namespace ACPI
         auto _lambda_FindRsdp = [](void) -> RootSystemDescriptionPointer *
         {
             const char *signature = "RSD PTR ";
-            ValueRange ranges[3] = [
-                { .Start = 0x0, .End = 0x7BFF + 1 },
-                { .Start = 0x80000, .End = 0x9FFFF + 1 },
-                { .Start = 0xE0000, .End = 0xFFFFF + 1 }
-            ];
+            ValueRange ranges[3] = {
+                { 0x0, 0x7BFF + 1 },
+                { 0x80000, 0x9FFFF + 1 },
+                { 0xE0000, 0xFFFFF + 1 }
+            };
             for (size_t i = 0; i < 3; i++)
             {
                 for (uint64_t addr = ranges[i].Start; addr < ranges[i].End; addr += 16)
                 {
-                    if (memcmp(Memory::GetIOMapping(addr), signature, 8) == 0)
+                    if (memcmp((void *) Memory::GetIOMapping(addr), signature, 8) == 0)
                     {
                         return reinterpret_cast<RootSystemDescriptionPointer *>(addr);
                     }
@@ -70,7 +77,7 @@ namespace ACPI
          * Detect ACPI Root System Description Pointer (RSDP)
          * We cannot initialize ACPI without it.
          */
-        if ((rsdp = _lambda_FindRsdp) == nullptr)
+        if ((rsdp = _lambda_FindRsdp()) == nullptr)
             System::Panic("Cannot find ACPI Root System Description Pointer.");
 
         /*
@@ -101,7 +108,32 @@ namespace ACPI
                 System::Panic("Unknown ACPI Revision: %u", rsdp->Revision);
                 break;
         }
-    
-        memcpy(g_OemID, rsdt->OemID, 6);
+        
+        g_MADT = static_cast<MADT *>(FindTableByName("APIC", 0));
+        g_FADT = static_cast<FADT *>(FindTableByName("FACP", 0));
+        g_HPET = static_cast<HPET *>(FindTableByName("HPET", 0));
+        g_MCFG = static_cast<MCFG *>(FindTableByName("MCFG", 0));
+
+        g_Timers[TimerACPI] = new ACPITimer();
+        g_Timers[TimerACPI]->Sleep(10);
+
+        // System::Out("ACPI Revision: %u", acpiDesc->revision);
+        // int tableLength = ((acpiRsdtHeader->table.length - sizeof(AcpiSystemDescTable)) / 4);
+        // System::Out("Table length: %u", tableLength);
+        // for (int i = 0; i < tableLength; i++)
+        // {
+        //     System::Out("%x", acpiRsdtHeader->pointers[i]);
+        // }
+    }
+
+    uint32_t GetRemapIRQ(uint32_t irq)
+    {
+        for (int i = 0; i < g_InterruptOverrides.Length(); i++) {
+            MADTInterruptOverride *iso = g_InterruptOverrides[i];
+            if (iso->irqSource == irq) {
+                return iso->gSi;
+            }
+        }
+        return irq;
     }
 } // namespace ACPI

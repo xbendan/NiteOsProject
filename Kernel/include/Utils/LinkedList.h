@@ -3,7 +3,7 @@
 #include <Mem/KMemAlloc.h>
 #include <Utils/Spinlock.h>
 #include <libkern/objects.h>
-#include <system.h>
+#include <System.h>
 
 typedef struct ListHead
 {
@@ -29,6 +29,7 @@ public:
         m_Front = NULL;
         m_Back = NULL;
         m_Count = 0;
+        m_Lock.m_Lock = 0;
     }
 
     ~LinkedList()

@@ -1,9 +1,10 @@
 #pragma once
 
-#include <macros>
 #include <Device/Device.h>
-#include <Arch/x86_64/acpi.h>
+#include <Drivers/ACPI.h>
 #include <Utils/ArrayList.h>
+
+#include <macros>
 
 #define PCI_BIST_CAPABLE (1 << 7)
 #define PCI_BIST_START (1 << 6)
@@ -244,13 +245,13 @@ namespace PCI
     class PCIDeviceProvider : public DeviceProvider
     {
         Spinlock lock;
-        PciMcfg *m_McfgTable;
+        MCFG *m_McfgTable;
         ConfigurationAccessMode m_AccessMode;
 
     public:
         // Remember change to ArrayList
         LinkedList<PCIInfo> m_DeviceList;
-        LinkedList<PciMcfgBaseAddress *> m_EnhancedBaseAddressList;
+        LinkedList<MCFGAddress *> m_EnhancedBaseAddressList;
 
         PCIDeviceProvider();
         ~PCIDeviceProvider();

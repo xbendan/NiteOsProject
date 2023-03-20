@@ -23,48 +23,48 @@ struct ACPITable
     uint32_t CreatorRevision;
 } __attribute__((packed));
 
-typedef struct MADTEntry
+struct MADTEntry
 {
-    uint8_t type;
-    uint8_t length;
-} __attribute__((packed)) madt_entry_t;
+    uint8_t Type;
+    uint8_t Length;
+} __attribute__((packed));
 
-typedef struct MADT : public ACPITable
+struct MADT : public ACPITable
 {
-    uint32_t address;
-    uint32_t flags;
-    madt_entry_t entries[];
-} __attribute__((packed)) acpi_madt_t;
+    uint32_t Address;
+    uint32_t Flags;
+    MADTEntry Entries[];
+} __attribute__((packed));
 
-typedef struct MadtLocalApic : public MADTEntry
+struct MADTLocalApic : public MADTEntry
 {
-    uint8_t processorId;
-    uint8_t apicId;
-    uint32_t flags;
-} __attribute__((packed)) madt_local_t;
+    uint8_t ProcessorId;
+    uint8_t ApicId;
+    uint32_t Flags;
+} __attribute__((packed));
 
-typedef struct MadtIoApic : public MADTEntry
+struct MADTIoApic : public MADTEntry
 {
-    uint8_t apicId;
-    uint8_t reserved;
-    uint32_t address;
-    uint32_t gSib;
-} __attribute__((packed)) madt_io_t;
+    uint8_t ApicId;
+    uint8_t __reserved__;
+    uint32_t Address;
+    uint32_t GSIB;
+} __attribute__((packed));
 
-typedef struct MadtIso : public MADTEntry
+struct MADTInterruptOverride : public MADTEntry
 {
     uint8_t busSource;
     uint8_t irqSource;
     uint32_t gSi;
     uint16_t Flags;
-} __attribute__((packed)) madt_iso_t;
+} __attribute__((packed));
 
-typedef struct MadtNmi : public MADTEntry
+struct MADTNonmaskableInterrupt : public MADTEntry
 {
     uint8_t ProcessorId;
     uint16_t Flags;
     uint8_t LINT;
-} __attribute__((packed)) madt_nmi_t;
+} __attribute__((packed));
 
 typedef struct ACPIAddress
 {
@@ -75,7 +75,7 @@ typedef struct ACPIAddress
     uint64_t Address;
 } acpi_gas_t;
 
-typedef struct Fadt : public ACPITable
+struct FADT : public ACPITable
 {
     uint32_t FirmwareControl;
     uint32_t DSDT;
@@ -136,7 +136,7 @@ typedef struct Fadt : public ACPITable
     ACPIAddress xPMTTimerBlock;
     ACPIAddress xGPE0Block;
     ACPIAddress xGPE1Block;
-} acpi_fadt_t;
+};
 
 typedef struct MadtAddressOverride : public MADTEntry
 {
@@ -156,22 +156,22 @@ struct MCFGAddress
 struct MCFG : public ACPITable
 {
     uint64_t __reserved__;
-    MCFGAddress bases[];
+    MCFGAddress BaseAddresses[];
 };
 
 struct HPET : public ACPITable
 {
-    uint8_t hardwareRevisionId;
-    uint8_t info;
-    uint16_t pciVendorId;
-    uint8_t addressSpaceId;
-    uint8_t registerBitWidth;
-    uint8_t registerBitOffset;
-    uint8_t reserved;
-    uint64_t address;
-    uint8_t hpetNumber;
-    uint16_t minimumTick;
-    uint8_t pageProtection;
+    uint8_t HardwareRevisionId;
+    uint8_t Info;
+    uint16_t PCIVendorId;
+    uint8_t AddressSpaceId;
+    uint8_t RegisterBitWidth;
+    uint8_t RegisterBitOffset;
+    uint8_t __reserved__;
+    uint64_t Address;
+    uint8_t HPETNumber;
+    uint16_t MinimumTick;
+    uint8_t PageProtection;
 };
 
 namespace ACPI
@@ -197,16 +197,14 @@ namespace ACPI
     struct ExtendedSystemDescriptionTable : public ACPITable { uint64_t Pointers[]; /* (table.length - sizeof(table)) / 8 */ };
 
     extern SizedArrayList<uint8_t, 256> g_Processors;
-    extern LinkedList<MadtIso *> g_InterruptOverrides;
+    extern SizedArrayList<MADTInterruptOverride *, 256> g_InterruptOverrides;
 
-    extern char g_OemId[6];
-
-    extern acpi_fadt_t *g_FADT;
-    extern acpi_hpet_t *g_HPET;
-    extern pci_mcfg_t *g_PCIMcfg;
+    extern MADT *g_MADT;
+    extern FADT *g_FADT;
+    extern HPET *g_HPET;
+    extern MCFG *g_MCFG;
 
     void Initialize();
-    void *FindTable(const char* str, int index);
 
     void Reset();
 
@@ -214,18 +212,19 @@ namespace ACPI
     
 } // namespace ACPI
 
-class TimerImplACPI : public Timer
+class ACPITimer : public Timer
 {
+private:
     uint8_t r_PMTTimerLength;
     ACPIAddress *r_xPMTTimerBlock;
 
     uint16_t m_TimerTicks;
 
 public:
-    TimerImplACPI();
-    ~TimerImplACPI();
+    ACPITimer();
+    ~ACPITimer();
 
     virtual void Tick();
     virtual uint64_t CurrentTime(TimeSpan span = Millisecond);
     virtual void Sleep(long milliseconds);
-}
+};

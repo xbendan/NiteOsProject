@@ -45,5 +45,7 @@ namespace SMBios
 
         if(g_SmbiosVersion == -1)
             System::Panic("No SMBIOS found!");
+        else
+            System::Out("System Management BIOS Initialized.");
     }
 }

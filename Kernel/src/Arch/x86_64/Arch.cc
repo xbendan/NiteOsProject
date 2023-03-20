@@ -1,5 +1,4 @@
 #include <Arch/x86_64/ports.h>
-#include <Arch/x86_64/acpi.h>
 #include <Init/BootInfo.h>
 #include <kern.h>
 
@@ -21,8 +20,6 @@ namespace System
 
     void Shutdown() {
         // Execute software shutdown progress.
-
-        using namespace ACPI;
 
         // WriteWord16(acpiFadt->pm1a_control_block, );
         // WriteWord16(acpiFadt->pm1b_control_block, );

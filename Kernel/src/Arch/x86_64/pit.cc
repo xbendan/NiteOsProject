@@ -2,14 +2,14 @@
 #include <Arch/x86_64/ports.h>
 #include <Arch/x86_64/cpu.h>
 #include <Arch/x86_64/irq.h>
-#include <timer.h>
+#include <Timer.h>
 
 using namespace Ports;
 
 namespace PIT
 {
     void TimerTickHandler(void *data, registers_t *regs) {
-        Timer::Tick();
+        //Timer::Tick();
     }
 
     void Initialize(uint32_t frequency)
@@ -24,17 +24,17 @@ namespace PIT
     }
 } // namespace PIT
 
-namespace Timer
-{
-    int frequency = 1000;
-    volatile uint64_t ticks = 0;
-    uint64_t uptimeUs = 0;
-    long pendingTicks = 0;
+// namespace Timer
+// {
+//     int frequency = 1000;
+//     volatile uint64_t ticks = 0;
+//     uint64_t uptimeUs = 0;
+//     long pendingTicks = 0;
     
-    void Tick() { ticks++; }
-    void Sleep(long milliseconds) {
-        uint64_t futureTicks = ticks + milliseconds;
-        while (ticks < futureTicks)
-            asm volatile("pause");
-    }
-}
+//     void Tick() { ticks++; }
+//     void Sleep(long milliseconds) {
+//         uint64_t futureTicks = ticks + milliseconds;
+//         while (ticks < futureTicks)
+//             asm volatile("pause");
+//     }
+// }

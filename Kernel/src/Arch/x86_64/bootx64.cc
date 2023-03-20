@@ -1,6 +1,12 @@
+#include <Init/BootInfo.h>
+#include <Drivers/video.h>
+#include <Drivers/ACPI.h>
+#include <Drivers/APIC.h>
+#include <Proc/Process.h>
+#include <kern.h>
+#include <System.h>
+
 #include <Arch/x86_64/boot.h>
-#include <Arch/x86_64/acpi.h>
-#include <Arch/x86_64/apic.h>
 #include <Arch/x86_64/irq.h>
 #include <Arch/x86_64/cpu.h>
 #include <Arch/x86_64/gdt.h>
@@ -9,13 +15,6 @@
 #include <Arch/x86_64/pit.h>
 #include <Arch/x86_64/smbios.h>
 #include <Arch/x86_64/smp.h>
-#include <Arch/x86_64/hpet.h>
-#include <Init/BootInfo.h>
-#include <Drivers/video.h>
-#include <Proc/Process.h>
-#include <timer.h>
-#include <kern.h>
-#include <system.h>
 
 BootInfo bootInfo;
 
@@ -145,13 +144,12 @@ namespace Boot
         }
 
         ACPI::Initialize();
-        System::Halt(); 
         // APIC
         APIC::Initialize();
 
         EnableInterrupts();
 
-        HPET::Initialize();
+        // HPET::Initialize();
         
         SMBios::Initialize();
         // SMP::Initialize();

@@ -11,7 +11,7 @@ namespace Task
 {
     Scheduler::Scheduler()
     {
-        
+        Register(&g_KernelProcess);
     }
 
     Scheduler::~Scheduler()
@@ -25,7 +25,7 @@ namespace Task
 
         do {
             _next = m_NextPID++;
-        } while (!Objects::IsNull(GetProcessById(_next)));
+        } while (GetProcessById(_next) != nullptr);
 
         return _next;
     }
@@ -41,6 +41,8 @@ namespace Task
         }
 
         *processInList = process;
+
+        System::Out("Process registered. PID=%u", process->m_ProcessId);
 
         process->Start();
         return true;

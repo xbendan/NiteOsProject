@@ -1,5 +1,5 @@
-#include <Drivers/AHCI.h>
-#include <Drivers/PCI.h>
+#include <Drivers/Storage/AHCI.h>
+#include <Drivers/Bus/PCI.h>
 #include <Mem/MMIO.h>
 #include <Mem/Page.h>
 

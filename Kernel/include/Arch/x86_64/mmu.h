@@ -4,7 +4,7 @@
 #include <Mem/Memory.h>
 #include <address.h>
 #include <kern.h>
-#include <system.h>
+#include <System.h>
 
 #define ARCH_PAGE_SIZE              (4096)
 #define PAGES_PER_TABLE             512

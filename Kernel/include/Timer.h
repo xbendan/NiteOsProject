@@ -1,3 +1,5 @@
+#pragma once
+
 #include <macros>
 
 enum TimeSpan
@@ -10,11 +12,23 @@ enum TimeSpan
     Day = 86400000000,
     Month = 2592000000000,
     Year = 31536000000000,
-}
+};
+
+enum TimerType
+{
+    TimerPIT,
+    TimerACPI,
+    TimerAPIC,
+    TimerRTC,
+    TimerHPET
+};
 
 class Timer
 {
+public:
     virtual void Tick() = 0;
     virtual uint64_t CurrentTime(TimeSpan span = Millisecond) = 0;
     virtual void Sleep(long milliseconds) = 0;
-}
+};
+
+extern Timer *g_Timers[5];

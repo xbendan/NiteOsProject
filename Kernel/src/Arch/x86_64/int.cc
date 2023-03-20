@@ -1,9 +1,10 @@
+#include <Drivers/APIC.h>
+
 #include <Arch/x86_64/pic.h>
-#include <Arch/x86_64/apic.h>
 #include <Arch/x86_64/cpu.h>
 #include <Arch/x86_64/irq.h>
 #include <kern.h>
-#include <system.h>
+#include <System.h>
 
 void EnableInterrupts() { asm("sti"); }
 void DisableInterrupts() { asm("cli"); }
