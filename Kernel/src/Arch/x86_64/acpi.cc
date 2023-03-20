@@ -4,6 +4,7 @@
 #include <Arch/x86_64/irq.h>
 #include <Arch/x86_64/ports.h>
 #include <Mem/Memory.h>
+#include <Mem/MMIO.h>
 #include <kern.h>
 #include <system.h>
 
@@ -34,7 +35,7 @@ namespace ACPI
             return nullptr;
         }
 
-        if (acpiDesc->revision == 2)
+        if (acpiDesc->revision >= 2)
             entries = (acpiRsdtHeader->table.length - sizeof(acpi_header_t)) / sizeof(uint64_t);
         else
             entries = (acpiRsdtHeader->table.length - sizeof(acpi_header_t)) / sizeof(uint32_t);
@@ -49,12 +50,12 @@ namespace ACPI
         int _index = 0;
 
         if (memcmp("DSDT", str, 4) == 0)
-            return (void *) Memory::ManagementUnit::GetIOMapping(acpiFadt->dsdt);
+            return (void *) Memory::GetIOMapping(acpiFadt->DSDT);
 
         for (int i = 0; i < entries; i++)
         {
             uintptr_t entry = getEntry(i);
-            acpi_header_t *header = (acpi_header_t *)(Memory::ManagementUnit::GetIOMapping(entry));
+            acpi_header_t *header = (acpi_header_t *)(Memory::GetIOMapping(entry));
             if (memcmp(header->signature, str, 4) == 0 && _index++ == index) {
                 return header;
             }
@@ -67,27 +68,27 @@ namespace ACPI
     {
         for (uintptr_t addr = 0; addr <= 0x7BFF; addr += 16)
         {
-            if (memcmp((void *)Memory::ManagementUnit::GetIOMapping(addr), __acpi_Signature, 8) == 0)
+            if (memcmp((void *)Memory::GetIOMapping(addr), __acpi_Signature, 8) == 0)
             {
-                acpiDesc = (acpi_rsdp_t *)(Memory::ManagementUnit::GetIOMapping(addr));
+                acpiDesc = (acpi_rsdp_t *)(Memory::GetIOMapping(addr));
                 goto INIT_ACPI_FOUND;
             }
         }
 
         for (uintptr_t addr = 0x80000; addr <= 0x9FFFF; addr += 16)
         {
-            if (memcmp((void *)Memory::ManagementUnit::GetIOMapping(addr), __acpi_Signature, 8) == 0)
+            if (memcmp((void *)Memory::GetIOMapping(addr), __acpi_Signature, 8) == 0)
             {
-                acpiDesc = (acpi_rsdp_t *)(Memory::ManagementUnit::GetIOMapping(addr));
+                acpiDesc = (acpi_rsdp_t *)(Memory::GetIOMapping(addr));
                 goto INIT_ACPI_FOUND;
             }
         }
 
         for (uintptr_t addr = 0xE0000; addr <= 0xFFFFF; addr += 16)
         {
-            if (memcmp((void *)Memory::ManagementUnit::GetIOMapping(addr), __acpi_Signature, 8) == 0)
+            if (memcmp((void *)Memory::GetIOMapping(addr), __acpi_Signature, 8) == 0)
             {
-                acpiDesc = (acpi_rsdp_t *)(Memory::ManagementUnit::GetIOMapping(addr));
+                acpiDesc = (acpi_rsdp_t *)(Memory::GetIOMapping(addr));
                 goto INIT_ACPI_FOUND;
             }
         }
@@ -98,14 +99,22 @@ namespace ACPI
 
         if(acpiDesc->revision == 2)
         {
-            acpiRsdtHeader = ((acpi_rsdt_t *) Memory::ManagementUnit::GetIOMapping(((acpi_xsdp_t *) acpiDesc)->xsdtPtr));
-            acpiXsdtHeader = ((acpi_xsdt_t *) Memory::ManagementUnit::GetIOMapping(((acpi_xsdp_t *) acpiDesc)->xsdtPtr));
+            acpiRsdtHeader = ((acpi_rsdt_t *) Memory::GetIOMapping(((acpi_xsdp_t *) acpiDesc)->xsdtPtr));
+            acpiXsdtHeader = ((acpi_xsdt_t *) Memory::GetIOMapping(((acpi_xsdp_t *) acpiDesc)->xsdtPtr));
         }
         else
-            acpiRsdtHeader = ((acpi_rsdt_t *) Memory::ManagementUnit::GetIOMapping(acpiDesc->rsdtPtr));
+            acpiRsdtHeader = ((acpi_rsdt_t *) Memory::GetIOMapping(acpiDesc->rsdtPtr));
 
         memcpy(acpiOemId, acpiRsdtHeader->table.oemId, 6);
         acpiOemId[6] = 0;
+
+        // System::Out("ACPI Revision: %u", acpiDesc->revision);
+        // int tableLength = ((acpiRsdtHeader->table.length - sizeof(AcpiSystemDescTable)) / 4);
+        // System::Out("Table length: %u", tableLength);
+        // for (int i = 0; i < tableLength; i++)
+        // {
+        //     System::Out("%x", acpiRsdtHeader->pointers[i]);
+        // }
 
         acpi_madt_t *madt = (acpi_madt_t *)(FindTable("APIC", 0));
         APIC::Local::localPhysApicBase = madt->address;
@@ -194,13 +203,13 @@ namespace ACPI
         uint16_t timerTicks;
 
         void Initialize() {
-            acpi_gas_t *xpm_timer = &acpiFadt->x_pmt_timer_block;
+            acpi_gas_t *xpm_timer = &acpiFadt->xPMTTimerBlock;
             uint64_t _acpiTimerBlock = 
                     // xpm_timer->address ?
                     // xpm_timer->address :
-                    acpiFadt->pmt_timer_block;
+                    acpiFadt->PMTTimerBlock;
             
-            switch (acpiFadt->x_pmt_timer_block.addressSpace) {
+            switch (acpiFadt->xPMTTimerBlock.addressSpace) {
                 case 0: {
                     // uint64_t pmtVirt = Memory::ManagementUnit::KernelAllocate4KPages(1);
                     // uint64_t pmtPhys = ALIGN_DOWN(_acpiTimerBlock, ARCH_PAGE_SIZE);
@@ -208,20 +217,20 @@ namespace ACPI
                     
                     // Memory::ManagementUnit::KernelMapVirtualMemory4K(pmtPhys, pmtVirt, 1);
                     // timerTicks = reinterpret_cast<uint32_t *>(pmtVirt + offset);
-                    timerTicks = acpiFadt->pmt_timer_block;
+                    timerTicks = acpiFadt->PMTTimerBlock;
                     break;
                 }
                 case 1:
                     break;
                 default:
-                    System::Out("Not implemented %u, Reset to default", acpiFadt->x_pmt_timer_block.addressSpace);
-                    timerTicks = acpiFadt->pmt_timer_block;
+                    System::Out("Not implemented %u, Reset to default", acpiFadt->xPMTTimerBlock.addressSpace);
+                    timerTicks = acpiFadt->PMTTimerBlock;
                     break;
             }
         }
 
         void Sleep(uint64_t microsecs) {
-            if (acpiFadt->pmt_timer_length != 4) {
+            if (acpiFadt->PMTTimerLength != 4) {
                 return;
             }
 
