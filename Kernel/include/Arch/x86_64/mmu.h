@@ -164,7 +164,7 @@ namespace Memory::ManagementUnit
 
     inline uintptr_t GetIOMapping(uint64_t addr) {
         if (addr > 0xFFFFFFFF) {
-            System::Panic("Access IO address greater than 4GB");
+            System::Panic("Access IO address (%x) greater than 4GB", addr);
             return 0xFFFFFFFF;
         }
         return addr + IO_VIRTUAL_BASE;

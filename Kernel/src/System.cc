@@ -16,7 +16,7 @@ namespace System
     }
 
     [[noreturn]] void Panic(const char *fmt, ...) {
-        Video::ClearScreen();
+        //Video::ClearScreen();
         
         va_list args;
         va_start(args, fmt);

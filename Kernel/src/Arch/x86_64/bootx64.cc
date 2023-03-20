@@ -145,6 +145,7 @@ namespace Boot
         }
 
         ACPI::Initialize();
+        System::Halt(); 
         // APIC
         APIC::Initialize();
 

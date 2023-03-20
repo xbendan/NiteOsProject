@@ -9,7 +9,7 @@ enum AcpiTableNameDefinition
     AcpiMultiDescriptionTable = 0
 };
 
-typedef struct AcpiHeader
+typedef struct ACPITable
 {
     char signature[4];
     uint32_t length;
@@ -22,27 +22,27 @@ typedef struct AcpiHeader
     uint32_t creatorRevision;
 } __attribute__((packed)) acpi_header_t;
 
-typedef struct AcpiMadtEntry
+typedef struct MADTEntry
 {
     uint8_t type;
     uint8_t length;
 } __attribute__((packed)) madt_entry_t;
 
-typedef struct AcpiMadt : public AcpiHeader
+typedef struct AcpiMadt : public ACPITable
 {
     uint32_t address;
     uint32_t flags;
     madt_entry_t entries[];
 } __attribute__((packed)) acpi_madt_t;
 
-typedef struct MadtLocalApic : public AcpiMadtEntry
+typedef struct MadtLocalApic : public MADTEntry
 {
     uint8_t processorId;
     uint8_t apicId;
     uint32_t flags;
 } __attribute__((packed)) madt_local_t;
 
-typedef struct MadtIoApic : public AcpiMadtEntry
+typedef struct MadtIoApic : public MADTEntry
 {
     uint8_t apicId;
     uint8_t reserved;
@@ -50,7 +50,7 @@ typedef struct MadtIoApic : public AcpiMadtEntry
     uint32_t gSib;
 } __attribute__((packed)) madt_io_t;
 
-typedef struct MadtIso : public AcpiMadtEntry
+typedef struct MadtIso : public MADTEntry
 {
     uint8_t busSource;
     uint8_t irqSource;
@@ -58,23 +58,23 @@ typedef struct MadtIso : public AcpiMadtEntry
     uint16_t flags;
 } __attribute__((packed)) madt_iso_t;
 
-typedef struct MadtNmi : public AcpiMadtEntry
+typedef struct MadtNmi : public MADTEntry
 {
     uint8_t processorId;
     uint16_t flags;
     uint8_t lInt;
 } __attribute__((packed)) madt_nmi_t;
 
-typedef struct AcpiGenericAddressStructure
+typedef struct ACPIAddress
 {
     uint8_t addressSpace;
-    uint8_t bitWidth;
+    uint8_t BitWidth;
     uint8_t bitOffset;
-    uint8_t accessSize;
+    uint8_t AccessSize;
     uint64_t address;
 } acpi_gas_t;
 
-typedef struct AcpiFadt : public AcpiHeader
+typedef struct Fadt : public ACPITable
 {
     uint32_t firmware_control;
     uint32_t dsdt;
@@ -82,68 +82,68 @@ typedef struct AcpiFadt : public AcpiHeader
     uint8_t __reserved__0;
 
     uint8_t ppmp;
-    uint16_t sci_interrupt;
-    uint32_t smi_cmdport;
-    uint8_t acpi_enable;
-    uint8_t acpi_disable;
-    uint8_t s4bios_req;
-    uint8_t pstate_control;
-    uint32_t pm1a_event_block;
-    uint32_t pm1b_event_block;
-    uint32_t pm1a_control_block;
-    uint32_t pm1b_control_block;
-    uint32_t pm2_control_block;
-    uint32_t pmt_timer_block;
-    uint32_t gpe0_block;
-    uint32_t gpe1_block;
-    uint8_t pm1_event_length;
-    uint8_t pm1_control_length;
-    uint8_t pm2_control_length;
-    uint8_t pmt_timer_length;
-    uint8_t gpe0_length;
-    uint8_t gpe1_length;
-    uint8_t gpe1_base;
-    uint8_t cstate_control;
-    uint16_t worst_c2_latency;
-    uint16_t worst_c3_latency;
-    uint16_t flush_size;
-    uint16_t flush_stride;
-    uint8_t duty_offset;
-    uint8_t duty_width;
-    uint8_t day_alarm;
-    uint8_t month_alarm;
-    uint8_t century;
+    uint16_t SCIInterrupt;
+    uint32_t SMICommandPort;
+    uint8_t Enable;
+    uint8_t Disable;
+    uint8_t S4BIOSReq;
+    uint8_t PStateControl;
+    uint32_t PM1aEventBlock;
+    uint32_t PM1bEventBlock;
+    uint32_t PM1aControlBlock;
+    uint32_t PM1bControlBlock;
+    uint32_t PM2ControlBlock;
+    uint32_t PMTTimerBlock;
+    uint32_t GPE0Block;
+    uint32_t GPE1Block;
+    uint8_t PM1EventLength;
+    uint8_t PM1ControlLength;
+    uint8_t PM2ControlLength;
+    uint8_t PMTTimerLength;
+    uint8_t GPE0Length;
+    uint8_t GPE1Length;
+    uint8_t GPE1Base;
+    uint8_t CStateControl;
+    uint16_t WorstC2Latency;
+    uint16_t WorstC3Latency;
+    uint16_t FlushSize;
+    uint16_t FlushStride;
+    uint8_t DutyOffset;
+    uint8_t DutyWidth;
+    uint8_t DayAlarm;
+    uint8_t MonthAlarm;
+    uint8_t Century;
 
-    uint16_t boot_arch_flags;
+    uint16_t BootArchFlags;
     uint8_t __reserved__1;
     uint32_t flags;
 
-    struct AcpiGenericAddressStructure reset_reg;
+    struct ACPIAddress ResetRegistry;
 
-    uint8_t reset_value;
-    uint16_t arm_boot_arch;
-    uint8_t fadt_minor_version;
+    uint8_t ResetVal;
+    uint16_t ARMBootArch;
+    uint8_t MinorVersion;
 
     uint64_t x_firmware_control;
     uint64_t x_dsdt;
 
-    struct AcpiGenericAddressStructure x_pm1a_event_block;
-    struct AcpiGenericAddressStructure x_pm1b_event_block;
-    struct AcpiGenericAddressStructure x_pm1a_control_block;
-    struct AcpiGenericAddressStructure x_pm1b_control_block;
-    struct AcpiGenericAddressStructure x_pm2_control_block;
-    struct AcpiGenericAddressStructure x_pmt_timer_block;
-    struct AcpiGenericAddressStructure x_gpe0_block;
-    struct AcpiGenericAddressStructure x_gpe1_block;
+    struct ACPIAddress xPM1aEventBlock;
+    struct ACPIAddress xPM1bEventBlock;
+    struct ACPIAddress xPM1aControlBlock;
+    struct ACPIAddress xPM1bControlBlock;
+    struct ACPIAddress xPM2ControlBlock;
+    struct ACPIAddress xPMTTimerBlock;
+    struct ACPIAddress xGPE0Block;
+    struct ACPIAddress xGPE1Block;
 } acpi_fadt_t;
 
-typedef struct MadtAddressOverride : public AcpiMadtEntry
+typedef struct MadtAddressOverride : public MADTEntry
 {
     uint16_t reserved;
     uint64_t address;
 } madt_address_override_t;
 
-struct PciMcfgBaseAddress
+struct MCFGAddress
 {
     uint64_t Base;
     uint16_t SegmentGroupNumber;
@@ -152,13 +152,13 @@ struct PciMcfgBaseAddress
     uint32_t __reserved__;
 };
 
-typedef struct PciMcfg : public AcpiHeader
+typedef struct MCFG : public ACPITable
 {
     uint64_t __reserved__;
-    PciMcfgBaseAddress BaseAddresses[];
+    MCFGAddress BaseAddresses[];
 } pci_mcfg_t;
 
-typedef struct AcpiHpet : public AcpiHeader
+typedef struct HPET : public ACPITable
 {
     uint8_t hardwareRevisionId;
     uint8_t info;
@@ -173,7 +173,7 @@ typedef struct AcpiHpet : public AcpiHeader
     uint8_t pageProtection;
 } acpi_hpet_t;
 
-typedef struct AcpiRootSystemDescPtr
+typedef struct ACPIRootSystemDescriptionPointer
 {
     char signature[8];
     uint8_t checksum;
@@ -204,13 +204,13 @@ typedef struct AcpiSystemDescTable
     uint32_t creatorRevision;
 } acpi_sdt_t;
 
-typedef struct AcpiRootSdt
+typedef struct ACPIRootSdt
 {
     struct AcpiSystemDescTable table;
     uint32_t pointers[]; // (table.length - sizeof(table)) / 4
 } acpi_rsdt_t;
 
-typedef struct AcpiExtendedSdt
+typedef struct ACPIExtendedSdt
 {
     struct AcpiSystemDescTable table;
     uint64_t pointers[]; // (table.length - sizeof(table)) / 8

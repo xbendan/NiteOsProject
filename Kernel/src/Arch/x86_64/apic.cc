@@ -115,14 +115,14 @@ namespace APIC
             uint32_t        reg, 
             uint32_t        data
         ) {
-            ((volatile uint32_t *) localApicBase)[reg] = data;
+            *((volatile uint32_t *) (localApicBase + reg)) = data;
             //*((volatile uint32_t *)(localApicBase + reg)) = data;
         }
 
         uint32_t ReadData(
             uint32_t        reg
         ) {
-            return ((volatile uint32_t *) localApicBase)[reg];
+            return *((volatile uint32_t *)(localApicBase + reg));
             //return *((volatile uint32_t *)(localApicBase + reg));
         }
 
@@ -138,7 +138,7 @@ namespace APIC
         }
         
         void Enable() {
-            WriteData(LOCAL_APIC_SIVR, 0x1ff);
+            WriteData(LOCAL_APIC_SIVR, 0x100);
         }
 
         void Initialize()
@@ -150,12 +150,12 @@ namespace APIC
             localApicBase = Memory::ManagementUnit::GetIOMapping(localPhysApicBase);
 
             WriteMsr(ModelSpecificRegisters::MSR_APIC, 
-                ReadMsr(ModelSpecificRegisters::MSR_APIC) | 0x800 & ~(LOCAL_APIC_ENABLE));
+                (ReadMsr(ModelSpecificRegisters::MSR_APIC) | 0x800) & ~(LOCAL_APIC_ENABLE));
 
             System::Out("%X", ReadBase());
 
             Enable();
-            // PIC::Disable();
+            PIC::Disable();
 
             Timer::Initialize(1000, 0x20);
 
