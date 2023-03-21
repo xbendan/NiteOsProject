@@ -1,3 +1,4 @@
+#include <Timer.h>
 #include <macros>
 
 #define LOCAL_APIC_ENABLE (1 << 10)
@@ -70,6 +71,7 @@ namespace APIC
         void Redirect(uint8_t irq, uint8_t vector, uint32_t delivery);
         void SetBase(uintptr_t newBase);
         void MapLegacyIRQ(uint8_t irq);
+        void EnableInterrupt(uint8_t irq);
     } // namespace IO
     namespace Local
     {
@@ -89,3 +91,19 @@ namespace APIC
 
     void Initialize();
 } // namespace APIC
+
+class LocalAPICTimer : public Timer
+{
+private:
+    uint64_t m_BusClock;
+
+public:
+    LocalAPICTimer();
+    ~LocalAPICTimer();
+
+    uint32_t EstimateBusSpeed();
+
+    virtual void Tick();
+    virtual uint64_t CurrentTime(TimeSpan span = Millisecond);
+    virtual void Sleep(long milliseconds);
+};

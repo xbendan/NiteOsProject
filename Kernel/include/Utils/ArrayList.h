@@ -110,12 +110,18 @@ public:
     {
         return m_Count;
     }
+    
+    size_t Capacity()
+    {
+        return m_Capacity;
+    }
 
     void Add(T obj)
     {
         if (m_Count >= m_Capacity) {
             return;
         }
+        if (m_ObjectSize == 1) System::Out("Object aborted.");
         array[m_Count++] = obj;
     }
 
@@ -140,5 +146,14 @@ public:
     void Remove(uint64_t index)
     {
 
+    }
+
+    template <typename F>
+    void ForEach(F consumer)
+    {
+        for (int i = 0; i < m_Count; i++)
+        {
+            consumer(array[i], i);
+        }
     }
 };

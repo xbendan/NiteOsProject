@@ -2,6 +2,8 @@
 #include <Drivers/ACPI.h>
 #include <System.h>
 
+#include <Arch/x86_64/cpu.h>
+
 namespace APIC
 {
     void Initialize()
@@ -13,9 +15,7 @@ namespace APIC
             System::Panic("Cannot find Multi ACPI Description Table (MADT).");
             return;
         }
-        System::Out("Initializing APIC");
-
-        Local::BasePhys = g_MADT->Address;
+        System::Out("Initializing APIC, Base=%x", Local::BasePhys = g_MADT->Address);
         
         uint64_t offset = (uint64_t) &g_MADT->Entries;
         uint64_t end = reinterpret_cast<uint64_t>(g_MADT) + g_MADT->Length;
@@ -65,6 +65,9 @@ namespace APIC
 
             offset += entry->Length;
         }
+
+        WriteMsr(ModelSpecificRegisters::MSR_APIC, 
+            (ReadMsr(ModelSpecificRegisters::MSR_APIC) | 0x800) & ~(LOCAL_APIC_ENABLE));
 
         Local::Initialize();
         IO::Initialize();

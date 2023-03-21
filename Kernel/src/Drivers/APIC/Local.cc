@@ -1,6 +1,7 @@
 #include <Drivers/APIC.h>
 #include <Mem/MMIO.h>
 #include <System.h>
+#include <Timer.h>
 
 #include <Arch/x86_64/cpu.h>
 #include <Arch/x86_64/idt.h>
@@ -81,6 +82,8 @@ namespace APIC::Local
 
         Enable();
         PIC::Disable();
+
+        g_Timers[TimerAPIC] = new LocalAPICTimer();
 
         //Timer::Initialize(1000, 0x20);
 

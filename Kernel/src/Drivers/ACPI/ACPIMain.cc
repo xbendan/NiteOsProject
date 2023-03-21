@@ -1,16 +1,18 @@
 #include <Drivers/ACPI.h>
+#include <Drivers/HPET.h>
 #include <Mem/MMIO.h>
 #include <System.h>
 
 #include <Utils/LinkedList.h>
+#include <Utils/ArrayList.h>
 #include <Utils/Range.h>
 
 #include <macros>
 
 namespace ACPI
 {
-    SizedArrayList<uint8_t, 256> g_Processors = SizedArrayList<uint8_t, 256>();
-    SizedArrayList<MADTInterruptOverride *, 256> g_InterruptOverrides = SizedArrayList<MADTInterruptOverride *, 256>();
+    SizedArrayList<uint8_t, 256> g_Processors;
+    SizedArrayList<MADTInterruptOverride *, 256> g_InterruptOverrides;
 
     RootSystemDescriptionPointer *rsdp;
     RootSystemDescriptionTable *rsdt;
@@ -115,7 +117,7 @@ namespace ACPI
         g_MCFG = static_cast<MCFG *>(FindTableByName("MCFG", 0));
 
         g_Timers[TimerACPI] = new ACPITimer();
-        g_Timers[TimerACPI]->Sleep(10);
+        g_Timers[TimerHPET] = new HPETTimer();
 
         // System::Out("ACPI Revision: %u", acpiDesc->revision);
         // int tableLength = ((acpiRsdtHeader->table.length - sizeof(AcpiSystemDescTable)) / 4);

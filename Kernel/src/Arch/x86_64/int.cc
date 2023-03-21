@@ -15,11 +15,9 @@ extern "C" void* DispatchInterrupts(void *rsp)
 {
     registers_t *context = reinterpret_cast<registers_t *>(rsp);
 
-    System::Out("Interrupt: %u", context->intno);
-
     if (context->intno >= 32) {
         APIC::Local::EndOfInterrupt();
-    }
+    } else System::Out("Interrupt: %u", context->intno);
 
     if (interruptHandlers[context->intno]) {
         interruptHandlers[context->intno](nullptr, context);

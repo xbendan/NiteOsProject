@@ -99,8 +99,7 @@ namespace SMP
 
     void Initialize()
     {
-        
-
+        System::Out("Initializing SMP, %u processor(s) found.", ACPI::g_InterruptOverrides.Capacity());
         cpus[0] = (processor_t *) kmalloc(sizeof(processor_t));
         
         *cpus[0] = (processor_t)
@@ -115,6 +114,13 @@ namespace SMP
         SetCPULocal(cpus[0]);
 
         memcpy((void *) SMP_TRAMPOLINE_ENTRY, &SMPTrampolineStart, ((uint64_t) &SMPTrampolineEnd) - ((uint64_t) &SMPTrampolineStart));
+
+        // ACPI::g_Processors.ForEach([&](uint8_t& processorId, int index) -> void {
+        //     if (processorId && index != ThisCPU())
+        //     {
+                
+        //     }
+        // });
         
         for(int i = 0; i < ACPI::g_Processors.Length(); i++)
         {

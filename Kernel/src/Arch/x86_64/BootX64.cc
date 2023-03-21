@@ -148,11 +148,9 @@ namespace Boot
         APIC::Initialize();
 
         EnableInterrupts();
-
-        // HPET::Initialize();
         
         SMBios::Initialize();
-        // SMP::Initialize();
+        SMP::Initialize();
 
         KernelInit();
 

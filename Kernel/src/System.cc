@@ -36,5 +36,6 @@ using namespace Task;
 [[noreturn]] void KernelInit()
 {
     g_Scheduler.m_IdleProcess = g_Scheduler.CreateIdleProcess();
+    
     for (;;) asm("hlt");
 }

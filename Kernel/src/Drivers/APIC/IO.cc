@@ -82,4 +82,17 @@ namespace APIC::IO
         WriteData64(IO_APIC_RED_TABLE_START + (index * 2), irq);
         System::Out("Map legacy IRQ index=%u, irq=%u", index, irq);
     }
+
+    void EnableInterrupt(uint8_t irq)
+    {
+        uint8_t index = 0;
+        ACPI::g_InterruptOverrides.ForEach([&](MADTInterruptOverride *&obj, int) -> void {
+            if (obj->irqSource == (irq - 0x20))
+            {
+                WriteData64(IO_APIC_RED_TABLE_ENT(obj->gSi), irq);
+                System::Out("Remap IRQ: Index=%u Data=%u", obj->gSi, irq);
+                return;
+            }
+        });
+    }
 } // namespace APIC::IO
