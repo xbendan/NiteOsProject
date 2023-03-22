@@ -73,13 +73,13 @@
 #define GDT_LM_GRANULARITY 0b0010
 #define GDT_FLAGS 0b1100
 
-struct GlobalDescTablePointer
+struct GDTPointer
 {
     uint16_t size;
     uint64_t base;
 } __attribute__((packed));
 
-struct GlobalDescTableEntry
+struct GDTEntry
 {
     uint16_t limit_low;
     uint16_t base_low;
@@ -101,7 +101,7 @@ typedef struct TaskStateSegment
     uint16_t iopb_offset;
 } __attribute__((packed)) tss_t;
 
-struct GlobalDescTableTaskEntry
+struct GDTTssEntry
 {
     uint16_t len;
     uint16_t base_low;
@@ -111,13 +111,30 @@ struct GlobalDescTableTaskEntry
     uint8_t base_high;
     uint32_t base_upper;
     uint32_t ign;
+
+    GDTTssEntry() {}
+
+    GDTTssEntry(TaskStateSegment const &tss)
+      : len(sizeof(TaskStateSegment)),
+        base_low((uint64_t)&tss & 0xFFFF),
+        base_medium(((uint64_t)&tss >> 16) & 0xFF),
+        flags_a(0b10001001),
+        flags_b(0),
+        base_high(((uint64_t)&tss >> 24) & 0xFF),
+        base_upper(((uint64_t)&tss >> 32) & 0xFFFFFFFF),
+        ign() { }
 } __attribute__((packed));
 
-struct GlobalDescTablePackage
-{
-    struct GlobalDescTableEntry entries[GDT_ENTRY_COUNT];
-    struct GlobalDescTableTaskEntry tss;
+struct GDTExtraEntry {
+	uint32_t base_highest;
+	uint32_t reserved0;
 } __attribute__((packed));
+
+struct GDTPackage
+{
+    GDTEntry entries[GDT_ENTRY_COUNT];
+    GDTTssEntry tss;
+} __attribute__((packed)) __attribute__((aligned(0x10)));
 
 #define IDT_DIVIDE_BY_ZERO 0x00
 #define IDT_SINGLE_STEP 0x01
@@ -186,13 +203,13 @@ namespace Task {
     struct Thread;
 }
 
-typedef struct Processor
+struct CPU
 {
-    Processor *self;
+    CPU *self;
     uint64_t id;
     
     void *gdt;
-    GlobalDescTablePointer gdtPtr;
+    GDTPointer gdtPtr;
     InterruptDescTablePointer idtPtr;
 
     TaskStateSegment tss __attribute__((aligned(16)));
@@ -200,7 +217,7 @@ typedef struct Processor
     Task::Thread *currentThread;
     Task::Thread *idleThread;
     Task::Process *idleProcess;
-} processor_t;
+};
 
 static inline uintptr_t ReadMsr(
     uintptr_t       msr
@@ -243,9 +260,11 @@ enum ModelSpecificRegisters {
     MSR_KERN_GS_BASE = 0xc0000102,
 };
 
+extern GDTPointer g_GDTPointer;
+
 CPUIDInfo CPUID();
-void SetCPULocal(processor_t *cpu);
-processor_t *GetCPULocal();
+void SetCPULocal(CPU *cpu);
+CPU *GetCPULocal();
 
 int ThisCPU();
 

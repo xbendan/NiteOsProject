@@ -149,6 +149,7 @@ namespace Memory::ManagementUnit
 
             pagetable_t *pageTable = kernelPageTablePointers[pdptIndex][pdirIndex];
             if (!pageTable) {
+                System::Out("No page table present.");
                 uint64_t pageDirPhys = Memory::AllocatePhysMemory4K(1)->addr, pageDirVirt = KernelAllocate4KPages(1);
                 KernelMapVirtualMemory4K(pageDirPhys, pageDirVirt, 1);
                 uint64_t pageTablesPhys = Memory::AllocatePhysMemory4K(512)->addr, pageTablesVirt = KernelAllocate4KPages(512);

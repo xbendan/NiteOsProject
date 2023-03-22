@@ -164,11 +164,7 @@ struct HPET : public ACPITable
     uint8_t HardwareRevisionId;
     uint8_t Info;
     uint16_t PCIVendorId;
-    uint8_t AddressSpaceId;
-    uint8_t RegisterBitWidth;
-    uint8_t RegisterBitOffset;
-    uint8_t __reserved__;
-    uint64_t Address;
+    ACPIAddress Address;
     uint8_t HPETNumber;
     uint16_t MinimumTick;
     uint8_t PageProtection;

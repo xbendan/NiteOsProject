@@ -1,3 +1,7 @@
+#include <Utils/Spinlock.h>
+
+#include <macros>
+
 namespace Utils
 {
     template<typename T> unsigned Hash(const T& value);

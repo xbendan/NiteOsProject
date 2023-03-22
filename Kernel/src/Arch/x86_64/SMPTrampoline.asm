@@ -16,9 +16,6 @@ section .text
 bits 16
 SMPTrampolineStart:
 
-mov al, "1"
-mov byte [0xb8000], al
-
 cli
 cld
 

@@ -33,7 +33,7 @@ cpuid_info_t CPUID()
     return info;
 }
 
-void SetCPULocal(processor_t *cpu)
+void SetCPULocal(CPU *cpu)
 {
     cpu->self = cpu;
     WriteMsr(MSR_KERN_GS_BASE, (uintptr_t) cpu);
@@ -44,10 +44,10 @@ void SetCPULocal(processor_t *cpu)
     //              "d"(((uintptr_t)cpu >> 32) & 0xFFFFFFFF) /*Value high*/, "c"(MSR_GS_BASE) /*Set Kernel GS Base*/);
 }
 
-processor_t *GetCPULocal()
+CPU *GetCPULocal()
 {
     InterruptsRetainer();
-    processor_t *cpu;
+    CPU *cpu;
     DisableInterrupts();
     asm volatile("swapgs; movq %%gs:0, %0; swapgs;"
                  : "=r"(cpu)); // CPU info is 16-byte aligned as per liballoc alignment

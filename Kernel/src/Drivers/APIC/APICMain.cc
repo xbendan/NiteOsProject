@@ -43,8 +43,9 @@ namespace APIC
                     break;
                 }
                 case 2: {
-                    g_InterruptOverrides.Add(static_cast<MADTInterruptOverride *>(entry));
-                    System::Out("[ACPI] Interrupt Override: %x", (uintptr_t) entry);
+                    MADTInterruptOverride* iso = static_cast<MADTInterruptOverride *>(entry);
+                    g_InterruptOverrides.Add(iso);
+                    System::Out("[ACPI] Interrupt Override: Source=%u, Interrupt=%u", iso->irqSource, iso->gSi);
                     break;
                 }
                 case 3: {

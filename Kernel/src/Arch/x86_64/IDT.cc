@@ -3,7 +3,7 @@
 
 extern uintptr_t isr_tables[];
 static struct InterruptDescTableEntry g_IdtEntryList[IDT_ENTRY_COUNT];
-struct InterruptDescTablePointer g_Idtr = {
+struct InterruptDescTablePointer g_IDTPointer = {
     .size = sizeof(struct InterruptDescTableEntry) * IDT_ENTRY_COUNT,
     .base = (uint64_t) &g_IdtEntryList[0]
 };
@@ -52,6 +52,6 @@ namespace IDT
         //     .base_high = ((isr_tables[33] >> 32) & 0xffffffff)
         // };
 
-        asmw_flush_idt((uint64_t) &g_Idtr);
+        asmw_flush_idt((uint64_t) &g_IDTPointer);
     }
 } // namespace IDT

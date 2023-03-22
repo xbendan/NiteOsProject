@@ -113,7 +113,7 @@ namespace Boot
 
         DisableInterrupts();
 
-        GDT::Initialize();
+        asmw_flush_gdt((uint64_t) &g_GDTPointer);
         IDT::Initialize();
 
         Video::Initialize();

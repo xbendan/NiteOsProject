@@ -71,23 +71,21 @@ public:
     }
 };
 
-template <typename T, int size> class SizedArrayList
+template <class T, int size> class SizedArrayList
 {
 private:
     T array[size];
-    uint64_t m_Count;
-    uint64_t m_Capacity;
+    uint64_t m_Count = 0;
     size_t m_ObjectSize = sizeof(T);
 
 public:
     SizedArrayList()
-      : m_Count(0),
-        m_Capacity(size)
-    { }
+      : m_Count(0)
+    { System::Out("ArrayList created size=%u", size); }
 
     T& operator[](int index)
     {
-        return array[index < m_Capacity ? index : 0];
+        return array[index < size ? index : 0];
     }
 
     bool Contains(T& obj)
@@ -106,22 +104,21 @@ public:
         return !m_Count;
     }
 
-    size_t Length()
+    inline size_t Length()
     {
         return m_Count;
     }
     
-    size_t Capacity()
+    inline size_t Capacity()
     {
-        return m_Capacity;
+        return size;
     }
 
-    void Add(T obj)
+    inline void Add(T obj)
     {
-        if (m_Count >= m_Capacity) {
+        if (m_Count > size) {
             return;
         }
-        if (m_ObjectSize == 1) System::Out("Object aborted.");
         array[m_Count++] = obj;
     }
 

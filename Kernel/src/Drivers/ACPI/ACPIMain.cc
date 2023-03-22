@@ -5,8 +5,10 @@
 
 #include <Utils/LinkedList.h>
 #include <Utils/ArrayList.h>
+#include <Utils/Table.h>
 #include <Utils/Range.h>
 
+#include <Arch/x86_64/mmu.h>
 #include <macros>
 
 namespace ACPI
@@ -17,6 +19,8 @@ namespace ACPI
     RootSystemDescriptionPointer *rsdp;
     RootSystemDescriptionTable *rsdt;
     ExtendedSystemDescriptionTable *xsdt;
+    KeyValueTable<uint64_t, uint64_t> xsdtEntryTable;
+    
     MADT *g_MADT;
     FADT *g_FADT;
     HPET *g_HPET;
@@ -32,16 +36,15 @@ namespace ACPI
             return nullptr;
         }
 
-        uint64_t length = rsdt->Length - sizeof(ACPITable);
-        uint64_t entries = rsdp->Revision ?
-            length / sizeof(uint64_t) :
-            length / sizeof(uint32_t);
+        // uint64_t entries = rsdp->Revision ?
+        //     (xsdt->Length - sizeof(ACPITable)) / sizeof(uint64_t) :
+        //     (rsdt->Length - sizeof(ACPITable)) / sizeof(uint32_t);
+        uint64_t entries = (rsdt->Length - sizeof(ACPITable)) / sizeof(uint32_t);
 
         int _index = 0;
         for (int i = 0; i < entries; i++)
         {
-            uintptr_t entry = rsdp->Revision ?
-                xsdt->Pointers[i] :
+            uintptr_t entry = 
                 rsdt->Pointers[i];
             ACPITable *header = reinterpret_cast<ACPITable *>(Memory::GetIOMapping(entry));
             if (memcmp(header->Signature, str, 4) == 0 && _index++ == index) {
@@ -100,10 +103,10 @@ namespace ACPI
             }
             case 2: {
                 ExtendedSystemDescriptionPointer *xsdp = static_cast<ExtendedSystemDescriptionPointer *>(rsdp);
-                uint64_t xsdtAddress = Memory::GetIOMapping(xsdp->XsdtAddress);
 
-                rsdt = reinterpret_cast<RootSystemDescriptionTable *>(xsdtAddress);
-                xsdt = reinterpret_cast<ExtendedSystemDescriptionTable *>(xsdtAddress);
+                rsdt = reinterpret_cast<RootSystemDescriptionTable *>(Memory::GetIOMapping(rsdp->RsdtAddress));
+                xsdt = reinterpret_cast<ExtendedSystemDescriptionTable *>(Memory::GetIOMapping(xsdp->XsdtAddress));
+                
                 break;
             }
             default:
@@ -118,14 +121,6 @@ namespace ACPI
 
         g_Timers[TimerACPI] = new ACPITimer();
         g_Timers[TimerHPET] = new HPETTimer();
-
-        // System::Out("ACPI Revision: %u", acpiDesc->revision);
-        // int tableLength = ((acpiRsdtHeader->table.length - sizeof(AcpiSystemDescTable)) / 4);
-        // System::Out("Table length: %u", tableLength);
-        // for (int i = 0; i < tableLength; i++)
-        // {
-        //     System::Out("%x", acpiRsdtHeader->pointers[i]);
-        // }
     }
 
     uint32_t GetRemapIRQ(uint32_t irq)
@@ -136,6 +131,6 @@ namespace ACPI
                 return iso->gSi;
             }
         }
-        return irq;
+        return 2;
     }
 } // namespace ACPI

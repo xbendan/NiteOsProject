@@ -6,7 +6,7 @@ namespace Task
 {
     void Scheduler::SwitchThread(Thread *newThread)
     {
-        Processor *cpu = GetCPULocal();
+        CPU *cpu = GetCPULocal();
 
         cpu->currentThread = newThread;
         cpu->tss.rsp[0] = reinterpret_cast<uint64_t>(newThread->m_KernelStack);

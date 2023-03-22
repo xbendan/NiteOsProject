@@ -11,10 +11,10 @@ HPETTimer::HPETTimer()
         return;
     }
 
-    clock = Read(0) >> 32;
-    Write(0x10, 0);
-    Write(0xf0, 0);
-    Write(0x10, 1);
+    // clock = Read(0) >> 32;
+    // Write(0x10, 0);
+    // Write(0xf0, 0);
+    // Write(0x10, 1);
 }
 
 void HPETTimer::Tick() { }

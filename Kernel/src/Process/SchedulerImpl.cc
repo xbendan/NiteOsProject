@@ -50,7 +50,7 @@ namespace Task
 
     void Scheduler::Schedule()
     {
-        Processor *cpu = GetCPULocal();
+        CPU *cpu = GetCPULocal();
 
         //if ()
     }
