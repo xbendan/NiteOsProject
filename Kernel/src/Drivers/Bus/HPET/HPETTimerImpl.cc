@@ -1,5 +1,5 @@
 #include <Drivers/Generic/ACPI.h>
-#include <Drivers/HPET.h>
+#include <Drivers/Clock/HPET.h>
 #include <Timer.h>
 #include <System.h>
 
