@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include <string.h>
+#include <String.h>
 
 
 #define __INLINE__ __attribute__((always_inline)) inline

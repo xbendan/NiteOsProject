@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Device/Device.h>
-#include <Drivers/ACPI.h>
+#include <Drivers/Generic/ACPI.h>
 #include <Utils/ArrayList.h>
 
 #include <macros>

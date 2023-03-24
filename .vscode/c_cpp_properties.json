@@ -12,15 +12,15 @@
             "intelliSenseMode": "linux-gcc-x64"
         },
         {
-            "name": "elf_x64",
+            "name": "BareMetalX64",
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/Kernel/include"
             ],
             "defines": [],
-            "compilerPath": "/home/umarin/build/x86_64-elf/x86_64-elf/bin",
-            "cStandard": "gnu99",
-            "cppStandard": "gnu++98",
+            "compilerPath": "/home/umarin/build/x86_64-elf/bin/x86_64-elf-gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++17",
             "intelliSenseMode": "gcc-x64",
             "configurationProvider": "ms-vscode.makefile-tools"
         }

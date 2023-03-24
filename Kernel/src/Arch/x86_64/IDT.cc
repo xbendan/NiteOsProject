@@ -12,12 +12,12 @@ namespace IDT
 {
     void SetGate(uint8_t num, uint64_t base, uint16_t sel, uint8_t flags, uint8_t ist = 0) {
         g_IdtEntryList[num] = {
-            .base_low = base & 0xffff,
+            .base_low = (uint16_t)(base & 0xffff),
             .selector = sel,
             .ist = ist,
             .flags = flags,
-            .base_med = (base >> 16) & 0xffff,
-            .base_high = (base >> 32) & 0xffffffff,
+            .base_med = (uint16_t)((base >> 16) & 0xffff),
+            .base_high = (uint32_t)((base >> 32) & 0xffffffff),
         };
     }
 

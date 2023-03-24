@@ -7,7 +7,7 @@ namespace TSS {
     void Initialize(tss_t* tss, void* gdt) {
         // load_tss((uintptr_t)tss, (uint64_t)gdt, 0x28);
         GDTPackage *package = reinterpret_cast<GDTPackage *>(gdt);
-        package->tss = GDTTssEntry((uint64_t) tss);
+        package->tss = GDTTssEntry(*tss);
 
         memset(tss, 0, sizeof(tss_t));
 

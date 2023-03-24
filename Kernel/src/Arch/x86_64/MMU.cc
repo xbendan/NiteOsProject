@@ -7,12 +7,11 @@
 #include <Proc/Scheduler.h>
 #include <Utils/Spinlock.h>
 #include <address.h>
-#include <kern.h>
 
 #define KERNEL_HEAP_PML4_INDEX 511
 #define KERNEL_HEAP_PDPT_INDEX 511
 
-namespace Memory::ManagementUnit
+namespace Memory::Paging
 {
     VirtualPages   kernelPagemap;
 
@@ -287,6 +286,6 @@ namespace Memory::ManagementUnit
 namespace Memory
 {
     uint64_t GetIOMapping(uint64_t address) {
-        return Memory::ManagementUnit::GetIOMapping(address);
+        return Memory::Paging::GetIOMapping(address);
     }
 }

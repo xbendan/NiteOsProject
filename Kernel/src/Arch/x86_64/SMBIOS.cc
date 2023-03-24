@@ -1,7 +1,6 @@
 #include <Arch/x86_64/smbios.h>
 #include <Arch/x86_64/mmu.h>
 #include <address.h>
-#include <kern.h>
 
 namespace SMBios
 {

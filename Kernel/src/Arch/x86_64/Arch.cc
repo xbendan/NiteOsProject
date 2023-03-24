@@ -1,17 +1,10 @@
 #include <Arch/x86_64/ports.h>
 #include <Init/BootInfo.h>
-#include <kern.h>
 
 using namespace Ports;
 
 namespace System
 {
-    void Halt() {
-        asm("cli");
-        while (true)
-            asm("hlt");
-    }
-
     void Reboot() {
         while(ReadByte8(0x64) & 0x02 != 0);
         WriteByte8(0x64, 0xFE);
@@ -26,4 +19,9 @@ namespace System
     }
 } // namespace System
 
-
+void Halt()
+{
+    asm("cli");
+    while (true)
+        asm("hlt");
+}

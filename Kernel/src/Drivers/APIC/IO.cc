@@ -1,5 +1,5 @@
 #include <Drivers/APIC.h>
-#include <Drivers/ACPI.h>
+#include <Drivers/Generic/ACPI.h>
 #include <Mem/MMIO.h>
 #include <System.h>
 
@@ -58,8 +58,7 @@ namespace APIC::IO
         // for (int i = 0; i < ACPI::g_InterruptOverrides.Length(); i++)
         // {
         //     MADTInterruptOverride *iso = ACPI::g_InterruptOverrides[i];
-        //     // Redirect(iso->gSi, iso->irqSource + 0x20, 0);
-        //     System::Out("Interrupt Override found, source=%u, interrupt=%u", iso->irqSource, iso->gSi);
+        //     Redirect(iso->gSi, iso->irqSource + 0x20, 0);
         // }
     }
 
@@ -86,23 +85,13 @@ namespace APIC::IO
     void EnableInterrupt(uint8_t irq)
     {
         uint8_t index = 0;
-        // ACPI::g_InterruptOverrides.ForEach([&](MADTInterruptOverride *&obj, int) -> void {
-        //     if (obj->irqSource == (irq - 0x20))
-        //     {
-        //         WriteData64(IO_APIC_RED_TABLE_ENT(obj->gSi), irq);
-        //         System::Out("Remap IRQ: Index=%u Data=%u", obj->gSi, irq);
-        //         return;
-        //     }
-        // });
-        // for (int i = 0; i < ACPI::g_InterruptOverrides.Length(); i++)
-        // {
-        //     MADTInterruptOverride* iso = ACPI::g_InterruptOverrides[i];
-        //     if (iso->irqSource == (irq - 0x20))
-        //     {
-        //         WriteData64(IO_APIC_RED_TABLE_ENT(iso->gSi), irq);
-        //         System::Out("Remap IRQ: Index=%u Data=%u", iso->gSi, irq);
-        //         return;
-        //     }
-        // }
+        ACPI::g_InterruptOverrides.ForEach([&](MADTInterruptOverride *&obj, int) -> void {
+            if (obj->irqSource == (irq - 0x20))
+            {
+                WriteData64(IO_APIC_RED_TABLE_ENT(obj->gSi), irq);
+                System::Out("Remap IRQ: Index=%u Data=%u", obj->gSi, irq);
+                return;
+            }
+        });
     }
 } // namespace APIC::IO

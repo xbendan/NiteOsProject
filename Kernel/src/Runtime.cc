@@ -2,16 +2,14 @@
 #include <macros>
 #include <System.h>
 
-inline void *operator new(size_t, void *p) { return p; }
+void *operator new(size_t size) { return (void *) Memory::g_KernelAllocator->Allocate(size); }
 
-void *operator new(size_t size) { return (void *) Memory::AllocateKernelObject(size); }
+void *operator new[](size_t size) { return (void *) Memory::g_KernelAllocator->Allocate(size); }
 
-void *operator new[](size_t size) { return (void *) Memory::AllocateKernelObject(size); }
-
-void operator delete(void* p) { Memory::FreeKernelObject((uintptr_t) p); }
+void operator delete(void* p) { Memory::g_KernelAllocator->Free((uintptr_t) p); }
 
 void operator delete(void* p, size_t) { ::operator delete(p); }
 
-void operator delete[](void* p) { Memory::FreeKernelObject((uintptr_t) p); }
+void operator delete[](void* p) { Memory::g_KernelAllocator->Free((uintptr_t) p); }
 
 void operator delete[](void* p, size_t) { ::operator delete[](p); }

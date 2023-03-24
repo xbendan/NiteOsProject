@@ -1,6 +1,6 @@
 #include <Drivers/video.h>
 #include <macros>
-#include <string.h>
+#include <String.h>
 #include <stdarg.h>
 
 namespace Video

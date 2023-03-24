@@ -1,5 +1,5 @@
 #include <Drivers/APIC.h>
-#include <Drivers/ACPI.h>
+#include <Drivers/Generic/ACPI.h>
 #include <System.h>
 
 #include <Arch/x86_64/cpu.h>
@@ -45,7 +45,7 @@ namespace APIC
                 case 2: {
                     MADTInterruptOverride* iso = static_cast<MADTInterruptOverride *>(entry);
                     g_InterruptOverrides.Add(iso);
-                    System::Out("[ACPI] Interrupt Override: Source=%u, Interrupt=%u", iso->irqSource, iso->gSi);
+                    // System::Out("[ACPI] Interrupt Override: Source=%u, Interrupt=%u", iso->irqSource, iso->gSi);
                     break;
                 }
                 case 3: {
@@ -66,9 +66,6 @@ namespace APIC
 
             offset += entry->Length;
         }
-
-        WriteMsr(ModelSpecificRegisters::MSR_APIC, 
-            (ReadMsr(ModelSpecificRegisters::MSR_APIC) | 0x800) & ~(LOCAL_APIC_ENABLE));
 
         Local::Initialize();
         IO::Initialize();

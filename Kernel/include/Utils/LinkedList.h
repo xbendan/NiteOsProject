@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Mem/KMemAlloc.h>
 #include <Utils/Spinlock.h>
 #include <libkern/objects.h>
 #include <System.h>

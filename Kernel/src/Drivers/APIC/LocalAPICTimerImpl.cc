@@ -1,4 +1,5 @@
 #include <Drivers/APIC.h>
+#include <System.h>
 #include <Timer.h>
 
 using namespace APIC::Local;
@@ -24,10 +25,12 @@ LocalAPICTimer::LocalAPICTimer()
     uint64_t hertz = 1000;
     uint32_t irq = 0x20;
     m_BusClock = EstimateBusSpeed();
-
+    
     WriteData(LOCAL_APIC_LVT_TIMER, 0x00020000 | irq);
     WriteData(LOCAL_APIC_TIMER_DIVIDE, 0x3);
     WriteData(LOCAL_APIC_TIMER_INITIAL_COUNT, m_BusClock / 16 / hertz);
+
+    APIC::IO::EnableInterrupt(irq);
 }
 
 LocalAPICTimer::~LocalAPICTimer()

@@ -1,9 +1,8 @@
 #include <Init/BootInfo.h>
 #include <Drivers/video.h>
-#include <Drivers/ACPI.h>
+#include <Drivers/Generic/ACPI.h>
 #include <Drivers/APIC.h>
 #include <Proc/Process.h>
-#include <kern.h>
 #include <System.h>
 
 #include <Arch/x86_64/boot.h>
@@ -15,6 +14,9 @@
 #include <Arch/x86_64/pit.h>
 #include <Arch/x86_64/smbios.h>
 #include <Arch/x86_64/smp.h>
+
+extern "C" void asmw_enable_sse();
+extern "C" void asmw_enable_avx();
 
 BootInfo bootInfo;
 
@@ -113,7 +115,9 @@ namespace Boot
 
         DisableInterrupts();
 
-        asmw_flush_gdt((uint64_t) &g_GDTPointer);
+        asmw_enable_sse();
+
+        GDT::Initialize();
         IDT::Initialize();
 
         Video::Initialize();
@@ -121,7 +125,7 @@ namespace Boot
         Memory::Initialize();
 
         // PIC::Initialize();
-        // PIT::Initialize(1000);
+        PIT::Initialize(1000);
 
         CPUIDInfo cpuId = CPUID();
         // Check hardware features
@@ -163,10 +167,7 @@ extern "C" [[noreturn]] void kload_stivale2(void *ptr)
     if(ptr == NULL)
         __asm__("mov $0x32, %al");
 
-    Boot::stivale2(
-        &bootInfo,
-        (stivale2_struct_t*)(ptr)
-    );
+    Boot::stivale2(&bootInfo, (stivale2_struct_t*)(ptr));
     Boot::Start();
 
 hang:

@@ -1,4 +1,4 @@
-#include <Drivers/ACPI.h>
+#include <Drivers/Generic/ACPI.h>
 
 #include <Arch/x86_64/ports.h>
 

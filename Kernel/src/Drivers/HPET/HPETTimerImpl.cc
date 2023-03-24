@@ -1,4 +1,4 @@
-#include <Drivers/ACPI.h>
+#include <Drivers/Generic/ACPI.h>
 #include <Drivers/HPET.h>
 #include <Timer.h>
 #include <System.h>
@@ -10,6 +10,8 @@ HPETTimer::HPETTimer()
         System::Out("Cannot initialize HPET Timer without HPET structure.");
         return;
     }
+    else
+        System::Out("Initializing HPET, address=%x", r_HPET->Address.Address);
 
     // clock = Read(0) >> 32;
     // Write(0x10, 0);
@@ -21,12 +23,11 @@ void HPETTimer::Tick() { }
 
 uint64_t HPETTimer::CurrentTime(TimeSpan span)
 {
-    return 0;
+    return Read(0xF0);
 }
 
 void HPETTimer::Sleep(long milliseconds)
 {
-    ticks = 0;
-    uint64_t futureTicks = ticks + (milliseconds * 10000000000000) / clock;
-    while (ticks < futureTicks) asm("nop");
+    uint64_t futureTicks = CurrentTime() + (milliseconds * 10000000000000) / clock;
+    while (CurrentTime() < futureTicks) asm("nop");
 }

@@ -4,7 +4,6 @@
 #include <Proc/Scheduler.h>
 #include <libkern/objects.h>
 #include <Utils/LinkedList.h>
-#include <kern.h>
 #include <System.h>
 
 #ifdef ARCH_X86_64
@@ -62,8 +61,8 @@ namespace Memory
     page_t *Request4KPageMapped(slab_cache_t *cache, uint64_t *addrVirt)
     {
         page_t *page = Request4KPage(cache);
-        uintptr_t _addrVirt = ManagementUnit::KernelAllocate4KPages(1);
-        ManagementUnit::KernelMapVirtualMemory4K(page->addr, _addrVirt, 1);
+        uintptr_t _addrVirt = Paging::KernelAllocate4KPages(1);
+        Paging::KernelMapVirtualMemory4K(page->addr, _addrVirt, 1);
 
         if (!Objects::IsNull(addrVirt)) {
             *addrVirt = _addrVirt;
@@ -208,7 +207,6 @@ SlowestPath:
         page->freelist = (void **) *page->freelist;
         page->slab_inuse++;
 
-        System::Out("KObjAlloc");
         return (uintptr_t) pointer;
     }
 

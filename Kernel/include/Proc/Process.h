@@ -17,7 +17,7 @@
 typedef uint32_t tid_t;
 typedef uint32_t pid_t;
 
-using namespace Memory::ManagementUnit;
+using namespace Memory::Paging;
 
 namespace Task
 {
@@ -125,7 +125,7 @@ namespace Task
 
         /* Architecture Fields */
         #ifdef ARCH_X86_64 
-        Memory::ManagementUnit::VirtualPages *m_Pagemap;
+        Memory::Paging::VirtualPages *m_Pagemap;
         #elif ARCH_AARCH64
 
         #elif ARCH_RISCV

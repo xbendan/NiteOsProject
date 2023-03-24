@@ -99,8 +99,8 @@ namespace Memory
 
     static inline bool IsPageAligned(page_t* page) { return !((page->addr) % ((1 << page->order) * ARCH_PAGE_SIZE)); }
 
-    uintptr_t KernelAllocate4KPages(size_t amount);
-    uintptr_t Allocate4KPages(size_t amount);
+    uintptr_t KernelAllocate4KPages(size_t amount, page_t **pagePtr = nullptr);
+    uintptr_t Allocate4KPages(size_t amount, page_t **pagePtr = nullptr);
     void Free4KPages(uintptr_t address);
     void Free4KPages(page_t *page);
 } // namespace Memory

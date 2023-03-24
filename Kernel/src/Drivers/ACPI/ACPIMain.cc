@@ -1,4 +1,4 @@
-#include <Drivers/ACPI.h>
+#include <Drivers/Generic/ACPI.h>
 #include <Drivers/HPET.h>
 #include <Mem/MMIO.h>
 #include <System.h>
@@ -36,15 +36,15 @@ namespace ACPI
             return nullptr;
         }
 
-        // uint64_t entries = rsdp->Revision ?
-        //     (xsdt->Length - sizeof(ACPITable)) / sizeof(uint64_t) :
-        //     (rsdt->Length - sizeof(ACPITable)) / sizeof(uint32_t);
-        uint64_t entries = (rsdt->Length - sizeof(ACPITable)) / sizeof(uint32_t);
+        uint64_t entries = rsdp->Revision ?
+            (xsdt->Length - sizeof(ACPITable)) / sizeof(uint64_t) :
+            (rsdt->Length - sizeof(ACPITable)) / sizeof(uint32_t);
 
         int _index = 0;
         for (int i = 0; i < entries; i++)
         {
-            uintptr_t entry = 
+            uintptr_t entry = rsdp->Revision ?
+                xsdt->Pointers[i] :
                 rsdt->Pointers[i];
             ACPITable *header = reinterpret_cast<ACPITable *>(Memory::GetIOMapping(entry));
             if (memcmp(header->Signature, str, 4) == 0 && _index++ == index) {
@@ -106,7 +106,7 @@ namespace ACPI
 
                 rsdt = reinterpret_cast<RootSystemDescriptionTable *>(Memory::GetIOMapping(rsdp->RsdtAddress));
                 xsdt = reinterpret_cast<ExtendedSystemDescriptionTable *>(Memory::GetIOMapping(xsdp->XsdtAddress));
-                
+
                 break;
             }
             default:
@@ -131,6 +131,6 @@ namespace ACPI
                 return iso->gSi;
             }
         }
-        return 2;
+        return -1;
     }
 } // namespace ACPI

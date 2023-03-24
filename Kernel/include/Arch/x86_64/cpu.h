@@ -61,8 +61,8 @@
 #define CPUID_EDX_IA64 (1 << 30)
 #define CPUID_EDX_PBE (1 << 31)
 
-#define CPU_CORE_ID ThisCPU()
-#define MAX_CPU_AMOUNT 64
+#define CPU_CORE_ID CurrentCPU()
+#define MAX_CPU_AMOUNT 256
 
 #define GDT_ENTRY_COUNT 5
 #define GDT_SEGMENT 0b00010000
@@ -266,7 +266,7 @@ CPUIDInfo CPUID();
 void SetCPULocal(CPU *cpu);
 CPU *GetCPULocal();
 
-int ThisCPU();
+int CurrentCPU();
 
 namespace TSS {
     void Initialize(tss_t* tss, void* gdt);

@@ -1,6 +1,5 @@
 #include <Mem/Page.h>
 #include <Mem/MemZone.h>
-#include <kern.h>
 
 #ifdef ARCH_X86_64
 #include <Arch/x86_64/mmu.h>
@@ -12,37 +11,31 @@ namespace Memory {
     void BuddyInit() {
         BuddyZone *zone = &(zones[ZONE_NORMAL]);
 
-        using namespace Model;
+        g_Blocks.ForEach([&](ValueRange &vals, int index) -> void
+        {
+            uint64_t addrStart = ALIGN_UP(vals.Start, PAGE_MAX_SIZE);
+            uint64_t addrEnd = ALIGN_DOWN(vals.End, PAGE_MAX_SIZE);
 
-        int index = 0;
-        mem_block_t *block;
-        while (memblocks[index].m_AddrStart) {
-            block = &memblocks[index];
-            uint64_t addrStart = ALIGN_UP(block->m_AddrStart, PAGE_MAX_SIZE);
-            uint64_t addrEnd = ALIGN_DOWN(block->m_AddrEnd, PAGE_MAX_SIZE);
-
-            for (; addrStart < addrEnd - PAGE_MAX_SIZE; addrStart += PAGE_MAX_SIZE) {
-                if(addrStart < LOWMEM_RESERVED || addrEnd < PAGE_MAX_ORDER) {
-                    continue;
-                }
-
-                page_t *pages = Model::GetPage(addrStart);
-                if (pages) {
+            uint64_t current = addrStart;
+            while (current < addrEnd - PAGE_MAX_SIZE && addrEnd > PAGE_MAX_SIZE)
+            {
+                page_t *pages = pageOf(current);
+                if (pages)
+                {
                     memset(pages, 0, sizeof(page_t) * PAGE_AMOUNT_PER_BLOCK);
-                    
                     for (size_t pageIndex = 0; pageIndex < PAGE_AMOUNT_PER_BLOCK; pageIndex++)
                     {
                         pages[pageIndex].flags = PFLAGS_FREE;
                         pages[pageIndex].first = pages;
-                        pages[pageIndex].addr = addrStart + (pageIndex * ARCH_PAGE_SIZE);
+                        pages[pageIndex].addr = current + (pageIndex * ARCH_PAGE_SIZE);
                     }
-                    
                     pages->order = PAGE_MAX_ORDER;
-                    zone->pageList[PAGE_MAX_ORDER].Add((ListNode<page_t> *) pages);
+
+                    zone->pageList[PAGE_MAX_ORDER].Add(reinterpret_cast<ListNode<page_t> *>(pages));
                 }
+                current += PAGE_MAX_SIZE;
             }
-            index++;
-        }
+        });
     }
 
     page_t *AllocatePhysMemory4KOrdered(uint8_t order) {

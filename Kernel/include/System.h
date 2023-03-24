@@ -6,8 +6,9 @@ namespace System
 
     void Reboot();
     void Shutdown();
-    void Halt();
     [[noreturn]] void Panic(const char *msg, ...);
 } // namespace System
+
+void Halt();
 
 [[noreturn]] void KernelInit();

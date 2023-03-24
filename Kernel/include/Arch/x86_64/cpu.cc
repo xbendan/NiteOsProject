@@ -3,7 +3,7 @@
 
 #include <Drivers/APIC.h>
 
-int ThisCPU()
+int CurrentCPU()
 {
     uintptr_t apicBase = APIC::Local::BaseVirtIO;
     if(apicBase)

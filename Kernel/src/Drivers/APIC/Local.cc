@@ -1,5 +1,7 @@
 #include <Drivers/APIC.h>
 #include <Mem/MMIO.h>
+#include <Mem/KMemAlloc.h>
+#include <Mem/SlabAllocator.h>
 #include <System.h>
 #include <Timer.h>
 
@@ -67,7 +69,7 @@ namespace APIC::Local
 
     void Initialize()
     {
-        // if (!localPhysApicBase)
+        // if (!BasePhys)
         // {
         //     System::Panic("Local APIC base not found.");
         // }
@@ -83,9 +85,7 @@ namespace APIC::Local
         Enable();
         PIC::Disable();
 
-        g_Timers[TimerAPIC] = new LocalAPICTimer();
-
-        //Timer::Initialize(1000, 0x20);
+        g_Timers[TimerAPIC] = reinterpret_cast<LocalAPICTimer *>(Memory::g_KernelAllocator->Allocate(sizeof(LocalAPICTimer)));
 
         RegisterInterruptHandler(0xff, SpuriousInterruptHandler);
     }

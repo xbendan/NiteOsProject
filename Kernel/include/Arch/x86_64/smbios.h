@@ -11,7 +11,7 @@ namespace SMBios
         uint8_t MinorVersion;
         uint16_t MaxSize;
         uint8_t Revision;
-        char FmtArea[5];
+        char FormatArea[5];
         char EntryPointString2[5];
         uint8_t Checksum2;
         uint16_t TableLength;
@@ -109,7 +109,6 @@ namespace SMBios
         uint8_t ECFMajorRelease /* Embbedded Controller Firmware */;
         uint8_t ECFMinorRelease;
         uint16_t ExtendedRomSize;
-
     };
 
     struct SmbiosSystemInformation : public SmbiosTypeHeader

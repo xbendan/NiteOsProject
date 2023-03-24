@@ -21,7 +21,6 @@ cld
 
 mov ax, SMP_MAGIC
 mov word [SMP_TRAMPOLINE_DATA_START_FLAG], ax
-mov word [SMP_MAGIC], SMP_MAGIC
 
 mov eax, cr4
 or eax, 1 << 5  ; Set PAE bit
@@ -33,11 +32,11 @@ mov cr3, eax
 mov ecx, 0xC0000080 ; EFER Model Specific Register
 rdmsr               ; Read from the MSR 
 or eax, 1 << 8
-; or eax, 1         ; Enable Syscall
+or eax, 1           ; Enable Syscall
 wrmsr
 
 mov eax, cr0
-or eax, 0x80000001 ; Paging, Protected Mode
+or eax, 0x80000001  ; Paging, Protected Mode
 mov cr0, eax
 
 lgdt [SMP_TRAMPOLINE_GDT_PTR]

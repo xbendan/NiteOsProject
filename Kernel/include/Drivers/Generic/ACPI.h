@@ -189,8 +189,8 @@ namespace ACPI
         uint8_t Reserved[3];
     } __attribute__((packed));
 
-    struct RootSystemDescriptionTable : public ACPITable { uint32_t Pointers[]; /* (table.length - sizeof(table)) / 4 */ };
-    struct ExtendedSystemDescriptionTable : public ACPITable { uint64_t Pointers[]; /* (table.length - sizeof(table)) / 8 */ };
+    struct RootSystemDescriptionTable : public ACPITable { uint32_t Pointers[]; /* (table.length - sizeof(table)) / 4 */ } __attribute__((packed));
+    struct ExtendedSystemDescriptionTable : public ACPITable { uint64_t Pointers[]; /* (table.length - sizeof(table)) / 8 */ } __attribute__((packed));
 
     extern SizedArrayList<uint8_t, 256> g_Processors;
     extern SizedArrayList<MADTInterruptOverride *, 256> g_InterruptOverrides;

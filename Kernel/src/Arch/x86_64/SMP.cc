@@ -1,4 +1,4 @@
-#include <Drivers/ACPI.h>
+#include <Drivers/Generic/ACPI.h>
 #include <Drivers/APIC.h>
 #include <Mem/Memory.h>
 #include <Mem/Page.h>
@@ -21,7 +21,7 @@ CPU *cpus[MAX_CPU_AMOUNT];
 
 namespace SMP
 {
-    volatile uint16_t* smpMagicValue = (uint16_t*) SMP_MAGIC;
+    volatile uint16_t* smpMagicValue = (uint16_t*) SMP_TRAMPOLINE_DATA_START_FLAG;
     volatile uint16_t* smpTrampolineCpuID = (uint16_t*) SMP_TRAMPOLINE_CPU_ID;
     GDTPointer* smpGdtPointer = (GDTPointer *) SMP_TRAMPOLINE_GDT_PTR;
     volatile uint64_t* smpRegisterCR3 = (uint64_t*)SMP_TRAMPOLINE_CR3;
@@ -46,10 +46,9 @@ namespace SMP
         TSS::Initialize(&cpu->tss, cpu->gdt);
         APIC::Local::Enable();
 
-        doneInit = true;
-
         asm("sti");
-        System::Out("Processor initialized.");
+
+        doneInit = true;
 
         for (;;)
             asm volatile("pause");
@@ -57,8 +56,12 @@ namespace SMP
 
     void InitializeProcessor(uint16_t cpuId)
     {
-        cpus[cpuId] = (CPU *) kmalloc(sizeof(CPU));
+        if (cpus[cpuId] != nullptr)
+        {
+            return;
+        }
 
+        cpus[cpuId] = new CPU();
         *cpus[cpuId] = {
             .self = cpus[cpuId],
             .id = cpuId,
@@ -72,8 +75,6 @@ namespace SMP
 
         asm volatile("mov %%cr3, %%rax" : "=a"(*smpRegisterCR3));
 
-        System::Out("APIC signal sending");
-
         APIC::Local::SendIPI(cpuId, ICR_DSH_DEST, ICR_MESSAGE_TYPE_INIT, 0);
         g_Timers[TimerACPI]->Sleep(50);
 
@@ -81,33 +82,28 @@ namespace SMP
             APIC::Local::SendIPI(cpuId, ICR_DSH_DEST, ICR_MESSAGE_TYPE_STARTUP, (SMP_TRAMPOLINE_ENTRY >> 12));
             g_Timers[TimerACPI]->Sleep(200);
         }
-        System::Out("APIC signal sent.");
 
         while (!doneInit)
             asm("pause");
 
+        System::Out("Processor %u initialized.", cpuId);
         doneInit = false;
     }
 
     void Initialize()
     {
         System::Out("Initializing SMP, %u processor(s) found.", ACPI::g_Processors.Length());
-        cpus[0] = (CPU *) kmalloc(sizeof(CPU));
-        
-        *cpus[0] = (CPU)
-        {
-            .id = 0,
-            .gdt = (void *) g_GDTPointer.base,
-            .gdtPtr = g_GDTPointer,
-            .idtPtr = g_IDTPointer,
-            .tss = TaskStateSegment
-            .currentThread = nullptr,
-            .idleThread = nullptr
-        };
+        cpus[0] = new CPU();
+
+        cpus[0]->id = 0;
+        cpus[0]->gdt = (void *) g_GDTPointer.base;
+        cpus[0]->gdtPtr = g_GDTPointer;
+        cpus[0]->idtPtr = g_IDTPointer;
+        cpus[0]->currentThread = nullptr;
+        cpus[0]->idleThread = nullptr;
+
         SetCPULocal(cpus[0]);
         TSS::Initialize(&cpus[0]->tss, cpus[0]->gdt);
-
-        System::Halt();
 
         memcpy((void *) SMP_TRAMPOLINE_ENTRY, &SMPTrampolineStart, ((uint64_t) &SMPTrampolineEnd) - ((uint64_t) &SMPTrampolineStart));
 

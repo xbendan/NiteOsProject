@@ -3,7 +3,6 @@
 #include <macros>
 #include <Mem/Memory.h>
 #include <address.h>
-#include <kern.h>
 #include <System.h>
 
 #define ARCH_PAGE_SIZE              (4096)
@@ -28,7 +27,7 @@
 #define PAGE_SIZE                   (1 << 7)
 #define IS_PAGE_ALIGNED(addr)       (addr % ARCH_PAGE_SIZE == 0)
 
-namespace Memory::ManagementUnit
+namespace Memory::Paging
 {  
     typedef uint64_t pml4e_t;
     typedef uint64_t pdpte_t;
@@ -175,7 +174,7 @@ namespace Memory::ManagementUnit
 
 
 extern "C" {
-Memory::ManagementUnit::pml4_t* asmw_get_pagemap();
+Memory::Paging::pml4_t* asmw_get_pagemap();
 inline void asmi_load_paging(uintptr_t addr) { asm("mov %%rax, %%cr3" ::"a"((uint64_t)addr)); }
 inline void asmi_invlpg(uintptr_t addr) { asm volatile("invlpg (%0)"::"r"(addr)); }
 }
