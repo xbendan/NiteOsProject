@@ -8,7 +8,10 @@ static irqhandle_t interruptHandlers[256];
 
 void UnhandlededException(InterruptData *data, RegisterContext *context)
 {
-
+    DisableInterrupts();
+    System::Panic("Unhandled Expcetion! Name=%s", data->name);
+    while (true)
+        ;
 }
 
 InterruptData g_IntData[256] =
@@ -66,12 +69,11 @@ extern "C" void* DispatchInterrupts(void *rsp)
     return rsp;
 }
 
-void RegisterInterruptHandler(int num, irqhandle_t func) {
-    
-    if (interruptHandlers[num] != 0) {
-        System::Out("The interrupt handler already exists.");
-        return;
-    }
+bool RegisterIRQ(uint8_t intno, irqhandle_t handler)
+{
+    if (handler == nullptr || g_IntData[intno]->handler)
+        return false;
 
-    interruptHandlers[num] = func;
+    g_IntData->handler = handler;
+    return true;
 }

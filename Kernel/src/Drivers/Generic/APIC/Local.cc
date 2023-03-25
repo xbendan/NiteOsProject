@@ -85,7 +85,7 @@ namespace APIC::Local
         Enable();
         PIC::Disable();
 
-        RegisterInterruptHandler(0xff, SpuriousInterruptHandler);
+        RegisterIRQ(0xFF, SpuriousInterruptHandler);
     }
 
     void EndOfInterrupt() { WriteData(LOCAL_APIC_EOI, 0); }

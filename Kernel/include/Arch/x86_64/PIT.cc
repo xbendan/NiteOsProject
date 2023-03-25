@@ -20,7 +20,7 @@ namespace PIT
         WriteByte8(0x40, __divisor__ & 0xFF);
         WriteByte8(0x40, (__divisor__ >> 8) & 0xFF);
 
-        // RegisterInterruptHandler(32, TimerTickHandler);
+        // Boot.h(32, TimerTickHandler);
     }
 } // namespace PIT
 

@@ -33,8 +33,9 @@ enum DeviceBus
     DeviceBusSoftware = 0,
     DeviceBusPCI = 1,
     DeviceBusUSB = 2,
+    DeviceBusPS2 = 3,
 
-    DeviceBusUnknown = 3
+    DeviceBusUnknown = 4
 };
 
 class DeviceProvider;

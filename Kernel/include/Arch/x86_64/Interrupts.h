@@ -30,7 +30,7 @@ struct InterruptData
     bool HasErrorCode() { return hasErrCode; }
 };
 
-void RegisterInterruptHandler(int num, irqhandle_t func);
+bool RegisterIRQ(uint8_t intno, irqhandle_t handler);
 
 static inline bool IsInterruptsEnabled() 
 {
