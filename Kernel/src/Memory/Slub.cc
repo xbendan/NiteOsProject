@@ -7,8 +7,8 @@
 #include <System.h>
 
 #ifdef ARCH_X86_64
-#include <Arch/x86_64/mmu.h>
-#include <Arch/x86_64/cpu.h>
+#include <Arch/x86_64/MMU.h>
+#include <Arch/x86_64/CPU.h>
 #endif
 
 namespace Memory

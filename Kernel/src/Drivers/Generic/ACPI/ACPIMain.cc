@@ -8,7 +8,7 @@
 #include <Utils/Table.h>
 #include <Utils/Range.h>
 
-#include <Arch/x86_64/mmu.h>
+#include <Arch/x86_64/MMU.h>
 #include <macros>
 
 namespace ACPI

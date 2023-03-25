@@ -6,8 +6,8 @@
 #include <System.h>
 
 #include "Arch/x86_64/smpdefines.inc"
-#include <Arch/x86_64/smp.h>
-#include <Arch/x86_64/cpu.h>
+#include <Arch/x86_64/SMP.h>
+#include <Arch/x86_64/CPU.h>
 
 #include <Utils/ArrayList.h>
 

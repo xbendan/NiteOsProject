@@ -38,7 +38,7 @@ LocalAPICTimer::~LocalAPICTimer()
     WriteData(LOCAL_APIC_LVT_TIMER, 0x00020000 | 0x10000);
 }
 
-void LocalAPICTimer::Tick() { }
+void LocalAPICTimer::Tick() { m_Ticks++; }
 
 uint64_t LocalAPICTimer::CurrentTime(TimeSpan span)
 {

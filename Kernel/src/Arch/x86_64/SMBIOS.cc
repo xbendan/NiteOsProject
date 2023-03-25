@@ -1,8 +1,8 @@
-#include <Arch/x86_64/smbios.h>
-#include <Arch/x86_64/mmu.h>
+#include <Arch/x86_64/SystemManagementBIOS.h>
+#include <Arch/x86_64/MMU.h>
 #include <address.h>
 
-namespace SMBios
+namespace SystemManagement
 {
     const char* __smbios_SignatureL2 = "_SM_";
     const char* __smbios_SignatureL3 = "_SM3_";

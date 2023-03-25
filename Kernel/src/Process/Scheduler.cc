@@ -7,7 +7,7 @@
 
 #if defined(ARCH_X86_64)
 
-#include <Arch/x86_64/cpu.h>
+#include <Arch/x86_64/CPU.h>
 
 #endif
 

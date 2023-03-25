@@ -5,7 +5,7 @@
 #include <Utils/Spinlock.h>
 #include <macros>
 #ifdef ARCH_X86_64
-    #include <Arch/x86_64/cpu.h>
+    #include <Arch/x86_64/CPU.h>
 #elif ARCH_AARCH64
     
 #elif ARCH_RISCV

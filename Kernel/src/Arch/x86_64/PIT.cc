@@ -1,7 +1,7 @@
 #include <Arch/x86_64/pit.h>
-#include <Arch/x86_64/ports.h>
-#include <Arch/x86_64/cpu.h>
-#include <Arch/x86_64/irq.h>
+#include <Arch/x86_64/Ports.h>
+#include <Arch/x86_64/CPU.h>
+#include <Arch/x86_64/Interrupts.h>
 #include <Timer.h>
 
 using namespace Ports;

@@ -1,5 +1,5 @@
-#include <Arch/x86_64/idt.h>
-#include <Arch/x86_64/mmu.h>
+#include <Arch/x86_64/IDT.h>
+#include <Arch/x86_64/MMU.h>
 #include <Mem/Memory.h>
 #include <Mem/KMemAlloc.h>
 #include <Mem/Page.h>

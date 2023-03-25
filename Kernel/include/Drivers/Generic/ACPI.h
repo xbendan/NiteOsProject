@@ -3,7 +3,7 @@
 #include <Timer.h>
 #include <macros>
 
-#include <Arch/x86_64/mmu.h>
+#include <Arch/x86_64/MMU.h>
 
 enum AcpiTableNameDefinition
 {

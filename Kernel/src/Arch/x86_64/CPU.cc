@@ -1,5 +1,5 @@
-#include <Arch/x86_64/cpu.h>
-#include <Arch/x86_64/irq.h>
+#include <Arch/x86_64/CPU.h>
+#include <Arch/x86_64/Interrupts.h>
 
 #include <Drivers/APIC.h>
 

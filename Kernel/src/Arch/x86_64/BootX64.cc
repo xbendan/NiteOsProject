@@ -5,15 +5,15 @@
 #include <Proc/Process.h>
 #include <System.h>
 
-#include <Arch/x86_64/boot.h>
-#include <Arch/x86_64/irq.h>
-#include <Arch/x86_64/cpu.h>
-#include <Arch/x86_64/gdt.h>
-#include <Arch/x86_64/idt.h>
+#include <Arch/x86_64/Boot.h>
+#include <Arch/x86_64/Interrupts.h>
+#include <Arch/x86_64/CPU.h>
+#include <Arch/x86_64/GDT.h>
+#include <Arch/x86_64/IDT.h>
 #include <Arch/x86_64/pic.h>
 #include <Arch/x86_64/pit.h>
-#include <Arch/x86_64/smbios.h>
-#include <Arch/x86_64/smp.h>
+#include <Arch/x86_64/SystemManagementBIOS.h>
+#include <Arch/x86_64/SMP.h>
 
 extern "C" void asmw_enable_sse();
 extern "C" void asmw_enable_avx();
@@ -153,7 +153,7 @@ namespace Boot
 
         EnableInterrupts();
         
-        SMBios::Initialize();
+        SystemManagement::Initialize();
         SMP::Initialize();
 
         KernelInit();

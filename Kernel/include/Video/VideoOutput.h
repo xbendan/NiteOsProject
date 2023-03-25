@@ -1,3 +1,6 @@
+#include <Video/Video.h>
+#include <macros>
+
 namespace Video
 {
     class VideoOutput
@@ -7,7 +10,8 @@ namespace Video
 
     class BufferOutput
     {
-
+    protected:
+        uint32_t *m_Buffer;
     };
 
     class MonitorOutput : VideoOutput

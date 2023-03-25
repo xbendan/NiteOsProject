@@ -24,6 +24,11 @@ namespace Task
             m_Name = file->m_Name;
         }
 
+        if (activity == nullptr)
+        {
+            
+        }
+
         Activity::CreateIfNull(this);
         ListNode<Thread> *mainThread = g_Scheduler.CreateThread(this);
 

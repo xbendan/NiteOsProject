@@ -96,6 +96,7 @@ class LocalAPICTimer : public Timer
 {
 private:
     uint64_t m_BusClock;
+    volatile uint64_t m_Ticks;
 
 public:
     LocalAPICTimer();

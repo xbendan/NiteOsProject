@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Arch/x86_64/gdt.h>
-#include <Arch/x86_64/idt.h>
+#include <Arch/x86_64/GDT.h>
+#include <Arch/x86_64/IDT.h>
 
 #define CPUID_ECX_SSE3 (1 << 0)
 #define CPUID_ECX_PCLMUL (1 << 1)

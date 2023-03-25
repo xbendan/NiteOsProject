@@ -1,5 +1,5 @@
-#include <Arch/x86_64/gdt.h>
-#include <Arch/x86_64/cpu.h>
+#include <Arch/x86_64/GDT.h>
+#include <Arch/x86_64/CPU.h>
 
 #include <macros>
 

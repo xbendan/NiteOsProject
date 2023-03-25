@@ -5,9 +5,9 @@
 #include <System.h>
 #include <Timer.h>
 
-#include <Arch/x86_64/cpu.h>
-#include <Arch/x86_64/idt.h>
-#include <Arch/x86_64/irq.h>
+#include <Arch/x86_64/CPU.h>
+#include <Arch/x86_64/IDT.h>
+#include <Arch/x86_64/Interrupts.h>
 #include <Arch/x86_64/pic.h>
 
 void SpuriousInterruptHandler(void *, registers_t * regs) { System::Out("Spurious interrupted."); }
@@ -84,8 +84,6 @@ namespace APIC::Local
 
         Enable();
         PIC::Disable();
-
-        g_Timers[TimerAPIC] = reinterpret_cast<LocalAPICTimer *>(Memory::g_KernelAllocator->Allocate(sizeof(LocalAPICTimer)));
 
         RegisterInterruptHandler(0xff, SpuriousInterruptHandler);
     }

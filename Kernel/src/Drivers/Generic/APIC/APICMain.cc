@@ -2,7 +2,7 @@
 #include <Drivers/Generic/ACPI.h>
 #include <System.h>
 
-#include <Arch/x86_64/cpu.h>
+#include <Arch/x86_64/CPU.h>
 
 namespace APIC
 {
@@ -69,5 +69,7 @@ namespace APIC
 
         Local::Initialize();
         IO::Initialize();
+
+        g_Timers[TimerAPIC] = new LocalAPICTimer();
     }
 } // namespace APIC
