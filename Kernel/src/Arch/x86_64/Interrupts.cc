@@ -1,6 +1,5 @@
 #include <Drivers/APIC.h>
 
-#include <Arch/x86_64/pic.h>
 #include <Arch/x86_64/CPU.h>
 #include <Arch/x86_64/Interrupts.h>
 #include <System.h>
@@ -9,7 +8,7 @@ static irqhandle_t interruptHandlers[256];
 
 void UnhandlededException(InterruptData *data, RegisterContext *context)
 {
-    
+
 }
 
 InterruptData g_IntData[256] =
@@ -50,10 +49,14 @@ InterruptData g_IntData[256] =
 extern "C" void* DispatchInterrupts(void *rsp)
 {
     RegisterContext *context = reinterpret_cast<RegisterContext *>(rsp);
+    InterruptData *data = &g_IntData[context->intno];
 
-    if (interruptHandlers[context->intno]) {
-        interruptHandlers[context->intno](nullptr, context);
-    } else if (!(context->ss & 0x3)) {
+    if (data->handler != nullptr)
+    {
+        data->handler(data, context);
+    }
+    else if (context->ss & 0x3)
+    {
 
     }
 
@@ -64,6 +67,7 @@ extern "C" void* DispatchInterrupts(void *rsp)
 }
 
 void RegisterInterruptHandler(int num, irqhandle_t func) {
+    
     if (interruptHandlers[num] != 0) {
         System::Out("The interrupt handler already exists.");
         return;

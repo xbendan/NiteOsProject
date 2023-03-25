@@ -1,6 +1,6 @@
 #include <macros>
 
-namespace SystemManagement
+namespace SMBIOS
 {
     struct Smbios2EntryPoint
     {

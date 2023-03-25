@@ -2,7 +2,7 @@
 #include <Arch/x86_64/MMU.h>
 #include <address.h>
 
-namespace SystemManagement
+namespace SMBIOS
 {
     const char* __smbios_SignatureL2 = "_SM_";
     const char* __smbios_SignatureL3 = "_SM3_";

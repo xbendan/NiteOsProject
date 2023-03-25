@@ -153,7 +153,7 @@ namespace Boot
 
         EnableInterrupts();
         
-        SystemManagement::Initialize();
+        SMBIOS::Initialize();
         SMP::Initialize();
 
         KernelInit();
