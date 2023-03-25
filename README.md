@@ -9,8 +9,8 @@ Nite is a full system project written in C/C++ (primarily C++, with OOP features
 - gcc cross-compiler for targeting architecture *(Now x86_64 only)*.
 - make
 
-move to sub folders  
-use command "make build"
+move to sub folders (Kernel, Apps/x, etc.)  
+use command "`make build`"
 
 # Architectures
 - [x] x86 [64-bit, x64, amd64] **(In progress)**  

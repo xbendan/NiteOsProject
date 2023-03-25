@@ -22,8 +22,8 @@ ATRI kernel is designed as a modern style system kernel. It's a monolithic kerne
 - [ ] Inter-process Communication
 - [ ] Shared Memory  
 ### Graphics  
-- [x] VGA Text Mode
-- [ ] Framebuffer **(In progress)**
+- [x] VGA Text Mode  
+- [ ] Framebuffer **(In progress)**  
 - [ ] Extended graphics  
 ### File System  
 - [ ] FAT32  
@@ -44,11 +44,14 @@ ATRI kernel is designed as a modern style system kernel. It's a monolithic kerne
 - [ ] Graphics (Virtual machine graphics)
 - [ ] Input (PS/2 Keyboard and Mouse)
 - [ ] Input (USB Human Interface devices)
+- [x] Clock (HPET)
+- [x] Clock (APIC) **(√)**  
+- [x] Clock (ACPI) **(√)**  
 - [x] General (PCI/PCI Express) **(√)**  
 - [x] General (ACPI) **(√)**  
 - [ ] Storage (IDE)
-- [x] Storage (AHCI/ATA) **(√)**  
+- [x] Storage (AHCI/ATA) **(?)**  
 - [ ] Storage (NVMe)
 - [ ] Storage (USB Massive Storage)
 # Changelog
-20230325: Finish kernel memory allocator (allocation only), add support to ACPI, PCI, SMP and AHCI.
+20230325: Finish kernel memory allocator (allocation only), add support to ACPI, PCI, SMP and AHCI.  
