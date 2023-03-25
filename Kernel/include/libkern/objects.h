@@ -18,5 +18,10 @@ namespace Objects
 
 namespace Integers
 {
-    
+    inline int ConstraintToRange(uint64_t min, uint64_t max, uint64_t val)
+    {
+        if (val > max) val = max;
+        if (val < min) val = min;
+        return val;
+    }
 }
