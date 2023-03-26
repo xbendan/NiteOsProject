@@ -1,7 +1,7 @@
 #include <Init/BootInfo.h>
 #include <Drivers/video.h>
 #include <Drivers/Generic/ACPI.h>
-#include <Drivers/APIC.h>
+#include <Drivers/Generic/APIC.h>
 #include <Proc/Process.h>
 #include <System.h>
 

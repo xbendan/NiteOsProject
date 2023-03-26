@@ -50,8 +50,8 @@ namespace Fs { struct File; }
 
 class Device
 {
-private:
-    static uint64_t allocatedId = 0;
+protected:
+    static uint64_t allocatedId;
 
     const char *m_Name;
     DeviceType m_Type;
@@ -71,17 +71,17 @@ public:
     Device(const char *name) : Device(name, DeviceBus::DeviceBusUnknown, DeviceType::DeviceTypeUnknown) {}
     Device(DeviceBus bus, DeviceType type): Device(nullptr, bus, type) {}
 
-    static Device GetDevice(const char *str);
-    static Device GetDevice(uint64_t id);
+    static Device *GetDevice(const char *str);
+    static Device *GetDevice(uint64_t id);
     static void RegisterDevice(Device *device);
-    static DeviceProvider GetProvider(DeviceBus bus);
+    static DeviceProvider *GetProvider(DeviceBus bus);
     static void EnumerateDevice(DeviceType type);
 
     inline const char *Name() { return m_Name; }
     inline DeviceType Type() { return m_Type; }
     inline DeviceBus Bus() { return m_DeviceBus; }
     inline uint64_t Id() { return m_DeviceId; }
-    inline DeviceProvider Provider() { return m_Provider; }
+    inline DeviceProvider *Provider() { return m_Provider; }
     inline LinkedList<Device *> &Dependencies() { return m_Dependencies; }
     
     inline bool IsPropertySet(DeviceProperty property) { return m_Properties & property; }
@@ -100,15 +100,3 @@ public:
 
     virtual Device *FindName(const char *str);
 };
-
-namespace DeviceManagement
-{
-    extern SizedArrayList<DeviceProvider *, 4> g_DeviceProviders;
-    extern SizedArrayList<LinkedList<Device *>, DeviceType::DeviceTypeUnknown + 1> g_DeviceLists;
-
-    Device *GetDevice(const char *str);
-    Device *GetDevice(uint64_t id);
-    void RegisterDevice()
-    DeviceProvider *GetProvider(DeviceBus bus);
-    void EnumerateDevice(DeviceType type);
-}

@@ -1,7 +1,7 @@
 #include <Arch/x86_64/CPU.h>
 #include <Arch/x86_64/Interrupts.h>
 
-#include <Drivers/APIC.h>
+#include <Drivers/Generic/APIC.h>
 
 int CurrentCPU()
 {

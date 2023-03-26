@@ -19,7 +19,7 @@ namespace Task
         0,
         &g_SystemActivity,
         TaskType::TaskTypeSystemProcess);
-    Scheduler g_Scheduler = Scheduler();
+    Scheduler *g_Scheduler;
 
     Process* GetCurrentProcess() {
         Thread *currentThread = GetCPULocal()->currentThread;

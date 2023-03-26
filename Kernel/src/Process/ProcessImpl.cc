@@ -30,7 +30,7 @@ namespace Task
         }
 
         Activity::CreateIfNull(this);
-        ListNode<Thread> *mainThread = g_Scheduler.CreateThread(this);
+        ListNode<Thread> *mainThread = g_Scheduler->CreateThread(this);
 
         m_MainThread = &mainThread->obj;
         m_ChildrenThreadList.Add(mainThread);
@@ -50,7 +50,7 @@ namespace Task
     //     m_IsIdle(true)
     // {
     //     Activity::CreateIfNull(this);
-    //     ListNode<Thread> *mainThread = g_Scheduler.CreateThread(this);
+    //     ListNode<Thread> *mainThread = g_Scheduler->CreateThread(this);
 
     //     m_MainThread = &mainThread->obj;
     //     m_ChildrenThreadList.Add(mainThread);

@@ -1,11 +1,15 @@
 #include <Device/Device.h>
 
-Device Device::GetDevice(const char *str)
+uint64_t Device::allocatedId = 0;
+SizedArrayList<DeviceProvider *, 4> Device::g_DeviceProviders;
+SizedArrayList<LinkedList<Device *>, DeviceType::DeviceTypeUnknown + 1> Device::g_DeviceLists;
+
+Device *Device::GetDevice(const char *str)
 {
 
 }
 
-Device Device::GetDevice(uint64_t id)
+Device *Device::GetDevice(uint64_t id)
 {
 
 }
@@ -25,7 +29,7 @@ void Device::RegisterDevice(Device *device)
     }
 }
 
-DeviceProvider Device::GetProvider(DeviceBus bus)
+DeviceProvider *Device::GetProvider(DeviceBus bus)
 {
 
 }

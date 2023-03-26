@@ -9,7 +9,7 @@ namespace AHCI
     {
         using namespace PCI;
 
-        DeviceProvider *deviceProvider = DeviceManagement::g_DeviceProviders[DeviceBusPCI];
+        DeviceProvider *deviceProvider = Device::g_DeviceProviders[DeviceBusPCI];
         PCIInfo *deviceInfo;
 
         if (Objects::IsNull(deviceProvider) || Objects::IsNull(deviceInfo = (static_cast<PCIDeviceProvider *>(deviceProvider))->FindGenericDevice(0x01, 0x06))) {

@@ -1,4 +1,4 @@
-#include <Drivers/APIC.h>
+#include <Drivers/Generic/APIC.h>
 #include <Mem/MMIO.h>
 #include <Mem/KMemAlloc.h>
 #include <Mem/SlabAllocator.h>
@@ -10,7 +10,7 @@
 #include <Arch/x86_64/Interrupts.h>
 #include <Arch/x86_64/pic.h>
 
-void SpuriousInterruptHandler(void *, registers_t * regs) { System::Out("Spurious interrupted."); }
+void SpuriousInterruptHandler(InterruptData *, RegisterContext * regs) { System::Out("Spurious interrupted."); }
 
 namespace APIC::Local
 {

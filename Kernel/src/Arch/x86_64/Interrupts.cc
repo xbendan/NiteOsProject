@@ -1,4 +1,4 @@
-#include <Drivers/APIC.h>
+#include <Drivers/Generic/APIC.h>
 
 #include <Arch/x86_64/CPU.h>
 #include <Arch/x86_64/Interrupts.h>
@@ -71,9 +71,10 @@ extern "C" void* DispatchInterrupts(void *rsp)
 
 bool RegisterIRQ(uint8_t intno, irqhandle_t handler)
 {
-    if (handler == nullptr || g_IntData[intno]->handler)
+    InterruptData *intData = &g_IntData[intno];
+    if (handler == nullptr || intData->handler)
         return false;
 
-    g_IntData->handler = handler;
+    intData->handler = handler;
     return true;
 }

@@ -1,4 +1,4 @@
-#include <Drivers/APIC.h>
+#include <Drivers/Generic/APIC.h>
 #include <Drivers/Generic/ACPI.h>
 #include <System.h>
 

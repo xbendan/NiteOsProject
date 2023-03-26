@@ -147,11 +147,11 @@ public:
         return obj == m_Front;
     }
 
-    bool Contains(T *t)
+    bool Contains(T &t)
     {
-        T *item = First();
+        ListNode<T> *item = First();
         do {
-            if (Objects::Equals(&item->obj, t)) {
+            if (item->obj == t) {
                 return true;
             }
 

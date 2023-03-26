@@ -1,4 +1,4 @@
-#include <Drivers/APIC.h>
+#include <Drivers/Generic/APIC.h>
 #include <System.h>
 #include <Timer.h>
 

@@ -81,7 +81,7 @@ private:
 public:
     SizedArrayList()
       : m_Count(0)
-    { System::Out("ArrayList created size=%u", size); }
+    { }
 
     T& operator[](int index)
     {

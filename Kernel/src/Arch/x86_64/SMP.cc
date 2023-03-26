@@ -1,5 +1,5 @@
 #include <Drivers/Generic/ACPI.h>
-#include <Drivers/APIC.h>
+#include <Drivers/Generic/APIC.h>
 #include <Mem/Memory.h>
 #include <Mem/Page.h>
 #include <Mem/KMemAlloc.h>

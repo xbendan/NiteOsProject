@@ -27,6 +27,8 @@ ACPITimer::ACPITimer()
     {
         m_TimerTicks = g_FADT->PMTTimerBlock;
     }
+
+    Timer::g_TypePreferrence = TimerType::TimerACPI;
 }
 
 ACPITimer::~ACPITimer()

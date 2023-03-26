@@ -87,7 +87,7 @@ namespace Task
     };
 
     extern Process g_KernelProcess;
-    extern Scheduler g_Scheduler;
+    extern Scheduler *g_Scheduler;
 
     Process *GetCurrentProcess();
 }

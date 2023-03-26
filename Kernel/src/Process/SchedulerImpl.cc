@@ -10,6 +10,7 @@
 namespace Task
 {
     Scheduler::Scheduler()
+      : m_IdleProcess(CreateIdleProcess())
     {
         Register(&g_KernelProcess);
     }

@@ -9,6 +9,7 @@ namespace Input
     PS2LegacyKeyboard *g_PS2Keyboard;
 
     PS2LegacyController::PS2LegacyController()
+      : Device("PS/2 Legacy Controller Device", DeviceBusPS2, DeviceTypeSystemDevices)
     {
         // Determine if PS2 Controller actually exists.
         /* PS2 Controller is not supported while the bit 1 of
@@ -57,6 +58,16 @@ namespace Input
     PS2LegacyController::~PS2LegacyController()
     {
 
+    }
+
+    void PS2LegacyController::Enable()
+    {
+
+    }
+
+    void PS2LegacyController::Disable()
+    {
+        
     }
 
     void PS2LegacyController::SendCommand(uint8_t command)

@@ -51,13 +51,16 @@ namespace Input
         PS2CfgReserved_1 = 0x80
     };
 
-    class PS2LegacyController : Device
+    class PS2LegacyController : public Device
     {
     public:
         PS2LegacyController();
         ~PS2LegacyController();
 
         void SendCommand(uint8_t command);
+
+        virtual void Enable();
+        virtual void Disable();
 
         inline void WaitData()
         {
@@ -67,7 +70,7 @@ namespace Input
                 if (Ports::ReadByte8(PS2_COMMAND_PORT) & PS2RegOutputBuffer)
                     return;
 
-                Timer::Sleep(1);
+                Sleep(1);
             }
         }
     };
