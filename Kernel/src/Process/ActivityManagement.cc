@@ -3,8 +3,5 @@
 
 namespace Task
 {
-    Activity g_SystemActivity(
-        "System",
-        &g_KernelProcess
-    );
+    Activity g_SystemActivity("System", &g_KernelProcess);
 } // namespace Task

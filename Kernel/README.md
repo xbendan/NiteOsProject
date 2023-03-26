@@ -15,8 +15,8 @@ ATRI kernel is designed as a modern style system kernel. It's a monolithic kerne
 - [x] Physical Memory - Page Frame Allocate and Free **(√)**  
 - [x] Physical Memory - Kernel Memory Allocate and Free **(√)**  
 ### Process & Thread  
-- [ ] Process Create, Exit, and Terminate **(In progress)**
-- [ ] Context Switch
+- [ ] Process Create, Exit, and Terminate **(In progress)**  
+- [ ] Context Switch **(In progress)**  
 - [ ] Schedule (Round Robin)
 - [ ] Schedule (Multilevel Feedback Queue Scheduling)
 - [ ] Inter-process Communication
@@ -39,11 +39,11 @@ ATRI kernel is designed as a modern style system kernel. It's a monolithic kerne
 # Support hardware & device  
 - [ ] USB (XHCI)
 - [ ] USB (EHCI)
-- [ ] Graphics (VGA/VESA/VBE)
+- [ ] Graphics (Framebuffer) **(In progress)**  
 - [ ] Graphics (Intel integrated graphics)
 - [ ] Graphics (Virtual machine graphics)
-- [ ] Input (PS/2 Keyboard and Mouse)
-- [ ] Input (USB Human Interface devices)  
+- [ ] Input (PS/2 Keyboard and Mouse) **(In progress)**  
+- [ ] Input (USB Human Interface Devices)  
 - [x] Clock (HPET)
 - [x] Clock (APIC)
 - [x] Clock (ACPI)
@@ -51,8 +51,8 @@ ATRI kernel is designed as a modern style system kernel. It's a monolithic kerne
 - [x] General (ACPI)  
 - [ ] Storage (IDE)
 - [x] Storage (AHCI/ATA)  
-- [ ] Storage (NVMe)
-- [ ] Storage (USB Massive Storage)
+- [ ] Storage (NVMe)  
+- [ ] Storage (USB Massive Storage)  
 # Changelog
 20230324: Finish kernel memory allocator (allocation only), add support to ACPI, PCI, SMP and AHCI.  
 20230325: Add support to SSE, MMX

@@ -1,5 +1,7 @@
 #include <Proc/Scheduler.h>
 #include <Proc/Process.h>
+#include <Device/Device.h>
+#include <Drivers/Input/PS2LegacyController.h>
 #include <Drivers/video.h>
 #include <Mem/Page.h>
 #include <Timer.h>
@@ -35,6 +37,8 @@ using namespace Task;
 
 [[noreturn]] void KernelInit()
 {
+    new Input::PS2LegacyController()->Register();
+
     g_Scheduler.m_IdleProcess = g_Scheduler.CreateIdleProcess();
     
     for (;;) asm("hlt");

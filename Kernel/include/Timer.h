@@ -25,7 +25,19 @@ enum TimerType
 
 class Timer
 {
+private:
+    static TimerType preferredTimerType = TimerType::TimerACPI;
+
 public:
+    static inline void Sleep(long milliseconds)
+    {
+        Timer *timer = &g_Timers[preferredTimerType];
+        if (timer != nullptr)
+        {
+            timer->Sleep(milliseconds);
+        }
+    }
+
     virtual void Tick() = 0;
     virtual uint64_t CurrentTime(TimeSpan span = Millisecond) = 0;
     virtual void Sleep(long milliseconds) = 0;
