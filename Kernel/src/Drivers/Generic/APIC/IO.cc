@@ -55,11 +55,11 @@ namespace APIC::IO
         interrupts = ReadData32(IO_APIC_REGISTER_VER) >> 16;
         apicId = ReadData32(IO_APIC_REGISTER_ID) >> 24;
 
-        // for (int i = 0; i < ACPI::g_InterruptOverrides.Length(); i++)
-        // {
-        //     MADTInterruptOverride *iso = ACPI::g_InterruptOverrides[i];
-        //     Redirect(iso->gSi, iso->irqSource + 0x20, 0);
-        // }
+        for (int i = 0; i < ACPI::g_InterruptOverrides.Length(); i++)
+        {
+            MADTInterruptOverride *iso = ACPI::g_InterruptOverrides[i];
+            Redirect(iso->gSi, iso->irqSource + 0x20, 0);
+        }
     }
 
     void Redirect(
@@ -88,10 +88,11 @@ namespace APIC::IO
         ACPI::g_InterruptOverrides.ForEach([&](MADTInterruptOverride *&obj, int) -> void {
             if (obj->irqSource == (irq - 0x20))
             {
-                WriteData64(IO_APIC_RED_TABLE_ENT(obj->gSi), irq);
+                // WriteData64(IO_APIC_RED_TABLE_ENT(obj->gSi), irq);
                 System::Out("Remap IRQ: Index=%u Data=%u", obj->gSi, irq);
                 return;
             }
         });
+        Redirect(irq - 0x20, irq, 0);
     }
 } // namespace APIC::IO

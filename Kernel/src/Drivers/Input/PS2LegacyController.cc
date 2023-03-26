@@ -29,12 +29,12 @@ namespace Input
             ReadByte8(PS2_DATA_PORT);
 
         /* Set the Controller Configuration Byte */
-        SendCommand(PS2CmdReadByteZero);
-        uint8_t status = ReadByte8(PS2CmdReadByteZero)
-            & ~(PS2CfgFirstPortClock | PS2CfgSecondPortClock | PS2CfgFirstPortTranslation)
-            | PS2CfgFirstPortInterrupt;
-        SendCommand(PS2CmdWriteByteZero);
-        WriteByte8(PS2_DATA_PORT, status);
+        // SendCommand(PS2CmdReadByteZero);
+        // uint8_t status = ReadByte8(PS2CmdReadByteZero)
+        //     & ~(PS2CfgFirstPortClock | PS2CfgSecondPortClock | PS2CfgFirstPortTranslation)
+        //     | PS2CfgFirstPortInterrupt;
+        // SendCommand(PS2CmdWriteByteZero);
+        // WriteByte8(PS2_DATA_PORT, status);
 
         /* Perform Controller Self Test */
         SendCommand(PS2CmdTestPS2Controller);
@@ -51,6 +51,8 @@ namespace Input
         if (!ReadByte8(PS2_DATA_PORT))
         {
             SendCommand(PS2CmdEnableFirstPort);
+            // WriteByte8(PS2_DATA_PORT, 0xF0);
+            // WriteByte8(PS2_DATA_PORT, 2);
             (g_PS2Keyboard = new PS2LegacyKeyboard())->Register();
         }
     }

@@ -2,7 +2,14 @@
 #include <System.h>
 #include <Timer.h>
 
+#include <Arch/x86_64/Interrupts.h>
+
 using namespace APIC::Local;
+
+void TimerTickHandler(InterruptData *data, RegisterContext *context)
+{
+    // System::Out("Timer tick!");
+}
 
 uint32_t LocalAPICTimer::EstimateBusSpeed()
 {
@@ -30,7 +37,7 @@ LocalAPICTimer::LocalAPICTimer()
     WriteData(LOCAL_APIC_TIMER_DIVIDE, 0x3);
     WriteData(LOCAL_APIC_TIMER_INITIAL_COUNT, m_BusClock / 16 / hertz);
 
-    APIC::IO::EnableInterrupt(irq);
+    RegisterIRQ(irq, TimerTickHandler);
 }
 
 LocalAPICTimer::~LocalAPICTimer()

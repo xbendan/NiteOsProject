@@ -11,15 +11,13 @@ namespace Input
 
     void KeyHandler(InterruptData *data, RegisterContext *context)
     {
-        uint8_t state = ReadByte8(PS2_COMMAND_PORT);
-        while ((state & PS2RegOutputBuffer) && !(state & PS2RegReceiveTimeout))
-        {
-            uint8_t keyCode = ReadByte8(PS2_DATA_PORT);
-            uint8_t scanCode = keyCode & 0x7F;
-            uint8_t keyState = keyCode & 0x80;
+        while (!(ReadByte8(PS2_COMMAND_PORT) & PS2RegOutputBuffer))
+            ;
 
-            
-        }
+        uint8_t keyCode = ReadByte8(PS2_DATA_PORT);
+        uint8_t scanCode = keyCode & 0x7F, keyState = keyCode & 0x80;
+
+        System::Out("Key: %x", keyCode);
     }
 
     PS2LegacyKeyboard::PS2LegacyKeyboard()
