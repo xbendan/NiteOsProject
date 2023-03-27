@@ -1,6 +1,5 @@
 #include <Arch/x86_64/SystemManagementBIOS.h>
 #include <Arch/x86_64/MMU.h>
-#include <address.h>
 
 namespace SMBIOS
 {

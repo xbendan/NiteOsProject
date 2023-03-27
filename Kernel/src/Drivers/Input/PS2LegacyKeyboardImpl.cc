@@ -17,6 +17,11 @@ namespace Input
         uint8_t keyCode = ReadByte8(PS2_DATA_PORT);
         uint8_t scanCode = keyCode & 0x7F, keyState = keyCode & 0x80;
 
+        if (keyCode & 0x80)
+        {
+            
+        }
+
         System::Out("Key: %x", keyCode);
     }
 

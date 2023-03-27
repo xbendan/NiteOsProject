@@ -1,12 +1,11 @@
-#include <Arch/x86_64/IDT.h>
 #include <Arch/x86_64/MMU.h>
+#include <Arch/x86_64/Interrupts.h>
 #include <Mem/Memory.h>
 #include <Mem/KMemAlloc.h>
 #include <Mem/Page.h>
 #include <Mem/MMIO.h>
 #include <Proc/Scheduler.h>
 #include <Utils/Spinlock.h>
-#include <address.h>
 
 #define KERNEL_HEAP_PML4_INDEX 511
 #define KERNEL_HEAP_PDPT_INDEX 511
@@ -24,6 +23,11 @@ namespace Memory::Paging
     pagedir_t   ioMappings[4] __attribute__((aligned(ARCH_PAGE_SIZE)));
 
     pagetable_t *kernelPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
+
+    void PageFaultHandler(InterruptData *data, RegisterContext *context)
+    {
+        
+    }
 
     void InitializeVirtualMemory() {
         memset(&kernelPages, 0, sizeof(pml4_t)); 
@@ -45,14 +49,14 @@ namespace Memory::Paging
         }
 
         for (int i = 0; i < 4; i++) {
-            SetPageFrame(&(kernelPdpts[PDPT_GET_INDEX(IO_VIRTUAL_BASE) + i]), ((address_t)&(ioMappings[i])) - KERNEL_VIRTUAL_BASE, 0x3);
+            SetPageFrame(&(kernelPdpts[PDPT_GET_INDEX(IO_VIRTUAL_BASE) + i]), ((uint64_t)&(ioMappings[i])) - KERNEL_VIRTUAL_BASE, 0x3);
             for (int j = 0; j < TABLES_PER_DIR; j++) {
                 SetPageFrame(&ioMappings[i][j], (PAGE_SIZE_1G * i + PAGE_SIZE_2M * j), (PAGE_PRESENT | PAGE_WRITABLE | PAGE_SIZE | PAGE_NOCACHE));
             }
         }
         kernelPdpts[0] = kernelPdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)];
 
-        asm("mov %%rax, %%cr3" ::"a"((address_t)&kernelPages - KERNEL_VIRTUAL_BASE));
+        asm("mov %%rax, %%cr3" ::"a"((uint64_t)&kernelPages - KERNEL_VIRTUAL_BASE));
     }
 
     bool IsPagePresent(VirtualPages *pagemap, uint64_t addr) {

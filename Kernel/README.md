@@ -56,3 +56,4 @@ ATRI kernel is designed as a modern style system kernel. It's a monolithic kerne
 # Changelog
 20230324: Finish kernel memory allocator (allocation only), add support to ACPI, PCI, SMP and AHCI.  
 20230325: Add support to SSE, MMX
+20230326: Add support to PS/2 controller and keyboard, update device.
