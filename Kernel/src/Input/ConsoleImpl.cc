@@ -45,6 +45,7 @@ void Console::RenderModifiers()
     m_TextPresenter->Text({ 13, 0 }, " Ctrl ", ctrl ? 0 : 15, ctrl ? 15 : 0);
     m_TextPresenter->Text({ 20, 0 }, " Shift ", shift ? 0 : 15, shift ? 15 : 0);
     m_TextPresenter->Text({ 28, 0 }, " Alt ", alt ? 0 : 15, alt ? 15 : 0);
+    m_TextPresenter->Text({ 0, 1 }, "--------------------------------------------------------------------------------", 15, 0);
 }
 
 void Console::Refresh()
@@ -54,7 +55,6 @@ void Console::Refresh()
 
     m_TextPresenter->Clear();
     RenderModifiers();
-    m_TextPresenter->Text({ 0, 1 }, "--------------------------------------------------------------------------------", 15, 0);
     m_TextPresenter->Text({ 0, 2 }, '>', 15, 0);
 }
 
@@ -97,15 +97,17 @@ void Console::AcceptKey(Input::Key key, bool isPressed)
     case Enter:
         if (!isPressed) break;
 
-        m_OffsetY++;
+        m_LineLength = 0;
         m_OffsetX = 1;
-        m_TextPresenter->Text({ 0, m_OffsetY + 2 }, '>', 15, 0);
-        if (m_OffsetY >= 23)
+        if (m_OffsetY >= 22)
         {
             m_TextPresenter->MoveUp();
             RenderModifiers();
-        }
+        } else m_OffsetY++;
+        m_TextPresenter->Text({ 0, m_OffsetY + 2 }, '>', 15, 0);
         break;
+    case Space:
+        AddChar(' '); break;
     case Backspace:
         
         break;
@@ -113,18 +115,22 @@ void Console::AcceptKey(Input::Key key, bool isPressed)
         char code = ApplyModifiers(key, m_KeyModifiers);
         if (!code || !isPressed || m_LineLength == 255) break;
         
-        m_TextPresenter->Text({ m_OffsetX, 2 + m_OffsetY }, code, 15, 0);
-        m_LineLength++;
-        if (++m_OffsetX >= 80)
-        {
-            m_OffsetX = 0;
-            m_OffsetY++;
-            if (m_OffsetY >= 23)
-            {
-                m_TextPresenter->MoveUp();
-                RenderModifiers();
-            }
-        }
+        AddChar(code);
         break;
+    }
+}
+
+void Console::AddChar(char c)
+{
+    m_TextPresenter->Text({ m_OffsetX, 2 + m_OffsetY }, c, 15, 0);
+    m_LineLength++;
+    if (++m_OffsetX >= 80)
+    {
+        m_OffsetX = 0;
+        if (m_OffsetY >= 22)
+        {
+            m_TextPresenter->MoveUp();
+            RenderModifiers();
+        } else m_OffsetY++;
     }
 }

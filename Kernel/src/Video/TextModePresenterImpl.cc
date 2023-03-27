@@ -69,13 +69,15 @@ namespace Video
     void TextModePresenter::MoveUp()
     {
         uint16_t *copy = (uint16_t *)(0xb8000 + 160);
-        for (int ln = 0; ln < 24; ln++)
+        for (int ln = 0; ln < 25; ln++)
         {
             for (int col = 0; col < 80; col++)
             {
-                m_TextBuffer[(ln * 80) + col] = copy[((ln + 1) * 80) + col];
+                m_TextBuffer[(ln * 80) + col] = copy[(ln * 80) + col];
             }
         }
+        for (int col = 0; col < 80; col++)
+            m_TextBuffer[1920 + col] = 0x0;
     }
 
     void TextModePresenter::Rectangle(Point point, int width, int height)

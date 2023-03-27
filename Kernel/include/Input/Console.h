@@ -22,6 +22,7 @@ public:
     void RenderModifiers();
     void Refresh();
     void AcceptKey(Input::Key key, bool isPressed);
+    void AddChar(char c);
 };
 
 extern Console *g_Console;
