@@ -1,4 +1,5 @@
 #include <Drivers/video.h>
+#include <Mem/MMIO.h>
 #include <macros>
 #include <String.h>
 #include <stdarg.h>
@@ -11,7 +12,7 @@ namespace Video
     uint16_t verticalOffset;
 
     void Initialize() {
-        buffers = (uint16_t *) 0xb8000;
+        buffers = (uint16_t *) Memory::GetIOMapping(0xb8000);
         horizontalOffset = 0;
         verticalOffset = 0;
     }

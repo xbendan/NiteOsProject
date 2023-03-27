@@ -1,8 +1,8 @@
-#include <Drivers/Input/KeyCode.h>
+#include <Input/KeyCode.h>
 
 namespace Input
 {
-    Key c_KeyScanCode1[128] =
+    Key c_KeyScanCode1[2][128] = {
     {
         None, // 0x00, 0
         Escape, Num1, Num2, Num3, Num4, Num5, Num6, Num7, Num8, Num9, Num0, Minus, Equals, Backspace, // 0x0E, 14
@@ -21,9 +21,46 @@ namespace Input
         None,
         F11, // 0x57, 87
         F12, // 0x58, 88
+    },
+    {
+        None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+        PreviousTrack, 
+        None, None, None, None, None, None, None, None, 
+        NextTrack,
+        None, None, 
+        NumpadEnter, RCtrl,
+        None, None, 
+        Mute, Calculator, MediaPlay,
+        None,
+        MediaStop,
+        None, None, None, None, None, None, None, None, None, 
+        VolumeDown,
+        None,
+        VolumeUp,
+        None,
+        WebHome,
+        None, None,
+        NumpadSlash,
+        None, None,
+        RAlt,
+        None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+        Home, CursorUp, PageUp,
+        None, 
+        CursorLeft,
+        None,
+        CursorRight,
+        None,
+        End, CursorDown, PageDown, Insert, Delete,
+        None, None, None, None, None, None, None, 
+        LeftMenu, RightMenu, Apps, Power, Sleep,
+        None, None, None,
+        Wake,
+        None,
+        WebSearch, WebFavorites, WebRefresh, WebStop, WebForward, WebBackward, Computer, Email, MediaSelect
+    }
     };
 
-    char ApplyModifiers(Key key, KeyModifiers modifiers)
+    char ApplyModifiers(Key key, uint8_t modifiers)
     {
         if (key >= A && key <= Z)
         {
@@ -59,22 +96,6 @@ namespace Input
             if (modifiers & KeyModifiersShift)
                 switch (key)
                 {
-                case Backtick: return '`';
-                case Minus: return '-';
-                case Equals: return '=';
-                case LeftBracket: return '[';
-                case RightBracket: return ']';
-                case Backslash: return '\\';
-                case Semicolon: return ';';
-                case Quote: return '\'';
-                case Comma: return ',';
-                case Period: return '.';
-                case Slash: return '/';
-                default: return 0x00;
-                }
-            else
-                switch (key)
-                {
                 case Backtick: return '~';
                 case Minus: return '_';
                 case Equals: return '+';
@@ -88,6 +109,23 @@ namespace Input
                 case Slash: return '?';
                 default: return 0x00;
                 }
+            else
+                switch (key)
+                {
+                case Backtick: return '`';
+                case Minus: return '-';
+                case Equals: return '=';
+                case LeftBracket: return '[';
+                case RightBracket: return ']';
+                case Backslash: return '\\';
+                case Semicolon: return ';';
+                case Quote: return '\'';
+                case Comma: return ',';
+                case Period: return '.';
+                case Slash: return '/';
+                default: return 0x00;
+                }
         }
+        return 0x00;
     }
 } // namespace Input

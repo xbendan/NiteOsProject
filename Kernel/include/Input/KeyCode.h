@@ -1,3 +1,5 @@
+#pragma once
+
 #include <macros>
 
 namespace Input
@@ -25,11 +27,17 @@ namespace Input
         Equals, Backslash, Colon, Semicolon, LessThan, GreaterThan, 
         Question, At, Caret, Underline, Wave,
         LeftBrace, RightBrace, LeftMenu, RightMenu,
-        PreviousTrack, NextTrack, Mute, MediaPlay, MediaStop,
+        PreviousTrack, NextTrack, Mute, MediaPlay, MediaStop, MediaSelect,
         VolumeDown, VolumeUp, Calculator, Apps, Email, Computer,
         CursorLeft, CursorRight, CursorUp, CursorDown,
         WebHome, WebRefresh, WebStop, WebSearch, WebForward, WebBackward, WebFavorites,
-        Sleep, Wake
+        Power, Sleep, Wake
+    };
+
+    enum KeyState
+    {
+        KeyPressed = 0,
+        KeyReleased = 0
     };
 
     enum KeyModifiers
@@ -40,9 +48,9 @@ namespace Input
         KeyModifiersCapsLock = 0x08
     };
 
-    extern Key c_KeyScanCode1[256];
+    extern Key c_KeyScanCode1[2][128];
 
-    char ApplyModifiers(Key key, KeyModifiers modifiers);
+    char ApplyModifiers(Key key, uint8_t modifiers);
 
     // inline char KeyToChar(Key key)
     // {

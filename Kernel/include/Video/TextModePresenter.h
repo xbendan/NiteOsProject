@@ -4,7 +4,7 @@
 
 namespace Video
 {
-    class TextModePresenter : VideoPresenter
+    class TextModePresenter : public VideoPresenter
     {
     private:
         uint16_t *m_TextBuffer;
@@ -17,6 +17,9 @@ namespace Video
 
         virtual void Clear();
         virtual void Text(Point point, const char *text, int fontSize);
+        void Text(Point point, const char *text, uint8_t foreground, uint8_t background);
+        void Text(Point point, char c, uint8_t foreground, uint8_t background);
+        void MoveUp();
         virtual void Rectangle(Point point, int width, int height);
     };
 } // namespace Video

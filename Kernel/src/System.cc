@@ -3,6 +3,7 @@
 #include <Device/Device.h>
 #include <Drivers/Input/PS2LegacyController.h>
 #include <Drivers/video.h>
+#include <Input/Console.h>
 #include <Mem/Page.h>
 #include <Timer.h>
 
@@ -32,6 +33,7 @@ namespace System
 } // namespace System
 
 Timer *g_Timers[5];
+Console *g_Console;
 TimerType Timer::g_TypePreferrence;
 
 void Sleep(long milliseconds)
@@ -49,6 +51,7 @@ using namespace Task;
 {
     (new Input::PS2LegacyController())->Register();
     g_Scheduler = new Scheduler();
+    g_Console = new Console();
     
     for (;;) asm("hlt");
 }

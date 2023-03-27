@@ -120,12 +120,12 @@ namespace Boot
         GDT::Initialize();
         IDT::Initialize();
 
-        Video::Initialize();
-
         Memory::Initialize();
 
+        Video::Initialize();
+
         // PIC::Initialize();
-        PIT::Initialize(1000);
+        // PIT::Initialize(1000);
 
         CPUIDInfo cpuId = CPUID();
         // Check hardware features

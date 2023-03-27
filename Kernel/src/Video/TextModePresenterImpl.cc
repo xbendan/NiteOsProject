@@ -26,6 +26,11 @@ namespace Video
 
     void TextModePresenter::Text(Point point, const char *text, int fontSize)
     {
+        Text(point, text, 15, 0);
+    }
+
+    void TextModePresenter::Text(Point point, const char *text, uint8_t foreground, uint8_t background)
+    {
         int x = point.x == -1 ? (0) : Integers::ConstraintToRange(0, 80, point.x);
         int y = point.y == -1 ? (m_OffsetY + 1) : Integers::ConstraintToRange(0, 25, point.y);
 
@@ -38,8 +43,7 @@ namespace Video
         size_t len = strlen(text);
         for (int i = 0; i < len; i++)
         {
-            m_TextBuffer[(y * 80) + x] = ((uint16_t) text[i] | (uint16_t) 15 << 8);
-            x++;
+            Text({ x, y }, text[i], foreground, background);
             if (++x >= 80)
             {
                 x = 0;
@@ -54,6 +58,24 @@ namespace Video
 
         m_OffsetX = x;
         m_OffsetY = y;
+    }
+
+    void TextModePresenter::Text(Point point, char c, uint8_t foreground, uint8_t background)
+    {
+        m_TextBuffer[(point.y * 80) + point.x] = 
+            ((uint16_t) c | (uint16_t) foreground << 8 | (uint16_t) background << 12);
+    }
+
+    void TextModePresenter::MoveUp()
+    {
+        uint16_t *copy = (uint16_t *)(0xb8000 + 160);
+        for (int ln = 0; ln < 24; ln++)
+        {
+            for (int col = 0; col < 80; col++)
+            {
+                m_TextBuffer[(ln * 80) + col] = copy[((ln + 1) * 80) + col];
+            }
+        }
     }
 
     void TextModePresenter::Rectangle(Point point, int width, int height)
