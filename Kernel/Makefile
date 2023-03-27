@@ -22,12 +22,12 @@ KERNEL_CFLAGS = -ffreestanding \
 	-mfsgsbase \
 	-mgeneral-regs-only \
 	-z max-page-size=0x1000 \
-	-nostdlib \
-	-g
+	-nostdlib
+#-g
 
-KERNEL_LDFLAGS = -nostdlib \
-	-O2 \
-	-z max-page-size=0x1000
+KERNEL_LDFLAGS = -O2 \
+	-z max-page-size=0x1000 \
+	-Map=debug_atrikrnl.map
 
 #ARCH_ASM_FILES_X64_IN 			:=  $(shell find ./Arch/x86_64 -name *.asm)
 #ARCH_C_FILES_X64_IN 			:=  $(shell find ./Arch/x86_64 -name *.cc)
@@ -66,7 +66,7 @@ build: $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM)
 	mkdir -p ./dist/${TARGET}
 	mkdir -p ./build/${TARGET}
 	mkdir -p ./build/kernel
-	$(CC) $(KERNEL_CFLAGS) $(KERNEL_LDFLAGS) -n -o ./dist/${TARGET}/atrikrnl.elf -O2 -T ./build/LinkerScript-${TARGET}.ld $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM)
+	$(LD) $(KERNEL_LDFLAGS) -n -o ./dist/${TARGET}/atrikrnl.elf -O2 -T ./build/LinkerScript-${TARGET}.ld $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM)
 	cp ./dist/${TARGET}/atrikrnl.elf ./target/${TARGET}/iso_limine/atrikrnl.elf
 	xorriso -as mkisofs -b limine-cd.bin \
         -no-emul-boot -boot-load-size 4 -boot-info-table \

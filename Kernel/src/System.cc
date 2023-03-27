@@ -51,7 +51,7 @@ using namespace Task;
 {
     (new Input::PS2LegacyController())->Register();
     g_Scheduler = new Scheduler();
-    g_Console = new Console();
+    (g_Console = new Console())->Refresh();
     
     for (;;) asm("hlt");
 }

@@ -40,16 +40,6 @@ namespace Memory::Paging
     using pagedir_t = pde_t[TABLES_PER_DIR]; /* 2MiB -> 1GiB */
     using pagetable_t = page_t[PAGES_PER_TABLE]; /* 4KiB -> 2MiB */
 
-    // struct VirtualPages
-    // {
-    //     pml4_t m_RootPageEntries __attribute__((aligned(ARCH_PAGE_SIZE)));;
-    //     pdpt_t m_PdptEntries __attribute__((aligned(ARCH_PAGE_SIZE)));;
-    //     pagedir_t *m_PageDirs[DIRS_PER_PDPT] __attribute__((aligned(ARCH_PAGE_SIZE)));;
-    //     pagetable_t **m_PageTables[TABLES_PER_DIR] __attribute__((aligned(ARCH_PAGE_SIZE)));;
-    //     uint64_t m_Pml4Phys;
-    //     pdpt_t *m_KernelPdpts;
-    // };
-
     struct VirtualPages
     {
         pml4_t pml4 __attribute__((aligned(ARCH_PAGE_SIZE)));
@@ -57,6 +47,7 @@ namespace Memory::Paging
         pagedir_t *pageDirs[DIRS_PER_PDPT] __attribute__((aligned(ARCH_PAGE_SIZE)));
         pagetable_t **pageTables[DIRS_PER_PDPT] __attribute__((aligned(ARCH_PAGE_SIZE)));
         uint64_t pml4Phys;
+        pdpt_t *kernelPdpts;
     };
 
     /**

@@ -29,6 +29,7 @@ namespace Input
 
         KeyState keyState = (KeyState)(response & 0x80);
         Key key = c_KeyScanCode1[keySet][keyCode];
+
         ConsoleKeyEventHandler(c_KeyScanCode1[keySet][keyCode], !(response & 0x80));
         
         keySet = 0;

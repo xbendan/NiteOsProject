@@ -157,6 +157,7 @@ namespace Task
         void *m_KernelStackBase;
 
         uint64_t m_FsBase;
+        void *m_FxState;
 
         registers_t m_Registers;  
         registers_t m_LastSyscall;

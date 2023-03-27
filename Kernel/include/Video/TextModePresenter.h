@@ -15,8 +15,8 @@ namespace Video
         TextModePresenter();
         ~TextModePresenter();
 
-        virtual void Clear();
-        virtual void Text(Point point, const char *text, int fontSize);
+        virtual void Clear() override;
+        virtual void Text(Point point, const char *text, int fontSize) override;
         void Text(Point point, const char *text, uint8_t foreground, uint8_t background);
         void Text(Point point, char c, uint8_t foreground, uint8_t background);
         void MoveUp();

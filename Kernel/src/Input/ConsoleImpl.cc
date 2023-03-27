@@ -5,9 +5,6 @@ void ConsoleKeyEventHandler(Input::Key key, bool isPressed)
 {
     Console *console = g_Console;
 
-    if (!console->IsInitialized())
-        console->Refresh();
-
     console->AcceptKey(key, isPressed);
 }
 

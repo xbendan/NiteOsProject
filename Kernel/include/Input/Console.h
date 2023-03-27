@@ -17,7 +17,7 @@ public:
     Console();
     ~Console();
 
-    bool IsInitialized() { return m_Init; }
+    inline bool IsInitialized() { return m_Init; }
     void Render();
     void RenderModifiers();
     void Refresh();

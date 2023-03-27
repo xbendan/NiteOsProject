@@ -8,10 +8,11 @@ namespace Task
     {
         CPU *cpu = GetCPULocal();
 
+        asm volatile("fxrstor64 (%0)" ::"r"((uintptr_t) newThread->m_FxState) : "memory");
+        WriteMsr(0xC0000100 /* Fs Base */, newThread->m_FsBase);
+
         cpu->currentThread = newThread;
         cpu->tss.rsp[0] = reinterpret_cast<uint64_t>(newThread->m_KernelStack);
-        
-        WriteMsr(0xC0000100 /* Fs Base */, newThread->m_FsBase);
         
         asm volatile(
             R"(mov %0, %%rsp;
