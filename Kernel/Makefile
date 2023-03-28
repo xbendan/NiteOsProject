@@ -5,29 +5,48 @@ OC = ${TARGET}-elf-objcopy
 LD = ${TARGET}-elf-ld
 NASM = nasm -f elf64
 
-KERNEL_CFLAGS = -ffreestanding \
-	-DARCH_X86_64 \
-	-D__DEBUG__ \
-	-O2 \
-	-std=c++11 \
-	-static \
-	-mcmodel=large \
-	-Wno-unused-function \
+KERNEL_CFLAGS = \
+	-Wall \
+	-Wno-write-strings \
 	-Wno-unused-parameter \
-	-Wwrite-strings \
-	-mno-red-zone \
-	-fno-omit-frame-pointer \
+	-Wno-sign-compare \
+	-ffreestanding \
+	-finline-functions \
 	-fno-exceptions \
 	-fno-rtti \
-	-mfsgsbase \
-	-mgeneral-regs-only \
-	-z max-page-size=0x1000 \
-	-nostdlib
+	-nostdlib \
+	-mno-mmx \
+	-mno-sse \
+	-mno-sse2 \
+	-mcmodel=large \
+	-mno-red-zone \
+	-fno-pic \
+	-DARCH_X86_64 \
+	-O2 \
+	-g
+
+#  -ffreestanding \
+# 	-DARCH_X86_64 \
+# 	-O2 \
+# 	-std=c++11 \
+# 	-static \
+# 	-mcmodel=large \
+# 	-Wno-unused-function \
+# 	-Wno-unused-parameter \
+# 	-Wwrite-strings \
+# 	-mno-red-zone \
+# 	-fno-omit-frame-pointer \
+# 	-fno-exceptions \
+# 	-fno-rtti \
+# 	-mfsgsbase \
+# 	-mgeneral-regs-only \
+# 	-z max-page-size=0x1000 \
+# 	-nostdlib
 #-g
 
-KERNEL_LDFLAGS = -O2 \
+KERNEL_LDFLAGS = -nostdlib \
 	-z max-page-size=0x1000 \
-	-Map=debug_atrikrnl.map
+	-Map=DebugFile.map
 
 #ARCH_ASM_FILES_X64_IN 			:=  $(shell find ./Arch/x86_64 -name *.asm)
 #ARCH_C_FILES_X64_IN 			:=  $(shell find ./Arch/x86_64 -name *.cc)

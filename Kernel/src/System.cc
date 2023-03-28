@@ -4,6 +4,7 @@
 #include <Drivers/Input/PS2LegacyController.h>
 #include <Drivers/video.h>
 #include <Input/Console.h>
+#include <Video/TextModePresenter.h>
 #include <Mem/Page.h>
 #include <Timer.h>
 
@@ -51,7 +52,7 @@ using namespace Task;
 {
     (new Input::PS2LegacyController())->Register();
     g_Scheduler = new Scheduler();
-    (g_Console = new Console())->Refresh();
+    g_Console = new Console();
     
     for (;;) asm("hlt");
 }

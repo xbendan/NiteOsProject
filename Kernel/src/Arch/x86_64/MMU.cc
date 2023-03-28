@@ -226,8 +226,8 @@ namespace Memory::Paging
                 counter += PAGES_PER_TABLE;
 
                 if (counter >= amount) {
-                    address = (PDPT_SIZE * KERNEL_HEAP_PML4_INDEX) + (PAGE_SIZE_1G * KERNEL_HEAP_PDPT_INDEX)
-                        + (pageDirOffset * PAGE_SIZE_2M) + (offset * PAGE_SIZE_4K) | 0xFFFF000000000000;
+                    address = ((PDPT_SIZE * KERNEL_HEAP_PML4_INDEX) + (PAGE_SIZE_1G * KERNEL_HEAP_PDPT_INDEX)
+                        + (pageDirOffset * PAGE_SIZE_2M) + (offset * PAGE_SIZE_4K)) | 0xFFFF000000000000;
                     SetPageFrame(&(kernelHeapPageDirs[pageDirOffset]), (uint64_t)&(kernelHeapPageTables[pageDirOffset]) - KERNEL_VIRTUAL_BASE, 0x3);
                     while (amount--) {
                         if (offset >= 512) {
@@ -261,7 +261,6 @@ namespace Memory::Paging
     }
 
     uintptr_t ConvertVirtToPhys(VirtualPages *pagemap, uintptr_t virt) {
-        uint64_t phys = 0;
         size_t pml4Index = PML4_GET_INDEX(virt), pdptIndex = PDPT_GET_INDEX(virt), pdirIndex = PDIR_GET_INDEX(virt), pageIndex = PAGE_GET_INDEX(virt);
 
         if(pml4Index == PDPTS_PER_PML4 - 1 || pagemap == &kernelPagemap) {

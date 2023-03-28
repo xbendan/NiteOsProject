@@ -11,13 +11,13 @@ void ConsoleKeyEventHandler(Input::Key key, bool isPressed)
 using namespace Input;
 
 Console::Console()
-  : m_Init(false),
-    m_TextPresenter(new Video::TextModePresenter()),
+  : m_TextPresenter(new Video::TextModePresenter()),
     m_Buffers(new uint8_t[23 * 80]),
-    m_OffsetX(1),
-    m_OffsetY(0)
+    m_OffsetX(0),
+    m_OffsetY(0),
+    m_KeyModifiers(0)
 {
-    
+    Refresh();
 }
 
 Console::~Console()
@@ -30,6 +30,13 @@ void Console::Render()
     
 }
 
+void Console::Refresh()
+{
+    m_TextPresenter->Clear();
+    RenderModifiers();
+    m_TextPresenter->Text({ 0, 2 }, '>', 15, 0);
+}
+
 void Console::RenderModifiers()
 {
     bool caps = m_KeyModifiers & KeyModifiersCapsLock;
@@ -37,22 +44,12 @@ void Console::RenderModifiers()
     bool ctrl = m_KeyModifiers & KeyModifiersCtrl;
     bool alt = m_KeyModifiers & KeyModifiersAlt;
 
-    m_TextPresenter->Text({ 0, 0 }, "CapsLock:   |      |       |     |", 15, 0);
+    m_TextPresenter->Text({ 0, 0 }, "CapsLock:   |      |       |     |                                              ", 15, 0);
     m_TextPresenter->Text({ 9, 0 }, (caps ? " A " : " a "), 0, 15);
     m_TextPresenter->Text({ 13, 0 }, " Ctrl ", ctrl ? 0 : 15, ctrl ? 15 : 0);
     m_TextPresenter->Text({ 20, 0 }, " Shift ", shift ? 0 : 15, shift ? 15 : 0);
     m_TextPresenter->Text({ 28, 0 }, " Alt ", alt ? 0 : 15, alt ? 15 : 0);
     m_TextPresenter->Text({ 0, 1 }, "--------------------------------------------------------------------------------", 15, 0);
-}
-
-void Console::Refresh()
-{
-    m_Init = true;
-    m_KeyModifiers = 0;
-
-    m_TextPresenter->Clear();
-    RenderModifiers();
-    m_TextPresenter->Text({ 0, 2 }, '>', 15, 0);
 }
 
 void Console::AcceptKey(Input::Key key, bool isPressed)
@@ -89,6 +86,10 @@ void Console::AcceptKey(Input::Key key, bool isPressed)
             m_KeyModifiers |= KeyModifiersAlt;
         else
             m_KeyModifiers &= ~(KeyModifiersAlt);
+        RenderModifiers();
+        break;
+    case F5:
+        m_TextPresenter->Clear();
         RenderModifiers();
         break;
     case Enter:

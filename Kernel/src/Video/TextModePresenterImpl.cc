@@ -86,9 +86,9 @@ namespace Video
         int y = Integers::ConstraintToRange(0, 25, point.y);
 
         const uint16_t blank = (15 << 8);
-        for (int y = point.y; y < point.y + height; y++)
+        for (; y < point.y + height; y++)
         {
-            for (int x = point.x; x < point.x + width; x++)
+            for (; x < point.x + width; x++)
             {
                 m_TextBuffer[(y * 80) + x] = blank;
             }

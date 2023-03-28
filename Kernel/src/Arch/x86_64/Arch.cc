@@ -6,7 +6,7 @@ using namespace Ports;
 namespace System
 {
     void Reboot() {
-        while(ReadByte8(0x64) & 0x02 != 0);
+        while(ReadByte8(0x64));
         WriteByte8(0x64, 0xFE);
         asm("hlt");
     }

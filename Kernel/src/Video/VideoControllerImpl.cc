@@ -4,7 +4,6 @@
 namespace Video
 {
     VideoController::VideoController()
-      : m_VideoMode(new TextModePresenter())
     {
     
     }
