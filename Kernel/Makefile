@@ -22,7 +22,7 @@ KERNEL_CFLAGS = \
 	-mno-red-zone \
 	-fno-pic \
 	-DARCH_X86_64 \
-	-O2 \
+	-O0 \
 	-g
 
 #  -ffreestanding \

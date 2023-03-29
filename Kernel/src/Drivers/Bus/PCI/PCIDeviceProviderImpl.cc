@@ -64,6 +64,11 @@ namespace PCI
         return deviceInfo;
     }
 
+    bool PCIDeviceProvider::CheckDevice(uint8_t bus, uint8_t device, uint8_t func)
+    {
+        return !(PCI::GetVendor(bus, device, func) == 0xFFFF);
+    }
+
     PCIInfo *PCIDeviceProvider::FindDevice(uint16_t deviceID, uint16_t vendorID)
     {
         

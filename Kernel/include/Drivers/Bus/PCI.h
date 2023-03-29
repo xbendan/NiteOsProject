@@ -279,4 +279,11 @@ namespace PCI
     void MsiCapSetData(MSICapability* msiCap, uint32_t dat);
     uint32_t MsiCapGetData(MSICapability* msiCap);
     void MsiCapSetAddress(MSICapability* msiCap, int cpu);
+
+    uint16_t GetVendor(uint8_t bus, uint8_t slot, uint8_t func);
+    uint16_t GetDeviceID(uint8_t bus, uint8_t slot, uint8_t func);
+
+    inline uint8_t GetClassCode(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCIClassCode); }
+    inline uint8_t GetSubclass(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCISubclass); }
+    inline uint8_t GetProgIf(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCIProgIF); }
 } // namespace PCI

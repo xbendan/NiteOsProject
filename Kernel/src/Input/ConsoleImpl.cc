@@ -27,14 +27,14 @@ Console::~Console()
 
 void Console::Render()
 {
-    
+    RenderModifiers();
+    m_TextPresenter->Text({ 0, 2 }, '>', 15, 0);
 }
 
 void Console::Refresh()
 {
     m_TextPresenter->Clear();
-    RenderModifiers();
-    m_TextPresenter->Text({ 0, 2 }, '>', 15, 0);
+    Render();
 }
 
 void Console::RenderModifiers()

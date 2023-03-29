@@ -98,5 +98,5 @@ class DeviceProvider
 public:
     DeviceBus m_DeviceBus;
 
-    virtual Device *FindName(const char *str);
+    virtual Device *FindName(const char *str) = 0;
 };

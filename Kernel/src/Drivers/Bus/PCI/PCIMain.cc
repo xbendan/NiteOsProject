@@ -91,12 +91,6 @@ namespace PCI
         return id;
     }
 
-    uint8_t GetClassCode(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCIClassCode); }
-
-    uint8_t GetSubclass(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCISubclass); }
-
-    uint8_t GetProgIf(uint8_t bus, uint8_t slot, uint8_t func) { return ConfigReadByte(bus, slot, func, PCIProgIF); }
-
     uint8_t GetHeaderType(uint8_t bus, uint8_t slot, uint8_t func) {
         return ConfigReadByte(bus, slot, func, PCIHeaderType);
     }

@@ -58,9 +58,9 @@ extern "C" void* DispatchInterrupts(void *rsp)
     }
     else if (!(context->ss & 0x3))
     {
+        System::Out("Interrupt=%u", context->intno);
         System::Out("RIP=%x, RSP=%x, RBP=%x", context->rip, context->rsp, context->rbp);
         System::Out("Stack Pointer=%x", *((uint64_t *) context->rsp));
-        System::Out("+1=%x, -1=%x", *((uint64_t *) context->rsp + 1), *((uint64_t *) context->rsp - 1));
         System::Out("RAX=%x, RBX=%x, RCX=%x", context->rax, context->rbx, context->rcx);
         System::Out("RDX=%x, RDI=%x", context->rdx, context->rdi);
             Halt();
