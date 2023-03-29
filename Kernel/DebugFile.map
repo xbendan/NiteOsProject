@@ -263,7 +263,7 @@ Linker script and memory map
  *(.stivale2hdr)
  .stivale2hdr   0xffffffff80101000       0x20 ./build/kernel/Arch/x86_64/Header.o
 
-.text           0xffffffff80102000     0xd4ab load address 0x0000000000102000
+.text           0xffffffff80102000     0xd51b load address 0x0000000000102000
  *(.text*)
  .text          0xffffffff80102000       0x87 ./build/kernel/Arch/x86_64/Arch.o
                 0xffffffff8010203f                System::Reboot()
@@ -754,538 +754,539 @@ Linker script and memory map
                 0xffffffff80109044                DiskDevice::Enable()
                 0xffffffff80109054                DiskDevice::Disable()
  *fill*         0xffffffff80109063        0x1 
- .text          0xffffffff80109064      0x7e7 ./build/kernel/Input/ConsoleImpl.o
+ .text          0xffffffff80109064      0x84f ./build/kernel/Input/ConsoleImpl.o
                 0xffffffff80109064                ConsoleKeyEventHandler(Input::Key, bool)
                 0xffffffff801090a4                Console::Console()
                 0xffffffff801090a4                Console::Console()
-                0xffffffff8010912a                Console::~Console()
-                0xffffffff8010912a                Console::~Console()
-                0xffffffff8010913a                Console::Render()
-                0xffffffff801091ac                Console::Refresh()
-                0xffffffff801091e8                Console::RenderModifiers()
-                0xffffffff80109476                Console::AcceptKey(Input::Key, bool)
-                0xffffffff80109756                Console::AddChar(char)
- .text          0xffffffff8010984b      0x25b ./build/kernel/Input/KeyCode.o
-                0xffffffff8010984b                Input::ApplyModifiers(Input::Key, unsigned char)
- .text          0xffffffff80109aa6      0x3d8 ./build/kernel/libkern/printf.o
-                0xffffffff80109aa6                puts(char const*)
-                0xffffffff80109ae8                printf(char const*, ...)
-                0xffffffff80109b3c                vprintf(char const*, __va_list_tag*)
- .text          0xffffffff80109e7e      0x27b ./build/kernel/libkern/sprintf.o
-                0xffffffff80109e7e                itoa(int, char*, int)
-                0xffffffff80109fe0                utoa(unsigned long, char*, int)
- *fill*         0xffffffff8010a0f9        0x1 
- .text          0xffffffff8010a0fa      0x5e0 ./build/kernel/Memory/Memory.o
-                0xffffffff8010a33d                Memory::Initialize()
+                0xffffffff80109192                Console::~Console()
+                0xffffffff80109192                Console::~Console()
+                0xffffffff801091a2                Console::Render()
+                0xffffffff80109214                Console::Refresh()
+                0xffffffff80109250                Console::RenderModifiers()
+                0xffffffff801094de                Console::AcceptKey(Input::Key, bool)
+                0xffffffff801097be                Console::AddChar(char)
+ .text          0xffffffff801098b3      0x25b ./build/kernel/Input/KeyCode.o
+                0xffffffff801098b3                Input::ApplyModifiers(Input::Key, unsigned char)
+ .text          0xffffffff80109b0e      0x3d8 ./build/kernel/libkern/printf.o
+                0xffffffff80109b0e                puts(char const*)
+                0xffffffff80109b50                printf(char const*, ...)
+                0xffffffff80109ba4                vprintf(char const*, __va_list_tag*)
+ .text          0xffffffff80109ee6      0x27b ./build/kernel/libkern/sprintf.o
+                0xffffffff80109ee6                itoa(int, char*, int)
+                0xffffffff8010a048                utoa(unsigned long, char*, int)
+ *fill*         0xffffffff8010a161        0x1 
+ .text          0xffffffff8010a162      0x5e0 ./build/kernel/Memory/Memory.o
+                0xffffffff8010a3a5                Memory::Initialize()
  .text._ZN14SizedArrayListIN6Memory7SectionELi256EEixEi
-                0xffffffff8010a6da       0x34 ./build/kernel/Memory/Memory.o
-                0xffffffff8010a6da                SizedArrayList<Memory::Section, 256>::operator[](int)
+                0xffffffff8010a742       0x34 ./build/kernel/Memory/Memory.o
+                0xffffffff8010a742                SizedArrayList<Memory::Section, 256>::operator[](int)
  .text._ZN14SizedArrayListI10ValueRangeLi64EEC2Ev
-                0xffffffff8010a70e       0x2d ./build/kernel/Memory/Memory.o
-                0xffffffff8010a70e                SizedArrayList<ValueRange, 64>::SizedArrayList()
-                0xffffffff8010a70e                SizedArrayList<ValueRange, 64>::SizedArrayList()
- *fill*         0xffffffff8010a73b        0x1 
+                0xffffffff8010a776       0x2d ./build/kernel/Memory/Memory.o
+                0xffffffff8010a776                SizedArrayList<ValueRange, 64>::SizedArrayList()
+                0xffffffff8010a776                SizedArrayList<ValueRange, 64>::SizedArrayList()
+ *fill*         0xffffffff8010a7a3        0x1 
  .text._ZN14SizedArrayListIN6Memory7SectionELi256EEC2Ev
-                0xffffffff8010a73c       0x2d ./build/kernel/Memory/Memory.o
-                0xffffffff8010a73c                SizedArrayList<Memory::Section, 256>::SizedArrayList()
-                0xffffffff8010a73c                SizedArrayList<Memory::Section, 256>::SizedArrayList()
- *fill*         0xffffffff8010a769        0x1 
+                0xffffffff8010a7a4       0x2d ./build/kernel/Memory/Memory.o
+                0xffffffff8010a7a4                SizedArrayList<Memory::Section, 256>::SizedArrayList()
+                0xffffffff8010a7a4                SizedArrayList<Memory::Section, 256>::SizedArrayList()
+ *fill*         0xffffffff8010a7d1        0x1 
  .text._ZN14SizedArrayListI10ValueRangeLi64EE3AddES0_
-                0xffffffff8010a76a       0x6b ./build/kernel/Memory/Memory.o
-                0xffffffff8010a76a                SizedArrayList<ValueRange, 64>::Add(ValueRange)
- *fill*         0xffffffff8010a7d5        0x1 
- .text          0xffffffff8010a7d6      0x7d8 ./build/kernel/Memory/Page.o
-                0xffffffff8010a9df                Memory::BuddyInit()
-                0xffffffff8010aa18                Memory::AllocatePhysMemory4KOrdered(unsigned char)
-                0xffffffff8010ab3e                Memory::AllocatePhysMemory4K(unsigned long)
-                0xffffffff8010ab7f                Memory::FreePhysMemory4K(unsigned long)
-                0xffffffff8010ab8e                Memory::FreePhysMemory4K(Memory::PageFrame*)
-                0xffffffff8010ab9d                Memory::ExpandPage(Memory::PageFrame*)
-                0xffffffff8010acc2                Memory::CombinePage(Memory::PageFrame*)
-                0xffffffff8010ae4f                Memory::CombinePage(Memory::PageFrame*, Memory::PageFrame*)
+                0xffffffff8010a7d2       0x6b ./build/kernel/Memory/Memory.o
+                0xffffffff8010a7d2                SizedArrayList<ValueRange, 64>::Add(ValueRange)
+ *fill*         0xffffffff8010a83d        0x1 
+ .text          0xffffffff8010a83e      0x7d8 ./build/kernel/Memory/Page.o
+                0xffffffff8010aa47                Memory::BuddyInit()
+                0xffffffff8010aa80                Memory::AllocatePhysMemory4KOrdered(unsigned char)
+                0xffffffff8010aba6                Memory::AllocatePhysMemory4K(unsigned long)
+                0xffffffff8010abe7                Memory::FreePhysMemory4K(unsigned long)
+                0xffffffff8010abf6                Memory::FreePhysMemory4K(Memory::PageFrame*)
+                0xffffffff8010ac05                Memory::ExpandPage(Memory::PageFrame*)
+                0xffffffff8010ad2a                Memory::CombinePage(Memory::PageFrame*)
+                0xffffffff8010aeb7                Memory::CombinePage(Memory::PageFrame*, Memory::PageFrame*)
  .text._ZN7ObjectsL6IsNullEPv
-                0xffffffff8010afae       0x16 ./build/kernel/Memory/Page.o
+                0xffffffff8010b016       0x16 ./build/kernel/Memory/Page.o
  .text._ZN7ObjectsL6EqualsEPvS0_
-                0xffffffff8010afc4       0x1d ./build/kernel/Memory/Page.o
+                0xffffffff8010b02c       0x1d ./build/kernel/Memory/Page.o
  .text._ZN6Memory6pageOfEm
-                0xffffffff8010afe1       0x6f ./build/kernel/Memory/Page.o
-                0xffffffff8010afe1                Memory::pageOf(unsigned long)
+                0xffffffff8010b049       0x6f ./build/kernel/Memory/Page.o
+                0xffffffff8010b049                Memory::pageOf(unsigned long)
  .text._ZN6Memory9BuddyZoneC2Ev
-                0xffffffff8010b050       0x44 ./build/kernel/Memory/Page.o
-                0xffffffff8010b050                Memory::BuddyZone::BuddyZone()
-                0xffffffff8010b050                Memory::BuddyZone::BuddyZone()
+                0xffffffff8010b0b8       0x44 ./build/kernel/Memory/Page.o
+                0xffffffff8010b0b8                Memory::BuddyZone::BuddyZone()
+                0xffffffff8010b0b8                Memory::BuddyZone::BuddyZone()
  .text._ZN10LinkedListIN6Memory9PageFrameEEC2Ev
-                0xffffffff8010b094       0x3c ./build/kernel/Memory/Page.o
-                0xffffffff8010b094                LinkedList<Memory::PageFrame>::LinkedList()
-                0xffffffff8010b094                LinkedList<Memory::PageFrame>::LinkedList()
+                0xffffffff8010b0fc       0x3c ./build/kernel/Memory/Page.o
+                0xffffffff8010b0fc                LinkedList<Memory::PageFrame>::LinkedList()
+                0xffffffff8010b0fc                LinkedList<Memory::PageFrame>::LinkedList()
  .text._ZN10LinkedListIN6Memory9PageFrameEED2Ev
-                0xffffffff8010b0d0       0x26 ./build/kernel/Memory/Page.o
-                0xffffffff8010b0d0                LinkedList<Memory::PageFrame>::~LinkedList()
-                0xffffffff8010b0d0                LinkedList<Memory::PageFrame>::~LinkedList()
+                0xffffffff8010b138       0x26 ./build/kernel/Memory/Page.o
+                0xffffffff8010b138                LinkedList<Memory::PageFrame>::~LinkedList()
+                0xffffffff8010b138                LinkedList<Memory::PageFrame>::~LinkedList()
  .text._ZN10LinkedListIN6Memory9PageFrameEE3AddEP8ListNodeIS1_E
-                0xffffffff8010b0f6       0xa2 ./build/kernel/Memory/Page.o
-                0xffffffff8010b0f6                LinkedList<Memory::PageFrame>::Add(ListNode<Memory::PageFrame>*)
+                0xffffffff8010b15e       0xa2 ./build/kernel/Memory/Page.o
+                0xffffffff8010b15e                LinkedList<Memory::PageFrame>::Add(ListNode<Memory::PageFrame>*)
  .text._ZN10LinkedListIN6Memory9PageFrameEE5CountEv
-                0xffffffff8010b198       0x15 ./build/kernel/Memory/Page.o
-                0xffffffff8010b198                LinkedList<Memory::PageFrame>::Count()
- *fill*         0xffffffff8010b1ad        0x1 
+                0xffffffff8010b200       0x15 ./build/kernel/Memory/Page.o
+                0xffffffff8010b200                LinkedList<Memory::PageFrame>::Count()
+ *fill*         0xffffffff8010b215        0x1 
  .text._ZN10LinkedListIN6Memory9PageFrameEE7ExtractEv
-                0xffffffff8010b1ae       0x9f ./build/kernel/Memory/Page.o
-                0xffffffff8010b1ae                LinkedList<Memory::PageFrame>::Extract()
- *fill*         0xffffffff8010b24d        0x1 
+                0xffffffff8010b216       0x9f ./build/kernel/Memory/Page.o
+                0xffffffff8010b216                LinkedList<Memory::PageFrame>::Extract()
+ *fill*         0xffffffff8010b2b5        0x1 
  .text._ZN10LinkedListIN6Memory9PageFrameEE6RemoveEP8ListNodeIS1_E
-                0xffffffff8010b24e      0x11d ./build/kernel/Memory/Page.o
-                0xffffffff8010b24e                LinkedList<Memory::PageFrame>::Remove(ListNode<Memory::PageFrame>*)
- *fill*         0xffffffff8010b36b        0x1 
+                0xffffffff8010b2b6      0x11d ./build/kernel/Memory/Page.o
+                0xffffffff8010b2b6                LinkedList<Memory::PageFrame>::Remove(ListNode<Memory::PageFrame>*)
+ *fill*         0xffffffff8010b3d3        0x1 
  .text._ZN10LinkedListIN6Memory9PageFrameEE5FirstEv
-                0xffffffff8010b36c       0x15 ./build/kernel/Memory/Page.o
-                0xffffffff8010b36c                LinkedList<Memory::PageFrame>::First()
- *fill*         0xffffffff8010b381        0x1 
+                0xffffffff8010b3d4       0x15 ./build/kernel/Memory/Page.o
+                0xffffffff8010b3d4                LinkedList<Memory::PageFrame>::First()
+ *fill*         0xffffffff8010b3e9        0x1 
  .text._ZN10LinkedListIN6Memory9PageFrameEE8ContainsEP8ListNodeIS1_E
-                0xffffffff8010b382       0x4d ./build/kernel/Memory/Page.o
-                0xffffffff8010b382                LinkedList<Memory::PageFrame>::Contains(ListNode<Memory::PageFrame>*)
- *fill*         0xffffffff8010b3cf        0x1 
+                0xffffffff8010b3ea       0x4d ./build/kernel/Memory/Page.o
+                0xffffffff8010b3ea                LinkedList<Memory::PageFrame>::Contains(ListNode<Memory::PageFrame>*)
+ *fill*         0xffffffff8010b437        0x1 
  .text._ZN6Memory9BuddyZoneD2Ev
-                0xffffffff8010b3d0       0x46 ./build/kernel/Memory/Page.o
-                0xffffffff8010b3d0                Memory::BuddyZone::~BuddyZone()
-                0xffffffff8010b3d0                Memory::BuddyZone::~BuddyZone()
- .text          0xffffffff8010b416      0x1fd ./build/kernel/Memory/PageAllocation.o
-                0xffffffff8010b46d                Memory::KernelAllocate4KPages(unsigned long, Memory::PageFrame**)
-                0xffffffff8010b512                Memory::Allocate4KPages(unsigned long, Memory::PageFrame**)
-                0xffffffff8010b5f5                Memory::Free4KPages(unsigned long)
-                0xffffffff8010b604                Memory::Free4KPages(Memory::PageFrame*)
+                0xffffffff8010b438       0x46 ./build/kernel/Memory/Page.o
+                0xffffffff8010b438                Memory::BuddyZone::~BuddyZone()
+                0xffffffff8010b438                Memory::BuddyZone::~BuddyZone()
+ .text          0xffffffff8010b47e      0x1fd ./build/kernel/Memory/PageAllocation.o
+                0xffffffff8010b4d5                Memory::KernelAllocate4KPages(unsigned long, Memory::PageFrame**)
+                0xffffffff8010b57a                Memory::Allocate4KPages(unsigned long, Memory::PageFrame**)
+                0xffffffff8010b65d                Memory::Free4KPages(unsigned long)
+                0xffffffff8010b66c                Memory::Free4KPages(Memory::PageFrame*)
  .text._ZN6Memory6Paging18MapVirtualMemory4KEPNS0_12VirtualPagesEmmm
-                0xffffffff8010b613       0x40 ./build/kernel/Memory/PageAllocation.o
-                0xffffffff8010b613                Memory::Paging::MapVirtualMemory4K(Memory::Paging::VirtualPages*, unsigned long, unsigned long, unsigned long)
- *fill*         0xffffffff8010b653        0x1 
- .text          0xffffffff8010b654      0x47f ./build/kernel/Memory/SlabAllocatorImpl.o
-                0xffffffff8010b736                Memory::SlabAllocator::SlabAllocator()
-                0xffffffff8010b736                Memory::SlabAllocator::SlabAllocator()
-                0xffffffff8010b7bc                Memory::SlabAllocator::~SlabAllocator()
-                0xffffffff8010b7bc                Memory::SlabAllocator::~SlabAllocator()
-                0xffffffff8010b7cc                Memory::SlabAllocator::Request4KPage(Memory::SlabCache*, unsigned long*)
-                0xffffffff8010b8e0                Memory::SlabAllocator::Allocate(unsigned long)
-                0xffffffff8010bac0                Memory::SlabAllocator::Free(unsigned long)
- .text          0xffffffff8010bad3      0x89a ./build/kernel/Memory/Slub.o
-                0xffffffff8010bae9                Memory::SetCache(Memory::SlabCache*, int, unsigned long)
-                0xffffffff8010bc1b                Memory::SetPageSlub(Memory::SlabCache*, Memory::PageFrame*, unsigned long)
-                0xffffffff8010bd0b                Memory::Request4KPageMapped(Memory::SlabCache*, unsigned long*)
-                0xffffffff8010bdb3                Memory::Request4KPage(Memory::SlabCache*)
-                0xffffffff8010be0f                Memory::SlubGetCPU(Memory::SlabCache*)
-                0xffffffff8010be45                Memory::SlubGetCache(unsigned long)
-                0xffffffff8010bed5                Memory::SlubGetPartial(Memory::SlabCache*)
-                0xffffffff8010bf6c                Memory::SlabFillCpuSlot(Memory::SlabCPUCache*, Memory::PageFrame*)
-                0xffffffff8010bfb0                Memory::AllocateKernelObject(Memory::SlabCache*)
-                0xffffffff8010c2ae                Memory::SlubInit()
-                0xffffffff8010c304                Memory::AllocateKernelObject(unsigned int)
-                0xffffffff8010c35e                Memory::FreeKernelObject(unsigned long)
- *fill*         0xffffffff8010c36d        0x1 
+                0xffffffff8010b67b       0x40 ./build/kernel/Memory/PageAllocation.o
+                0xffffffff8010b67b                Memory::Paging::MapVirtualMemory4K(Memory::Paging::VirtualPages*, unsigned long, unsigned long, unsigned long)
+ *fill*         0xffffffff8010b6bb        0x1 
+ .text          0xffffffff8010b6bc      0x47f ./build/kernel/Memory/SlabAllocatorImpl.o
+                0xffffffff8010b79e                Memory::SlabAllocator::SlabAllocator()
+                0xffffffff8010b79e                Memory::SlabAllocator::SlabAllocator()
+                0xffffffff8010b824                Memory::SlabAllocator::~SlabAllocator()
+                0xffffffff8010b824                Memory::SlabAllocator::~SlabAllocator()
+                0xffffffff8010b834                Memory::SlabAllocator::Request4KPage(Memory::SlabCache*, unsigned long*)
+                0xffffffff8010b948                Memory::SlabAllocator::Allocate(unsigned long)
+                0xffffffff8010bb28                Memory::SlabAllocator::Free(unsigned long)
+ .text          0xffffffff8010bb3b      0x89a ./build/kernel/Memory/Slub.o
+                0xffffffff8010bb51                Memory::SetCache(Memory::SlabCache*, int, unsigned long)
+                0xffffffff8010bc83                Memory::SetPageSlub(Memory::SlabCache*, Memory::PageFrame*, unsigned long)
+                0xffffffff8010bd73                Memory::Request4KPageMapped(Memory::SlabCache*, unsigned long*)
+                0xffffffff8010be1b                Memory::Request4KPage(Memory::SlabCache*)
+                0xffffffff8010be77                Memory::SlubGetCPU(Memory::SlabCache*)
+                0xffffffff8010bead                Memory::SlubGetCache(unsigned long)
+                0xffffffff8010bf3d                Memory::SlubGetPartial(Memory::SlabCache*)
+                0xffffffff8010bfd4                Memory::SlabFillCpuSlot(Memory::SlabCPUCache*, Memory::PageFrame*)
+                0xffffffff8010c018                Memory::AllocateKernelObject(Memory::SlabCache*)
+                0xffffffff8010c316                Memory::SlubInit()
+                0xffffffff8010c36c                Memory::AllocateKernelObject(unsigned int)
+                0xffffffff8010c3c6                Memory::FreeKernelObject(unsigned long)
+ *fill*         0xffffffff8010c3d5        0x1 
  .text._ZN10LinkedListIN6Memory9PageFrameEE6RemoveEP8ListHead
-                0xffffffff8010c36e       0x2d ./build/kernel/Memory/Slub.o
-                0xffffffff8010c36e                LinkedList<Memory::PageFrame>::Remove(ListHead*)
- .text          0xffffffff8010c39b       0x22 ./build/kernel/Panic.o
-                0xffffffff8010c39b                CallPanic(char const*)
- *fill*         0xffffffff8010c3bd        0x1 
- .text          0xffffffff8010c3be      0x1a8 ./build/kernel/Process/ActivityImpl.o
-                0xffffffff8010c3f2                Task::Activity::Activity(char const*, Task::Process*)
-                0xffffffff8010c3f2                Task::Activity::Activity(char const*, Task::Process*)
-                0xffffffff8010c446                Task::Activity::Activity(Task::Process*)
-                0xffffffff8010c446                Task::Activity::Activity(Task::Process*)
-                0xffffffff8010c47a                Task::Activity::Add(Task::Process*)
-                0xffffffff8010c4fe                Task::Activity::CreateIfNull(Task::Process*)
+                0xffffffff8010c3d6       0x2d ./build/kernel/Memory/Slub.o
+                0xffffffff8010c3d6                LinkedList<Memory::PageFrame>::Remove(ListHead*)
+ .text          0xffffffff8010c403       0x22 ./build/kernel/Panic.o
+                0xffffffff8010c403                CallPanic(char const*)
+ *fill*         0xffffffff8010c425        0x1 
+ .text          0xffffffff8010c426      0x1a8 ./build/kernel/Process/ActivityImpl.o
+                0xffffffff8010c45a                Task::Activity::Activity(char const*, Task::Process*)
+                0xffffffff8010c45a                Task::Activity::Activity(char const*, Task::Process*)
+                0xffffffff8010c4ae                Task::Activity::Activity(Task::Process*)
+                0xffffffff8010c4ae                Task::Activity::Activity(Task::Process*)
+                0xffffffff8010c4e2                Task::Activity::Add(Task::Process*)
+                0xffffffff8010c566                Task::Activity::CreateIfNull(Task::Process*)
  .text._ZN10LinkedListIPN4Task7ProcessEEC2Ev
-                0xffffffff8010c566       0x3c ./build/kernel/Process/ActivityImpl.o
-                0xffffffff8010c566                LinkedList<Task::Process*>::LinkedList()
-                0xffffffff8010c566                LinkedList<Task::Process*>::LinkedList()
+                0xffffffff8010c5ce       0x3c ./build/kernel/Process/ActivityImpl.o
+                0xffffffff8010c5ce                LinkedList<Task::Process*>::LinkedList()
+                0xffffffff8010c5ce                LinkedList<Task::Process*>::LinkedList()
  .text._ZN10LinkedListIPN4Task7ProcessEE3AddES2_
-                0xffffffff8010c5a2       0x63 ./build/kernel/Process/ActivityImpl.o
-                0xffffffff8010c5a2                LinkedList<Task::Process*>::Add(Task::Process*)
- *fill*         0xffffffff8010c605        0x1 
+                0xffffffff8010c60a       0x63 ./build/kernel/Process/ActivityImpl.o
+                0xffffffff8010c60a                LinkedList<Task::Process*>::Add(Task::Process*)
+ *fill*         0xffffffff8010c66d        0x1 
  .text._ZN8ListNodeIPN4Task7ProcessEEC2ES2_
-                0xffffffff8010c606       0x1f ./build/kernel/Process/ActivityImpl.o
-                0xffffffff8010c606                ListNode<Task::Process*>::ListNode(Task::Process*)
-                0xffffffff8010c606                ListNode<Task::Process*>::ListNode(Task::Process*)
- *fill*         0xffffffff8010c625        0x1 
+                0xffffffff8010c66e       0x1f ./build/kernel/Process/ActivityImpl.o
+                0xffffffff8010c66e                ListNode<Task::Process*>::ListNode(Task::Process*)
+                0xffffffff8010c66e                ListNode<Task::Process*>::ListNode(Task::Process*)
+ *fill*         0xffffffff8010c68d        0x1 
  .text._ZN10LinkedListIPN4Task7ProcessEE3AddEP8ListNodeIS2_E
-                0xffffffff8010c626       0xa2 ./build/kernel/Process/ActivityImpl.o
-                0xffffffff8010c626                LinkedList<Task::Process*>::Add(ListNode<Task::Process*>*)
- .text          0xffffffff8010c6c8       0xa2 ./build/kernel/Process/ActivityManagement.o
+                0xffffffff8010c68e       0xa2 ./build/kernel/Process/ActivityImpl.o
+                0xffffffff8010c68e                LinkedList<Task::Process*>::Add(ListNode<Task::Process*>*)
+ .text          0xffffffff8010c730       0xa2 ./build/kernel/Process/ActivityManagement.o
  .text._ZN4Task8ActivityD2Ev
-                0xffffffff8010c76a       0x26 ./build/kernel/Process/ActivityManagement.o
-                0xffffffff8010c76a                Task::Activity::~Activity()
-                0xffffffff8010c76a                Task::Activity::~Activity()
+                0xffffffff8010c7d2       0x26 ./build/kernel/Process/ActivityManagement.o
+                0xffffffff8010c7d2                Task::Activity::~Activity()
+                0xffffffff8010c7d2                Task::Activity::~Activity()
  .text._ZN10LinkedListIPN4Task7ProcessEED2Ev
-                0xffffffff8010c790       0x26 ./build/kernel/Process/ActivityManagement.o
-                0xffffffff8010c790                LinkedList<Task::Process*>::~LinkedList()
-                0xffffffff8010c790                LinkedList<Task::Process*>::~LinkedList()
- .text          0xffffffff8010c7b6      0x1e3 ./build/kernel/Process/ProcessImpl.o
-                0xffffffff8010c7cc                Task::Process::Process()
-                0xffffffff8010c7cc                Task::Process::Process()
-                0xffffffff8010c7f2                Task::Process::Process(char const*, Fs::File*, unsigned int, Task::Activity*, Task::TaskType)
-                0xffffffff8010c7f2                Task::Process::Process(char const*, Fs::File*, unsigned int, Task::Activity*, Task::TaskType)
-                0xffffffff8010c928                Task::Process::~Process()
-                0xffffffff8010c928                Task::Process::~Process()
-                0xffffffff8010c94e                Task::Process::Start()
-                0xffffffff8010c96c                Task::Process::Suspend()
-                0xffffffff8010c98a                Task::Process::Stop()
- *fill*         0xffffffff8010c999        0x1 
+                0xffffffff8010c7f8       0x26 ./build/kernel/Process/ActivityManagement.o
+                0xffffffff8010c7f8                LinkedList<Task::Process*>::~LinkedList()
+                0xffffffff8010c7f8                LinkedList<Task::Process*>::~LinkedList()
+ .text          0xffffffff8010c81e      0x1e3 ./build/kernel/Process/ProcessImpl.o
+                0xffffffff8010c834                Task::Process::Process()
+                0xffffffff8010c834                Task::Process::Process()
+                0xffffffff8010c85a                Task::Process::Process(char const*, Fs::File*, unsigned int, Task::Activity*, Task::TaskType)
+                0xffffffff8010c85a                Task::Process::Process(char const*, Fs::File*, unsigned int, Task::Activity*, Task::TaskType)
+                0xffffffff8010c990                Task::Process::~Process()
+                0xffffffff8010c990                Task::Process::~Process()
+                0xffffffff8010c9b6                Task::Process::Start()
+                0xffffffff8010c9d4                Task::Process::Suspend()
+                0xffffffff8010c9f2                Task::Process::Stop()
+ *fill*         0xffffffff8010ca01        0x1 
  .text._ZN10LinkedListIN4Task6ThreadEEC2Ev
-                0xffffffff8010c99a       0x3c ./build/kernel/Process/ProcessImpl.o
-                0xffffffff8010c99a                LinkedList<Task::Thread>::LinkedList()
-                0xffffffff8010c99a                LinkedList<Task::Thread>::LinkedList()
+                0xffffffff8010ca02       0x3c ./build/kernel/Process/ProcessImpl.o
+                0xffffffff8010ca02                LinkedList<Task::Thread>::LinkedList()
+                0xffffffff8010ca02                LinkedList<Task::Thread>::LinkedList()
  .text._ZN10LinkedListIN4Task6ThreadEED2Ev
-                0xffffffff8010c9d6       0x26 ./build/kernel/Process/ProcessImpl.o
-                0xffffffff8010c9d6                LinkedList<Task::Thread>::~LinkedList()
-                0xffffffff8010c9d6                LinkedList<Task::Thread>::~LinkedList()
+                0xffffffff8010ca3e       0x26 ./build/kernel/Process/ProcessImpl.o
+                0xffffffff8010ca3e                LinkedList<Task::Thread>::~LinkedList()
+                0xffffffff8010ca3e                LinkedList<Task::Thread>::~LinkedList()
  .text._ZN10LinkedListIN4Task6ThreadEE3AddEP8ListNodeIS1_E
-                0xffffffff8010c9fc       0xa2 ./build/kernel/Process/ProcessImpl.o
-                0xffffffff8010c9fc                LinkedList<Task::Thread>::Add(ListNode<Task::Thread>*)
- .text          0xffffffff8010ca9e      0x10c ./build/kernel/Process/Scheduler.o
-                0xffffffff8010cab4                Task::GetCurrentProcess()
- .text          0xffffffff8010cbaa      0x3c5 ./build/kernel/Process/SchedulerImpl.o
-                0xffffffff8010cbc0                Task::Scheduler::Scheduler()
-                0xffffffff8010cbc0                Task::Scheduler::Scheduler()
-                0xffffffff8010cc2e                Task::Scheduler::~Scheduler()
-                0xffffffff8010cc2e                Task::Scheduler::~Scheduler()
-                0xffffffff8010cc3e                Task::Scheduler::NextPID()
-                0xffffffff8010cc84                Task::Scheduler::Register(Task::Process*)
-                0xffffffff8010cd46                Task::Scheduler::Schedule()
-                0xffffffff8010cd66                Task::Scheduler::CreateProcess(char const*, Task::Activity*)
-                0xffffffff8010cda2                Task::Scheduler::CreateIdleProcess()
-                0xffffffff8010cdde                Task::Scheduler::CreateELFProcess(Fs::File*)
-                0xffffffff8010ce1c                Task::Scheduler::CreateProcessEx(char const*, Task::Activity*, Task::TaskType, Fs::File*)
-                0xffffffff8010ceba                Task::Scheduler::CreateThread(Task::Process*)
- *fill*         0xffffffff8010cf6f        0x1 
+                0xffffffff8010ca64       0xa2 ./build/kernel/Process/ProcessImpl.o
+                0xffffffff8010ca64                LinkedList<Task::Thread>::Add(ListNode<Task::Thread>*)
+ .text          0xffffffff8010cb06      0x10c ./build/kernel/Process/Scheduler.o
+                0xffffffff8010cb1c                Task::GetCurrentProcess()
+ .text          0xffffffff8010cc12      0x3c5 ./build/kernel/Process/SchedulerImpl.o
+                0xffffffff8010cc28                Task::Scheduler::Scheduler()
+                0xffffffff8010cc28                Task::Scheduler::Scheduler()
+                0xffffffff8010cc96                Task::Scheduler::~Scheduler()
+                0xffffffff8010cc96                Task::Scheduler::~Scheduler()
+                0xffffffff8010cca6                Task::Scheduler::NextPID()
+                0xffffffff8010ccec                Task::Scheduler::Register(Task::Process*)
+                0xffffffff8010cdae                Task::Scheduler::Schedule()
+                0xffffffff8010cdce                Task::Scheduler::CreateProcess(char const*, Task::Activity*)
+                0xffffffff8010ce0a                Task::Scheduler::CreateIdleProcess()
+                0xffffffff8010ce46                Task::Scheduler::CreateELFProcess(Fs::File*)
+                0xffffffff8010ce84                Task::Scheduler::CreateProcessEx(char const*, Task::Activity*, Task::TaskType, Fs::File*)
+                0xffffffff8010cf22                Task::Scheduler::CreateThread(Task::Process*)
+ *fill*         0xffffffff8010cfd7        0x1 
  .text._ZN4Task6ThreadC2EPNS_7ProcessE
-                0xffffffff8010cf70       0x60 ./build/kernel/Process/SchedulerImpl.o
-                0xffffffff8010cf70                Task::Thread::Thread(Task::Process*)
-                0xffffffff8010cf70                Task::Thread::Thread(Task::Process*)
+                0xffffffff8010cfd8       0x60 ./build/kernel/Process/SchedulerImpl.o
+                0xffffffff8010cfd8                Task::Thread::Thread(Task::Process*)
+                0xffffffff8010cfd8                Task::Thread::Thread(Task::Process*)
  .text._ZN4Task9Scheduler14GetProcessByIdEj
-                0xffffffff8010cfd0       0x30 ./build/kernel/Process/SchedulerImpl.o
-                0xffffffff8010cfd0                Task::Scheduler::GetProcessById(unsigned int)
+                0xffffffff8010d038       0x30 ./build/kernel/Process/SchedulerImpl.o
+                0xffffffff8010d038                Task::Scheduler::GetProcessById(unsigned int)
  .text._ZN14SizedArrayListIPN4Task7ProcessELi65536EEixEi
-                0xffffffff8010d000       0x35 ./build/kernel/Process/SchedulerImpl.o
-                0xffffffff8010d000                SizedArrayList<Task::Process*, 65536>::operator[](int)
- *fill*         0xffffffff8010d035        0x1 
+                0xffffffff8010d068       0x35 ./build/kernel/Process/SchedulerImpl.o
+                0xffffffff8010d068                SizedArrayList<Task::Process*, 65536>::operator[](int)
+ *fill*         0xffffffff8010d09d        0x1 
  .text._ZN14SizedArrayListIPN4Task7ProcessELi65536EEC2Ev
-                0xffffffff8010d036       0x2d ./build/kernel/Process/SchedulerImpl.o
-                0xffffffff8010d036                SizedArrayList<Task::Process*, 65536>::SizedArrayList()
-                0xffffffff8010d036                SizedArrayList<Task::Process*, 65536>::SizedArrayList()
- *fill*         0xffffffff8010d063        0x1 
+                0xffffffff8010d09e       0x2d ./build/kernel/Process/SchedulerImpl.o
+                0xffffffff8010d09e                SizedArrayList<Task::Process*, 65536>::SizedArrayList()
+                0xffffffff8010d09e                SizedArrayList<Task::Process*, 65536>::SizedArrayList()
+ *fill*         0xffffffff8010d0cb        0x1 
  .text._ZN8ListNodeIN4Task6ThreadEEC2ES1_
-                0xffffffff8010d064       0x29 ./build/kernel/Process/SchedulerImpl.o
-                0xffffffff8010d064                ListNode<Task::Thread>::ListNode(Task::Thread)
-                0xffffffff8010d064                ListNode<Task::Thread>::ListNode(Task::Thread)
- .text          0xffffffff8010d08d      0x112 ./build/kernel/Runtime.o
-                0xffffffff8010d08d                operator new(unsigned long)
-                0xffffffff8010d0be                operator new[](unsigned long)
-                0xffffffff8010d0ef                operator delete(void*)
-                0xffffffff8010d121                operator delete(void*, unsigned long)
-                0xffffffff8010d147                operator delete[](void*)
-                0xffffffff8010d179                operator delete[](void*, unsigned long)
- .text          0xffffffff8010d19f      0x7fb ./build/kernel/String.o
-                0xffffffff8010d19f                memset
-                0xffffffff8010d1eb                memcpy
-                0xffffffff8010d2ba                memcmp
-                0xffffffff8010d34c                strcpy
-                0xffffffff8010d390                strncpy
-                0xffffffff8010d3f9                strlen
-                0xffffffff8010d42c                strcmp
-                0xffffffff8010d48e                strncmp
-                0xffffffff8010d529                strchr
-                0xffffffff8010d56d                strnchr
-                0xffffffff8010d5e4                strrchr
-                0xffffffff8010d632                strspn
-                0xffffffff8010d69e                strcspn
-                0xffffffff8010d702                strtok_r
-                0xffffffff8010d7f8                strcat
-                0xffffffff8010d83e                strncat
-                0xffffffff8010d88d                toupper
-                0xffffffff8010d8b5                strupr
-                0xffffffff8010d91a                strnupr
- .text          0xffffffff8010d99a      0x1aa ./build/kernel/System.o
-                0xffffffff8010d99a                System::Out(char const*, ...)
-                0xffffffff8010d9fa                System::Panic(char const*, ...)
-                0xffffffff8010da4f                Sleep(long)
-                0xffffffff8010daa3                KernelInit()
- .text          0xffffffff8010db44        0x0 ./build/kernel/Video/FrameBufferPresenterImpl.o
- .text          0xffffffff8010db44      0x45b ./build/kernel/Video/TextModePresenterImpl.o
-                0xffffffff8010db44                Video::TextModePresenter::TextModePresenter()
-                0xffffffff8010db44                Video::TextModePresenter::TextModePresenter()
-                0xffffffff8010db98                Video::TextModePresenter::Clear()
-                0xffffffff8010dbf8                Video::TextModePresenter::Text(Video::Point, char const*, int)
-                0xffffffff8010dc38                Video::TextModePresenter::Text(Video::Point, char const*, unsigned char, unsigned char)
-                0xffffffff8010ddce                Video::TextModePresenter::Text(Video::Point, char, unsigned char, unsigned char)
-                0xffffffff8010de34                Video::TextModePresenter::MoveUp()
-                0xffffffff8010def0                Video::TextModePresenter::Rectangle(Video::Point, int, int)
+                0xffffffff8010d0cc       0x29 ./build/kernel/Process/SchedulerImpl.o
+                0xffffffff8010d0cc                ListNode<Task::Thread>::ListNode(Task::Thread)
+                0xffffffff8010d0cc                ListNode<Task::Thread>::ListNode(Task::Thread)
+ .text          0xffffffff8010d0f5      0x112 ./build/kernel/Runtime.o
+                0xffffffff8010d0f5                operator new(unsigned long)
+                0xffffffff8010d126                operator new[](unsigned long)
+                0xffffffff8010d157                operator delete(void*)
+                0xffffffff8010d189                operator delete(void*, unsigned long)
+                0xffffffff8010d1af                operator delete[](void*)
+                0xffffffff8010d1e1                operator delete[](void*, unsigned long)
+ .text          0xffffffff8010d207      0x7fb ./build/kernel/String.o
+                0xffffffff8010d207                memset
+                0xffffffff8010d253                memcpy
+                0xffffffff8010d322                memcmp
+                0xffffffff8010d3b4                strcpy
+                0xffffffff8010d3f8                strncpy
+                0xffffffff8010d461                strlen
+                0xffffffff8010d494                strcmp
+                0xffffffff8010d4f6                strncmp
+                0xffffffff8010d591                strchr
+                0xffffffff8010d5d5                strnchr
+                0xffffffff8010d64c                strrchr
+                0xffffffff8010d69a                strspn
+                0xffffffff8010d706                strcspn
+                0xffffffff8010d76a                strtok_r
+                0xffffffff8010d860                strcat
+                0xffffffff8010d8a6                strncat
+                0xffffffff8010d8f5                toupper
+                0xffffffff8010d91d                strupr
+                0xffffffff8010d982                strnupr
+ .text          0xffffffff8010da02      0x1aa ./build/kernel/System.o
+                0xffffffff8010da02                System::Out(char const*, ...)
+                0xffffffff8010da62                System::Panic(char const*, ...)
+                0xffffffff8010dab7                Sleep(long)
+                0xffffffff8010db0b                KernelInit()
+ .text          0xffffffff8010dbac        0x0 ./build/kernel/Video/FrameBufferPresenterImpl.o
+ .text          0xffffffff8010dbac      0x45b ./build/kernel/Video/TextModePresenterImpl.o
+                0xffffffff8010dbac                Video::TextModePresenter::TextModePresenter()
+                0xffffffff8010dbac                Video::TextModePresenter::TextModePresenter()
+                0xffffffff8010dc00                Video::TextModePresenter::Clear()
+                0xffffffff8010dc60                Video::TextModePresenter::Text(Video::Point, char const*, int)
+                0xffffffff8010dca0                Video::TextModePresenter::Text(Video::Point, char const*, unsigned char, unsigned char)
+                0xffffffff8010de36                Video::TextModePresenter::Text(Video::Point, char, unsigned char, unsigned char)
+                0xffffffff8010de9c                Video::TextModePresenter::MoveUp()
+                0xffffffff8010df58                Video::TextModePresenter::Rectangle(Video::Point, int, int)
  .text._ZN8Integers17ConstraintToRangeEmmm
-                0xffffffff8010df9f       0x3e ./build/kernel/Video/TextModePresenterImpl.o
-                0xffffffff8010df9f                Integers::ConstraintToRange(unsigned long, unsigned long, unsigned long)
- *fill*         0xffffffff8010dfdd        0x1 
- .text          0xffffffff8010dfde       0x1f ./build/kernel/Video/VideoControllerImpl.o
-                0xffffffff8010dfde                Video::VideoController::VideoController()
-                0xffffffff8010dfde                Video::VideoController::VideoController()
-                0xffffffff8010dfee                Video::VideoController::~VideoController()
-                0xffffffff8010dfee                Video::VideoController::~VideoController()
- *fill*         0xffffffff8010dffd        0x1 
- .text          0xffffffff8010dffe       0x6f ./build/kernel/Video/VideoPresenterImpl.o
-                0xffffffff8010dffe                Video::VideoPresenter::VideoPresenter()
-                0xffffffff8010dffe                Video::VideoPresenter::VideoPresenter()
-                0xffffffff8010e036                Video::VideoPresenter::~VideoPresenter()
-                0xffffffff8010e036                Video::VideoPresenter::~VideoPresenter()
- *fill*         0xffffffff8010e06d        0x1 
+                0xffffffff8010e007       0x3e ./build/kernel/Video/TextModePresenterImpl.o
+                0xffffffff8010e007                Integers::ConstraintToRange(unsigned long, unsigned long, unsigned long)
+ *fill*         0xffffffff8010e045        0x1 
+ .text          0xffffffff8010e046       0x1f ./build/kernel/Video/VideoControllerImpl.o
+                0xffffffff8010e046                Video::VideoController::VideoController()
+                0xffffffff8010e046                Video::VideoController::VideoController()
+                0xffffffff8010e056                Video::VideoController::~VideoController()
+                0xffffffff8010e056                Video::VideoController::~VideoController()
+ *fill*         0xffffffff8010e065        0x1 
+ .text          0xffffffff8010e066       0x6f ./build/kernel/Video/VideoPresenterImpl.o
+                0xffffffff8010e066                Video::VideoPresenter::VideoPresenter()
+                0xffffffff8010e066                Video::VideoPresenter::VideoPresenter()
+                0xffffffff8010e09e                Video::VideoPresenter::~VideoPresenter()
+                0xffffffff8010e09e                Video::VideoPresenter::~VideoPresenter()
+ *fill*         0xffffffff8010e0d5        0x1 
  .text._ZN10LinkedListIPN5Video11VideoOutputEEC2Ev
-                0xffffffff8010e06e       0x3c ./build/kernel/Video/VideoPresenterImpl.o
-                0xffffffff8010e06e                LinkedList<Video::VideoOutput*>::LinkedList()
-                0xffffffff8010e06e                LinkedList<Video::VideoOutput*>::LinkedList()
+                0xffffffff8010e0d6       0x3c ./build/kernel/Video/VideoPresenterImpl.o
+                0xffffffff8010e0d6                LinkedList<Video::VideoOutput*>::LinkedList()
+                0xffffffff8010e0d6                LinkedList<Video::VideoOutput*>::LinkedList()
  .text._ZN10LinkedListIPN5Video11VideoOutputEED2Ev
-                0xffffffff8010e0aa       0x26 ./build/kernel/Video/VideoPresenterImpl.o
-                0xffffffff8010e0aa                LinkedList<Video::VideoOutput*>::~LinkedList()
-                0xffffffff8010e0aa                LinkedList<Video::VideoOutput*>::~LinkedList()
- .text          0xffffffff8010e0d0     0x12a4 ./build/kernel/Arch/x86_64/IRQ.o
-                0xffffffff8010e1ff                ipi48
-                0xffffffff8010e208                ipi49
-                0xffffffff8010e211                ipi50
-                0xffffffff8010e21a                ipi51
-                0xffffffff8010e223                ipi52
-                0xffffffff8010e22c                ipi53
-                0xffffffff8010e235                ipi54
-                0xffffffff8010e23e                ipi55
-                0xffffffff8010e247                ipi56
-                0xffffffff8010e250                ipi57
-                0xffffffff8010e259                ipi58
-                0xffffffff8010e262                ipi59
-                0xffffffff8010e26b                ipi60
-                0xffffffff8010e274                ipi61
-                0xffffffff8010e27d                ipi62
-                0xffffffff8010e286                ipi63
-                0xffffffff8010e28f                ipi64
-                0xffffffff8010e298                ipi65
-                0xffffffff8010e2a1                ipi66
-                0xffffffff8010e2aa                ipi67
-                0xffffffff8010e2b3                ipi68
-                0xffffffff8010e2bc                ipi69
-                0xffffffff8010e2c5                ipi70
-                0xffffffff8010e2ce                ipi71
-                0xffffffff8010e2d7                ipi72
-                0xffffffff8010e2e0                ipi73
-                0xffffffff8010e2e9                ipi74
-                0xffffffff8010e2f2                ipi75
-                0xffffffff8010e2fb                ipi76
-                0xffffffff8010e304                ipi77
-                0xffffffff8010e30d                ipi78
-                0xffffffff8010e316                ipi79
-                0xffffffff8010e31f                ipi80
-                0xffffffff8010e328                ipi81
-                0xffffffff8010e331                ipi82
-                0xffffffff8010e33a                ipi83
-                0xffffffff8010e343                ipi84
-                0xffffffff8010e34c                ipi85
-                0xffffffff8010e355                ipi86
-                0xffffffff8010e35e                ipi87
-                0xffffffff8010e367                ipi88
-                0xffffffff8010e370                ipi89
-                0xffffffff8010e379                ipi90
-                0xffffffff8010e382                ipi91
-                0xffffffff8010e38b                ipi92
-                0xffffffff8010e394                ipi93
-                0xffffffff8010e39d                ipi94
-                0xffffffff8010e3a6                ipi95
-                0xffffffff8010e3af                ipi96
-                0xffffffff8010e3b8                ipi97
-                0xffffffff8010e3c1                ipi98
-                0xffffffff8010e3ca                ipi99
-                0xffffffff8010e3d3                ipi100
-                0xffffffff8010e3dc                ipi101
-                0xffffffff8010e3e5                ipi102
-                0xffffffff8010e3ee                ipi103
-                0xffffffff8010e3f7                ipi104
-                0xffffffff8010e400                ipi105
-                0xffffffff8010e409                ipi106
-                0xffffffff8010e412                ipi107
-                0xffffffff8010e41b                ipi108
-                0xffffffff8010e424                ipi109
-                0xffffffff8010e42d                ipi110
-                0xffffffff8010e436                ipi111
-                0xffffffff8010e43f                ipi112
-                0xffffffff8010e448                ipi113
-                0xffffffff8010e451                ipi114
-                0xffffffff8010e45a                ipi115
-                0xffffffff8010e463                ipi116
-                0xffffffff8010e46c                ipi117
-                0xffffffff8010e475                ipi118
-                0xffffffff8010e47e                ipi119
-                0xffffffff8010e487                ipi120
-                0xffffffff8010e490                ipi121
-                0xffffffff8010e499                ipi122
-                0xffffffff8010e4a2                ipi123
-                0xffffffff8010e4ab                ipi124
-                0xffffffff8010e4b4                ipi125
-                0xffffffff8010e4bd                ipi126
-                0xffffffff8010e4c6                ipi127
-                0xffffffff8010e4cf                ipi128
-                0xffffffff8010e4db                ipi129
-                0xffffffff8010e4e7                ipi130
-                0xffffffff8010e4f3                ipi131
-                0xffffffff8010e4ff                ipi132
-                0xffffffff8010e50b                ipi133
-                0xffffffff8010e517                ipi134
-                0xffffffff8010e523                ipi135
-                0xffffffff8010e52f                ipi136
-                0xffffffff8010e53b                ipi137
-                0xffffffff8010e547                ipi138
-                0xffffffff8010e553                ipi139
-                0xffffffff8010e55f                ipi140
-                0xffffffff8010e56b                ipi141
-                0xffffffff8010e577                ipi142
-                0xffffffff8010e583                ipi143
-                0xffffffff8010e58f                ipi144
-                0xffffffff8010e59b                ipi145
-                0xffffffff8010e5a7                ipi146
-                0xffffffff8010e5b3                ipi147
-                0xffffffff8010e5bf                ipi148
-                0xffffffff8010e5cb                ipi149
-                0xffffffff8010e5d7                ipi150
-                0xffffffff8010e5e3                ipi151
-                0xffffffff8010e5ef                ipi152
-                0xffffffff8010e5fb                ipi153
-                0xffffffff8010e607                ipi154
-                0xffffffff8010e613                ipi155
-                0xffffffff8010e61f                ipi156
-                0xffffffff8010e62b                ipi157
-                0xffffffff8010e637                ipi158
-                0xffffffff8010e643                ipi159
-                0xffffffff8010e64f                ipi160
-                0xffffffff8010e65b                ipi161
-                0xffffffff8010e667                ipi162
-                0xffffffff8010e673                ipi163
-                0xffffffff8010e67f                ipi164
-                0xffffffff8010e68b                ipi165
-                0xffffffff8010e697                ipi166
-                0xffffffff8010e6a3                ipi167
-                0xffffffff8010e6af                ipi168
-                0xffffffff8010e6bb                ipi169
-                0xffffffff8010e6c7                ipi170
-                0xffffffff8010e6d3                ipi171
-                0xffffffff8010e6df                ipi172
-                0xffffffff8010e6eb                ipi173
-                0xffffffff8010e6f7                ipi174
-                0xffffffff8010e703                ipi175
-                0xffffffff8010e70f                ipi176
-                0xffffffff8010e71b                ipi177
-                0xffffffff8010e727                ipi178
-                0xffffffff8010e733                ipi179
-                0xffffffff8010e73f                ipi180
-                0xffffffff8010e74b                ipi181
-                0xffffffff8010e757                ipi182
-                0xffffffff8010e763                ipi183
-                0xffffffff8010e76f                ipi184
-                0xffffffff8010e77b                ipi185
-                0xffffffff8010e787                ipi186
-                0xffffffff8010e793                ipi187
-                0xffffffff8010e79f                ipi188
-                0xffffffff8010e7ab                ipi189
-                0xffffffff8010e7b7                ipi190
-                0xffffffff8010e7c3                ipi191
-                0xffffffff8010e7cf                ipi192
-                0xffffffff8010e7db                ipi193
-                0xffffffff8010e7e7                ipi194
-                0xffffffff8010e7f3                ipi195
-                0xffffffff8010e7ff                ipi196
-                0xffffffff8010e80b                ipi197
-                0xffffffff8010e817                ipi198
-                0xffffffff8010e823                ipi199
-                0xffffffff8010e82f                ipi200
-                0xffffffff8010e83b                ipi201
-                0xffffffff8010e847                ipi202
-                0xffffffff8010e853                ipi203
-                0xffffffff8010e85f                ipi204
-                0xffffffff8010e86b                ipi205
-                0xffffffff8010e877                ipi206
-                0xffffffff8010e883                ipi207
-                0xffffffff8010e88f                ipi208
-                0xffffffff8010e89b                ipi209
-                0xffffffff8010e8a7                ipi210
-                0xffffffff8010e8b3                ipi211
-                0xffffffff8010e8bf                ipi212
-                0xffffffff8010e8cb                ipi213
-                0xffffffff8010e8d7                ipi214
-                0xffffffff8010e8e3                ipi215
-                0xffffffff8010e8ef                ipi216
-                0xffffffff8010e8fb                ipi217
-                0xffffffff8010e907                ipi218
-                0xffffffff8010e913                ipi219
-                0xffffffff8010e91f                ipi220
-                0xffffffff8010e92b                ipi221
-                0xffffffff8010e937                ipi222
-                0xffffffff8010e943                ipi223
-                0xffffffff8010e94f                ipi224
-                0xffffffff8010e95b                ipi225
-                0xffffffff8010e967                ipi226
-                0xffffffff8010e973                ipi227
-                0xffffffff8010e97f                ipi228
-                0xffffffff8010e98b                ipi229
-                0xffffffff8010e997                ipi230
-                0xffffffff8010e9a3                ipi231
-                0xffffffff8010e9af                ipi232
-                0xffffffff8010e9bb                ipi233
-                0xffffffff8010e9c7                ipi234
-                0xffffffff8010e9d3                ipi235
-                0xffffffff8010e9df                ipi236
-                0xffffffff8010e9eb                ipi237
-                0xffffffff8010e9f7                ipi238
-                0xffffffff8010ea03                ipi239
-                0xffffffff8010ea0f                ipi240
-                0xffffffff8010ea1b                ipi241
-                0xffffffff8010ea27                ipi242
-                0xffffffff8010ea33                ipi243
-                0xffffffff8010ea3f                ipi244
-                0xffffffff8010ea4b                ipi245
-                0xffffffff8010ea57                ipi246
-                0xffffffff8010ea63                ipi247
-                0xffffffff8010ea6f                ipi248
-                0xffffffff8010ea7b                ipi249
-                0xffffffff8010ea87                ipi250
-                0xffffffff8010ea93                ipi251
-                0xffffffff8010ea9f                ipi252
-                0xffffffff8010eaab                ipi253
-                0xffffffff8010eab7                ipi254
-                0xffffffff8010eac3                ipi255
-                0xffffffff8010eacf                intrid32
-                0xffffffff8010ead8                intrid33
-                0xffffffff8010eae1                intrid34
-                0xffffffff8010eaea                intrid35
-                0xffffffff8010eaf3                intrid36
-                0xffffffff8010eafc                intrid37
-                0xffffffff8010eb05                intrid38
-                0xffffffff8010eb0e                intrid39
-                0xffffffff8010eb17                intrid40
-                0xffffffff8010eb20                intrid41
-                0xffffffff8010eb29                intrid42
-                0xffffffff8010eb32                intrid43
-                0xffffffff8010eb3b                intrid44
-                0xffffffff8010eb44                intrid45
-                0xffffffff8010eb4d                intrid46
-                0xffffffff8010eb56                intrid47
-                0xffffffff8010eb74                isr_tables
- *fill*         0xffffffff8010f374        0xc 
- .text          0xffffffff8010f380       0x3c ./build/kernel/Arch/x86_64/KernelStack.o
-                0xffffffff8010f380                load_tss
- *fill*         0xffffffff8010f3bc        0x4 
- .text          0xffffffff8010f3c0       0x86 ./build/kernel/Arch/x86_64/SMPTrampoline.o
-                0xffffffff8010f3c0                SMPTrampolineStart
-                0xffffffff8010f446                SMPTrampolineEnd
- *fill*         0xffffffff8010f446        0xa 
- .text          0xffffffff8010f450       0x5b ./build/kernel/Arch/x86_64/Wrapper.o
-                0xffffffff8010f450                asmw_flush_gdt
-                0xffffffff8010f47b                asmw_flush_idt
-                0xffffffff8010f47f                asmw_load_paging
-                0xffffffff8010f483                asmw_enable_sse
-                0xffffffff8010f494                asmw_enable_avx
-                0xffffffff8010f4a7                asmw_get_pagemap
+                0xffffffff8010e112       0x26 ./build/kernel/Video/VideoPresenterImpl.o
+                0xffffffff8010e112                LinkedList<Video::VideoOutput*>::~LinkedList()
+                0xffffffff8010e112                LinkedList<Video::VideoOutput*>::~LinkedList()
+ *fill*         0xffffffff8010e138        0x8 
+ .text          0xffffffff8010e140     0x12a4 ./build/kernel/Arch/x86_64/IRQ.o
+                0xffffffff8010e26f                ipi48
+                0xffffffff8010e278                ipi49
+                0xffffffff8010e281                ipi50
+                0xffffffff8010e28a                ipi51
+                0xffffffff8010e293                ipi52
+                0xffffffff8010e29c                ipi53
+                0xffffffff8010e2a5                ipi54
+                0xffffffff8010e2ae                ipi55
+                0xffffffff8010e2b7                ipi56
+                0xffffffff8010e2c0                ipi57
+                0xffffffff8010e2c9                ipi58
+                0xffffffff8010e2d2                ipi59
+                0xffffffff8010e2db                ipi60
+                0xffffffff8010e2e4                ipi61
+                0xffffffff8010e2ed                ipi62
+                0xffffffff8010e2f6                ipi63
+                0xffffffff8010e2ff                ipi64
+                0xffffffff8010e308                ipi65
+                0xffffffff8010e311                ipi66
+                0xffffffff8010e31a                ipi67
+                0xffffffff8010e323                ipi68
+                0xffffffff8010e32c                ipi69
+                0xffffffff8010e335                ipi70
+                0xffffffff8010e33e                ipi71
+                0xffffffff8010e347                ipi72
+                0xffffffff8010e350                ipi73
+                0xffffffff8010e359                ipi74
+                0xffffffff8010e362                ipi75
+                0xffffffff8010e36b                ipi76
+                0xffffffff8010e374                ipi77
+                0xffffffff8010e37d                ipi78
+                0xffffffff8010e386                ipi79
+                0xffffffff8010e38f                ipi80
+                0xffffffff8010e398                ipi81
+                0xffffffff8010e3a1                ipi82
+                0xffffffff8010e3aa                ipi83
+                0xffffffff8010e3b3                ipi84
+                0xffffffff8010e3bc                ipi85
+                0xffffffff8010e3c5                ipi86
+                0xffffffff8010e3ce                ipi87
+                0xffffffff8010e3d7                ipi88
+                0xffffffff8010e3e0                ipi89
+                0xffffffff8010e3e9                ipi90
+                0xffffffff8010e3f2                ipi91
+                0xffffffff8010e3fb                ipi92
+                0xffffffff8010e404                ipi93
+                0xffffffff8010e40d                ipi94
+                0xffffffff8010e416                ipi95
+                0xffffffff8010e41f                ipi96
+                0xffffffff8010e428                ipi97
+                0xffffffff8010e431                ipi98
+                0xffffffff8010e43a                ipi99
+                0xffffffff8010e443                ipi100
+                0xffffffff8010e44c                ipi101
+                0xffffffff8010e455                ipi102
+                0xffffffff8010e45e                ipi103
+                0xffffffff8010e467                ipi104
+                0xffffffff8010e470                ipi105
+                0xffffffff8010e479                ipi106
+                0xffffffff8010e482                ipi107
+                0xffffffff8010e48b                ipi108
+                0xffffffff8010e494                ipi109
+                0xffffffff8010e49d                ipi110
+                0xffffffff8010e4a6                ipi111
+                0xffffffff8010e4af                ipi112
+                0xffffffff8010e4b8                ipi113
+                0xffffffff8010e4c1                ipi114
+                0xffffffff8010e4ca                ipi115
+                0xffffffff8010e4d3                ipi116
+                0xffffffff8010e4dc                ipi117
+                0xffffffff8010e4e5                ipi118
+                0xffffffff8010e4ee                ipi119
+                0xffffffff8010e4f7                ipi120
+                0xffffffff8010e500                ipi121
+                0xffffffff8010e509                ipi122
+                0xffffffff8010e512                ipi123
+                0xffffffff8010e51b                ipi124
+                0xffffffff8010e524                ipi125
+                0xffffffff8010e52d                ipi126
+                0xffffffff8010e536                ipi127
+                0xffffffff8010e53f                ipi128
+                0xffffffff8010e54b                ipi129
+                0xffffffff8010e557                ipi130
+                0xffffffff8010e563                ipi131
+                0xffffffff8010e56f                ipi132
+                0xffffffff8010e57b                ipi133
+                0xffffffff8010e587                ipi134
+                0xffffffff8010e593                ipi135
+                0xffffffff8010e59f                ipi136
+                0xffffffff8010e5ab                ipi137
+                0xffffffff8010e5b7                ipi138
+                0xffffffff8010e5c3                ipi139
+                0xffffffff8010e5cf                ipi140
+                0xffffffff8010e5db                ipi141
+                0xffffffff8010e5e7                ipi142
+                0xffffffff8010e5f3                ipi143
+                0xffffffff8010e5ff                ipi144
+                0xffffffff8010e60b                ipi145
+                0xffffffff8010e617                ipi146
+                0xffffffff8010e623                ipi147
+                0xffffffff8010e62f                ipi148
+                0xffffffff8010e63b                ipi149
+                0xffffffff8010e647                ipi150
+                0xffffffff8010e653                ipi151
+                0xffffffff8010e65f                ipi152
+                0xffffffff8010e66b                ipi153
+                0xffffffff8010e677                ipi154
+                0xffffffff8010e683                ipi155
+                0xffffffff8010e68f                ipi156
+                0xffffffff8010e69b                ipi157
+                0xffffffff8010e6a7                ipi158
+                0xffffffff8010e6b3                ipi159
+                0xffffffff8010e6bf                ipi160
+                0xffffffff8010e6cb                ipi161
+                0xffffffff8010e6d7                ipi162
+                0xffffffff8010e6e3                ipi163
+                0xffffffff8010e6ef                ipi164
+                0xffffffff8010e6fb                ipi165
+                0xffffffff8010e707                ipi166
+                0xffffffff8010e713                ipi167
+                0xffffffff8010e71f                ipi168
+                0xffffffff8010e72b                ipi169
+                0xffffffff8010e737                ipi170
+                0xffffffff8010e743                ipi171
+                0xffffffff8010e74f                ipi172
+                0xffffffff8010e75b                ipi173
+                0xffffffff8010e767                ipi174
+                0xffffffff8010e773                ipi175
+                0xffffffff8010e77f                ipi176
+                0xffffffff8010e78b                ipi177
+                0xffffffff8010e797                ipi178
+                0xffffffff8010e7a3                ipi179
+                0xffffffff8010e7af                ipi180
+                0xffffffff8010e7bb                ipi181
+                0xffffffff8010e7c7                ipi182
+                0xffffffff8010e7d3                ipi183
+                0xffffffff8010e7df                ipi184
+                0xffffffff8010e7eb                ipi185
+                0xffffffff8010e7f7                ipi186
+                0xffffffff8010e803                ipi187
+                0xffffffff8010e80f                ipi188
+                0xffffffff8010e81b                ipi189
+                0xffffffff8010e827                ipi190
+                0xffffffff8010e833                ipi191
+                0xffffffff8010e83f                ipi192
+                0xffffffff8010e84b                ipi193
+                0xffffffff8010e857                ipi194
+                0xffffffff8010e863                ipi195
+                0xffffffff8010e86f                ipi196
+                0xffffffff8010e87b                ipi197
+                0xffffffff8010e887                ipi198
+                0xffffffff8010e893                ipi199
+                0xffffffff8010e89f                ipi200
+                0xffffffff8010e8ab                ipi201
+                0xffffffff8010e8b7                ipi202
+                0xffffffff8010e8c3                ipi203
+                0xffffffff8010e8cf                ipi204
+                0xffffffff8010e8db                ipi205
+                0xffffffff8010e8e7                ipi206
+                0xffffffff8010e8f3                ipi207
+                0xffffffff8010e8ff                ipi208
+                0xffffffff8010e90b                ipi209
+                0xffffffff8010e917                ipi210
+                0xffffffff8010e923                ipi211
+                0xffffffff8010e92f                ipi212
+                0xffffffff8010e93b                ipi213
+                0xffffffff8010e947                ipi214
+                0xffffffff8010e953                ipi215
+                0xffffffff8010e95f                ipi216
+                0xffffffff8010e96b                ipi217
+                0xffffffff8010e977                ipi218
+                0xffffffff8010e983                ipi219
+                0xffffffff8010e98f                ipi220
+                0xffffffff8010e99b                ipi221
+                0xffffffff8010e9a7                ipi222
+                0xffffffff8010e9b3                ipi223
+                0xffffffff8010e9bf                ipi224
+                0xffffffff8010e9cb                ipi225
+                0xffffffff8010e9d7                ipi226
+                0xffffffff8010e9e3                ipi227
+                0xffffffff8010e9ef                ipi228
+                0xffffffff8010e9fb                ipi229
+                0xffffffff8010ea07                ipi230
+                0xffffffff8010ea13                ipi231
+                0xffffffff8010ea1f                ipi232
+                0xffffffff8010ea2b                ipi233
+                0xffffffff8010ea37                ipi234
+                0xffffffff8010ea43                ipi235
+                0xffffffff8010ea4f                ipi236
+                0xffffffff8010ea5b                ipi237
+                0xffffffff8010ea67                ipi238
+                0xffffffff8010ea73                ipi239
+                0xffffffff8010ea7f                ipi240
+                0xffffffff8010ea8b                ipi241
+                0xffffffff8010ea97                ipi242
+                0xffffffff8010eaa3                ipi243
+                0xffffffff8010eaaf                ipi244
+                0xffffffff8010eabb                ipi245
+                0xffffffff8010eac7                ipi246
+                0xffffffff8010ead3                ipi247
+                0xffffffff8010eadf                ipi248
+                0xffffffff8010eaeb                ipi249
+                0xffffffff8010eaf7                ipi250
+                0xffffffff8010eb03                ipi251
+                0xffffffff8010eb0f                ipi252
+                0xffffffff8010eb1b                ipi253
+                0xffffffff8010eb27                ipi254
+                0xffffffff8010eb33                ipi255
+                0xffffffff8010eb3f                intrid32
+                0xffffffff8010eb48                intrid33
+                0xffffffff8010eb51                intrid34
+                0xffffffff8010eb5a                intrid35
+                0xffffffff8010eb63                intrid36
+                0xffffffff8010eb6c                intrid37
+                0xffffffff8010eb75                intrid38
+                0xffffffff8010eb7e                intrid39
+                0xffffffff8010eb87                intrid40
+                0xffffffff8010eb90                intrid41
+                0xffffffff8010eb99                intrid42
+                0xffffffff8010eba2                intrid43
+                0xffffffff8010ebab                intrid44
+                0xffffffff8010ebb4                intrid45
+                0xffffffff8010ebbd                intrid46
+                0xffffffff8010ebc6                intrid47
+                0xffffffff8010ebe4                isr_tables
+ *fill*         0xffffffff8010f3e4        0xc 
+ .text          0xffffffff8010f3f0       0x3c ./build/kernel/Arch/x86_64/KernelStack.o
+                0xffffffff8010f3f0                load_tss
+ *fill*         0xffffffff8010f42c        0x4 
+ .text          0xffffffff8010f430       0x86 ./build/kernel/Arch/x86_64/SMPTrampoline.o
+                0xffffffff8010f430                SMPTrampolineStart
+                0xffffffff8010f4b6                SMPTrampolineEnd
+ *fill*         0xffffffff8010f4b6        0xa 
+ .text          0xffffffff8010f4c0       0x5b ./build/kernel/Arch/x86_64/Wrapper.o
+                0xffffffff8010f4c0                asmw_flush_gdt
+                0xffffffff8010f4eb                asmw_flush_idt
+                0xffffffff8010f4ef                asmw_load_paging
+                0xffffffff8010f4f3                asmw_enable_sse
+                0xffffffff8010f504                asmw_enable_avx
+                0xffffffff8010f517                asmw_get_pagemap
 
-.iplt           0xffffffff8010f4ab        0x0 load address 0x000000000010f4ab
- .iplt          0xffffffff8010f4ab        0x0 ./build/kernel/Arch/x86_64/Arch.o
+.iplt           0xffffffff8010f51b        0x0 load address 0x000000000010f51b
+ .iplt          0xffffffff8010f51b        0x0 ./build/kernel/Arch/x86_64/Arch.o
 
 .rodata         0xffffffff80110000     0x1110 load address 0x0000000000110000
  *(.rodata*)
@@ -1883,7 +1884,7 @@ LOAD ./build/kernel/Arch/x86_64/SMPTrampoline.o
 LOAD ./build/kernel/Arch/x86_64/Wrapper.o
 OUTPUT(./dist/x86_64/atrikrnl.elf elf64-x86-64)
 
-.debug_info     0x0000000000000000    0x2abcb
+.debug_info     0x0000000000000000    0x2abd8
  .debug_info    0x0000000000000000      0x1d4 ./build/kernel/Arch/x86_64/Arch.o
  .debug_info    0x00000000000001d4      0xa9d ./build/kernel/Arch/x86_64/BootX64.o
  .debug_info    0x0000000000000c71      0x678 ./build/kernel/Arch/x86_64/CPU.o
@@ -1917,30 +1918,30 @@ OUTPUT(./dist/x86_64/atrikrnl.elf elf64-x86-64)
  .debug_info    0x0000000000015fd1     0x1c21 ./build/kernel/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
  .debug_info    0x0000000000017bf2      0x384 ./build/kernel/Drivers/Video.o
  .debug_info    0x0000000000017f76      0xa33 ./build/kernel/Fs/DiskDeviceImpl.o
- .debug_info    0x00000000000189a9      0xa36 ./build/kernel/Input/ConsoleImpl.o
- .debug_info    0x00000000000193df      0x4d4 ./build/kernel/Input/KeyCode.o
- .debug_info    0x00000000000198b3      0x331 ./build/kernel/libkern/printf.o
- .debug_info    0x0000000000019be4      0x1ee ./build/kernel/libkern/sprintf.o
- .debug_info    0x0000000000019dd2     0x15b0 ./build/kernel/Memory/Memory.o
- .debug_info    0x000000000001b382     0x156e ./build/kernel/Memory/Page.o
- .debug_info    0x000000000001c8f0     0x10b9 ./build/kernel/Memory/PageAllocation.o
- .debug_info    0x000000000001d9a9      0xc28 ./build/kernel/Memory/SlabAllocatorImpl.o
- .debug_info    0x000000000001e5d1     0x1325 ./build/kernel/Memory/Slub.o
- .debug_info    0x000000000001f8f6       0xe6 ./build/kernel/Panic.o
- .debug_info    0x000000000001f9dc     0x13c7 ./build/kernel/Process/ActivityImpl.o
- .debug_info    0x0000000000020da3     0x115d ./build/kernel/Process/ActivityManagement.o
- .debug_info    0x0000000000021f00     0x1792 ./build/kernel/Process/ProcessImpl.o
- .debug_info    0x0000000000023692     0x1697 ./build/kernel/Process/Scheduler.o
- .debug_info    0x0000000000024d29     0x1b50 ./build/kernel/Process/SchedulerImpl.o
- .debug_info    0x0000000000026879      0x8b2 ./build/kernel/Runtime.o
- .debug_info    0x000000000002712b      0x76f ./build/kernel/String.o
- .debug_info    0x000000000002789a     0x1f22 ./build/kernel/System.o
- .debug_info    0x00000000000297bc       0x79 ./build/kernel/Video/FrameBufferPresenterImpl.o
- .debug_info    0x0000000000029835      0xb4a ./build/kernel/Video/TextModePresenterImpl.o
- .debug_info    0x000000000002a37f      0x19f ./build/kernel/Video/VideoControllerImpl.o
- .debug_info    0x000000000002a51e      0x6ad ./build/kernel/Video/VideoPresenterImpl.o
+ .debug_info    0x00000000000189a9      0xa43 ./build/kernel/Input/ConsoleImpl.o
+ .debug_info    0x00000000000193ec      0x4d4 ./build/kernel/Input/KeyCode.o
+ .debug_info    0x00000000000198c0      0x331 ./build/kernel/libkern/printf.o
+ .debug_info    0x0000000000019bf1      0x1ee ./build/kernel/libkern/sprintf.o
+ .debug_info    0x0000000000019ddf     0x15b0 ./build/kernel/Memory/Memory.o
+ .debug_info    0x000000000001b38f     0x156e ./build/kernel/Memory/Page.o
+ .debug_info    0x000000000001c8fd     0x10b9 ./build/kernel/Memory/PageAllocation.o
+ .debug_info    0x000000000001d9b6      0xc28 ./build/kernel/Memory/SlabAllocatorImpl.o
+ .debug_info    0x000000000001e5de     0x1325 ./build/kernel/Memory/Slub.o
+ .debug_info    0x000000000001f903       0xe6 ./build/kernel/Panic.o
+ .debug_info    0x000000000001f9e9     0x13c7 ./build/kernel/Process/ActivityImpl.o
+ .debug_info    0x0000000000020db0     0x115d ./build/kernel/Process/ActivityManagement.o
+ .debug_info    0x0000000000021f0d     0x1792 ./build/kernel/Process/ProcessImpl.o
+ .debug_info    0x000000000002369f     0x1697 ./build/kernel/Process/Scheduler.o
+ .debug_info    0x0000000000024d36     0x1b50 ./build/kernel/Process/SchedulerImpl.o
+ .debug_info    0x0000000000026886      0x8b2 ./build/kernel/Runtime.o
+ .debug_info    0x0000000000027138      0x76f ./build/kernel/String.o
+ .debug_info    0x00000000000278a7     0x1f22 ./build/kernel/System.o
+ .debug_info    0x00000000000297c9       0x79 ./build/kernel/Video/FrameBufferPresenterImpl.o
+ .debug_info    0x0000000000029842      0xb4a ./build/kernel/Video/TextModePresenterImpl.o
+ .debug_info    0x000000000002a38c      0x19f ./build/kernel/Video/VideoControllerImpl.o
+ .debug_info    0x000000000002a52b      0x6ad ./build/kernel/Video/VideoPresenterImpl.o
 
-.debug_abbrev   0x0000000000000000     0xaefa
+.debug_abbrev   0x0000000000000000     0xaf0f
  .debug_abbrev  0x0000000000000000      0x11d ./build/kernel/Arch/x86_64/Arch.o
  .debug_abbrev  0x000000000000011d      0x34f ./build/kernel/Arch/x86_64/BootX64.o
  .debug_abbrev  0x000000000000046c      0x2c6 ./build/kernel/Arch/x86_64/CPU.o
@@ -1974,28 +1975,28 @@ OUTPUT(./dist/x86_64/atrikrnl.elf elf64-x86-64)
  .debug_abbrev  0x00000000000061e6      0x5aa ./build/kernel/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
  .debug_abbrev  0x0000000000006790      0x154 ./build/kernel/Drivers/Video.o
  .debug_abbrev  0x00000000000068e4      0x301 ./build/kernel/Fs/DiskDeviceImpl.o
- .debug_abbrev  0x0000000000006be5      0x28c ./build/kernel/Input/ConsoleImpl.o
- .debug_abbrev  0x0000000000006e71      0x12b ./build/kernel/Input/KeyCode.o
- .debug_abbrev  0x0000000000006f9c      0x168 ./build/kernel/libkern/printf.o
- .debug_abbrev  0x0000000000007104       0xc0 ./build/kernel/libkern/sprintf.o
- .debug_abbrev  0x00000000000071c4      0x4ae ./build/kernel/Memory/Memory.o
- .debug_abbrev  0x0000000000007672      0x4b0 ./build/kernel/Memory/Page.o
- .debug_abbrev  0x0000000000007b22      0x3bd ./build/kernel/Memory/PageAllocation.o
- .debug_abbrev  0x0000000000007edf      0x403 ./build/kernel/Memory/SlabAllocatorImpl.o
- .debug_abbrev  0x00000000000082e2      0x43b ./build/kernel/Memory/Slub.o
- .debug_abbrev  0x000000000000871d       0x9d ./build/kernel/Panic.o
- .debug_abbrev  0x00000000000087ba      0x42b ./build/kernel/Process/ActivityImpl.o
- .debug_abbrev  0x0000000000008be5      0x3ee ./build/kernel/Process/ActivityManagement.o
- .debug_abbrev  0x0000000000008fd3      0x48f ./build/kernel/Process/ProcessImpl.o
- .debug_abbrev  0x0000000000009462      0x4a4 ./build/kernel/Process/Scheduler.o
- .debug_abbrev  0x0000000000009906      0x50f ./build/kernel/Process/SchedulerImpl.o
- .debug_abbrev  0x0000000000009e15      0x2b3 ./build/kernel/Runtime.o
- .debug_abbrev  0x000000000000a0c8       0xf0 ./build/kernel/String.o
- .debug_abbrev  0x000000000000a1b8      0x643 ./build/kernel/System.o
- .debug_abbrev  0x000000000000a7fb       0x3a ./build/kernel/Video/FrameBufferPresenterImpl.o
- .debug_abbrev  0x000000000000a835      0x348 ./build/kernel/Video/TextModePresenterImpl.o
- .debug_abbrev  0x000000000000ab7d      0x10c ./build/kernel/Video/VideoControllerImpl.o
- .debug_abbrev  0x000000000000ac89      0x271 ./build/kernel/Video/VideoPresenterImpl.o
+ .debug_abbrev  0x0000000000006be5      0x2a1 ./build/kernel/Input/ConsoleImpl.o
+ .debug_abbrev  0x0000000000006e86      0x12b ./build/kernel/Input/KeyCode.o
+ .debug_abbrev  0x0000000000006fb1      0x168 ./build/kernel/libkern/printf.o
+ .debug_abbrev  0x0000000000007119       0xc0 ./build/kernel/libkern/sprintf.o
+ .debug_abbrev  0x00000000000071d9      0x4ae ./build/kernel/Memory/Memory.o
+ .debug_abbrev  0x0000000000007687      0x4b0 ./build/kernel/Memory/Page.o
+ .debug_abbrev  0x0000000000007b37      0x3bd ./build/kernel/Memory/PageAllocation.o
+ .debug_abbrev  0x0000000000007ef4      0x403 ./build/kernel/Memory/SlabAllocatorImpl.o
+ .debug_abbrev  0x00000000000082f7      0x43b ./build/kernel/Memory/Slub.o
+ .debug_abbrev  0x0000000000008732       0x9d ./build/kernel/Panic.o
+ .debug_abbrev  0x00000000000087cf      0x42b ./build/kernel/Process/ActivityImpl.o
+ .debug_abbrev  0x0000000000008bfa      0x3ee ./build/kernel/Process/ActivityManagement.o
+ .debug_abbrev  0x0000000000008fe8      0x48f ./build/kernel/Process/ProcessImpl.o
+ .debug_abbrev  0x0000000000009477      0x4a4 ./build/kernel/Process/Scheduler.o
+ .debug_abbrev  0x000000000000991b      0x50f ./build/kernel/Process/SchedulerImpl.o
+ .debug_abbrev  0x0000000000009e2a      0x2b3 ./build/kernel/Runtime.o
+ .debug_abbrev  0x000000000000a0dd       0xf0 ./build/kernel/String.o
+ .debug_abbrev  0x000000000000a1cd      0x643 ./build/kernel/System.o
+ .debug_abbrev  0x000000000000a810       0x3a ./build/kernel/Video/FrameBufferPresenterImpl.o
+ .debug_abbrev  0x000000000000a84a      0x348 ./build/kernel/Video/TextModePresenterImpl.o
+ .debug_abbrev  0x000000000000ab92      0x10c ./build/kernel/Video/VideoControllerImpl.o
+ .debug_abbrev  0x000000000000ac9e      0x271 ./build/kernel/Video/VideoPresenterImpl.o
 
 .debug_aranges  0x0000000000000000     0x1410
  .debug_aranges
@@ -2109,7 +2110,7 @@ OUTPUT(./dist/x86_64/atrikrnl.elf elf64-x86-64)
  .debug_aranges
                 0x00000000000013b0       0x60 ./build/kernel/Video/VideoPresenterImpl.o
 
-.debug_line     0x0000000000000000     0x6d77
+.debug_line     0x0000000000000000     0x6d89
  .debug_line    0x0000000000000000       0xaa ./build/kernel/Arch/x86_64/Arch.o
  .debug_line    0x00000000000000aa      0x25a ./build/kernel/Arch/x86_64/BootX64.o
  .debug_line    0x0000000000000304      0x1da ./build/kernel/Arch/x86_64/CPU.o
@@ -2146,28 +2147,28 @@ OUTPUT(./dist/x86_64/atrikrnl.elf elf64-x86-64)
  .debug_line    0x0000000000003d5e      0x15e ./build/kernel/Drivers/Video.o
  .debug_line    0x0000000000003ebc        0x0 ./build/kernel/Event.o
  .debug_line    0x0000000000003ebc       0x79 ./build/kernel/Fs/DiskDeviceImpl.o
- .debug_line    0x0000000000003f35      0x2d2 ./build/kernel/Input/ConsoleImpl.o
- .debug_line    0x0000000000004207      0x144 ./build/kernel/Input/KeyCode.o
- .debug_line    0x000000000000434b      0x133 ./build/kernel/libkern/printf.o
- .debug_line    0x000000000000447e      0x15d ./build/kernel/libkern/sprintf.o
- .debug_line    0x00000000000045db      0x35f ./build/kernel/Memory/Memory.o
- .debug_line    0x000000000000493a      0x6b9 ./build/kernel/Memory/Page.o
- .debug_line    0x0000000000004ff3      0x160 ./build/kernel/Memory/PageAllocation.o
- .debug_line    0x0000000000005153      0x281 ./build/kernel/Memory/SlabAllocatorImpl.o
- .debug_line    0x00000000000053d4      0x555 ./build/kernel/Memory/Slub.o
- .debug_line    0x0000000000005929       0x61 ./build/kernel/Panic.o
- .debug_line    0x000000000000598a      0x223 ./build/kernel/Process/ActivityImpl.o
- .debug_line    0x0000000000005bad      0x108 ./build/kernel/Process/ActivityManagement.o
- .debug_line    0x0000000000005cb5      0x208 ./build/kernel/Process/ProcessImpl.o
- .debug_line    0x0000000000005ebd      0x10c ./build/kernel/Process/Scheduler.o
- .debug_line    0x0000000000005fc9      0x26f ./build/kernel/Process/SchedulerImpl.o
- .debug_line    0x0000000000006238       0xc7 ./build/kernel/Runtime.o
- .debug_line    0x00000000000062ff      0x48f ./build/kernel/String.o
- .debug_line    0x000000000000678e      0x15f ./build/kernel/System.o
- .debug_line    0x00000000000068ed       0x3e ./build/kernel/Video/FrameBufferPresenterImpl.o
- .debug_line    0x000000000000692b      0x315 ./build/kernel/Video/TextModePresenterImpl.o
- .debug_line    0x0000000000006c40       0x59 ./build/kernel/Video/VideoControllerImpl.o
- .debug_line    0x0000000000006c99       0xde ./build/kernel/Video/VideoPresenterImpl.o
+ .debug_line    0x0000000000003f35      0x2e4 ./build/kernel/Input/ConsoleImpl.o
+ .debug_line    0x0000000000004219      0x144 ./build/kernel/Input/KeyCode.o
+ .debug_line    0x000000000000435d      0x133 ./build/kernel/libkern/printf.o
+ .debug_line    0x0000000000004490      0x15d ./build/kernel/libkern/sprintf.o
+ .debug_line    0x00000000000045ed      0x35f ./build/kernel/Memory/Memory.o
+ .debug_line    0x000000000000494c      0x6b9 ./build/kernel/Memory/Page.o
+ .debug_line    0x0000000000005005      0x160 ./build/kernel/Memory/PageAllocation.o
+ .debug_line    0x0000000000005165      0x281 ./build/kernel/Memory/SlabAllocatorImpl.o
+ .debug_line    0x00000000000053e6      0x555 ./build/kernel/Memory/Slub.o
+ .debug_line    0x000000000000593b       0x61 ./build/kernel/Panic.o
+ .debug_line    0x000000000000599c      0x223 ./build/kernel/Process/ActivityImpl.o
+ .debug_line    0x0000000000005bbf      0x108 ./build/kernel/Process/ActivityManagement.o
+ .debug_line    0x0000000000005cc7      0x208 ./build/kernel/Process/ProcessImpl.o
+ .debug_line    0x0000000000005ecf      0x10c ./build/kernel/Process/Scheduler.o
+ .debug_line    0x0000000000005fdb      0x26f ./build/kernel/Process/SchedulerImpl.o
+ .debug_line    0x000000000000624a       0xc7 ./build/kernel/Runtime.o
+ .debug_line    0x0000000000006311      0x48f ./build/kernel/String.o
+ .debug_line    0x00000000000067a0      0x15f ./build/kernel/System.o
+ .debug_line    0x00000000000068ff       0x3e ./build/kernel/Video/FrameBufferPresenterImpl.o
+ .debug_line    0x000000000000693d      0x315 ./build/kernel/Video/TextModePresenterImpl.o
+ .debug_line    0x0000000000006c52       0x59 ./build/kernel/Video/VideoControllerImpl.o
+ .debug_line    0x0000000000006cab       0xde ./build/kernel/Video/VideoPresenterImpl.o
 
 .debug_str      0x0000000000000000     0xa94e
  .debug_str     0x0000000000000000      0x189 ./build/kernel/Arch/x86_64/Arch.o

@@ -17,7 +17,9 @@ Console::Console()
     m_OffsetY(0),
     m_KeyModifiers(0)
 {
-    Refresh();
+    m_TextPresenter->Clear();
+    RenderModifiers();
+    m_TextPresenter->Text({ 0, 2 }, '>', 15, 0);
 }
 
 Console::~Console()
