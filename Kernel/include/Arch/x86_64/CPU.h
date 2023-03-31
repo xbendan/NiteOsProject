@@ -242,10 +242,10 @@ static inline void WriteMsr(
 
 static inline bool IsIntEnabled() {
     uint64_t flags;
-    asm volatile("pushf\n\t"
-                 "pop %o"
-                 : "=g"(flags));
-    return flags & (1 << 9);
+    asm volatile("pushfq;"
+                 "pop %0;"
+                 : "=rm"(flags)::"memory", "cc");
+    return flags & 0x200;
 }
 
 enum ModelSpecificRegisters {

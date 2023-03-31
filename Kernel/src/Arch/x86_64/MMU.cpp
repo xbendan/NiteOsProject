@@ -281,7 +281,7 @@ namespace Memory::Paging
         }
     }
 
-    void HandlePageFault(void *ptr, registers_t *regs) {
+    void HandlePageFault(InterruptData *ptr, registers_t *regs) {
 
     }
 } // namespace Memory

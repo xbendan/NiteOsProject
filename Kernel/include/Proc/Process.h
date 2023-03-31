@@ -159,8 +159,8 @@ namespace Task
         uint64_t m_FsBase;
         void *m_FxState;
 
-        registers_t m_Registers;  
-        registers_t m_LastSyscall;
+        RegisterContext m_Registers;  
+        RegisterContext m_LastSyscall;
 
         TaskPriority m_ThreadPriority;       /* The priority when scheduling */
         TaskState m_ThreadState = TaskState::TaskStateRunning;          /* Thread state */

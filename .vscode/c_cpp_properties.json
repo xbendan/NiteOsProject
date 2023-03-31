@@ -1,29 +1,32 @@
 {
-    "configurations": [
-        {
-            "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [],
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "gnu17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-x64"
-        },
-        {
-            "name": "BareMetalX64",
-            "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/Kernel/include"
-            ],
-            "defines": [],
-            "compilerPath": "/home/umarin/build/x86_64-elf/bin",
-            "cStandard": "gnu23",
-            "cppStandard": "gnu++23",
-            "intelliSenseMode": "gcc-x64",
-            "configurationProvider": "ms-vscode.makefile-tools"
-        }
-    ],
-    "version": 4
+  "configurations": [
+    {
+      "name": "linux-gcc-x64",
+      "includePath": [
+        "${workspaceFolder}/**"
+      ],
+      "defines": [],
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "${default}",
+      "cppStandard": "${default}",
+      "intelliSenseMode": "linux-gcc-x64"
+    },
+    {
+      "name": "BareMetalX64",
+      "includePath": [
+        "${workspaceFolder}/Kernel/include/**",
+        "/home/plana/Builds/llvm-clang/lib/**"
+      ],
+      "defines": [],
+      "compilerPath": "/home/plana/Builds/llvm-clang/bin/clang++",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "clang-x64",
+      "configurationProvider": "ms-vscode.makefile-tools",
+      "compilerArgs": [
+        "--target=x86_64-pc-none-elf"
+      ]
+    }
+  ],
+  "version": 4
 }

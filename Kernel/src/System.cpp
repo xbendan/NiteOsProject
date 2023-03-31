@@ -1,19 +1,20 @@
-#include <Proc/Scheduler.h>
-#include <Proc/Process.h>
 #include <Device/Device.h>
 #include <Drivers/Input/PS2LegacyController.h>
 #include <Drivers/video.h>
 #include <Input/Console.h>
-#include <Video/TextModePresenter.h>
 #include <Mem/Page.h>
+#include <Proc/Process.h>
+#include <Proc/Scheduler.h>
 #include <Timer.h>
+#include <Video/TextModePresenter.h>
 
 #include <libkern/printf.h>
 #include <macros>
 
 namespace System
 {
-    void Out(const char* fmt, ...) {
+    void Out(const char *fmt, ...)
+    {
         va_list args;
         va_start(args, fmt);
         vprintf(fmt, args);
@@ -21,15 +22,14 @@ namespace System
         Video::Newline();
     }
 
-    [[noreturn]] void Panic(const char *fmt, ...) {
-        //Video::ClearScreen();
-        
+    [[noreturn]] void Panic(const char *fmt, ...)
+    {
         va_list args;
         va_start(args, fmt);
         vprintf(fmt, args);
         va_end(args);
 
-        for (;;) asm("cli; hlt;");
+        Halt();
     }
 } // namespace System
 
@@ -53,6 +53,7 @@ using namespace Task;
     (new Input::PS2LegacyController())->Register();
     g_Scheduler = new Scheduler();
     g_Console = new Console();
-    
-    for (;;) asm("hlt");
+
+    for (;;)
+        asm("hlt");
 }

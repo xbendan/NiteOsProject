@@ -4,22 +4,15 @@
 #include <Utils/LinkedList.h>
 #include <Utils/Spinlock.h>
 #include <macros>
-#ifdef ARCH_X86_64
-    #include <Arch/x86_64/CPU.h>
-#elif ARCH_AARCH64
-    
-#elif ARCH_RISCV
 
+#ifdef ARCH_X86_64
+#include <Arch/x86_64/CPU.h>
 #endif
 
 #define SLAB_MAX_BLOCK_ORDER        16
 #define SLAB_MAX_STRUCT_ORDER       1
 #define SLAB_MAX_SIZE               ARCH_PAGE_SIZE
 #define MAX_NUMA_COUNT              4
-
-uint8_t BLOCK_ORDER(size_t size);
-
-using namespace Memory;
 
 namespace Memory
 {
