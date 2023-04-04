@@ -31,7 +31,7 @@ void Device::RegisterDevice(Device *device)
 
 DeviceProvider *Device::GetProvider(DeviceBus bus)
 {
-
+    return g_DeviceProviders[bus];
 }
 
 void Device::EnumerateDevice(DeviceType type)

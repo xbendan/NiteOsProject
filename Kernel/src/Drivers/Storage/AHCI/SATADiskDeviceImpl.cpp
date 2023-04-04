@@ -9,8 +9,8 @@
 namespace AHCI
 {
     SATADiskDevice::SATADiskDevice(int port, HBAPortRegisters *portRegs, AHCIControllerDevice *controllerDevice)
-      : m_PortRegs(portRegs),
-        m_MemoryRegs(controllerDevice->MemoryRegisters()),
+      : m_MemoryRegs(controllerDevice->MemoryRegisters()),
+        m_PortRegs(portRegs),
         DiskDevice("Unidentified SATA Hard Disk Drive")
     {
         StopCommand();

@@ -4,22 +4,22 @@
 void ConsoleKeyEventHandler(Input::Key key, bool isPressed)
 {
     Console *console = g_Console;
-
     console->AcceptKey(key, isPressed);
 }
 
 using namespace Input;
 
+static const char *c_modifiers =    "CapsLock:   |      |       |     |                                              ";
+static const char *c_split =        "--------------------------------------------------------------------------------";
+
 Console::Console()
   : m_TextPresenter(new Video::TextModePresenter()),
+    m_KeyModifiers(0),
     m_Buffers(new uint8_t[23 * 80]),
-    m_OffsetX(0),
-    m_OffsetY(0),
-    m_KeyModifiers(0)
+    m_OffsetX(1),
+    m_OffsetY(0)
 {
-    m_TextPresenter->Clear();
-    RenderModifiers();
-    m_TextPresenter->Text({ 0, 2 }, '>', 15, 0);
+    Refresh();
 }
 
 Console::~Console()
@@ -29,14 +29,26 @@ Console::~Console()
 
 void Console::Render()
 {
-    RenderModifiers();
-    m_TextPresenter->Text({ 0, 2 }, '>', 15, 0);
+    
 }
 
 void Console::Refresh()
 {
     m_TextPresenter->Clear();
-    Render();
+    RenderModifiers();
+    m_TextPresenter->Text({ 0, 2 }, '>', 15, 0);
+}
+
+void Console::Newline()
+{
+    m_LineLength = 0;
+    m_OffsetX = 1;
+    if (m_OffsetY >= 22)
+    {
+        m_TextPresenter->MoveUp();
+        RenderModifiers();
+    } else m_OffsetY++;
+    m_TextPresenter->Text({ 0, m_OffsetY + 2 }, '>', 15, 0);
 }
 
 void Console::RenderModifiers()
@@ -46,12 +58,14 @@ void Console::RenderModifiers()
     bool ctrl = m_KeyModifiers & KeyModifiersCtrl;
     bool alt = m_KeyModifiers & KeyModifiersAlt;
 
-    m_TextPresenter->Text({ 0, 0 }, "CapsLock:   |      |       |     |                                              ", 15, 0);
-    m_TextPresenter->Text({ 9, 0 }, (caps ? " A " : " a "), 0, 15);
-    m_TextPresenter->Text({ 13, 0 }, " Ctrl ", ctrl ? 0 : 15, ctrl ? 15 : 0);
-    m_TextPresenter->Text({ 20, 0 }, " Shift ", shift ? 0 : 15, shift ? 15 : 0);
-    m_TextPresenter->Text({ 28, 0 }, " Alt ", alt ? 0 : 15, alt ? 15 : 0);
-    m_TextPresenter->Text({ 0, 1 }, "--------------------------------------------------------------------------------", 15, 0);
+    TextModePresenter *presenter = reinterpret_cast<TextModePresenter *>(m_TextPresenter);
+
+    presenter->Text({ 0, 0 }, c_modifiers, 15, 0);
+    presenter->Text({ 9, 0 }, (caps ? " A " : " a "), 0, 15);
+    presenter->Text({ 13, 0 }, " Ctrl ", ctrl ? 0 : 15, ctrl ? 15 : 0);
+    presenter->Text({ 20, 0 }, " Shift ", shift ? 0 : 15, shift ? 15 : 0);
+    presenter->Text({ 28, 0 }, " Alt ", alt ? 0 : 15, alt ? 15 : 0);
+    presenter->Text({ 0, 1 }, c_split, 15, 0);
 }
 
 void Console::AcceptKey(Input::Key key, bool isPressed)
@@ -96,15 +110,7 @@ void Console::AcceptKey(Input::Key key, bool isPressed)
         break;
     case Enter:
         if (!isPressed) break;
-
-        m_LineLength = 0;
-        m_OffsetX = 1;
-        if (m_OffsetY >= 22)
-        {
-            m_TextPresenter->MoveUp();
-            RenderModifiers();
-        } else m_OffsetY++;
-        m_TextPresenter->Text({ 0, m_OffsetY + 2 }, '>', 15, 0);
+        Newline();
         break;
     case Space:
         AddChar(' '); break;

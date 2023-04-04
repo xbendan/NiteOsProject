@@ -1,0 +1,1782 @@
+
+Discarded input sections
+
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/Arch.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/BootX64.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/BootX64.o
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/BootX64.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/CPU.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/CPU.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/CPU.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/CPU.o
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/CPU.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/GDT.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/GDT.o
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/GDT.o
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/IDT.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/Interrupts.o
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/Interrupts.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/MMU.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/MMU.o
+ .group         0x0000000000000000        0xc ./build/Arch/x86_64/MMU.o
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/MMU.o
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/PIC.o
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/PIT.o
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/SchedulerArchImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/SMBIOS.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/SMP.o
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/SMP.o
+ .group         0x0000000000000000        0x8 ./build/Arch/x86_64/TaskStateSegment.o
+ .comment       0x0000000000000000       0x13 ./build/Arch/x86_64/TaskStateSegment.o
+ .comment       0x0000000000000000       0x13 ./build/Device/ComputerDeviceImpl.o
+ .group         0x0000000000000000        0x8 ./build/Device/DeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Device/DeviceImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Device/DeviceImpl.o
+ .group         0x0000000000000000        0x8 ./build/Device/DeviceManagement.o
+ .group         0x0000000000000000        0xc ./build/Device/DeviceManagement.o
+ .group         0x0000000000000000        0x8 ./build/Device/DeviceManagement.o
+ .group         0x0000000000000000        0xc ./build/Device/DeviceManagement.o
+ .group         0x0000000000000000        0x8 ./build/Device/DeviceManagement.o
+ .group         0x0000000000000000        0xc ./build/Device/DeviceManagement.o
+ .comment       0x0000000000000000       0x13 ./build/Device/DeviceManagement.o
+ .group         0x0000000000000000        0x8 ./build/Device/DeviceStaticImpl.o
+ .group         0x0000000000000000        0x8 ./build/Device/DeviceStaticImpl.o
+ .group         0x0000000000000000        0xc ./build/Device/DeviceStaticImpl.o
+ .group         0x0000000000000000        0x8 ./build/Device/DeviceStaticImpl.o
+ .group         0x0000000000000000        0xc ./build/Device/DeviceStaticImpl.o
+ .group         0x0000000000000000        0x8 ./build/Device/DeviceStaticImpl.o
+ .group         0x0000000000000000        0xc ./build/Device/DeviceStaticImpl.o
+ .group         0x0000000000000000        0x8 ./build/Device/DeviceStaticImpl.o
+ .group         0x0000000000000000        0x8 ./build/Device/DeviceStaticImpl.o
+ .group         0x0000000000000000        0x8 ./build/Device/DeviceStaticImpl.o
+ .group         0x0000000000000000        0xc ./build/Device/DeviceStaticImpl.o
+ .group         0x0000000000000000        0xc ./build/Device/DeviceStaticImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Device/DeviceStaticImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Bus/PCI/PCIMain.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Generic/ACPI/ACPITimerImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Generic/ACPI/ACPITimerImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Generic/ACPI/ACPITimerImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Generic/ACPI/ACPITimerImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Generic/ACPI/MADTMain.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Generic/APIC/APICMain.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Generic/APIC/APICMain.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Generic/APIC/APICMain.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Generic/APIC/IO.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Generic/APIC/IO.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Generic/APIC/IO.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Generic/APIC/Local.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Generic/APIC/LocalAPICTimerImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Generic/APIC/LocalAPICTimerImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Generic/APIC/LocalAPICTimerImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Generic/APIC/LocalAPICTimerImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Input/PS2LegacyController.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Input/PS2LegacyController.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Input/PS2LegacyController.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Input/PS2LegacyController.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Input/PS2LegacyController.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Input/PS2LegacyController.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Input/PS2LegacyController.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Input/PS2LegacyController.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Storage/AHCI/AHCIMain.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Storage/AHCI/AHCIMain.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Storage/AHCI/AHCIMain.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ .group         0x0000000000000000        0x8 ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ .group         0x0000000000000000        0xc ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Drivers/Video.o
+ .group         0x0000000000000000        0xc ./build/Fs/DiskDeviceImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Fs/DiskDeviceImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Input/ConsoleImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Input/KeyCode.o
+ .comment       0x0000000000000000       0x13 ./build/libkern/printf.o
+ .comment       0x0000000000000000       0x13 ./build/libkern/sprintf.o
+ .group         0x0000000000000000        0x8 ./build/Memory/Memory.o
+ .group         0x0000000000000000        0x8 ./build/Memory/Memory.o
+ .group         0x0000000000000000        0x8 ./build/Memory/Memory.o
+ .group         0x0000000000000000        0x8 ./build/Memory/Memory.o
+ .comment       0x0000000000000000       0x13 ./build/Memory/Memory.o
+ .group         0x0000000000000000        0x8 ./build/Memory/Page.o
+ .group         0x0000000000000000        0x8 ./build/Memory/Page.o
+ .group         0x0000000000000000       0x14 ./build/Memory/Page.o
+ .group         0x0000000000000000        0xc ./build/Memory/Page.o
+ .group         0x0000000000000000        0xc ./build/Memory/Page.o
+ .group         0x0000000000000000        0x8 ./build/Memory/Page.o
+ .group         0x0000000000000000        0x8 ./build/Memory/Page.o
+ .group         0x0000000000000000        0xc ./build/Memory/Page.o
+ .group         0x0000000000000000        0xc ./build/Memory/Page.o
+ .group         0x0000000000000000        0x8 ./build/Memory/Page.o
+ .group         0x0000000000000000        0xc ./build/Memory/Page.o
+ .group         0x0000000000000000        0x8 ./build/Memory/Page.o
+ .group         0x0000000000000000        0x8 ./build/Memory/Page.o
+ .group         0x0000000000000000        0xc ./build/Memory/Page.o
+ .comment       0x0000000000000000       0x13 ./build/Memory/Page.o
+ .group         0x0000000000000000        0xc ./build/Memory/PageAllocation.o
+ .comment       0x0000000000000000       0x13 ./build/Memory/PageAllocation.o
+ .comment       0x0000000000000000       0x13 ./build/Memory/SlabAllocatorImpl.o
+ .group         0x0000000000000000        0x8 ./build/Process/ActivityImpl.o
+ .group         0x0000000000000000        0x8 ./build/Process/ActivityImpl.o
+ .group         0x0000000000000000        0x8 ./build/Process/ActivityImpl.o
+ .group         0x0000000000000000        0xc ./build/Process/ActivityImpl.o
+ .group         0x0000000000000000        0x8 ./build/Process/ActivityImpl.o
+ .group         0x0000000000000000        0xc ./build/Process/ActivityImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Process/ActivityImpl.o
+ .group         0x0000000000000000        0x8 ./build/Process/ActivityManagement.o
+ .group         0x0000000000000000        0xc ./build/Process/ActivityManagement.o
+ .group         0x0000000000000000        0xc ./build/Process/ActivityManagement.o
+ .comment       0x0000000000000000       0x13 ./build/Process/ActivityManagement.o
+ .group         0x0000000000000000        0x8 ./build/Process/ProcessImpl.o
+ .group         0x0000000000000000        0x8 ./build/Process/ProcessImpl.o
+ .group         0x0000000000000000        0x8 ./build/Process/ProcessImpl.o
+ .group         0x0000000000000000        0xc ./build/Process/ProcessImpl.o
+ .group         0x0000000000000000        0xc ./build/Process/ProcessImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Process/ProcessImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Process/Scheduler.o
+ .group         0x0000000000000000        0x8 ./build/Process/SchedulerImpl.o
+ .group         0x0000000000000000        0xc ./build/Process/SchedulerImpl.o
+ .group         0x0000000000000000        0x8 ./build/Process/SchedulerImpl.o
+ .group         0x0000000000000000        0x8 ./build/Process/SchedulerImpl.o
+ .group         0x0000000000000000        0x8 ./build/Process/SchedulerImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Process/SchedulerImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Runtime.o
+ .comment       0x0000000000000000       0x13 ./build/String.o
+ .group         0x0000000000000000        0xc ./build/System.o
+ .comment       0x0000000000000000       0x13 ./build/System.o
+ .comment       0x0000000000000000       0x13 ./build/Video/FrameBufferPresenterImpl.o
+ .group         0x0000000000000000        0x8 ./build/Video/TextModePresenterImpl.o
+ .group         0x0000000000000000        0xc ./build/Video/TextModePresenterImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Video/TextModePresenterImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Video/VideoControllerImpl.o
+ .group         0x0000000000000000        0x8 ./build/Video/VideoPresenterImpl.o
+ .group         0x0000000000000000        0x8 ./build/Video/VideoPresenterImpl.o
+ .group         0x0000000000000000        0xc ./build/Video/VideoPresenterImpl.o
+ .group         0x0000000000000000        0xc ./build/Video/VideoPresenterImpl.o
+ .comment       0x0000000000000000       0x13 ./build/Video/VideoPresenterImpl.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+                0xffffffff80000000                KERNEL_VMA = 0xffffffff80000000
+                0x0000000000100000                . = 0x100000
+
+.boot.text      0x0000000000100000       0x44
+ *(.boot.text)
+ .boot.text     0x0000000000100000       0x44 ./build/Arch/x86_64/Header.o
+
+.boot.data      0x0000000000100044      0xfbc
+ *(.boot.data)
+                0x0000000000101000                . = ALIGN (0x1000)
+ *fill*         0x0000000000100044      0xfbc 
+                0xffffffff80101000                . = (. + KERNEL_VMA)
+                0xffffffff80101000                KERNEL_START_ADDR = .
+
+.stivalehdr
+ *(.stivalehdr)
+
+.stivale2hdr    0xffffffff80101000       0x20 load address 0x0000000000101000
+ *(.stivale2hdr)
+ .stivale2hdr   0xffffffff80101000       0x20 ./build/Arch/x86_64/Header.o
+
+.text           0xffffffff80102000     0xb13b load address 0x0000000000102000
+ *(.text*)
+ .text          0xffffffff80102000       0x77 ./build/Arch/x86_64/Arch.o
+                0xffffffff8010203d                System::Reboot()
+                0xffffffff80102068                System::Shutdown()
+                0xffffffff8010206f                Halt()
+ .text          0xffffffff80102077      0x3b4 ./build/Arch/x86_64/BootX64.o
+                0xffffffff80102077                Boot::multiboot2(BootInfo*, multiboot2_info_header_t*)
+                0xffffffff8010208a                Boot::stivale2(BootInfo*, stivale2_struct*)
+                0xffffffff8010231e                Boot::Start()
+                0xffffffff801023fb                kload_stivale2
+ .text._Z17DisableInterruptsv
+                0xffffffff8010242b        0x8 ./build/Arch/x86_64/BootX64.o
+                0xffffffff8010242b                DisableInterrupts()
+ .text._Z16EnableInterruptsv
+                0xffffffff80102433        0x8 ./build/Arch/x86_64/BootX64.o
+                0xffffffff80102433                EnableInterrupts()
+ .text          0xffffffff8010243b      0x1c6 ./build/Arch/x86_64/CPU.o
+                0xffffffff8010246a                CurrentCPU()
+                0xffffffff8010249a                CPUID()
+                0xffffffff80102587                SetCPULocal(CPU*)
+                0xffffffff801025c3                GetCPULocal()
+ *fill*         0xffffffff80102601        0x1 
+ .text._ZN18InterruptsRetainerC2Ev
+                0xffffffff80102602       0x10 ./build/Arch/x86_64/CPU.o
+                0xffffffff80102602                InterruptsRetainer::InterruptsRetainer()
+                0xffffffff80102602                InterruptsRetainer::InterruptsRetainer()
+ .text._ZN18InterruptsRetainerD2Ev
+                0xffffffff80102612       0x10 ./build/Arch/x86_64/CPU.o
+                0xffffffff80102612                InterruptsRetainer::~InterruptsRetainer()
+                0xffffffff80102612                InterruptsRetainer::~InterruptsRetainer()
+ .text._ZN9CPUIDInfoC2Ev
+                0xffffffff80102622       0x17 ./build/Arch/x86_64/CPU.o
+                0xffffffff80102622                CPUIDInfo::CPUIDInfo()
+                0xffffffff80102622                CPUIDInfo::CPUIDInfo()
+ .text          0xffffffff80102639       0x84 ./build/Arch/x86_64/GDT.o
+                0xffffffff80102639                GDT::Initialize()
+ *fill*         0xffffffff801026bd        0x1 
+ .text._ZN11GDTTssEntryC2Ev
+                0xffffffff801026be        0xf ./build/Arch/x86_64/GDT.o
+                0xffffffff801026be                GDTTssEntry::GDTTssEntry()
+                0xffffffff801026be                GDTTssEntry::GDTTssEntry()
+ *fill*         0xffffffff801026cd        0x1 
+ .text._ZN11GDTTssEntryC2ERK16TaskStateSegment
+                0xffffffff801026ce       0x78 ./build/Arch/x86_64/GDT.o
+                0xffffffff801026ce                GDTTssEntry::GDTTssEntry(TaskStateSegment const&)
+                0xffffffff801026ce                GDTTssEntry::GDTTssEntry(TaskStateSegment const&)
+ .text          0xffffffff80102746      0x126 ./build/Arch/x86_64/IDT.o
+                0xffffffff80102746                IDT::SetGate(unsigned char, unsigned long, unsigned short, unsigned char, unsigned char)
+                0xffffffff80102813                IDT::Initialize()
+ .text          0xffffffff8010286c      0x1df ./build/Arch/x86_64/Interrupts.o
+                0xffffffff8010286c                UnhandlededException(InterruptData*, RegisterContext*)
+                0xffffffff8010289c                DispatchInterrupts
+                0xffffffff801029ee                RegisterIRQ(unsigned char, void (*)(InterruptData*, RegisterContext*))
+ .text          0xffffffff80102a4b      0xb06 ./build/Arch/x86_64/MMU.o
+                0xffffffff80102a4b                Memory::Paging::PageFaultHandler(InterruptData*, RegisterContext*)
+                0xffffffff80102a5e                Memory::Paging::InitializeVirtualMemory()
+                0xffffffff80102ca0                Memory::Paging::IsPagePresent(Memory::Paging::VirtualPages*, unsigned long)
+                0xffffffff80102ddd                Memory::Paging::CreatePagemap()
+                0xffffffff80102e58                Memory::Paging::DestroyPagemap()
+                0xffffffff80102e5f                Memory::Paging::MapVirtualMemory4K(Memory::Paging::VirtualPages*, unsigned long, unsigned long, unsigned long, unsigned long)
+                0xffffffff80102e7e                Memory::Paging::Allocate4KPages(Memory::Paging::VirtualPages*, unsigned long)
+                0xffffffff80102e95                Memory::Paging::Free4KPages(Memory::Paging::VirtualPages*, unsigned long, unsigned long)
+                0xffffffff80102eac                Memory::Paging::KernelMapVirtualMemory4K(unsigned long, unsigned long, unsigned long)
+                0xffffffff80102edc                Memory::Paging::KernelMapVirtualMemory4K(unsigned long, unsigned long, unsigned long, unsigned long)
+                0xffffffff801030ea                Memory::Paging::KernelAllocate4KPages(unsigned long)
+                0xffffffff80103411                Memory::Paging::KernelFree4KPages(void*, unsigned long)
+                0xffffffff80103424                Memory::Paging::ConvertVirtToPhys(Memory::Paging::VirtualPages*, unsigned long)
+                0xffffffff80103524                Memory::Paging::HandlePageFault(InterruptData*, RegisterContext*)
+                0xffffffff80103537                Memory::GetIOMapping(unsigned long)
+ .text._ZN6Memory6Paging12SetPageFlagsEPmm
+                0xffffffff80103551       0x28 ./build/Arch/x86_64/MMU.o
+                0xffffffff80103551                Memory::Paging::SetPageFlags(unsigned long*, unsigned long)
+ .text._ZN6Memory6Paging12SetPageFrameEPmmm
+                0xffffffff80103579       0x4a ./build/Arch/x86_64/MMU.o
+                0xffffffff80103579                Memory::Paging::SetPageFrame(unsigned long*, unsigned long, unsigned long)
+ .text._ZN6Memory6Paging12GetIOMappingEm
+                0xffffffff801035c3       0x42 ./build/Arch/x86_64/MMU.o
+                0xffffffff801035c3                Memory::Paging::GetIOMapping(unsigned long)
+ .text          0xffffffff80103605      0x15b ./build/Arch/x86_64/PIC.o
+                0xffffffff8010363a                PIC::Initialize()
+                0xffffffff80103709                PIC::Disable()
+                0xffffffff8010372e                RestoreInterrupts(int)
+ .text          0xffffffff80103760       0x8a ./build/Arch/x86_64/PIT.o
+                0xffffffff8010377f                PIT::TimerTickHandler(void*, RegisterContext*)
+                0xffffffff80103792                PIT::Initialize(unsigned int)
+ .text          0xffffffff801037ea       0xd3 ./build/Arch/x86_64/SchedulerArchImpl.o
+                0xffffffff8010381a                Task::Scheduler::SwitchThread(Task::Thread*)
+ *fill*         0xffffffff801038bd        0x1 
+ .text          0xffffffff801038be      0x16e ./build/Arch/x86_64/SMBIOS.o
+                0xffffffff8010390e                SMBIOS::Initialize()
+ .text          0xffffffff80103a2c      0x4a1 ./build/Arch/x86_64/SMP.o
+                0xffffffff80103a2c                SMP::TrampolineEntry(unsigned short)
+                0xffffffff80103b2d                SMP::InitializeProcessor(unsigned short)
+                0xffffffff80103d37                SMP::Initialize()
+ *fill*         0xffffffff80103ecd        0x1 
+ .text._ZN14SizedArrayListIhLi256EE6LengthEv
+                0xffffffff80103ece       0x19 ./build/Arch/x86_64/SMP.o
+                0xffffffff80103ece                SizedArrayList<unsigned char, 256>::Length()
+ .text          0xffffffff80103ee7       0xf2 ./build/Arch/x86_64/TaskStateSegment.o
+                0xffffffff80103ee7                TSS::Initialize(TaskStateSegment*, void*)
+ .text          0xffffffff80103fd9        0x0 ./build/Device/ComputerDeviceImpl.o
+ *fill*         0xffffffff80103fd9        0x1 
+ .text          0xffffffff80103fda       0x57 ./build/Device/DeviceImpl.o
+                0xffffffff80103fda                Device::Device(char const*, DeviceBus, DeviceType)
+                0xffffffff80103fda                Device::Device(char const*, DeviceBus, DeviceType)
+ *fill*         0xffffffff80104031        0x1 
+ .text._ZN10LinkedListIP6DeviceEC2Ev
+                0xffffffff80104032       0x3c ./build/Device/DeviceImpl.o
+                0xffffffff80104032                LinkedList<Device*>::LinkedList()
+                0xffffffff80104032                LinkedList<Device*>::LinkedList()
+ .text          0xffffffff8010406e       0x67 ./build/Device/DeviceManagement.o
+ *fill*         0xffffffff801040d5        0x1 
+ .text._ZN8Spinlock7ReleaseEv
+                0xffffffff801040d6       0x1a ./build/Device/DeviceManagement.o
+                0xffffffff801040d6                Spinlock::Release()
+ .text._ZN10LinkedListIP6DeviceED2Ev
+                0xffffffff801040f0       0x1f ./build/Device/DeviceManagement.o
+                0xffffffff801040f0                LinkedList<Device*>::~LinkedList()
+                0xffffffff801040f0                LinkedList<Device*>::~LinkedList()
+ *fill*         0xffffffff8010410f        0x1 
+ .text._ZN14SizedArrayListIP14DeviceProviderLi4EEC2Ev
+                0xffffffff80104110       0x27 ./build/Device/DeviceManagement.o
+                0xffffffff80104110                SizedArrayList<DeviceProvider*, 4>::SizedArrayList()
+                0xffffffff80104110                SizedArrayList<DeviceProvider*, 4>::SizedArrayList()
+ *fill*         0xffffffff80104137        0x1 
+ .text._ZN14SizedArrayListI10LinkedListIP6DeviceELi20EEC2Ev
+                0xffffffff80104138       0x5a ./build/Device/DeviceManagement.o
+                0xffffffff80104138                SizedArrayList<LinkedList<Device*>, 20>::SizedArrayList()
+                0xffffffff80104138                SizedArrayList<LinkedList<Device*>, 20>::SizedArrayList()
+ .text._ZN14SizedArrayListI10LinkedListIP6DeviceELi20EED2Ev
+                0xffffffff80104192       0x3f ./build/Device/DeviceManagement.o
+                0xffffffff80104192                SizedArrayList<LinkedList<Device*>, 20>::~SizedArrayList()
+                0xffffffff80104192                SizedArrayList<LinkedList<Device*>, 20>::~SizedArrayList()
+ *fill*         0xffffffff801041d1        0x1 
+ .text          0xffffffff801041d2      0x123 ./build/Device/DeviceStaticImpl.o
+                0xffffffff801041d2                Device::GetDevice(char const*)
+                0xffffffff801041e2                Device::GetDevice(unsigned long)
+                0xffffffff801041f2                Device::RegisterDevice(Device*)
+                0xffffffff8010425e                Device::GetProvider(DeviceBus)
+                0xffffffff80104280                Device::EnumerateDevice(DeviceType)
+ *fill*         0xffffffff801042f5        0x1 
+ .text._ZN8Spinlock7AcquireEv
+                0xffffffff801042f6       0x28 ./build/Device/DeviceStaticImpl.o
+                0xffffffff801042f6                Spinlock::Acquire()
+ .text._ZN14SizedArrayListI10LinkedListIP6DeviceELi20EEixEi
+                0xffffffff8010431e       0x38 ./build/Device/DeviceStaticImpl.o
+                0xffffffff8010431e                SizedArrayList<LinkedList<Device*>, 20>::operator[](int)
+ .text._ZN10LinkedListIP6DeviceE3AddES1_
+                0xffffffff80104356       0x4e ./build/Device/DeviceStaticImpl.o
+                0xffffffff80104356                LinkedList<Device*>::Add(Device*)
+ .text._ZN14SizedArrayListIP14DeviceProviderLi4EEixEi
+                0xffffffff801043a4       0x32 ./build/Device/DeviceStaticImpl.o
+                0xffffffff801043a4                SizedArrayList<DeviceProvider*, 4>::operator[](int)
+ .text._ZN8ListNodeIP6DeviceEC2ES1_
+                0xffffffff801043d6       0x1f ./build/Device/DeviceStaticImpl.o
+                0xffffffff801043d6                ListNode<Device*>::ListNode(Device*)
+                0xffffffff801043d6                ListNode<Device*>::ListNode(Device*)
+ *fill*         0xffffffff801043f5        0x1 
+ .text._ZN10LinkedListIP6DeviceE3AddEP8ListNodeIS1_E
+                0xffffffff801043f6       0x90 ./build/Device/DeviceStaticImpl.o
+                0xffffffff801043f6                LinkedList<Device*>::Add(ListNode<Device*>*)
+ .text          0xffffffff80104486       0xc1 ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+                0xffffffff80104486                PCI::PCIDevice::PCIDevice(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)
+                0xffffffff80104486                PCI::PCIDevice::PCIDevice(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)
+                0xffffffff801044fe                PCI::PCIDevice::~PCIDevice()
+                0xffffffff801044fe                PCI::PCIDevice::~PCIDevice()
+                0xffffffff80104528                PCI::PCIDevice::Enable()
+                0xffffffff80104538                PCI::PCIDevice::Disable()
+ *fill*         0xffffffff80104547        0x1 
+ .text._ZN6DeviceD2Ev
+                0xffffffff80104548       0x2d ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+                0xffffffff80104548                Device::~Device()
+                0xffffffff80104548                Device::~Device()
+ *fill*         0xffffffff80104575        0x1 
+ .text._ZN6DeviceC2E9DeviceBus10DeviceType
+                0xffffffff80104576       0x2c ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+                0xffffffff80104576                Device::Device(DeviceBus, DeviceType)
+                0xffffffff80104576                Device::Device(DeviceBus, DeviceType)
+ .text._ZN3PCI7PCIInfoC2Ehhhhh
+                0xffffffff801045a2       0xbf ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+                0xffffffff801045a2                PCI::PCIInfo::PCIInfo(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)
+                0xffffffff801045a2                PCI::PCIInfo::PCIInfo(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)
+ *fill*         0xffffffff80104661        0x1 
+ .text          0xffffffff80104662      0x46f ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104662                PCI::PCIDeviceProvider::PCIDeviceProvider()
+                0xffffffff80104662                PCI::PCIDeviceProvider::PCIDeviceProvider()
+                0xffffffff801048f0                PCI::PCIDeviceProvider::~PCIDeviceProvider()
+                0xffffffff801048f0                PCI::PCIDeviceProvider::~PCIDeviceProvider()
+                0xffffffff8010492e                PCI::PCIDeviceProvider::FindName(char const*)
+                0xffffffff80104942                PCI::PCIDeviceProvider::ConnectDevice(unsigned char, unsigned char, unsigned char)
+                0xffffffff801049ae                PCI::PCIDeviceProvider::CheckDevice(unsigned char, unsigned char, unsigned char)
+                0xffffffff801049e6                PCI::PCIDeviceProvider::FindDevice(unsigned short, unsigned short)
+                0xffffffff80104a04                PCI::PCIDeviceProvider::FindGenericDevice(unsigned short, unsigned short)
+                0xffffffff80104a94                PCI::PCIDeviceProvider::EnumerateDevice(unsigned short, unsigned short, void (*)(PCI::PCIInfo&))
+                0xffffffff80104ab4                PCI::PCIDeviceProvider::EnumerateGenericDevice(unsigned char, unsigned char, void (*)(PCI::PCIInfo&))
+ *fill*         0xffffffff80104ad1        0x1 
+ .text._ZN3PCI7PCIInfoC2Ehhh
+                0xffffffff80104ad2       0x75 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104ad2                PCI::PCIInfo::PCIInfo(unsigned char, unsigned char, unsigned char)
+                0xffffffff80104ad2                PCI::PCIInfo::PCIInfo(unsigned char, unsigned char, unsigned char)
+ *fill*         0xffffffff80104b47        0x1 
+ .text._ZN14DeviceProviderC2Ev
+                0xffffffff80104b48       0x1d ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104b48                DeviceProvider::DeviceProvider()
+                0xffffffff80104b48                DeviceProvider::DeviceProvider()
+ *fill*         0xffffffff80104b65        0x1 
+ .text._ZN10LinkedListIN3PCI7PCIInfoEEC2Ev
+                0xffffffff80104b66       0x3c ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104b66                LinkedList<PCI::PCIInfo>::LinkedList()
+                0xffffffff80104b66                LinkedList<PCI::PCIInfo>::LinkedList()
+ .text._ZN10LinkedListIN3PCI7PCIInfoEED2Ev
+                0xffffffff80104ba2       0x1f ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104ba2                LinkedList<PCI::PCIInfo>::~LinkedList()
+                0xffffffff80104ba2                LinkedList<PCI::PCIInfo>::~LinkedList()
+ *fill*         0xffffffff80104bc1        0x1 
+ .text._ZN10LinkedListIP11MCFGAddressEC2Ev
+                0xffffffff80104bc2       0x3c ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104bc2                LinkedList<MCFGAddress*>::LinkedList()
+                0xffffffff80104bc2                LinkedList<MCFGAddress*>::LinkedList()
+ .text._ZN10LinkedListIP11MCFGAddressED2Ev
+                0xffffffff80104bfe       0x1f ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104bfe                LinkedList<MCFGAddress*>::~LinkedList()
+                0xffffffff80104bfe                LinkedList<MCFGAddress*>::~LinkedList()
+ *fill*         0xffffffff80104c1d        0x1 
+ .text._ZN10LinkedListIN3PCI7PCIInfoEEaSERKS2_
+                0xffffffff80104c1e       0x13 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104c1e                LinkedList<PCI::PCIInfo>::operator=(LinkedList<PCI::PCIInfo> const&)
+ *fill*         0xffffffff80104c31        0x1 
+ .text._ZN10LinkedListIP11MCFGAddressEaSERKS2_
+                0xffffffff80104c32       0x13 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104c32                LinkedList<MCFGAddress*>::operator=(LinkedList<MCFGAddress*> const&)
+ *fill*         0xffffffff80104c45        0x1 
+ .text._ZN10LinkedListIP11MCFGAddressE3AddES1_
+                0xffffffff80104c46       0x4e ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104c46                LinkedList<MCFGAddress*>::Add(MCFGAddress*)
+ .text._ZN10LinkedListIN3PCI7PCIInfoEE3AddES1_
+                0xffffffff80104c94       0x5d ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104c94                LinkedList<PCI::PCIInfo>::Add(PCI::PCIInfo)
+ *fill*         0xffffffff80104cf1        0x1 
+ .text._ZN10LinkedListIN3PCI7PCIInfoEE5CountEv
+                0xffffffff80104cf2       0x15 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104cf2                LinkedList<PCI::PCIInfo>::Count()
+ *fill*         0xffffffff80104d07        0x1 
+ .text._ZN10LinkedListIN3PCI7PCIInfoEEixEi
+                0xffffffff80104d08       0x22 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104d08                LinkedList<PCI::PCIInfo>::operator[](int)
+ .text._ZN8ListNodeIP11MCFGAddressEC2ES1_
+                0xffffffff80104d2a       0x1f ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104d2a                ListNode<MCFGAddress*>::ListNode(MCFGAddress*)
+                0xffffffff80104d2a                ListNode<MCFGAddress*>::ListNode(MCFGAddress*)
+ *fill*         0xffffffff80104d49        0x1 
+ .text._ZN10LinkedListIP11MCFGAddressE3AddEP8ListNodeIS1_E
+                0xffffffff80104d4a       0x90 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104d4a                LinkedList<MCFGAddress*>::Add(ListNode<MCFGAddress*>*)
+ .text._ZN8ListNodeIN3PCI7PCIInfoEEC2ES1_
+                0xffffffff80104dda       0x30 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104dda                ListNode<PCI::PCIInfo>::ListNode(PCI::PCIInfo)
+                0xffffffff80104dda                ListNode<PCI::PCIInfo>::ListNode(PCI::PCIInfo)
+ .text._ZN10LinkedListIN3PCI7PCIInfoEE3AddEP8ListNodeIS1_E
+                0xffffffff80104e0a       0x90 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104e0a                LinkedList<PCI::PCIInfo>::Add(ListNode<PCI::PCIInfo>*)
+ .text._ZN10LinkedListIN3PCI7PCIInfoEE3GetEj
+                0xffffffff80104e9a       0x70 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff80104e9a                LinkedList<PCI::PCIInfo>::Get(unsigned int)
+ .text          0xffffffff80104f0a      0x4a9 ./build/Drivers/Bus/PCI/PCIMain.o
+                0xffffffff80104f43                PCI::MsiCapSetData(PCI::MSICapability*, unsigned int)
+                0xffffffff80104f7f                PCI::MsiCapGetData(PCI::MSICapability*)
+                0xffffffff80104fb1                PCI::MsiCapSetAddress(PCI::MSICapability*, int)
+                0xffffffff80104ff6                PCI::ConfigReadDword(unsigned char, unsigned char, unsigned char, unsigned char)
+                0xffffffff80105053                PCI::ConfigReadWord(unsigned char, unsigned char, unsigned char, unsigned char)
+                0xffffffff801050be                PCI::ConfigReadByte(unsigned char, unsigned char, unsigned char, unsigned char)
+                0xffffffff80105129                PCI::ConfigWriteDword(unsigned char, unsigned char, unsigned char, unsigned char, unsigned int)
+                0xffffffff80105190                PCI::ConfigWriteWord(unsigned char, unsigned char, unsigned char, unsigned char, unsigned short)
+                0xffffffff80105232                PCI::ConfigWriteByte(unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)
+                0xffffffff801052d3                PCI::GetVendor(unsigned char, unsigned char, unsigned char)
+                0xffffffff8010530e                PCI::GetDeviceID(unsigned char, unsigned char, unsigned char)
+                0xffffffff80105349                PCI::GetHeaderType(unsigned char, unsigned char, unsigned char)
+                0xffffffff8010537c                PCI::CheckDevice(unsigned char, unsigned char, unsigned char)
+ *fill*         0xffffffff801053b3        0x1 
+ .text          0xffffffff801053b4      0x13c ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+                0xffffffff801053b4                HPETTimer::HPETTimer()
+                0xffffffff801053b4                HPETTimer::HPETTimer()
+                0xffffffff80105430                HPETTimer::Tick()
+                0xffffffff80105440                HPETTimer::CurrentTime(TimeSpan)
+                0xffffffff80105464                HPETTimer::Sleep(long)
+ .text._ZN9HPETTimer4ReadEm
+                0xffffffff801054f0       0x28 ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+                0xffffffff801054f0                HPETTimer::Read(unsigned long)
+ .text._ZN5TimerC2Ev
+                0xffffffff80105518       0x1d ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+                0xffffffff80105518                Timer::Timer()
+                0xffffffff80105518                Timer::Timer()
+ *fill*         0xffffffff80105535        0x1 
+ .text          0xffffffff80105536      0x47b ./build/Drivers/Generic/ACPI/ACPIMain.o
+                0xffffffff80105536                ACPI::FindTableByName(char const*, int)
+                0xffffffff8010575a                ACPI::Initialize()
+                0xffffffff801058cd                ACPI::GetRemapIRQ(unsigned int)
+ *fill*         0xffffffff801059b1        0x1 
+ .text._ZN13KeyValueTableImmEC2Ev
+                0xffffffff801059b2       0x1b ./build/Drivers/Generic/ACPI/ACPIMain.o
+                0xffffffff801059b2                KeyValueTable<unsigned long, unsigned long>::KeyValueTable()
+                0xffffffff801059b2                KeyValueTable<unsigned long, unsigned long>::KeyValueTable()
+ *fill*         0xffffffff801059cd        0x1 
+ .text._ZN14SizedArrayListIhLi256EEC2Ev
+                0xffffffff801059ce       0x2d ./build/Drivers/Generic/ACPI/ACPIMain.o
+                0xffffffff801059ce                SizedArrayList<unsigned char, 256>::SizedArrayList()
+                0xffffffff801059ce                SizedArrayList<unsigned char, 256>::SizedArrayList()
+ *fill*         0xffffffff801059fb        0x1 
+ .text._ZN14SizedArrayListIP21MADTInterruptOverrideLi256EEC2Ev
+                0xffffffff801059fc       0x2d ./build/Drivers/Generic/ACPI/ACPIMain.o
+                0xffffffff801059fc                SizedArrayList<MADTInterruptOverride*, 256>::SizedArrayList()
+                0xffffffff801059fc                SizedArrayList<MADTInterruptOverride*, 256>::SizedArrayList()
+ *fill*         0xffffffff80105a29        0x1 
+ .text._ZN10LinkedListIP12KeyValuePairImmEEC2Ev
+                0xffffffff80105a2a       0x3c ./build/Drivers/Generic/ACPI/ACPIMain.o
+                0xffffffff80105a2a                LinkedList<KeyValuePair<unsigned long, unsigned long>*>::LinkedList()
+                0xffffffff80105a2a                LinkedList<KeyValuePair<unsigned long, unsigned long>*>::LinkedList()
+ .text._ZN10LinkedListIP12KeyValuePairImmEED2Ev
+                0xffffffff80105a66       0x1f ./build/Drivers/Generic/ACPI/ACPIMain.o
+                0xffffffff80105a66                LinkedList<KeyValuePair<unsigned long, unsigned long>*>::~LinkedList()
+                0xffffffff80105a66                LinkedList<KeyValuePair<unsigned long, unsigned long>*>::~LinkedList()
+ *fill*         0xffffffff80105a85        0x1 
+ .text._ZN14SizedArrayListIP21MADTInterruptOverrideLi256EE6LengthEv
+                0xffffffff80105a86       0x19 ./build/Drivers/Generic/ACPI/ACPIMain.o
+                0xffffffff80105a86                SizedArrayList<MADTInterruptOverride*, 256>::Length()
+ *fill*         0xffffffff80105a9f        0x1 
+ .text._ZN14SizedArrayListIP21MADTInterruptOverrideLi256EEixEi
+                0xffffffff80105aa0       0x35 ./build/Drivers/Generic/ACPI/ACPIMain.o
+                0xffffffff80105aa0                SizedArrayList<MADTInterruptOverride*, 256>::operator[](int)
+ *fill*         0xffffffff80105ad5        0x1 
+ .text._ZN13KeyValueTableImmED2Ev
+                0xffffffff80105ad6       0x1b ./build/Drivers/Generic/ACPI/ACPIMain.o
+                0xffffffff80105ad6                KeyValueTable<unsigned long, unsigned long>::~KeyValueTable()
+                0xffffffff80105ad6                KeyValueTable<unsigned long, unsigned long>::~KeyValueTable()
+ *fill*         0xffffffff80105af1        0x1 
+ .text          0xffffffff80105af2      0x257 ./build/Drivers/Generic/ACPI/ACPITimerImpl.o
+                0xffffffff80105b10                ACPITimer::ACPITimer()
+                0xffffffff80105b10                ACPITimer::ACPITimer()
+                0xffffffff80105bf0                ACPITimer::~ACPITimer()
+                0xffffffff80105bf0                ACPITimer::~ACPITimer()
+                0xffffffff80105c0e                ACPITimer::Tick()
+                0xffffffff80105c1e                ACPITimer::CurrentTime(TimeSpan)
+                0xffffffff80105c44                ACPITimer::Sleep(long)
+ .text          0xffffffff80105d49        0x0 ./build/Drivers/Generic/ACPI/MADTMain.o
+ .text          0xffffffff80105d49      0x215 ./build/Drivers/Generic/APIC/APICMain.o
+                0xffffffff80105d49                APIC::Initialize()
+ .text._ZN14SizedArrayListIhLi256EE3AddEh
+                0xffffffff80105f5e       0x4e ./build/Drivers/Generic/APIC/APICMain.o
+                0xffffffff80105f5e                SizedArrayList<unsigned char, 256>::Add(unsigned char)
+ .text._ZN14SizedArrayListIP21MADTInterruptOverrideLi256EE3AddES1_
+                0xffffffff80105fac       0x4e ./build/Drivers/Generic/APIC/APICMain.o
+                0xffffffff80105fac                SizedArrayList<MADTInterruptOverride*, 256>::Add(MADTInterruptOverride*)
+ .text          0xffffffff80105ffa      0x35c ./build/Drivers/Generic/APIC/IO.o
+                0xffffffff80105ffa                APIC::IO::WriteData32(unsigned int, unsigned int)
+                0xffffffff80106023                APIC::IO::ReadData32(unsigned int)
+                0xffffffff80106045                APIC::IO::WriteData64(unsigned int, unsigned long)
+                0xffffffff8010608a                APIC::IO::ReadData64(unsigned int)
+                0xffffffff801060c1                APIC::IO::Initialize()
+                0xffffffff801061b0                APIC::IO::Redirect(unsigned char, unsigned char, unsigned int)
+                0xffffffff801061e6                APIC::IO::SetBase(unsigned long)
+                0xffffffff80106200                APIC::IO::MapLegacyIRQ(unsigned char)
+                0xffffffff801062b2                APIC::IO::EnableInterrupt(unsigned char)
+ .text          0xffffffff80106356      0x1ec ./build/Drivers/Generic/APIC/Local.o
+                0xffffffff80106356                SpuriousInterruptHandler(InterruptData*, RegisterContext*)
+                0xffffffff8010637a                APIC::Local::WriteBase(unsigned long)
+                0xffffffff801063b1                APIC::Local::ReadBase()
+                0xffffffff801063f0                APIC::Local::WriteData(unsigned int, unsigned int)
+                0xffffffff80106416                APIC::Local::ReadData(unsigned int)
+                0xffffffff80106432                APIC::Local::SendIPI(unsigned char, unsigned int)
+                0xffffffff80106481                APIC::Local::SendIPI(unsigned char, unsigned int, unsigned int, unsigned char)
+                0xffffffff801064b7                APIC::Local::Enable()
+                0xffffffff801064cd                APIC::Local::Initialize()
+                0xffffffff8010652c                APIC::Local::EndOfInterrupt()
+ .text          0xffffffff80106542      0x20d ./build/Drivers/Generic/APIC/LocalAPICTimerImpl.o
+                0xffffffff80106542                TimerTickHandler(InterruptData*, RegisterContext*)
+                0xffffffff80106556                LocalAPICTimer::EstimateBusSpeed()
+                0xffffffff80106618                LocalAPICTimer::LocalAPICTimer()
+                0xffffffff80106618                LocalAPICTimer::LocalAPICTimer()
+                0xffffffff801066be                LocalAPICTimer::~LocalAPICTimer()
+                0xffffffff801066be                LocalAPICTimer::~LocalAPICTimer()
+                0xffffffff801066ea                LocalAPICTimer::Tick()
+                0xffffffff8010670e                LocalAPICTimer::CurrentTime(TimeSpan)
+                0xffffffff8010673c                LocalAPICTimer::Sleep(long)
+ *fill*         0xffffffff8010674f        0x1 
+ .text          0xffffffff80106750      0x232 ./build/Drivers/Input/PS2LegacyController.o
+                0xffffffff8010678e                Input::PS2LegacyController::PS2LegacyController()
+                0xffffffff8010678e                Input::PS2LegacyController::PS2LegacyController()
+                0xffffffff801068fa                Input::PS2LegacyController::~PS2LegacyController()
+                0xffffffff801068fa                Input::PS2LegacyController::~PS2LegacyController()
+                0xffffffff80106924                Input::PS2LegacyController::Enable()
+                0xffffffff80106934                Input::PS2LegacyController::Disable()
+                0xffffffff80106944                Input::PS2LegacyController::SendCommand(unsigned char)
+ .text._ZN6Device8RegisterEv
+                0xffffffff80106982       0x1b ./build/Drivers/Input/PS2LegacyController.o
+                0xffffffff80106982                Device::Register()
+ *fill*         0xffffffff8010699d        0x1 
+ .text._ZN5Input19PS2LegacyController8WaitDataEv
+                0xffffffff8010699e       0x4f ./build/Drivers/Input/PS2LegacyController.o
+                0xffffffff8010699e                Input::PS2LegacyController::WaitData()
+ *fill*         0xffffffff801069ed        0x1 
+ .text          0xffffffff801069ee      0x149 ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+                0xffffffff80106a0c                Input::KeyHandler(InterruptData*, RegisterContext*)
+                0xffffffff80106a98                Input::PS2LegacyKeyboard::PS2LegacyKeyboard()
+                0xffffffff80106a98                Input::PS2LegacyKeyboard::PS2LegacyKeyboard()
+                0xffffffff80106aee                Input::PS2LegacyKeyboard::~PS2LegacyKeyboard()
+                0xffffffff80106aee                Input::PS2LegacyKeyboard::~PS2LegacyKeyboard()
+                0xffffffff80106b18                Input::PS2LegacyKeyboard::Enable()
+                0xffffffff80106b28                Input::PS2LegacyKeyboard::Disable()
+ *fill*         0xffffffff80106b37        0x1 
+ .text          0xffffffff80106b38      0x37d ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                0xffffffff80106bec                AHCI::AHCIControllerDevice::AHCIControllerDevice(PCI::PCIInfo)
+                0xffffffff80106bec                AHCI::AHCIControllerDevice::AHCIControllerDevice(PCI::PCIInfo)
+                0xffffffff80106e96                AHCI::AHCIControllerDevice::Enable()
+                0xffffffff80106ea6                AHCI::AHCIControllerDevice::Disable()
+ *fill*         0xffffffff80106eb5        0x1 
+ .text._ZN3PCI9PCIDeviceC2ERNS_7PCIInfoE
+                0xffffffff80106eb6       0x5d ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                0xffffffff80106eb6                PCI::PCIDevice::PCIDevice(PCI::PCIInfo&)
+                0xffffffff80106eb6                PCI::PCIDevice::PCIDevice(PCI::PCIInfo&)
+ *fill*         0xffffffff80106f13        0x1 
+ .text._ZN3PCI9PCIDevice22GetBaseAddressRegisterEh
+                0xffffffff80106f14       0xdb ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                0xffffffff80106f14                PCI::PCIDevice::GetBaseAddressRegister(unsigned char)
+ *fill*         0xffffffff80106fef        0x1 
+ .text._ZN3PCI9PCIDevice18EnableBusMasteringEv
+                0xffffffff80106ff0       0x72 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                0xffffffff80106ff0                PCI::PCIDevice::EnableBusMastering()
+ .text._ZN3PCI9PCIDevice16EnableInterruptsEv
+                0xffffffff80107062       0x76 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                0xffffffff80107062                PCI::PCIDevice::EnableInterrupts()
+ .text._ZN3PCI9PCIDevice17EnableMemorySpaceEv
+                0xffffffff801070d8       0x72 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                0xffffffff801070d8                PCI::PCIDevice::EnableMemorySpace()
+ .text._ZN4AHCI14SATADiskDevice6StatusEv
+                0xffffffff8010714a       0x15 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                0xffffffff8010714a                AHCI::SATADiskDevice::Status()
+ *fill*         0xffffffff8010715f        0x1 
+ .text._ZN10LinkedListIPN4AHCI14SATADiskDeviceEEC2Ev
+                0xffffffff80107160       0x3c ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                0xffffffff80107160                LinkedList<AHCI::SATADiskDevice*>::LinkedList()
+                0xffffffff80107160                LinkedList<AHCI::SATADiskDevice*>::LinkedList()
+ .text._ZN10LinkedListIPN4AHCI14SATADiskDeviceEE3AddES2_
+                0xffffffff8010719c       0x4e ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                0xffffffff8010719c                LinkedList<AHCI::SATADiskDevice*>::Add(AHCI::SATADiskDevice*)
+ .text._ZN8ListNodeIPN4AHCI14SATADiskDeviceEEC2ES2_
+                0xffffffff801071ea       0x1f ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                0xffffffff801071ea                ListNode<AHCI::SATADiskDevice*>::ListNode(AHCI::SATADiskDevice*)
+                0xffffffff801071ea                ListNode<AHCI::SATADiskDevice*>::ListNode(AHCI::SATADiskDevice*)
+ *fill*         0xffffffff80107209        0x1 
+ .text._ZN10LinkedListIPN4AHCI14SATADiskDeviceEE3AddEP8ListNodeIS2_E
+                0xffffffff8010720a       0x90 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                0xffffffff8010720a                LinkedList<AHCI::SATADiskDevice*>::Add(ListNode<AHCI::SATADiskDevice*>*)
+ .text          0xffffffff8010729a      0x11d ./build/Drivers/Storage/AHCI/AHCIMain.o
+                0xffffffff801072e0                AHCI::Initialize()
+ *fill*         0xffffffff801073b7        0x1 
+ .text._ZN3PCI9PCIDevice8VendorIDEv
+                0xffffffff801073b8       0x16 ./build/Drivers/Storage/AHCI/AHCIMain.o
+                0xffffffff801073b8                PCI::PCIDevice::VendorID()
+ .text          0xffffffff801073ce      0x6a2 ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+                0xffffffff801073ce                AHCI::SATADiskDevice::SATADiskDevice(int, AHCI::HBAPortRegisters*, AHCI::AHCIControllerDevice*)
+                0xffffffff801073ce                AHCI::SATADiskDevice::SATADiskDevice(int, AHCI::HBAPortRegisters*, AHCI::AHCIControllerDevice*)
+                0xffffffff801075b8                AHCI::SATADiskDevice::~SATADiskDevice()
+                0xffffffff801075b8                AHCI::SATADiskDevice::~SATADiskDevice()
+                0xffffffff801075e2                AHCI::SATADiskDevice::Enable()
+                0xffffffff801075f2                AHCI::SATADiskDevice::Disable()
+                0xffffffff80107602                AHCI::SATADiskDevice::Read(unsigned long, unsigned int, void*)
+                0xffffffff80107638                AHCI::SATADiskDevice::Write(unsigned long, unsigned int, void*)
+                0xffffffff8010766e                AHCI::SATADiskDevice::Access(unsigned long, unsigned int, unsigned long, int)
+                0xffffffff80107990                AHCI::SATADiskDevice::StartCommand()
+                0xffffffff801079ce                AHCI::SATADiskDevice::FindCommandSlot()
+                0xffffffff80107a1e                AHCI::SATADiskDevice::StopCommand()
+ .text._ZN10DiskDeviceC2EPKc9DeviceBus
+                0xffffffff80107a70       0x3c ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+                0xffffffff80107a70                DiskDevice::DiskDevice(char const*, DeviceBus)
+                0xffffffff80107a70                DiskDevice::DiskDevice(char const*, DeviceBus)
+ .text._ZN10DiskDeviceD2Ev
+                0xffffffff80107aac       0x29 ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+                0xffffffff80107aac                DiskDevice::~DiskDevice()
+                0xffffffff80107aac                DiskDevice::~DiskDevice()
+ *fill*         0xffffffff80107ad5        0x1 
+ .text._ZN10DiskDeviceC2EPKc
+                0xffffffff80107ad6       0x2b ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+                0xffffffff80107ad6                DiskDevice::DiskDevice(char const*)
+                0xffffffff80107ad6                DiskDevice::DiskDevice(char const*)
+ *fill*         0xffffffff80107b01        0x1 
+ .text._ZN4AHCI20AHCIControllerDevice15MemoryRegistersEv
+                0xffffffff80107b02       0x19 ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+                0xffffffff80107b02                AHCI::AHCIControllerDevice::MemoryRegisters()
+ .text          0xffffffff80107b1b      0x1ca ./build/Drivers/Video.o
+                0xffffffff80107b1b                Video::Initialize()
+                0xffffffff80107b45                Video::Newline()
+                0xffffffff80107b81                Video::CheckIfLineFulled()
+                0xffffffff80107ba5                Video::ClearScreen()
+                0xffffffff80107c0b                Video::WriteChar(char)
+                0xffffffff80107c6f                Video::WriteText(char const*)
+                0xffffffff80107c9c                Video::WriteText(char const*, unsigned long)
+ *fill*         0xffffffff80107ce5        0x1 
+ .text          0xffffffff80107ce6       0x1f ./build/Fs/DiskDeviceImpl.o
+                0xffffffff80107ce6                DiskDevice::Enable()
+                0xffffffff80107cf6                DiskDevice::Disable()
+ *fill*         0xffffffff80107d05        0x1 
+ .text          0xffffffff80107d06      0x6fe ./build/Input/ConsoleImpl.o
+                0xffffffff80107d06                ConsoleKeyEventHandler(Input::Key, bool)
+                0xffffffff80107d3a                Console::Console()
+                0xffffffff80107d3a                Console::Console()
+                0xffffffff80107da4                Console::~Console()
+                0xffffffff80107da4                Console::~Console()
+                0xffffffff80107db4                Console::Render()
+                0xffffffff80107dc4                Console::Refresh()
+                0xffffffff80107e42                Console::Newline()
+                0xffffffff80107ef0                Console::RenderModifiers()
+                0xffffffff8010813a                Console::AcceptKey(Input::Key, bool)
+                0xffffffff80108324                Console::AddChar(char)
+ .text          0xffffffff80108404      0x21a ./build/Input/KeyCode.o
+                0xffffffff80108404                Input::ApplyModifiers(Input::Key, unsigned char)
+ .text          0xffffffff8010861e      0x367 ./build/libkern/printf.o
+                0xffffffff8010861e                puts(char const*)
+                0xffffffff80108659                printf(char const*, ...)
+                0xffffffff801086a6                vprintf(char const*, __va_list_tag*)
+ .text          0xffffffff80108985      0x27e ./build/libkern/sprintf.o
+                0xffffffff80108985                itoa(int, char*, int)
+                0xffffffff80108ae7                utoa(unsigned long, char*, int)
+ *fill*         0xffffffff80108c03        0x1 
+ .text          0xffffffff80108c04      0x50c ./build/Memory/Memory.o
+                0xffffffff80108dfe                Memory::Initialize()
+ .text._ZN14SizedArrayListIN6Memory7SectionELi256EEixEi
+                0xffffffff80109110       0x34 ./build/Memory/Memory.o
+                0xffffffff80109110                SizedArrayList<Memory::Section, 256>::operator[](int)
+ .text._ZN14SizedArrayListI10ValueRangeLi64EEC2Ev
+                0xffffffff80109144       0x2d ./build/Memory/Memory.o
+                0xffffffff80109144                SizedArrayList<ValueRange, 64>::SizedArrayList()
+                0xffffffff80109144                SizedArrayList<ValueRange, 64>::SizedArrayList()
+ *fill*         0xffffffff80109171        0x1 
+ .text._ZN14SizedArrayListIN6Memory7SectionELi256EEC2Ev
+                0xffffffff80109172       0x2d ./build/Memory/Memory.o
+                0xffffffff80109172                SizedArrayList<Memory::Section, 256>::SizedArrayList()
+                0xffffffff80109172                SizedArrayList<Memory::Section, 256>::SizedArrayList()
+ *fill*         0xffffffff8010919f        0x1 
+ .text._ZN14SizedArrayListI10ValueRangeLi64EE3AddES0_
+                0xffffffff801091a0       0x6b ./build/Memory/Memory.o
+                0xffffffff801091a0                SizedArrayList<ValueRange, 64>::Add(ValueRange)
+ *fill*         0xffffffff8010920b        0x1 
+ .text          0xffffffff8010920c      0x709 ./build/Memory/Page.o
+                0xffffffff80109400                Memory::BuddyInit()
+                0xffffffff80109426                Memory::AllocatePhysMemory4KOrdered(unsigned char)
+                0xffffffff80109524                Memory::AllocatePhysMemory4K(unsigned long)
+                0xffffffff80109550                Memory::FreePhysMemory4K(unsigned long)
+                0xffffffff8010955f                Memory::FreePhysMemory4K(Memory::PageFrame*)
+                0xffffffff8010956e                Memory::ExpandPage(Memory::PageFrame*)
+                0xffffffff8010967f                Memory::CombinePage(Memory::PageFrame*)
+                0xffffffff801097f1                Memory::CombinePage(Memory::PageFrame*, Memory::PageFrame*)
+ .text._ZN7ObjectsL6IsNullEPv
+                0xffffffff80109915       0x16 ./build/Memory/Page.o
+ .text._ZN7ObjectsL6EqualsEPvS0_
+                0xffffffff8010992b       0x1d ./build/Memory/Page.o
+ .text._ZN6Memory6pageOfEm
+                0xffffffff80109948       0x62 ./build/Memory/Page.o
+                0xffffffff80109948                Memory::pageOf(unsigned long)
+ .text._ZN6Memory9BuddyZoneC2Ev
+                0xffffffff801099aa       0x3d ./build/Memory/Page.o
+                0xffffffff801099aa                Memory::BuddyZone::BuddyZone()
+                0xffffffff801099aa                Memory::BuddyZone::BuddyZone()
+ *fill*         0xffffffff801099e7        0x1 
+ .text._ZN10LinkedListIN6Memory9PageFrameEEC2Ev
+                0xffffffff801099e8       0x3c ./build/Memory/Page.o
+                0xffffffff801099e8                LinkedList<Memory::PageFrame>::LinkedList()
+                0xffffffff801099e8                LinkedList<Memory::PageFrame>::LinkedList()
+ .text._ZN10LinkedListIN6Memory9PageFrameEED2Ev
+                0xffffffff80109a24       0x1f ./build/Memory/Page.o
+                0xffffffff80109a24                LinkedList<Memory::PageFrame>::~LinkedList()
+                0xffffffff80109a24                LinkedList<Memory::PageFrame>::~LinkedList()
+ *fill*         0xffffffff80109a43        0x1 
+ .text._ZN10LinkedListIN6Memory9PageFrameEE3AddEP8ListNodeIS1_E
+                0xffffffff80109a44       0x90 ./build/Memory/Page.o
+                0xffffffff80109a44                LinkedList<Memory::PageFrame>::Add(ListNode<Memory::PageFrame>*)
+ .text._ZN10LinkedListIN6Memory9PageFrameEE5CountEv
+                0xffffffff80109ad4       0x15 ./build/Memory/Page.o
+                0xffffffff80109ad4                LinkedList<Memory::PageFrame>::Count()
+ *fill*         0xffffffff80109ae9        0x1 
+ .text._ZN10LinkedListIN6Memory9PageFrameEE7ExtractEv
+                0xffffffff80109aea       0x98 ./build/Memory/Page.o
+                0xffffffff80109aea                LinkedList<Memory::PageFrame>::Extract()
+ .text._ZN10LinkedListIN6Memory9PageFrameEE6RemoveEP8ListNodeIS1_E
+                0xffffffff80109b82       0xfa ./build/Memory/Page.o
+                0xffffffff80109b82                LinkedList<Memory::PageFrame>::Remove(ListNode<Memory::PageFrame>*)
+ .text._ZN10LinkedListIN6Memory9PageFrameEE5FirstEv
+                0xffffffff80109c7c       0x15 ./build/Memory/Page.o
+                0xffffffff80109c7c                LinkedList<Memory::PageFrame>::First()
+ *fill*         0xffffffff80109c91        0x1 
+ .text._ZN10LinkedListIN6Memory9PageFrameEE8ContainsEP8ListNodeIS1_E
+                0xffffffff80109c92       0x4d ./build/Memory/Page.o
+                0xffffffff80109c92                LinkedList<Memory::PageFrame>::Contains(ListNode<Memory::PageFrame>*)
+ *fill*         0xffffffff80109cdf        0x1 
+ .text._ZN6Memory9BuddyZoneD2Ev
+                0xffffffff80109ce0       0x3f ./build/Memory/Page.o
+                0xffffffff80109ce0                Memory::BuddyZone::~BuddyZone()
+                0xffffffff80109ce0                Memory::BuddyZone::~BuddyZone()
+ .text          0xffffffff80109d1f      0x1ba ./build/Memory/PageAllocation.o
+                0xffffffff80109d76                Memory::KernelAllocate4KPages(unsigned long, Memory::PageFrame**)
+                0xffffffff80109dff                Memory::Allocate4KPages(unsigned long, Memory::PageFrame**)
+                0xffffffff80109ebb                Memory::Free4KPages(unsigned long)
+                0xffffffff80109eca                Memory::Free4KPages(Memory::PageFrame*)
+ .text._ZN6Memory6Paging18MapVirtualMemory4KEPNS0_12VirtualPagesEmmm
+                0xffffffff80109ed9       0x39 ./build/Memory/PageAllocation.o
+                0xffffffff80109ed9                Memory::Paging::MapVirtualMemory4K(Memory::Paging::VirtualPages*, unsigned long, unsigned long, unsigned long)
+ .text          0xffffffff80109f12      0x445 ./build/Memory/SlabAllocatorImpl.o
+                0xffffffff80109ff0                Memory::SlabAllocator::SlabAllocator()
+                0xffffffff80109ff0                Memory::SlabAllocator::SlabAllocator()
+                0xffffffff8010a062                Memory::SlabAllocator::~SlabAllocator()
+                0xffffffff8010a062                Memory::SlabAllocator::~SlabAllocator()
+                0xffffffff8010a072                Memory::SlabAllocator::Request4KPage(Memory::SlabCache*, unsigned long*)
+                0xffffffff8010a192                Memory::SlabAllocator::Allocate(unsigned long)
+                0xffffffff8010a344                Memory::SlabAllocator::Free(unsigned long)
+ *fill*         0xffffffff8010a357        0x1 
+ .text          0xffffffff8010a358      0x169 ./build/Process/ActivityImpl.o
+                0xffffffff8010a38c                Task::Activity::Activity(char const*, Task::Process*)
+                0xffffffff8010a38c                Task::Activity::Activity(char const*, Task::Process*)
+                0xffffffff8010a3d2                Task::Activity::Activity(Task::Process*)
+                0xffffffff8010a3d2                Task::Activity::Activity(Task::Process*)
+                0xffffffff8010a400                Task::Activity::Add(Task::Process*)
+                0xffffffff8010a46e                Task::Activity::CreateIfNull(Task::Process*)
+ *fill*         0xffffffff8010a4c1        0x1 
+ .text._ZN10LinkedListIPN4Task7ProcessEEC2Ev
+                0xffffffff8010a4c2       0x3c ./build/Process/ActivityImpl.o
+                0xffffffff8010a4c2                LinkedList<Task::Process*>::LinkedList()
+                0xffffffff8010a4c2                LinkedList<Task::Process*>::LinkedList()
+ .text._ZN10LinkedListIPN4Task7ProcessEE3AddES2_
+                0xffffffff8010a4fe       0x4e ./build/Process/ActivityImpl.o
+                0xffffffff8010a4fe                LinkedList<Task::Process*>::Add(Task::Process*)
+ .text._ZN8ListNodeIPN4Task7ProcessEEC2ES2_
+                0xffffffff8010a54c       0x1f ./build/Process/ActivityImpl.o
+                0xffffffff8010a54c                ListNode<Task::Process*>::ListNode(Task::Process*)
+                0xffffffff8010a54c                ListNode<Task::Process*>::ListNode(Task::Process*)
+ *fill*         0xffffffff8010a56b        0x1 
+ .text._ZN10LinkedListIPN4Task7ProcessEE3AddEP8ListNodeIS2_E
+                0xffffffff8010a56c       0x90 ./build/Process/ActivityImpl.o
+                0xffffffff8010a56c                LinkedList<Task::Process*>::Add(ListNode<Task::Process*>*)
+ .text          0xffffffff8010a5fc       0x69 ./build/Process/ActivityManagement.o
+ *fill*         0xffffffff8010a665        0x1 
+ .text._ZN4Task8ActivityD2Ev
+                0xffffffff8010a666       0x1f ./build/Process/ActivityManagement.o
+                0xffffffff8010a666                Task::Activity::~Activity()
+                0xffffffff8010a666                Task::Activity::~Activity()
+ *fill*         0xffffffff8010a685        0x1 
+ .text._ZN10LinkedListIPN4Task7ProcessEED2Ev
+                0xffffffff8010a686       0x1f ./build/Process/ActivityManagement.o
+                0xffffffff8010a686                LinkedList<Task::Process*>::~LinkedList()
+                0xffffffff8010a686                LinkedList<Task::Process*>::~LinkedList()
+ *fill*         0xffffffff8010a6a5        0x1 
+ .text          0xffffffff8010a6a6      0x1a7 ./build/Process/ProcessImpl.o
+                0xffffffff8010a6bc                Task::Process::Process()
+                0xffffffff8010a6bc                Task::Process::Process()
+                0xffffffff8010a6dc                Task::Process::Process(char const*, Fs::File*, unsigned int, Task::Activity*, Task::TaskType)
+                0xffffffff8010a6dc                Task::Process::Process(char const*, Fs::File*, unsigned int, Task::Activity*, Task::TaskType)
+                0xffffffff8010a7e2                Task::Process::~Process()
+                0xffffffff8010a7e2                Task::Process::~Process()
+                0xffffffff8010a802                Task::Process::Start()
+                0xffffffff8010a820                Task::Process::Suspend()
+                0xffffffff8010a83e                Task::Process::Stop()
+ *fill*         0xffffffff8010a84d        0x1 
+ .text._ZN10LinkedListIN4Task6ThreadEEC2Ev
+                0xffffffff8010a84e       0x3c ./build/Process/ProcessImpl.o
+                0xffffffff8010a84e                LinkedList<Task::Thread>::LinkedList()
+                0xffffffff8010a84e                LinkedList<Task::Thread>::LinkedList()
+ .text._ZN10LinkedListIN4Task6ThreadEED2Ev
+                0xffffffff8010a88a       0x1f ./build/Process/ProcessImpl.o
+                0xffffffff8010a88a                LinkedList<Task::Thread>::~LinkedList()
+                0xffffffff8010a88a                LinkedList<Task::Thread>::~LinkedList()
+ *fill*         0xffffffff8010a8a9        0x1 
+ .text._ZN10LinkedListIN4Task6ThreadEE3AddEP8ListNodeIS1_E
+                0xffffffff8010a8aa       0x90 ./build/Process/ProcessImpl.o
+                0xffffffff8010a8aa                LinkedList<Task::Thread>::Add(ListNode<Task::Thread>*)
+ .text          0xffffffff8010a93a       0xc8 ./build/Process/Scheduler.o
+                0xffffffff8010a950                Task::GetCurrentProcess()
+ .text          0xffffffff8010aa02      0x325 ./build/Process/SchedulerImpl.o
+                0xffffffff8010aa18                Task::Scheduler::Scheduler()
+                0xffffffff8010aa18                Task::Scheduler::Scheduler()
+                0xffffffff8010aa6c                Task::Scheduler::~Scheduler()
+                0xffffffff8010aa6c                Task::Scheduler::~Scheduler()
+                0xffffffff8010aa7c                Task::Scheduler::NextPID()
+                0xffffffff8010aac0                Task::Scheduler::Register(Task::Process*)
+                0xffffffff8010ab60                Task::Scheduler::Schedule()
+                0xffffffff8010ab78                Task::Scheduler::CreateProcess(char const*, Task::Activity*)
+                0xffffffff8010abae                Task::Scheduler::CreateIdleProcess()
+                0xffffffff8010abe0                Task::Scheduler::CreateELFProcess(Fs::File*)
+                0xffffffff8010ac16                Task::Scheduler::CreateProcessEx(char const*, Task::Activity*, Task::TaskType, Fs::File*)
+                0xffffffff8010ac8e                Task::Scheduler::CreateThread(Task::Process*)
+ *fill*         0xffffffff8010ad27        0x1 
+ .text._ZN4Task6ThreadC2EPNS_7ProcessE
+                0xffffffff8010ad28       0x60 ./build/Process/SchedulerImpl.o
+                0xffffffff8010ad28                Task::Thread::Thread(Task::Process*)
+                0xffffffff8010ad28                Task::Thread::Thread(Task::Process*)
+ .text._ZN4Task9Scheduler14GetProcessByIdEj
+                0xffffffff8010ad88       0x29 ./build/Process/SchedulerImpl.o
+                0xffffffff8010ad88                Task::Scheduler::GetProcessById(unsigned int)
+ *fill*         0xffffffff8010adb1        0x1 
+ .text._ZN14SizedArrayListIPN4Task7ProcessELi65536EEixEi
+                0xffffffff8010adb2       0x35 ./build/Process/SchedulerImpl.o
+                0xffffffff8010adb2                SizedArrayList<Task::Process*, 65536>::operator[](int)
+ *fill*         0xffffffff8010ade7        0x1 
+ .text._ZN14SizedArrayListIPN4Task7ProcessELi65536EEC2Ev
+                0xffffffff8010ade8       0x2d ./build/Process/SchedulerImpl.o
+                0xffffffff8010ade8                SizedArrayList<Task::Process*, 65536>::SizedArrayList()
+                0xffffffff8010ade8                SizedArrayList<Task::Process*, 65536>::SizedArrayList()
+ *fill*         0xffffffff8010ae15        0x1 
+ .text._ZN8ListNodeIN4Task6ThreadEEC2ES1_
+                0xffffffff8010ae16       0x29 ./build/Process/SchedulerImpl.o
+                0xffffffff8010ae16                ListNode<Task::Thread>::ListNode(Task::Thread)
+                0xffffffff8010ae16                ListNode<Task::Thread>::ListNode(Task::Thread)
+ .text          0xffffffff8010ae3f       0xed ./build/Runtime.o
+                0xffffffff8010ae3f                operator new(unsigned long)
+                0xffffffff8010ae63                operator new[](unsigned long)
+                0xffffffff8010ae87                operator delete(void*)
+                0xffffffff8010aeac                operator delete(void*, unsigned long)
+                0xffffffff8010aecb                operator delete[](void*)
+                0xffffffff8010aef0                operator delete[](void*, unsigned long)
+                0xffffffff8010af0f                __cxa_pure_virtual
+ .text          0xffffffff8010af2c      0x7b5 ./build/String.o
+                0xffffffff8010af2c                memset
+                0xffffffff8010af78                memcpy
+                0xffffffff8010b047                memcmp
+                0xffffffff8010b0d9                strcpy
+                0xffffffff8010b11d                strncpy
+                0xffffffff8010b186                strlen
+                0xffffffff8010b1b9                strcmp
+                0xffffffff8010b21b                strncmp
+                0xffffffff8010b2b6                strchr
+                0xffffffff8010b2fa                strnchr
+                0xffffffff8010b371                strrchr
+                0xffffffff8010b3bf                strspn
+                0xffffffff8010b424                strcspn
+                0xffffffff8010b481                strtok_r
+                0xffffffff8010b569                strcat
+                0xffffffff8010b5a1                strncat
+                0xffffffff8010b5e2                toupper
+                0xffffffff8010b60a                strupr
+                0xffffffff8010b668                strnupr
+ .text          0xffffffff8010b6e1      0x13e ./build/System.o
+                0xffffffff8010b6e1                System::Out(char const*, ...)
+                0xffffffff8010b73d                System::Panic(char const*, ...)
+                0xffffffff8010b78f                Sleep(long)
+                0xffffffff8010b7d7                KernelInit()
+ .text          0xffffffff8010b81f        0x0 ./build/Video/FrameBufferPresenterImpl.o
+ *fill*         0xffffffff8010b81f        0x1 
+ .text          0xffffffff8010b820      0x423 ./build/Video/TextModePresenterImpl.o
+                0xffffffff8010b820                Video::TextModePresenter::TextModePresenter()
+                0xffffffff8010b820                Video::TextModePresenter::TextModePresenter()
+                0xffffffff8010b86a                Video::TextModePresenter::Clear()
+                0xffffffff8010b8ca                Video::TextModePresenter::Text(Video::Point, char const*, int)
+                0xffffffff8010b904                Video::TextModePresenter::Text(Video::Point, char const*, unsigned char, unsigned char)
+                0xffffffff8010ba7e                Video::TextModePresenter::Text(Video::Point, char, unsigned char, unsigned char)
+                0xffffffff8010bae4                Video::TextModePresenter::MoveUp()
+                0xffffffff8010bba2                Video::TextModePresenter::Rectangle(Video::Point, int, int)
+ .text._ZN8Integers17ConstraintToRangeEmmm
+                0xffffffff8010bc43       0x3e ./build/Video/TextModePresenterImpl.o
+                0xffffffff8010bc43                Integers::ConstraintToRange(unsigned long, unsigned long, unsigned long)
+ *fill*         0xffffffff8010bc81        0x1 
+ .text          0xffffffff8010bc82       0x1f ./build/Video/VideoControllerImpl.o
+                0xffffffff8010bc82                Video::VideoController::VideoController()
+                0xffffffff8010bc82                Video::VideoController::VideoController()
+                0xffffffff8010bc92                Video::VideoController::~VideoController()
+                0xffffffff8010bc92                Video::VideoController::~VideoController()
+ *fill*         0xffffffff8010bca1        0x1 
+ .text          0xffffffff8010bca2       0x5b ./build/Video/VideoPresenterImpl.o
+                0xffffffff8010bca2                Video::VideoPresenter::VideoPresenter()
+                0xffffffff8010bca2                Video::VideoPresenter::VideoPresenter()
+                0xffffffff8010bcd0                Video::VideoPresenter::~VideoPresenter()
+                0xffffffff8010bcd0                Video::VideoPresenter::~VideoPresenter()
+ *fill*         0xffffffff8010bcfd        0x1 
+ .text._ZN10LinkedListIPN5Video11VideoOutputEEC2Ev
+                0xffffffff8010bcfe       0x3c ./build/Video/VideoPresenterImpl.o
+                0xffffffff8010bcfe                LinkedList<Video::VideoOutput*>::LinkedList()
+                0xffffffff8010bcfe                LinkedList<Video::VideoOutput*>::LinkedList()
+ .text._ZN10LinkedListIPN5Video11VideoOutputEED2Ev
+                0xffffffff8010bd3a       0x1f ./build/Video/VideoPresenterImpl.o
+                0xffffffff8010bd3a                LinkedList<Video::VideoOutput*>::~LinkedList()
+                0xffffffff8010bd3a                LinkedList<Video::VideoOutput*>::~LinkedList()
+ *fill*         0xffffffff8010bd59        0x7 
+ .text          0xffffffff8010bd60     0x12a4 ./build/Arch/x86_64/IRQ.o
+                0xffffffff8010be8f                ipi48
+                0xffffffff8010be98                ipi49
+                0xffffffff8010bea1                ipi50
+                0xffffffff8010beaa                ipi51
+                0xffffffff8010beb3                ipi52
+                0xffffffff8010bebc                ipi53
+                0xffffffff8010bec5                ipi54
+                0xffffffff8010bece                ipi55
+                0xffffffff8010bed7                ipi56
+                0xffffffff8010bee0                ipi57
+                0xffffffff8010bee9                ipi58
+                0xffffffff8010bef2                ipi59
+                0xffffffff8010befb                ipi60
+                0xffffffff8010bf04                ipi61
+                0xffffffff8010bf0d                ipi62
+                0xffffffff8010bf16                ipi63
+                0xffffffff8010bf1f                ipi64
+                0xffffffff8010bf28                ipi65
+                0xffffffff8010bf31                ipi66
+                0xffffffff8010bf3a                ipi67
+                0xffffffff8010bf43                ipi68
+                0xffffffff8010bf4c                ipi69
+                0xffffffff8010bf55                ipi70
+                0xffffffff8010bf5e                ipi71
+                0xffffffff8010bf67                ipi72
+                0xffffffff8010bf70                ipi73
+                0xffffffff8010bf79                ipi74
+                0xffffffff8010bf82                ipi75
+                0xffffffff8010bf8b                ipi76
+                0xffffffff8010bf94                ipi77
+                0xffffffff8010bf9d                ipi78
+                0xffffffff8010bfa6                ipi79
+                0xffffffff8010bfaf                ipi80
+                0xffffffff8010bfb8                ipi81
+                0xffffffff8010bfc1                ipi82
+                0xffffffff8010bfca                ipi83
+                0xffffffff8010bfd3                ipi84
+                0xffffffff8010bfdc                ipi85
+                0xffffffff8010bfe5                ipi86
+                0xffffffff8010bfee                ipi87
+                0xffffffff8010bff7                ipi88
+                0xffffffff8010c000                ipi89
+                0xffffffff8010c009                ipi90
+                0xffffffff8010c012                ipi91
+                0xffffffff8010c01b                ipi92
+                0xffffffff8010c024                ipi93
+                0xffffffff8010c02d                ipi94
+                0xffffffff8010c036                ipi95
+                0xffffffff8010c03f                ipi96
+                0xffffffff8010c048                ipi97
+                0xffffffff8010c051                ipi98
+                0xffffffff8010c05a                ipi99
+                0xffffffff8010c063                ipi100
+                0xffffffff8010c06c                ipi101
+                0xffffffff8010c075                ipi102
+                0xffffffff8010c07e                ipi103
+                0xffffffff8010c087                ipi104
+                0xffffffff8010c090                ipi105
+                0xffffffff8010c099                ipi106
+                0xffffffff8010c0a2                ipi107
+                0xffffffff8010c0ab                ipi108
+                0xffffffff8010c0b4                ipi109
+                0xffffffff8010c0bd                ipi110
+                0xffffffff8010c0c6                ipi111
+                0xffffffff8010c0cf                ipi112
+                0xffffffff8010c0d8                ipi113
+                0xffffffff8010c0e1                ipi114
+                0xffffffff8010c0ea                ipi115
+                0xffffffff8010c0f3                ipi116
+                0xffffffff8010c0fc                ipi117
+                0xffffffff8010c105                ipi118
+                0xffffffff8010c10e                ipi119
+                0xffffffff8010c117                ipi120
+                0xffffffff8010c120                ipi121
+                0xffffffff8010c129                ipi122
+                0xffffffff8010c132                ipi123
+                0xffffffff8010c13b                ipi124
+                0xffffffff8010c144                ipi125
+                0xffffffff8010c14d                ipi126
+                0xffffffff8010c156                ipi127
+                0xffffffff8010c15f                ipi128
+                0xffffffff8010c16b                ipi129
+                0xffffffff8010c177                ipi130
+                0xffffffff8010c183                ipi131
+                0xffffffff8010c18f                ipi132
+                0xffffffff8010c19b                ipi133
+                0xffffffff8010c1a7                ipi134
+                0xffffffff8010c1b3                ipi135
+                0xffffffff8010c1bf                ipi136
+                0xffffffff8010c1cb                ipi137
+                0xffffffff8010c1d7                ipi138
+                0xffffffff8010c1e3                ipi139
+                0xffffffff8010c1ef                ipi140
+                0xffffffff8010c1fb                ipi141
+                0xffffffff8010c207                ipi142
+                0xffffffff8010c213                ipi143
+                0xffffffff8010c21f                ipi144
+                0xffffffff8010c22b                ipi145
+                0xffffffff8010c237                ipi146
+                0xffffffff8010c243                ipi147
+                0xffffffff8010c24f                ipi148
+                0xffffffff8010c25b                ipi149
+                0xffffffff8010c267                ipi150
+                0xffffffff8010c273                ipi151
+                0xffffffff8010c27f                ipi152
+                0xffffffff8010c28b                ipi153
+                0xffffffff8010c297                ipi154
+                0xffffffff8010c2a3                ipi155
+                0xffffffff8010c2af                ipi156
+                0xffffffff8010c2bb                ipi157
+                0xffffffff8010c2c7                ipi158
+                0xffffffff8010c2d3                ipi159
+                0xffffffff8010c2df                ipi160
+                0xffffffff8010c2eb                ipi161
+                0xffffffff8010c2f7                ipi162
+                0xffffffff8010c303                ipi163
+                0xffffffff8010c30f                ipi164
+                0xffffffff8010c31b                ipi165
+                0xffffffff8010c327                ipi166
+                0xffffffff8010c333                ipi167
+                0xffffffff8010c33f                ipi168
+                0xffffffff8010c34b                ipi169
+                0xffffffff8010c357                ipi170
+                0xffffffff8010c363                ipi171
+                0xffffffff8010c36f                ipi172
+                0xffffffff8010c37b                ipi173
+                0xffffffff8010c387                ipi174
+                0xffffffff8010c393                ipi175
+                0xffffffff8010c39f                ipi176
+                0xffffffff8010c3ab                ipi177
+                0xffffffff8010c3b7                ipi178
+                0xffffffff8010c3c3                ipi179
+                0xffffffff8010c3cf                ipi180
+                0xffffffff8010c3db                ipi181
+                0xffffffff8010c3e7                ipi182
+                0xffffffff8010c3f3                ipi183
+                0xffffffff8010c3ff                ipi184
+                0xffffffff8010c40b                ipi185
+                0xffffffff8010c417                ipi186
+                0xffffffff8010c423                ipi187
+                0xffffffff8010c42f                ipi188
+                0xffffffff8010c43b                ipi189
+                0xffffffff8010c447                ipi190
+                0xffffffff8010c453                ipi191
+                0xffffffff8010c45f                ipi192
+                0xffffffff8010c46b                ipi193
+                0xffffffff8010c477                ipi194
+                0xffffffff8010c483                ipi195
+                0xffffffff8010c48f                ipi196
+                0xffffffff8010c49b                ipi197
+                0xffffffff8010c4a7                ipi198
+                0xffffffff8010c4b3                ipi199
+                0xffffffff8010c4bf                ipi200
+                0xffffffff8010c4cb                ipi201
+                0xffffffff8010c4d7                ipi202
+                0xffffffff8010c4e3                ipi203
+                0xffffffff8010c4ef                ipi204
+                0xffffffff8010c4fb                ipi205
+                0xffffffff8010c507                ipi206
+                0xffffffff8010c513                ipi207
+                0xffffffff8010c51f                ipi208
+                0xffffffff8010c52b                ipi209
+                0xffffffff8010c537                ipi210
+                0xffffffff8010c543                ipi211
+                0xffffffff8010c54f                ipi212
+                0xffffffff8010c55b                ipi213
+                0xffffffff8010c567                ipi214
+                0xffffffff8010c573                ipi215
+                0xffffffff8010c57f                ipi216
+                0xffffffff8010c58b                ipi217
+                0xffffffff8010c597                ipi218
+                0xffffffff8010c5a3                ipi219
+                0xffffffff8010c5af                ipi220
+                0xffffffff8010c5bb                ipi221
+                0xffffffff8010c5c7                ipi222
+                0xffffffff8010c5d3                ipi223
+                0xffffffff8010c5df                ipi224
+                0xffffffff8010c5eb                ipi225
+                0xffffffff8010c5f7                ipi226
+                0xffffffff8010c603                ipi227
+                0xffffffff8010c60f                ipi228
+                0xffffffff8010c61b                ipi229
+                0xffffffff8010c627                ipi230
+                0xffffffff8010c633                ipi231
+                0xffffffff8010c63f                ipi232
+                0xffffffff8010c64b                ipi233
+                0xffffffff8010c657                ipi234
+                0xffffffff8010c663                ipi235
+                0xffffffff8010c66f                ipi236
+                0xffffffff8010c67b                ipi237
+                0xffffffff8010c687                ipi238
+                0xffffffff8010c693                ipi239
+                0xffffffff8010c69f                ipi240
+                0xffffffff8010c6ab                ipi241
+                0xffffffff8010c6b7                ipi242
+                0xffffffff8010c6c3                ipi243
+                0xffffffff8010c6cf                ipi244
+                0xffffffff8010c6db                ipi245
+                0xffffffff8010c6e7                ipi246
+                0xffffffff8010c6f3                ipi247
+                0xffffffff8010c6ff                ipi248
+                0xffffffff8010c70b                ipi249
+                0xffffffff8010c717                ipi250
+                0xffffffff8010c723                ipi251
+                0xffffffff8010c72f                ipi252
+                0xffffffff8010c73b                ipi253
+                0xffffffff8010c747                ipi254
+                0xffffffff8010c753                ipi255
+                0xffffffff8010c75f                intrid32
+                0xffffffff8010c768                intrid33
+                0xffffffff8010c771                intrid34
+                0xffffffff8010c77a                intrid35
+                0xffffffff8010c783                intrid36
+                0xffffffff8010c78c                intrid37
+                0xffffffff8010c795                intrid38
+                0xffffffff8010c79e                intrid39
+                0xffffffff8010c7a7                intrid40
+                0xffffffff8010c7b0                intrid41
+                0xffffffff8010c7b9                intrid42
+                0xffffffff8010c7c2                intrid43
+                0xffffffff8010c7cb                intrid44
+                0xffffffff8010c7d4                intrid45
+                0xffffffff8010c7dd                intrid46
+                0xffffffff8010c7e6                intrid47
+                0xffffffff8010c804                isr_tables
+ *fill*         0xffffffff8010d004        0xc 
+ .text          0xffffffff8010d010       0x3c ./build/Arch/x86_64/KernelStack.o
+                0xffffffff8010d010                load_tss
+ *fill*         0xffffffff8010d04c        0x4 
+ .text          0xffffffff8010d050       0x86 ./build/Arch/x86_64/SMPTrampoline.o
+                0xffffffff8010d050                SMPTrampolineStart
+                0xffffffff8010d0d6                SMPTrampolineEnd
+ *fill*         0xffffffff8010d0d6        0xa 
+ .text          0xffffffff8010d0e0       0x5b ./build/Arch/x86_64/Wrapper.o
+                0xffffffff8010d0e0                asmw_flush_gdt
+                0xffffffff8010d10b                asmw_flush_idt
+                0xffffffff8010d10f                asmw_load_paging
+                0xffffffff8010d113                asmw_enable_sse
+                0xffffffff8010d124                asmw_enable_avx
+                0xffffffff8010d137                asmw_get_pagemap
+
+.iplt           0xffffffff8010d13b        0x0 load address 0x000000000010d13b
+ .iplt          0xffffffff8010d13b        0x0 ./build/Arch/x86_64/Arch.o
+
+.rodata         0xffffffff8010e000     0x1060 load address 0x000000000010e000
+ *(.rodata*)
+ .rodata        0xffffffff8010e000       0xde ./build/Arch/x86_64/BootX64.o
+ *fill*         0xffffffff8010e0de        0x2 
+ .rodata        0xffffffff8010e0e0      0x269 ./build/Arch/x86_64/Interrupts.o
+ *fill*         0xffffffff8010e349        0x7 
+ .rodata        0xffffffff8010e350       0x5d ./build/Arch/x86_64/MMU.o
+ *fill*         0xffffffff8010e3ad        0x3 
+ .rodata        0xffffffff8010e3b0       0x44 ./build/Arch/x86_64/SMBIOS.o
+ *fill*         0xffffffff8010e3f4        0x4 
+ .rodata        0xffffffff8010e3f8       0x72 ./build/Arch/x86_64/SMP.o
+ *fill*         0xffffffff8010e46a        0x6 
+ .rodata._ZTV6Device
+                0xffffffff8010e470       0x20 ./build/Device/DeviceImpl.o
+                0xffffffff8010e470                vtable for Device
+ .rodata._ZTVN3PCI9PCIDeviceE
+                0xffffffff8010e490       0x20 ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+                0xffffffff8010e490                vtable for PCI::PCIDevice
+ .rodata        0xffffffff8010e4b0       0x27 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ *fill*         0xffffffff8010e4d7        0x1 
+ .rodata._ZTVN3PCI17PCIDeviceProviderE
+                0xffffffff8010e4d8       0x18 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff8010e4d8                vtable for PCI::PCIDeviceProvider
+ .rodata._ZTV14DeviceProvider
+                0xffffffff8010e4f0       0x18 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                0xffffffff8010e4f0                vtable for DeviceProvider
+ .rodata        0xffffffff8010e508       0x53 ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+ *fill*         0xffffffff8010e55b        0x5 
+ .rodata._ZTV9HPETTimer
+                0xffffffff8010e560       0x28 ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+                0xffffffff8010e560                vtable for HPETTimer
+ .rodata._ZTV5Timer
+                0xffffffff8010e588       0x28 ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+                0xffffffff8010e588                vtable for Timer
+ .rodata        0xffffffff8010e5b0       0x70 ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .rodata        0xffffffff8010e620       0x38 ./build/Drivers/Generic/ACPI/ACPITimerImpl.o
+ .rodata._ZTV9ACPITimer
+                0xffffffff8010e658       0x28 ./build/Drivers/Generic/ACPI/ACPITimerImpl.o
+                0xffffffff8010e658                vtable for ACPITimer
+ .rodata        0xffffffff8010e680      0x158 ./build/Drivers/Generic/APIC/APICMain.o
+ .rodata        0xffffffff8010e7d8       0x5c ./build/Drivers/Generic/APIC/IO.o
+ .rodata        0xffffffff8010e834       0x2a ./build/Drivers/Generic/APIC/Local.o
+ *fill*         0xffffffff8010e85e        0x2 
+ .rodata._ZTV14LocalAPICTimer
+                0xffffffff8010e860       0x28 ./build/Drivers/Generic/APIC/LocalAPICTimerImpl.o
+                0xffffffff8010e860                vtable for LocalAPICTimer
+ .rodata        0xffffffff8010e888       0x7f ./build/Drivers/Input/PS2LegacyController.o
+ *fill*         0xffffffff8010e907        0x1 
+ .rodata._ZTVN5Input19PS2LegacyControllerE
+                0xffffffff8010e908       0x20 ./build/Drivers/Input/PS2LegacyController.o
+                0xffffffff8010e908                vtable for Input::PS2LegacyController
+ .rodata        0xffffffff8010e928       0x22 ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+ *fill*         0xffffffff8010e94a        0x6 
+ .rodata._ZTVN5Input17PS2LegacyKeyboardE
+                0xffffffff8010e950       0x20 ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+                0xffffffff8010e950                vtable for Input::PS2LegacyKeyboard
+ .rodata        0xffffffff8010e970       0x32 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ *fill*         0xffffffff8010e9a2        0x6 
+ .rodata._ZTVN4AHCI20AHCIControllerDeviceE
+                0xffffffff8010e9a8       0x20 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                0xffffffff8010e9a8                vtable for AHCI::AHCIControllerDevice
+ .rodata        0xffffffff8010e9c8       0x4a ./build/Drivers/Storage/AHCI/AHCIMain.o
+ *fill*         0xffffffff8010ea12        0x6 
+ .rodata        0xffffffff8010ea18       0x22 ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ *fill*         0xffffffff8010ea3a        0x6 
+ .rodata._ZTVN4AHCI14SATADiskDeviceE
+                0xffffffff8010ea40       0x30 ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+                0xffffffff8010ea40                vtable for AHCI::SATADiskDevice
+ .rodata._ZTV10DiskDevice
+                0xffffffff8010ea70       0x30 ./build/Fs/DiskDeviceImpl.o
+                0xffffffff8010ea70                vtable for DiskDevice
+ .rodata        0xffffffff8010eaa0      0x1b8 ./build/Input/ConsoleImpl.o
+ .rodata        0xffffffff8010ec58      0x130 ./build/Input/KeyCode.o
+ .rodata        0xffffffff8010ed88      0x1c0 ./build/libkern/printf.o
+ .rodata        0xffffffff8010ef48       0x28 ./build/Memory/Memory.o
+ .rodata        0xffffffff8010ef70       0x17 ./build/Memory/Page.o
+ *fill*         0xffffffff8010ef87        0x1 
+ .rodata        0xffffffff8010ef88       0x21 ./build/Memory/SlabAllocatorImpl.o
+ .rodata        0xffffffff8010efa9        0x7 ./build/Process/ActivityManagement.o
+ .rodata        0xffffffff8010efb0        0x9 ./build/Process/Scheduler.o
+ .rodata        0xffffffff8010efb9       0x1d ./build/Process/SchedulerImpl.o
+ *fill*         0xffffffff8010efd6        0x2 
+ .rodata        0xffffffff8010efd8       0x36 ./build/Runtime.o
+ *fill*         0xffffffff8010f00e        0x2 
+ .rodata._ZTVN5Video17TextModePresenterE
+                0xffffffff8010f010       0x28 ./build/Video/TextModePresenterImpl.o
+                0xffffffff8010f010                vtable for Video::TextModePresenter
+ .rodata._ZTVN5Video14VideoPresenterE
+                0xffffffff8010f038       0x28 ./build/Video/VideoPresenterImpl.o
+                0xffffffff8010f038                vtable for Video::VideoPresenter
+
+.eh_frame       0xffffffff8010f060     0x33e8 load address 0x000000000010f060
+ .eh_frame      0xffffffff8010f060       0xb8 ./build/Arch/x86_64/Arch.o
+ .eh_frame      0xffffffff8010f118       0xc0 ./build/Arch/x86_64/BootX64.o
+                                         0xd8 (size before relaxing)
+ .eh_frame      0xffffffff8010f1d8      0x108 ./build/Arch/x86_64/CPU.o
+                                        0x140 (size before relaxing)
+ .eh_frame      0xffffffff8010f2e0       0xa0 ./build/Arch/x86_64/GDT.o
+                                         0xb8 (size before relaxing)
+ .eh_frame      0xffffffff8010f380       0x40 ./build/Arch/x86_64/IDT.o
+                                         0x58 (size before relaxing)
+ .eh_frame      0xffffffff8010f3c0       0x60 ./build/Arch/x86_64/Interrupts.o
+                                         0x98 (size before relaxing)
+ .eh_frame      0xffffffff8010f420      0x240 ./build/Arch/x86_64/MMU.o
+                                        0x258 (size before relaxing)
+ .eh_frame      0xffffffff8010f660       0xa0 ./build/Arch/x86_64/PIC.o
+                                         0xb8 (size before relaxing)
+ .eh_frame      0xffffffff8010f700       0x60 ./build/Arch/x86_64/PIT.o
+                                         0x78 (size before relaxing)
+ .eh_frame      0xffffffff8010f760       0x40 ./build/Arch/x86_64/SchedulerArchImpl.o
+                                         0x58 (size before relaxing)
+ .eh_frame      0xffffffff8010f7a0       0x40 ./build/Arch/x86_64/SMBIOS.o
+                                         0x58 (size before relaxing)
+ .eh_frame      0xffffffff8010f7e0       0xc0 ./build/Arch/x86_64/SMP.o
+                                         0xd8 (size before relaxing)
+ .eh_frame      0xffffffff8010f8a0       0x20 ./build/Arch/x86_64/TaskStateSegment.o
+                                         0x58 (size before relaxing)
+ .eh_frame      0xffffffff8010f8c0       0x40 ./build/Device/DeviceImpl.o
+                                         0x58 (size before relaxing)
+ .eh_frame      0xffffffff8010f900       0xf0 ./build/Device/DeviceManagement.o
+                                        0x128 (size before relaxing)
+ .eh_frame      0xffffffff8010f9f0      0x1a8 ./build/Device/DeviceStaticImpl.o
+                                        0x288 (size before relaxing)
+ .eh_frame      0xffffffff8010fb98       0xe0 ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+                                        0x138 (size before relaxing)
+ .eh_frame      0xffffffff8010fc78      0x350 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+                                        0x3c8 (size before relaxing)
+ .eh_frame      0xffffffff8010ffc8      0x1e0 ./build/Drivers/Bus/PCI/PCIMain.o
+                                        0x1f8 (size before relaxing)
+ .eh_frame      0xffffffff801101a8       0xc0 ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+                                         0xd8 (size before relaxing)
+ .eh_frame      0xffffffff80110268      0x1c8 ./build/Drivers/Generic/ACPI/ACPIMain.o
+                                        0x200 (size before relaxing)
+ .eh_frame      0xffffffff80110430       0xc0 ./build/Drivers/Generic/ACPI/ACPITimerImpl.o
+                                         0xf8 (size before relaxing)
+ .eh_frame      0xffffffff801104f0       0x68 ./build/Drivers/Generic/APIC/APICMain.o
+                                         0x80 (size before relaxing)
+ .eh_frame      0xffffffff80110558      0x168 ./build/Drivers/Generic/APIC/IO.o
+                                        0x1c0 (size before relaxing)
+ .eh_frame      0xffffffff801106c0      0x140 ./build/Drivers/Generic/APIC/Local.o
+                                        0x158 (size before relaxing)
+ .eh_frame      0xffffffff80110800       0xe8 ./build/Drivers/Generic/APIC/LocalAPICTimerImpl.o
+                                        0x120 (size before relaxing)
+ .eh_frame      0xffffffff801108e8      0x128 ./build/Drivers/Input/PS2LegacyController.o
+                                        0x1a0 (size before relaxing)
+ .eh_frame      0xffffffff80110a10       0xc0 ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+                                        0x138 (size before relaxing)
+ .eh_frame      0xffffffff80110ad0      0x1e8 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+                                        0x240 (size before relaxing)
+ .eh_frame      0xffffffff80110cb8       0x88 ./build/Drivers/Storage/AHCI/AHCIMain.o
+                                         0xc0 (size before relaxing)
+ .eh_frame      0xffffffff80110d40      0x1c0 ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+                                        0x238 (size before relaxing)
+ .eh_frame      0xffffffff80110f00       0xe0 ./build/Drivers/Video.o
+                                         0xf8 (size before relaxing)
+ .eh_frame      0xffffffff80110fe0       0x40 ./build/Fs/DiskDeviceImpl.o
+                                         0x58 (size before relaxing)
+ .eh_frame      0xffffffff80111020      0x148 ./build/Input/ConsoleImpl.o
+                                        0x160 (size before relaxing)
+ .eh_frame      0xffffffff80111168       0x20 ./build/Input/KeyCode.o
+                                         0x38 (size before relaxing)
+ .eh_frame      0xffffffff80111188       0x60 ./build/libkern/printf.o
+                                         0x78 (size before relaxing)
+ .eh_frame      0xffffffff801111e8       0x40 ./build/libkern/sprintf.o
+                                         0x58 (size before relaxing)
+ .eh_frame      0xffffffff80111228      0x1c0 ./build/Memory/Memory.o
+                                        0x1d8 (size before relaxing)
+ .eh_frame      0xffffffff801113e8      0x398 ./build/Memory/Page.o
+                                        0x410 (size before relaxing)
+ .eh_frame      0xffffffff80111780       0xc0 ./build/Memory/PageAllocation.o
+                                         0xd8 (size before relaxing)
+ .eh_frame      0xffffffff80111840       0xe0 ./build/Memory/SlabAllocatorImpl.o
+                                         0xf8 (size before relaxing)
+ .eh_frame      0xffffffff80111920      0x148 ./build/Process/ActivityImpl.o
+                                        0x1a0 (size before relaxing)
+ .eh_frame      0xffffffff80111a68       0x80 ./build/Process/ActivityManagement.o
+                                         0xb8 (size before relaxing)
+ .eh_frame      0xffffffff80111ae8      0x140 ./build/Process/ProcessImpl.o
+                                        0x198 (size before relaxing)
+ .eh_frame      0xffffffff80111c28       0x80 ./build/Process/Scheduler.o
+                                         0x98 (size before relaxing)
+ .eh_frame      0xffffffff80111ca8      0x208 ./build/Process/SchedulerImpl.o
+                                        0x220 (size before relaxing)
+ .eh_frame      0xffffffff80111eb0       0xe0 ./build/Runtime.o
+                                         0xf8 (size before relaxing)
+ .eh_frame      0xffffffff80111f90      0x270 ./build/String.o
+                                        0x288 (size before relaxing)
+ .eh_frame      0xffffffff80112200       0x80 ./build/System.o
+                                         0xb8 (size before relaxing)
+ .eh_frame      0xffffffff80112280      0x108 ./build/Video/TextModePresenterImpl.o
+                                        0x120 (size before relaxing)
+ .eh_frame      0xffffffff80112388       0x40 ./build/Video/VideoControllerImpl.o
+                                         0x58 (size before relaxing)
+ .eh_frame      0xffffffff801123c8       0x80 ./build/Video/VideoPresenterImpl.o
+                                         0xb8 (size before relaxing)
+
+.rela.dyn       0xffffffff80112448        0x0 load address 0x0000000000112448
+ .rela.got      0xffffffff80112448        0x0 ./build/Arch/x86_64/Arch.o
+ .rela.iplt     0xffffffff80112448        0x0 ./build/Arch/x86_64/Arch.o
+ .rela.text     0xffffffff80112448        0x0 ./build/Arch/x86_64/Arch.o
+ .rela.text._ZN6DeviceD2Ev
+                0xffffffff80112448        0x0 ./build/Arch/x86_64/Arch.o
+ .rela.text._ZN14DeviceProviderC2Ev
+                0xffffffff80112448        0x0 ./build/Arch/x86_64/Arch.o
+ .rela.text._ZN5TimerC2Ev
+                0xffffffff80112448        0x0 ./build/Arch/x86_64/Arch.o
+ .rela.text._ZN10DiskDeviceC2EPKc9DeviceBus
+                0xffffffff80112448        0x0 ./build/Arch/x86_64/Arch.o
+ .rela.text._ZN10DiskDeviceD2Ev
+                0xffffffff80112448        0x0 ./build/Arch/x86_64/Arch.o
+
+.data           0xffffffff80113000     0x1d51 load address 0x0000000000113000
+ *(.data*)
+ .data          0xffffffff80113000        0x0 ./build/Arch/x86_64/Arch.o
+ .data          0xffffffff80113000        0x0 ./build/Arch/x86_64/BootX64.o
+ .data          0xffffffff80113000        0x0 ./build/Arch/x86_64/CPU.o
+ .data          0xffffffff80113000       0x4a ./build/Arch/x86_64/GDT.o
+                0xffffffff80113000                gdt
+                0xffffffff80113040                g_GDTPointer
+ *fill*         0xffffffff8011304a        0x6 
+ .data          0xffffffff80113050        0xa ./build/Arch/x86_64/IDT.o
+                0xffffffff80113050                g_IDTPointer
+ *fill*         0xffffffff8011305a        0x6 
+ .data          0xffffffff80113060     0x1800 ./build/Arch/x86_64/Interrupts.o
+                0xffffffff80113060                g_IntData
+ .data          0xffffffff80114860        0x0 ./build/Arch/x86_64/MMU.o
+ .data          0xffffffff80114860        0x0 ./build/Arch/x86_64/PIC.o
+ .data          0xffffffff80114860        0x0 ./build/Arch/x86_64/PIT.o
+ .data          0xffffffff80114860        0x0 ./build/Arch/x86_64/SchedulerArchImpl.o
+ .data          0xffffffff80114860       0x14 ./build/Arch/x86_64/SMBIOS.o
+                0xffffffff80114860                SMBIOS::__smbios_SignatureL2
+                0xffffffff80114868                SMBIOS::__smbios_SignatureL3
+                0xffffffff80114870                SMBIOS::g_SmbiosVersion
+ *fill*         0xffffffff80114874        0x4 
+ .data          0xffffffff80114878       0x30 ./build/Arch/x86_64/SMP.o
+                0xffffffff80114878                SMP::smpMagicValue
+                0xffffffff80114880                SMP::smpTrampolineCpuID
+                0xffffffff80114888                SMP::smpGdtPointer
+                0xffffffff80114890                SMP::smpRegisterCR3
+                0xffffffff80114898                SMP::smpStack
+                0xffffffff801148a0                SMP::smpEntry2
+ .data          0xffffffff801148a8        0x0 ./build/Arch/x86_64/TaskStateSegment.o
+ .data          0xffffffff801148a8        0x0 ./build/Device/ComputerDeviceImpl.o
+ .data          0xffffffff801148a8        0x0 ./build/Device/DeviceImpl.o
+ .data          0xffffffff801148a8        0x0 ./build/Device/DeviceManagement.o
+ .data          0xffffffff801148a8        0x0 ./build/Device/DeviceStaticImpl.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Bus/PCI/PCIMain.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Generic/ACPI/ACPITimerImpl.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Generic/ACPI/MADTMain.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Generic/APIC/APICMain.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Generic/APIC/IO.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Generic/APIC/Local.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Generic/APIC/LocalAPICTimerImpl.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Input/PS2LegacyController.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Storage/AHCI/AHCIMain.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ .data          0xffffffff801148a8        0x0 ./build/Drivers/Video.o
+ .data          0xffffffff801148a8        0x0 ./build/Fs/DiskDeviceImpl.o
+ .data          0xffffffff801148a8       0x10 ./build/Input/ConsoleImpl.o
+ *fill*         0xffffffff801148b8        0x8 
+ .data          0xffffffff801148c0      0x400 ./build/Input/KeyCode.o
+                0xffffffff801148c0                Input::c_KeyScanCode1
+ .data          0xffffffff80114cc0        0x0 ./build/libkern/printf.o
+ .data          0xffffffff80114cc0        0x0 ./build/libkern/sprintf.o
+ .data          0xffffffff80114cc0        0x0 ./build/Memory/Memory.o
+ .data          0xffffffff80114cc0        0x0 ./build/Memory/Page.o
+ .data          0xffffffff80114cc0        0x0 ./build/Memory/PageAllocation.o
+ .data          0xffffffff80114cc0       0x20 ./build/Memory/SlabAllocatorImpl.o
+                0xffffffff80114cc0                Memory::m_BlockSize
+ .data          0xffffffff80114ce0        0x0 ./build/Process/ActivityImpl.o
+ .data          0xffffffff80114ce0        0x0 ./build/Process/ActivityManagement.o
+ .data          0xffffffff80114ce0        0x0 ./build/Process/ProcessImpl.o
+ .data          0xffffffff80114ce0        0x0 ./build/Process/Scheduler.o
+ .data          0xffffffff80114ce0        0x0 ./build/Process/SchedulerImpl.o
+ .data          0xffffffff80114ce0        0x0 ./build/Runtime.o
+ .data          0xffffffff80114ce0        0x0 ./build/String.o
+ .data          0xffffffff80114ce0        0x0 ./build/System.o
+ .data          0xffffffff80114ce0        0x0 ./build/Video/FrameBufferPresenterImpl.o
+ .data          0xffffffff80114ce0        0x0 ./build/Video/TextModePresenterImpl.o
+ .data          0xffffffff80114ce0        0x0 ./build/Video/VideoControllerImpl.o
+ .data          0xffffffff80114ce0        0x0 ./build/Video/VideoPresenterImpl.o
+ .data          0xffffffff80114ce0       0x71 ./build/Arch/x86_64/Header.o
+                0xffffffff80114d48                __cxa_atexit
+                0xffffffff80114d49                __dso_handle
+
+.got            0xffffffff80114d58        0x0 load address 0x0000000000114d58
+ .got           0xffffffff80114d58        0x0 ./build/Arch/x86_64/Arch.o
+
+.got.plt        0xffffffff80114d58        0x0 load address 0x0000000000114d58
+ .got.plt       0xffffffff80114d58        0x0 ./build/Arch/x86_64/Arch.o
+
+.igot.plt       0xffffffff80114d58        0x0 load address 0x0000000000114d58
+ .igot.plt      0xffffffff80114d58        0x0 ./build/Arch/x86_64/Arch.o
+
+.ctors          0xffffffff80114d58       0x40 load address 0x0000000000114d58
+ .ctors         0xffffffff80114d58        0x8 ./build/Arch/x86_64/GDT.o
+ .ctors         0xffffffff80114d60        0x8 ./build/Device/DeviceManagement.o
+ .ctors         0xffffffff80114d68        0x8 ./build/Device/DeviceStaticImpl.o
+ .ctors         0xffffffff80114d70        0x8 ./build/Drivers/Generic/ACPI/ACPIMain.o
+ .ctors         0xffffffff80114d78        0x8 ./build/Memory/Memory.o
+ .ctors         0xffffffff80114d80        0x8 ./build/Memory/Page.o
+ .ctors         0xffffffff80114d88        0x8 ./build/Process/ActivityManagement.o
+ .ctors         0xffffffff80114d90        0x8 ./build/Process/Scheduler.o
+
+.bss            0xffffffff80115000   0x419fe0 load address 0x0000000000115000
+                0xffffffff80115000                __bss = .
+ *(COMMON)
+ *(.bss*)
+ .bss           0xffffffff80115000        0x0 ./build/Arch/x86_64/Arch.o
+ .bss           0xffffffff80115000      0x660 ./build/Arch/x86_64/BootX64.o
+                0xffffffff80115000                multiboot2_memory_info_t
+                0xffffffff80115020                bootInfo
+ .bss           0xffffffff80115660        0x0 ./build/Arch/x86_64/CPU.o
+ .bss           0xffffffff80115660       0x70 ./build/Arch/x86_64/GDT.o
+                0xffffffff80115660                tss
+ *fill*         0xffffffff801156d0       0x10 
+ .bss           0xffffffff801156e0     0x1000 ./build/Arch/x86_64/IDT.o
+ .bss           0xffffffff801166e0        0x0 ./build/Arch/x86_64/Interrupts.o
+ *fill*         0xffffffff801166e0      0x920 
+ .bss           0xffffffff80117000   0x40d000 ./build/Arch/x86_64/MMU.o
+                0xffffffff80117000                Memory::Paging::kernelPagemap
+                0xffffffff8011c000                Memory::Paging::kernelPages
+                0xffffffff8011d000                Memory::Paging::kernelPdpts
+                0xffffffff8011e000                Memory::Paging::kernelPageDirs
+                0xffffffff8011f000                Memory::Paging::kernelHeapPageDirs
+                0xffffffff80120000                Memory::Paging::kernelHeapPageTables
+                0xffffffff80320000                Memory::Paging::ioMappings
+                0xffffffff80324000                Memory::Paging::kernelPageTablePointers
+ .bss           0xffffffff80524000        0x0 ./build/Arch/x86_64/PIC.o
+ .bss           0xffffffff80524000        0x0 ./build/Arch/x86_64/PIT.o
+ .bss           0xffffffff80524000        0x0 ./build/Arch/x86_64/SchedulerArchImpl.o
+ .bss           0xffffffff80524000        0x8 ./build/Arch/x86_64/SMBIOS.o
+                0xffffffff80524000                SMBIOS::SmbiosInfo
+ *fill*         0xffffffff80524008       0x18 
+ .bss           0xffffffff80524020      0x820 ./build/Arch/x86_64/SMP.o
+                0xffffffff80524020                doneInit
+                0xffffffff80524040                cpus
+ .bss           0xffffffff80524840        0x0 ./build/Arch/x86_64/TaskStateSegment.o
+ .bss           0xffffffff80524840        0x0 ./build/Device/ComputerDeviceImpl.o
+ .bss           0xffffffff80524840        0x0 ./build/Device/DeviceImpl.o
+ .bss           0xffffffff80524840      0x230 ./build/Device/DeviceManagement.o
+                0xffffffff80524840                DeviceManagement::g_DeviceProviders
+                0xffffffff80524880                DeviceManagement::g_DeviceLists
+ *fill*         0xffffffff80524a70       0x10 
+ .bss           0xffffffff80524a80      0x250 ./build/Device/DeviceStaticImpl.o
+                0xffffffff80524a80                Device::allocatedId
+                0xffffffff80524aa0                Device::g_DeviceProviders
+                0xffffffff80524ae0                Device::g_DeviceLists
+ .bss           0xffffffff80524cd0        0x0 ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+ .bss           0xffffffff80524cd0        0x0 ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+ .bss           0xffffffff80524cd0        0x0 ./build/Drivers/Bus/PCI/PCIMain.o
+ .bss           0xffffffff80524cd0        0x0 ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+ *fill*         0xffffffff80524cd0       0x10 
+ .bss           0xffffffff80524ce0      0x988 ./build/Drivers/Generic/ACPI/ACPIMain.o
+                0xffffffff80524ce0                ACPI::g_Processors
+                0xffffffff80524e00                ACPI::g_InterruptOverrides
+                0xffffffff80525610                ACPI::rsdp
+                0xffffffff80525618                ACPI::rsdt
+                0xffffffff80525620                ACPI::xsdt
+                0xffffffff80525630                ACPI::xsdtEntryTable
+                0xffffffff80525648                ACPI::g_MADT
+                0xffffffff80525650                ACPI::g_FADT
+                0xffffffff80525658                ACPI::g_HPET
+                0xffffffff80525660                ACPI::g_MCFG
+ .bss           0xffffffff80525668        0x0 ./build/Drivers/Generic/ACPI/ACPITimerImpl.o
+ .bss           0xffffffff80525668        0x0 ./build/Drivers/Generic/ACPI/MADTMain.o
+ .bss           0xffffffff80525668        0x0 ./build/Drivers/Generic/APIC/APICMain.o
+ .bss           0xffffffff80525668       0x28 ./build/Drivers/Generic/APIC/IO.o
+                0xffffffff80525668                APIC::IO::BasePhys
+                0xffffffff80525670                APIC::IO::BaseVirtIO
+                0xffffffff80525678                APIC::IO::registerSelect
+                0xffffffff80525680                APIC::IO::ioWindow
+                0xffffffff80525688                APIC::IO::interrupts
+                0xffffffff8052568c                APIC::IO::apicId
+ .bss           0xffffffff80525690       0x10 ./build/Drivers/Generic/APIC/Local.o
+                0xffffffff80525690                APIC::Local::BasePhys
+                0xffffffff80525698                APIC::Local::BaseVirtIO
+ .bss           0xffffffff805256a0        0x0 ./build/Drivers/Generic/APIC/LocalAPICTimerImpl.o
+ .bss           0xffffffff805256a0        0x8 ./build/Drivers/Input/PS2LegacyController.o
+                0xffffffff805256a0                Input::g_PS2Keyboard
+ .bss           0xffffffff805256a8        0x4 ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+ .bss           0xffffffff805256ac        0x0 ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+ *fill*         0xffffffff805256ac        0x4 
+ .bss           0xffffffff805256b0        0x8 ./build/Drivers/Storage/AHCI/AHCIMain.o
+                0xffffffff805256b0                AHCI::g_ControllerDevice
+ .bss           0xffffffff805256b8        0x0 ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+ .bss           0xffffffff805256b8        0xc ./build/Drivers/Video.o
+                0xffffffff805256b8                Video::buffers
+                0xffffffff805256c0                Video::horizontalOffset
+                0xffffffff805256c2                Video::verticalOffset
+ .bss           0xffffffff805256c4        0x0 ./build/Fs/DiskDeviceImpl.o
+ .bss           0xffffffff805256c4        0x0 ./build/Input/ConsoleImpl.o
+ .bss           0xffffffff805256c4        0x0 ./build/Input/KeyCode.o
+ .bss           0xffffffff805256c4        0x0 ./build/libkern/printf.o
+ .bss           0xffffffff805256c4        0x0 ./build/libkern/sprintf.o
+ *fill*         0xffffffff805256c4       0x1c 
+ .bss           0xffffffff805256e0     0x1478 ./build/Memory/Memory.o
+                0xffffffff805256e0                Memory::g_Statistics
+                0xffffffff80525720                Memory::g_Blocks
+                0xffffffff80525b40                Memory::g_Sections
+                0xffffffff80526b50                Memory::g_KernelAllocator
+ *fill*         0xffffffff80526b58        0x8 
+ .bss           0xffffffff80526b60      0x348 ./build/Memory/Page.o
+                0xffffffff80526b60                Memory::zones
+ .bss           0xffffffff80526ea8        0x0 ./build/Memory/PageAllocation.o
+ .bss           0xffffffff80526ea8        0x0 ./build/Memory/SlabAllocatorImpl.o
+ .bss           0xffffffff80526ea8        0x0 ./build/Process/ActivityImpl.o
+ *fill*         0xffffffff80526ea8       0x18 
+ .bss           0xffffffff80526ec0       0x28 ./build/Process/ActivityManagement.o
+                0xffffffff80526ec0                Task::g_SystemActivity
+ .bss           0xffffffff80526ee8        0x0 ./build/Process/ProcessImpl.o
+ *fill*         0xffffffff80526ee8       0x18 
+ .bss           0xffffffff80526f00       0x90 ./build/Process/Scheduler.o
+                0xffffffff80526f00                Task::g_KernelProcess
+                0xffffffff80526f88                Task::g_Scheduler
+ .bss           0xffffffff80526f90        0x0 ./build/Process/SchedulerImpl.o
+ .bss           0xffffffff80526f90        0x0 ./build/Runtime.o
+ .bss           0xffffffff80526f90        0x0 ./build/String.o
+ *fill*         0xffffffff80526f90       0x10 
+ .bss           0xffffffff80526fa0       0x34 ./build/System.o
+                0xffffffff80526fa0                g_Timers
+                0xffffffff80526fc8                g_Console
+                0xffffffff80526fd0                Timer::g_TypePreferrence
+ .bss           0xffffffff80526fd4        0x0 ./build/Video/FrameBufferPresenterImpl.o
+ .bss           0xffffffff80526fd4        0x0 ./build/Video/TextModePresenterImpl.o
+ .bss           0xffffffff80526fd4        0x0 ./build/Video/VideoControllerImpl.o
+ .bss           0xffffffff80526fd4        0x0 ./build/Video/VideoPresenterImpl.o
+ *fill*         0xffffffff80526fd4        0xc 
+ .bss           0xffffffff80526fe0     0x8000 ./build/Arch/x86_64/KernelStack.o
+                0xffffffff80526fe0                stack_bottom
+                0xffffffff8052efe0                stack_top
+                0xffffffff8052efe0                __bss_end = .
+                0xffffffff8052efe0                KERNEL_END_ADDR = .
+
+/DISCARD/
+ *(.comment)
+LOAD ./build/Arch/x86_64/Arch.o
+LOAD ./build/Arch/x86_64/BootX64.o
+LOAD ./build/Arch/x86_64/CPU.o
+LOAD ./build/Arch/x86_64/GDT.o
+LOAD ./build/Arch/x86_64/IDT.o
+LOAD ./build/Arch/x86_64/Interrupts.o
+LOAD ./build/Arch/x86_64/MMU.o
+LOAD ./build/Arch/x86_64/PIC.o
+LOAD ./build/Arch/x86_64/PIT.o
+LOAD ./build/Arch/x86_64/SchedulerArchImpl.o
+LOAD ./build/Arch/x86_64/SMBIOS.o
+LOAD ./build/Arch/x86_64/SMP.o
+LOAD ./build/Arch/x86_64/TaskStateSegment.o
+LOAD ./build/Device/ComputerDeviceImpl.o
+LOAD ./build/Device/DeviceImpl.o
+LOAD ./build/Device/DeviceManagement.o
+LOAD ./build/Device/DeviceStaticImpl.o
+LOAD ./build/Drivers/Bus/PCI/PCIDeviceImpl.o
+LOAD ./build/Drivers/Bus/PCI/PCIDeviceProviderImpl.o
+LOAD ./build/Drivers/Bus/PCI/PCIMain.o
+LOAD ./build/Drivers/Clock/HPET/HPETTimerImpl.o
+LOAD ./build/Drivers/Generic/ACPI/ACPIMain.o
+LOAD ./build/Drivers/Generic/ACPI/ACPITimerImpl.o
+LOAD ./build/Drivers/Generic/ACPI/MADTMain.o
+LOAD ./build/Drivers/Generic/APIC/APICMain.o
+LOAD ./build/Drivers/Generic/APIC/IO.o
+LOAD ./build/Drivers/Generic/APIC/Local.o
+LOAD ./build/Drivers/Generic/APIC/LocalAPICTimerImpl.o
+LOAD ./build/Drivers/Input/PS2LegacyController.o
+LOAD ./build/Drivers/Input/PS2LegacyKeyboardImpl.o
+LOAD ./build/Drivers/Storage/AHCI/AHCIControllerDeviceImpl.o
+LOAD ./build/Drivers/Storage/AHCI/AHCIMain.o
+LOAD ./build/Drivers/Storage/AHCI/SATADiskDeviceImpl.o
+LOAD ./build/Drivers/Video.o
+LOAD ./build/Fs/DiskDeviceImpl.o
+LOAD ./build/Input/ConsoleImpl.o
+LOAD ./build/Input/KeyCode.o
+LOAD ./build/libkern/printf.o
+LOAD ./build/libkern/sprintf.o
+LOAD ./build/Memory/Memory.o
+LOAD ./build/Memory/Page.o
+LOAD ./build/Memory/PageAllocation.o
+LOAD ./build/Memory/SlabAllocatorImpl.o
+LOAD ./build/Process/ActivityImpl.o
+LOAD ./build/Process/ActivityManagement.o
+LOAD ./build/Process/ProcessImpl.o
+LOAD ./build/Process/Scheduler.o
+LOAD ./build/Process/SchedulerImpl.o
+LOAD ./build/Runtime.o
+LOAD ./build/String.o
+LOAD ./build/System.o
+LOAD ./build/Video/FrameBufferPresenterImpl.o
+LOAD ./build/Video/TextModePresenterImpl.o
+LOAD ./build/Video/VideoControllerImpl.o
+LOAD ./build/Video/VideoPresenterImpl.o
+LOAD ./build/Arch/x86_64/Header.o
+LOAD ./build/Arch/x86_64/IRQ.o
+LOAD ./build/Arch/x86_64/KernelStack.o
+LOAD ./build/Arch/x86_64/SMPTrampoline.o
+LOAD ./build/Arch/x86_64/Wrapper.o
+OUTPUT(./dist/x86_64/atrikrnl.elf elf64-x86-64)

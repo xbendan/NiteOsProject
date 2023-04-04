@@ -159,11 +159,11 @@ namespace PCI
         uint8_t m_ProgIf;
 
         PCIInfo(uint8_t bus, uint8_t slot, uint8_t func, uint8_t classCode, uint8_t subclass)
-          : m_Bus(bus),
+          : m_DeviceID(ConfigReadWord(bus, slot, func, PCIDeviceID)),
+            m_VendorID(ConfigReadWord(bus, slot, func, PCIVendorID)),
+            m_Bus(bus),
             m_Slot(slot),
             m_Func(func),
-            m_DeviceID(ConfigReadWord(bus, slot, func, PCIDeviceID)),
-            m_VendorID(ConfigReadWord(bus, slot, func, PCIVendorID)),
             m_ClassCode(classCode),
             m_SubClass(subclass),
             m_ProgIf(ConfigReadByte(bus, slot, func, PCIProgIF)) {}

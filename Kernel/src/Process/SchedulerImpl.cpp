@@ -82,6 +82,7 @@ namespace Task
     ) {
         Process *proc = new Process(name, file, this->NextPID(), activity, type);
         Register(proc);
+
         return proc;
     }
 

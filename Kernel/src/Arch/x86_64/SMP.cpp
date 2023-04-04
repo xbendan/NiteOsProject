@@ -86,7 +86,6 @@ namespace SMP
         while (!doneInit)
             asm("pause");
 
-        System::Out("Processor %u initialized.", cpuId);
         doneInit = false;
     }
 

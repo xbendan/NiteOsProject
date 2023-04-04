@@ -19,7 +19,7 @@ namespace APIC::Local
 
     void WriteBase(uint64_t val)
     {
-        uint64_t low = val & 0xFFFFFFFF | 0x800;
+        uint64_t low = (val & 0xFFFFFFFF) | 0x800;
         uint64_t high = val >> 32;
         asm("wrmsr" ::"a"(low), "d"(high), "c"(0x1B));
     }

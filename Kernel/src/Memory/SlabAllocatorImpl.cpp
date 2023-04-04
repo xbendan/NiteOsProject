@@ -1,4 +1,5 @@
 #include <Mem/SlabAllocator.h>
+#include <Arch/x86_64/MMU.h>
 
 namespace Memory
 {
@@ -17,7 +18,7 @@ namespace Memory
 
             cache->size = size;
             cache->flags = flags;
-            cache->reserved = ARCH_PAGE_SIZE / size;
+            cache->reserved = ARCH_PAGE_SIZE % size;
 
             // for (int i = 0; i < MAX_CPU_AMOUNT; i++) {
             //     uint64_t addrVirt = 0;
@@ -52,15 +53,19 @@ namespace Memory
             *addrVirt = addr;
         }
 
-        page->flags != PFLAGS_KMEM;
+        page->flags |= PFLAGS_KMEM;
         page->slab_cache = cache;
         page->freelist = (void **) addr;
 
         page->slab_objects = ((ARCH_PAGE_SIZE - cache->reserved) / cache->size);
         page->slab_inuse = 0;
-        
+
         for (int i = 0; i < page->slab_objects - 1; i++) {
-            *((uint64_t *)(addr + (i * cache->size))) = (uint64_t)(addr + ((i + 1) * cache->size));
+            // *((uint64_t *)(addr + i * cache->size)) = (uint64_t)(addr + (i + 1) * cache->size);
+            uint64_t next = addr + cache->size;
+            uint64_t *p = reinterpret_cast<uint64_t *>(addr);
+            *p = next;
+            addr += cache->size;
         }
 
         return page;
@@ -77,7 +82,7 @@ namespace Memory
          * Find the cache with suitable size
          * request size >= cache size
          */
-        slab_cache_t *cache;
+        slab_cache_t *cache = nullptr;
         for (int i = 0; i < 16; i++)
             if (m_BlockSize[i] >= size)
             {
@@ -102,7 +107,6 @@ namespace Memory
          * If yes, request new physical page from page frame allocator.
          */
         address = (uint64_t) page->freelist;
-        memset((void *) address, 0, cache->size);
 
         page->freelist = (void **) *(page->freelist);
         /* Check whether the objects in this page is running out */
@@ -111,6 +115,7 @@ namespace Memory
             cpu->page = Request4KPage(cache);
         }
 
+        memset((void *)address, 0, cache->size);
         return address;
     }
 

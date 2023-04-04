@@ -108,7 +108,7 @@ namespace Boot
 
     void Start()
     {
-        if(bootInfo.m_Checksum != 0xDEADC0DE)
+        if (bootInfo.m_Checksum != 0xDEADC0DE)
         {
             return;
         }
@@ -124,8 +124,8 @@ namespace Boot
 
         Video::Initialize();
 
-        // PIC::Initialize();
-        // PIT::Initialize(1000);
+        // // PIC::Initialize();
+        // // PIT::Initialize(1000);
 
         CPUIDInfo cpuId = CPUID();
         // Check hardware features
@@ -152,7 +152,7 @@ namespace Boot
         APIC::Initialize();
 
         EnableInterrupts();
-        
+
         SMBIOS::Initialize();
         SMP::Initialize();
 

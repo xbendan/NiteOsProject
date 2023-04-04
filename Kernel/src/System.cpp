@@ -20,6 +20,8 @@ namespace System
         vprintf(fmt, args);
         va_end(args);
         Video::Newline();
+
+        Sleep(80);
     }
 
     [[noreturn]] void Panic(const char *fmt, ...)
@@ -52,7 +54,9 @@ using namespace Task;
 {
     (new Input::PS2LegacyController())->Register();
     g_Scheduler = new Scheduler();
-    g_Console = new Console();
+    
+
+    // g_Console = new Console();
 
     for (;;)
         asm("hlt");

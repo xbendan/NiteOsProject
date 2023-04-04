@@ -1,9 +1,15 @@
-CC = clang
-CXX = clang++
-LLD = lld
-NASM = nasm
+# CC = clang
+# CXX = clang++ -x c++
+# LD = ld.lld
+# CC = /home/plana/Builds/x86_64-elf-11.2.0/bin/${TARGET}-elf-gcc
+# CXX = /home/plana/Builds/x86_64-elf-11.2.0/bin/${TARGET}-elf-g++
+# LD = /home/plana/Builds/x86_64-elf-11.2.0/bin/${TARGET}-elf-ld
 
-TARGET=x86_64  
+TARGET=x86_64
+CC = ${TARGET}-elf-gcc
+CXX = ${TARGET}-elf-g++
+LD = ${TARGET}-elf-ld
+NASM = nasm
 
 KERNEL_C_FLAGS = -DARCH_X86_64 \
 	-Wall \
@@ -14,22 +20,18 @@ KERNEL_C_FLAGS = -DARCH_X86_64 \
 	-finline-functions \
 	-fno-exceptions \
 	-fno-rtti \
+	-fno-pic \
 	-nostdlib \
+	-std=gnu++17 \
 	-mno-mmx \
 	-mno-sse \
 	-mno-sse2 \
-	-mcpu=x86-64 \
 	-mcmodel=large \
+	-mcmodel=kernel \
 	-mno-red-zone \
-	-fno-pic \
-	-O0 \
-	-g \
-	--target=x86_64-unknown-none-elf
+	-O0
 
-KERNEL_LD_FLAGS = \
-	-nostdlib \
-	-z max-page-size=0x1000 \
-	-Map=ElfLinkStruct
+KERNEL_LD_FLAGS = -nostdlib -z max-page-size=0x1000 -Map=KernelStruct.map
 
 KERNEL_FILES_IN_CPP 			:= $(shell find ./src -name *.cpp)
 KERNEL_FILES_IN_ASM				:= $(shell find ./src -name *.asm)
@@ -46,7 +48,8 @@ $(KERNEL_FILES_OUT_ASM): build/%.o : src/%.asm
 .PHONY: build
 build: $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM)
 	mkdir -p ./dist/${TARGET}
-	$(LLD) $(KERNEL_LD_FLAGS) -n -o ./dist/${TARGET}/atrikrnl.elf -O2 -T ./target/LinkerScript-${TARGET}.ld $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM)
+#	$(CXX) -Iinclude $(KERNEL_C_FLAGS) $(KERNEL_LD_FLAGS) $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM) -o ./dist/${TARGET}/atrikrnl.elf -O0 -T ./target/LinkerScript-${TARGET}.ld
+	$(LD) $(KERNEL_LD_FLAGS) -o ./dist/${TARGET}/atrikrnl.elf -T ./target/LinkerScript-${TARGET}.ld $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM)
 	cp ./dist/${TARGET}/atrikrnl.elf ./target/${TARGET}/iso_limine/atrikrnl.elf
 	xorriso -as mkisofs -b limine-cd.bin \
         -no-emul-boot -boot-load-size 4 -boot-info-table \

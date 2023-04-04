@@ -27,7 +27,6 @@ namespace Task
 
     enum TaskPriority
     {
-        PriorityIdle = -1,
         PriorityLowest = 0,
         PriorityLow = 1,
         PriorityNormal = 2,
@@ -85,6 +84,10 @@ namespace Task
          */
         void Terminate(int stopCode);
 
+    protected:
+        
+
+    private:
         const char *m_Name;         /* Name of the process */
         const char *m_Publisher;    /* Name of the publisher */
         //char *m_FileName;     /* Executable file name of this process */
@@ -100,15 +103,6 @@ namespace Task
             uint32_t __reserved__: 30;
         } __attribute__((packed));
         uint16_t m_Handles;   /* Register handles amount */
-        //uint16_t m_Cores;     /* CPU Cores currently running on */
-        struct
-        { // Memory
-            //uint64_t m_MemoryAllocated;     /* Memory allocated for this process */
-            //uint32_t m_MemoryCached;        /* Memory allocated and cached */
-            uint32_t m_Pages;               /* Amount of 4K pages */
-            uint32_t m_PresentPages;        /* Pages that is present now */
-            uint32_t m_SwappedPages;        /* Pages that has been swapped into disks */
-        };
 
         struct
         {
@@ -168,8 +162,8 @@ namespace Task
         uint32_t m_TimeSlice = 0;
 
         Thread(Process *process)
-          : m_Parent(process),
-            m_ThreadId(process->m_NextThreadId++),
+          : m_ThreadId(process->m_NextThreadId++),
+            m_Parent(process),
             m_ThreadPriority(TaskPriority::PriorityNormal),
             m_ThreadState(TaskState::TaskStateRunning) { }
     };

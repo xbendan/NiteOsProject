@@ -58,3 +58,4 @@ ATRI kernel is designed as a modern style system kernel. It's a monolithic kerne
 20230325: Add support to SSE, MMX
 20230326: Add support to PS/2 controller and keyboard, update device.
 20230327: Implement a simple console with no backspace.
+20230403: Finally fixed issues on kernel memory allocation.

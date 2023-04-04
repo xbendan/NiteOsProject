@@ -7,6 +7,7 @@ global asmw_get_pagemap
 
 asmw_flush_gdt:
     lgdt [rdi]
+    
     push rbp
     mov rbp, rsp
 

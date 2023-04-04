@@ -27,8 +27,6 @@ namespace Task
 
         bool Register(Process *process);
 
-        void Tick();
-
         void Schedule();
 
         void SwitchThread(Thread *newThread);

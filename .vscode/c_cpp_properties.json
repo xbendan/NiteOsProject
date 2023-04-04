@@ -15,17 +15,14 @@
       "name": "BareMetalX64",
       "includePath": [
         "${workspaceFolder}/Kernel/include/**",
-        "/home/plana/Builds/llvm-clang/lib/**"
+        "/home/plana/Builds/gcc-12.2.0-output/lib"
       ],
       "defines": [],
-      "compilerPath": "/home/plana/Builds/llvm-clang/bin/clang++",
-      "cStandard": "c17",
-      "cppStandard": "c++17",
-      "intelliSenseMode": "clang-x64",
-      "configurationProvider": "ms-vscode.makefile-tools",
-      "compilerArgs": [
-        "--target=x86_64-pc-none-elf"
-      ]
+      "compilerPath": "/home/plana/Builds/gcc-12.2.0-output/bin",
+      "cStandard": "gnu17",
+      "cppStandard": "gnu++20",
+      "intelliSenseMode": "gcc-x64",
+      "configurationProvider": "ms-vscode.makefile-tools"
     }
   ],
   "version": 4
