@@ -124,9 +124,6 @@ namespace Boot
 
         Video::Initialize();
 
-        // // PIC::Initialize();
-        // // PIT::Initialize(1000);
-
         CPUIDInfo cpuId = CPUID();
         // Check hardware features
         {

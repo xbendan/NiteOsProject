@@ -17,7 +17,7 @@
 typedef uint32_t tid_t;
 typedef uint32_t pid_t;
 
-using namespace Memory::Paging;
+using namespace Paging;
 
 namespace Task
 {
@@ -84,8 +84,15 @@ namespace Task
          */
         void Terminate(int stopCode);
 
+#       if defined(ARCH_X86_64)
+        Paging::VirtualPages AddressSpace() { return m_Pagemap; }
+#       endif
+
     protected:
-        
+        uint32_t m_NextThreadId;
+
+        friend Thread;
+        friend Scheduler;
 
     private:
         const char *m_Name;         /* Name of the process */
@@ -110,7 +117,6 @@ namespace Task
             Spinlock m_HandleLock;
         };
 
-        uint32_t m_NextThreadId;
         Thread *m_MainThread;
         LinkedList<Thread> m_ChildrenThreadList;
 
@@ -119,7 +125,7 @@ namespace Task
 
         /* Architecture Fields */
         #ifdef ARCH_X86_64 
-        Memory::Paging::VirtualPages *m_Pagemap;
+        Paging::VirtualPages *m_Pagemap;
         #elif ARCH_AARCH64
 
         #elif ARCH_RISCV

@@ -88,7 +88,7 @@ namespace APIC::IO
         ACPI::g_InterruptOverrides.ForEach([&](MADTInterruptOverride *&obj, int) -> void {
             if (obj->irqSource == (irq - 0x20))
             {
-                // WriteData64(IO_APIC_RED_TABLE_ENT(obj->gSi), irq);
+                WriteData64(IO_APIC_RED_TABLE_ENT(obj->gSi), irq);
                 System::Out("Remap IRQ: Index=%u Data=%u", obj->gSi, irq);
                 return;
             }

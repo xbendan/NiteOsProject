@@ -1,16 +1,18 @@
-#include <Arch/x86_64/MMU.h>
-#include <Arch/x86_64/Interrupts.h>
 #include <Mem/Memory.h>
 #include <Mem/KMemAlloc.h>
 #include <Mem/Page.h>
 #include <Mem/MMIO.h>
+#include <Mem/AddressSpace.h>
 #include <Proc/Scheduler.h>
 #include <Utils/Spinlock.h>
+
+#include <Arch/x86_64/MMU.h>
+#include <Arch/x86_64/Interrupts.h>
 
 #define KERNEL_HEAP_PML4_INDEX 511
 #define KERNEL_HEAP_PDPT_INDEX 511
 
-namespace Memory::Paging
+namespace Paging
 {
     VirtualPages   kernelPagemap;
 
@@ -289,6 +291,16 @@ namespace Memory::Paging
 namespace Memory
 {
     uint64_t GetIOMapping(uint64_t address) {
-        return Memory::Paging::GetIOMapping(address);
+        return Paging::GetIOMapping(address);
     }
+}
+
+KernelAddressSpace::KernelAddressSpace()
+{
+
+}
+
+KernelAddressSpace::~KernelAddressSpace()
+{
+
 }

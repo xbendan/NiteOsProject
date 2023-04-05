@@ -92,6 +92,8 @@ namespace APIC
     void Initialize();
 } // namespace APIC
 
+#include <Arch/x86_64/Interrupts.h>
+
 class LocalAPICTimer : public Timer
 {
 private:
@@ -99,12 +101,13 @@ private:
     volatile uint64_t m_Ticks;
 
 public:
+    static void TimerEvent(InterruptData *data, RegisterContext *regs);
+
     LocalAPICTimer();
     ~LocalAPICTimer();
 
     uint32_t EstimateBusSpeed();
-
-    virtual void Tick();
-    virtual uint64_t CurrentTime(TimeSpan span = Millisecond);
-    virtual void Sleep(long milliseconds);
+    void Tick() override;
+    uint64_t CurrentTime(TimeSpan span = Millisecond) override;
+    void Sleep(long milliseconds) override;
 };

@@ -6,9 +6,10 @@
 
 using namespace APIC::Local;
 
-void TimerTickHandler(InterruptData *data, RegisterContext *context)
+void LocalAPICTimer::TimerEvent(InterruptData *data, RegisterContext *regs)
 {
-    // System::Out("Timer tick!");
+    System::Out("Tick!");
+    g_Timers[TimerAPIC]->Tick();
 }
 
 uint32_t LocalAPICTimer::EstimateBusSpeed()
@@ -37,7 +38,8 @@ LocalAPICTimer::LocalAPICTimer()
     WriteData(LOCAL_APIC_TIMER_DIVIDE, 0x3);
     WriteData(LOCAL_APIC_TIMER_INITIAL_COUNT, m_BusClock / 16 / hertz);
 
-    RegisterIRQ(irq, TimerTickHandler);
+    APIC::IO::EnableInterrupt(irq);
+    RegisterIRQ(irq, TimerEvent);
 }
 
 LocalAPICTimer::~LocalAPICTimer()
@@ -49,7 +51,8 @@ void LocalAPICTimer::Tick() { m_Ticks++; }
 
 uint64_t LocalAPICTimer::CurrentTime(TimeSpan span)
 {
-    return ReadData(LOCAL_APIC_TIMER_CURRENT_COUNT) * 1000 / span;
+    // return ReadData(LOCAL_APIC_TIMER_CURRENT_COUNT) * 1000 / span;
+    return m_Ticks * 1000 / span;
 }
 
 void LocalAPICTimer::Sleep(long milliseconds)

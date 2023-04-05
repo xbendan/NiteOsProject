@@ -18,9 +18,9 @@
         "/home/plana/Builds/gcc-12.2.0-output/lib"
       ],
       "defines": [],
-      "compilerPath": "/home/plana/Builds/gcc-12.2.0-output/bin",
-      "cStandard": "gnu17",
-      "cppStandard": "gnu++20",
+      "compilerPath": "/home/plana/Builds/gcc-12.2.0-output/bin/x86_64-elf-g++",
+      "cStandard": "c23",
+      "cppStandard": "c++23",
       "intelliSenseMode": "gcc-x64",
       "configurationProvider": "ms-vscode.makefile-tools"
     }

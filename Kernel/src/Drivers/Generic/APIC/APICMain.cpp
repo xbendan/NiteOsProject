@@ -71,5 +71,11 @@ namespace APIC
         IO::Initialize();
 
         g_Timers[TimerAPIC] = new LocalAPICTimer();
+
+        while (true)
+        {
+            g_Timers[TimerACPI]->Sleep(1000);
+            System::Out("%u", g_Timers[TimerAPIC]->CurrentTime());
+        }
     }
 } // namespace APIC
