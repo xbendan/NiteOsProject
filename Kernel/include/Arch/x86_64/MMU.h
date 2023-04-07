@@ -27,6 +27,9 @@
 #define PAGE_SIZE                   (1 << 7)
 #define IS_PAGE_ALIGNED(addr)       (addr % ARCH_PAGE_SIZE == 0)
 
+#define KERNEL_HEAP_PML4_INDEX 511
+#define KERNEL_HEAP_PDPT_INDEX 511
+
 namespace Paging
 {  
     typedef uint64_t pml4e_t;
@@ -40,14 +43,47 @@ namespace Paging
     using pagedir_t = pde_t[TABLES_PER_DIR]; /* 2MiB -> 1GiB */
     using pagetable_t = page_t[PAGES_PER_TABLE]; /* 4KiB -> 2MiB */
 
-    struct VirtualPages
+    extern pagedir_t   kernelPageDirs __attribute__((aligned(ARCH_PAGE_SIZE)));
+    extern pagedir_t   kernelHeapPageDirs __attribute__((aligned(ARCH_PAGE_SIZE)));
+    extern pagetable_t kernelHeapPageTables[TABLES_PER_DIR] __attribute__((aligned(ARCH_PAGE_SIZE)));
+    extern pagedir_t   ioMappings[4] __attribute__((aligned(ARCH_PAGE_SIZE)));
+    extern pagetable_t *kernelPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
+
+    enum PageFlags
     {
+        PagePresent = 0x01,
+        PageWritable = 0x02,
+        PageUser = 0x04,
+        PageWriteThrough = 0x08,
+        PageCacheDisabled = 0x10,
+        PageDirectAddress = 0x80
+    };
+
+    class VirtualPages
+    {
+    public:
         pml4_t pml4 __attribute__((aligned(ARCH_PAGE_SIZE)));
         pdpt_t pdpts __attribute__((aligned(ARCH_PAGE_SIZE)));
-        pagedir_t *pageDirs[DIRS_PER_PDPT] __attribute__((aligned(ARCH_PAGE_SIZE)));
-        pagetable_t **pageTables[DIRS_PER_PDPT] __attribute__((aligned(ARCH_PAGE_SIZE)));
+        /*
+         * 
+         */
+        pde_t *pageDirs[DIRS_PER_PDPT] __attribute__((aligned(ARCH_PAGE_SIZE)));
+        page_t **pageTables[DIRS_PER_PDPT] __attribute__((aligned(ARCH_PAGE_SIZE)));
+        /*
+         * Each PDPT contains 1024 * 1024 / 4 = 262144 pages
+         * 1 byte = 8 bits, 262144 pages needs 32768 bytes to manage
+         * 
+         * 3 Level Bitmap
+         * - 512 pointers to next level pointers, point at a 4K page. PDPT 1GB for each
+         * - A 4K page contains 512 pointers to bits. PDIR 2MB for each
+         * - 512 bits total, 32 bytes
+         */
+        uint64_t **bitmaps[DIRS_PER_PDPT];
         uint64_t pml4Phys;
         pdpt_t *kernelPdpts;
+
+        void CheckBitmap(uint64_t d, uint64_t t);
+        void CheckPageTable(uint64_t d, uint64_t t);
     };
 
     /**
@@ -170,9 +206,8 @@ namespace Paging
         return addr + IO_VIRTUAL_BASE;
     }
 
-    extern VirtualPages kernelPagemap;
+    extern VirtualPages g_KernelPagemap;
 } // namespace Memory
-
 
 extern "C" {
 Paging::pml4_t* asmw_get_pagemap();

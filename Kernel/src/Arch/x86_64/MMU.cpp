@@ -14,7 +14,8 @@
 
 namespace Paging
 {
-    VirtualPages   kernelPagemap;
+    KernelAddressSpace g_KernelSpace;
+    VirtualPages g_KernelPagemap;
 
     pml4_t      kernelPages __attribute__((aligned(ARCH_PAGE_SIZE)));
     pdpt_t      kernelPdpts __attribute__((aligned(ARCH_PAGE_SIZE)));
@@ -32,31 +33,33 @@ namespace Paging
     }
 
     void InitializeVirtualMemory() {
-        memset(&kernelPages, 0, sizeof(pml4_t)); 
-        memset(&kernelPdpts, 0, sizeof(pdpt_t)); 
-        memset(&kernelPageDirs, 0, sizeof(pagedir_t)); 
+        // memset(&kernelPages, 0, sizeof(pml4_t)); 
+        // memset(&kernelPdpts, 0, sizeof(pdpt_t)); 
+        // memset(&kernelPageDirs, 0, sizeof(pagedir_t)); 
 
-        SetPageFrame(&(kernelPages[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]), (uint64_t)&kernelPdpts - KERNEL_VIRTUAL_BASE, 0x3);
-        kernelPages[0] = kernelPages[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)];
+        // SetPageFrame(&(kernelPages[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]), (uint64_t)&kernelPdpts - KERNEL_VIRTUAL_BASE, 0x3);
+        // kernelPages[0] = kernelPages[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)];
 
-        SetPageFrame(&(kernelPdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)]), (uint64_t)&kernelPageDirs - KERNEL_VIRTUAL_BASE, 0x3);
-        for (int i = 0; i < TABLES_PER_DIR; i++) {
-            SetPageFrame(&kernelPageDirs[i], (PAGE_SIZE_2M * i), 0x83);
-        }
+        // SetPageFrame(&(kernelPdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)]), (uint64_t)&kernelPageDirs - KERNEL_VIRTUAL_BASE, 0x3);
+        // for (int i = 0; i < TABLES_PER_DIR; i++) {
+        //     SetPageFrame(&kernelPageDirs[i], (PAGE_SIZE_2M * i), 0x83);
+        // }
 
-        SetPageFrame(&(kernelPdpts[KERNEL_HEAP_PDPT_INDEX]), (uint64_t)&kernelHeapPageDirs - KERNEL_VIRTUAL_BASE, 0x3);
-        for (int j = 0; j < TABLES_PER_DIR; j++) {
-            SetPageFrame(&(kernelHeapPageDirs[j]), (uint64_t)&(kernelHeapPageTables[j]) - KERNEL_VIRTUAL_BASE, 0x3);
-            kernelPageTablePointers[KERNEL_HEAP_PDPT_INDEX][j] = &(kernelHeapPageTables[j]);
-        }
+        // SetPageFrame(&(kernelPdpts[KERNEL_HEAP_PDPT_INDEX]), (uint64_t)&kernelHeapPageDirs - KERNEL_VIRTUAL_BASE, 0x3);
+        // for (int j = 0; j < TABLES_PER_DIR; j++) {
+        //     SetPageFrame(&(kernelHeapPageDirs[j]), (uint64_t)&(kernelHeapPageTables[j]) - KERNEL_VIRTUAL_BASE, 0x3);
+        //     kernelPageTablePointers[KERNEL_HEAP_PDPT_INDEX][j] = &(kernelHeapPageTables[j]);
+        // }
 
-        for (int i = 0; i < 4; i++) {
-            SetPageFrame(&(kernelPdpts[PDPT_GET_INDEX(IO_VIRTUAL_BASE) + i]), ((uint64_t)&(ioMappings[i])) - KERNEL_VIRTUAL_BASE, 0x3);
-            for (int j = 0; j < TABLES_PER_DIR; j++) {
-                SetPageFrame(&ioMappings[i][j], (PAGE_SIZE_1G * i + PAGE_SIZE_2M * j), (PAGE_PRESENT | PAGE_WRITABLE | PAGE_SIZE | PAGE_NOCACHE));
-            }
-        }
-        kernelPdpts[0] = kernelPdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)];
+        // for (int i = 0; i < 4; i++) {
+        //     SetPageFrame(&(kernelPdpts[PDPT_GET_INDEX(IO_VIRTUAL_BASE) + i]), ((uint64_t)&(ioMappings[i])) - KERNEL_VIRTUAL_BASE, 0x3);
+        //     for (int j = 0; j < TABLES_PER_DIR; j++) {
+        //         SetPageFrame(&ioMappings[i][j], (PAGE_SIZE_1G * i + PAGE_SIZE_2M * j), (PAGE_PRESENT | PAGE_WRITABLE | PAGE_SIZE | PAGE_NOCACHE));
+        //     }
+        // }
+        // kernelPdpts[0] = kernelPdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)];
+
+        g_KernelSpace = KernelAddressSpace();
 
         asm("mov %%rax, %%cr3" ::"a"((uint64_t)&kernelPages - KERNEL_VIRTUAL_BASE));
     }
@@ -92,7 +95,7 @@ namespace Paging
     VirtualPages *CreatePagemap()
     {
         VirtualPages *pagemap = reinterpret_cast<VirtualPages *>(Memory::KernelAllocate4KPages(4));
-        SetPageFrame(&(pagemap->pml4[0]), ConvertVirtToPhys(&kernelPagemap, (uint64_t)&pagemap->pdpts), 0x3);
+        SetPageFrame(&(pagemap->pml4[0]), ConvertVirtToPhys(&g_KernelPagemap, (uint64_t)&pagemap->pdpts), 0x3);
         SetPageFrame(&(pagemap->pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]), (uint64_t)&kernelPdpts - KERNEL_VIRTUAL_BASE, 0x3);
 
 
@@ -102,6 +105,11 @@ namespace Paging
     void DestroyPagemap()
     {
 
+    }
+
+    void CreatePageTable(uint64_t entry)
+    {
+        
     }
 
     /**
@@ -265,7 +273,7 @@ namespace Paging
     uintptr_t ConvertVirtToPhys(VirtualPages *pagemap, uintptr_t virt) {
         size_t pml4Index = PML4_GET_INDEX(virt), pdptIndex = PDPT_GET_INDEX(virt), pdirIndex = PDIR_GET_INDEX(virt), pageIndex = PAGE_GET_INDEX(virt);
 
-        if(pml4Index == PDPTS_PER_PML4 - 1 || pagemap == &kernelPagemap) {
+        if(pml4Index == PDPTS_PER_PML4 - 1 || pagemap == &g_KernelPagemap) {
             /* Kernel address space */
             if (pdptIndex == PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)) {
                 return (PAGE_SIZE_2M * pdirIndex) + (virt % PAGE_SIZE_2M); 
@@ -282,9 +290,40 @@ namespace Paging
             return 0x0;
         }
     }
+    
+    using namespace Memory;
 
-    void HandlePageFault(InterruptData *ptr, registers_t *regs) {
+    void VirtualPages::CheckBitmap(uint64_t d, uint64_t t)
+    {
+        if (!bitmaps[d][t])
+        {
+            uint64_t base = ALIGN_DOWN(t, 64);
+            uint64_t address = Task::g_KernelProcess.AddressSpace()->Allocate4KPages(1);
+            for (int i = 0; i < 64; i++)
+            {
+                bitmaps[d][base + i] = address + (i * 64);
+            }
+        }
+    }
 
+    void VirtualPages::CheckPageTable(uint64_t d, uint64_t t)
+    {
+        AddressSpace *kernelSpace = Task::g_KernelProcess.AddressSpace();
+
+        if (!(pdpts[d] & PagePresent) || !pageDirs[d])
+        {
+            PageFrame *page;
+            pageDirs[d] = kernelSpace->Allocate4KPages(1, &page);
+            pageTables[d] = kernelSpace->Allocate4KPages(1);
+            SetPageFrame(&pdpts[d], page->address, (PagePresent | PageWritable | PageUser));
+        }
+
+        if (!(pageDirs[d][t] & PagePresent) || !pageTables[d][t])
+        {
+            PageFrame *page;
+            pageTables[d][t] = Task::g_KernelProcess.AddressSpace()->Allocate4KPages(1, &page);
+            SetPageFrame(&pageDirs[d][t], page->address, (PagePresent | PageWritable | PageUser))
+        }
     }
 } // namespace Memory
 

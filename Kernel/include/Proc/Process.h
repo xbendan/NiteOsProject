@@ -3,6 +3,7 @@
 #include <Fs/VirtualFs.h>
 #include <Utils/LinkedList.h>
 #include <Utils/Spinlock.h>
+#include <Mem/AddressSpace.h>
 #include <macros>
 
 #ifdef ARCH_X86_64
@@ -84,9 +85,7 @@ namespace Task
          */
         void Terminate(int stopCode);
 
-#       if defined(ARCH_X86_64)
-        Paging::VirtualPages AddressSpace() { return m_Pagemap; }
-#       endif
+        AddressSpace *AddressSpace() { return m_AddrSpace; }
 
     protected:
         uint32_t m_NextThreadId;
@@ -123,14 +122,7 @@ namespace Task
         uintptr_t m_EntryPoint;
         uintptr_t m_Heap;
 
-        /* Architecture Fields */
-        #ifdef ARCH_X86_64 
-        Paging::VirtualPages *m_Pagemap;
-        #elif ARCH_AARCH64
-
-        #elif ARCH_RISCV
-
-        #endif
+        AddressSpace *m_AddrSpace;
     };
 
     struct ThreadBlocker

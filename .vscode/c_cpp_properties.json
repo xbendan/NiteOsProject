@@ -14,13 +14,12 @@
     {
       "name": "BareMetalX64",
       "includePath": [
-        "${workspaceFolder}/Kernel/include/**",
-        "/home/plana/Builds/gcc-12.2.0-output/lib"
+        "${workspaceFolder}/Kernel/include/**"
       ],
       "defines": [],
-      "compilerPath": "/home/plana/Builds/gcc-12.2.0-output/bin/x86_64-elf-g++",
-      "cStandard": "c23",
-      "cppStandard": "c++23",
+      "compilerPath": "/home/plana/Builds/gcc-12.2.0-output/bin/x86_64-elf-g",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
       "intelliSenseMode": "gcc-x64",
       "configurationProvider": "ms-vscode.makefile-tools"
     }
