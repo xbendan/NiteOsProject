@@ -17,19 +17,19 @@ namespace Task
         m_FileSource(file),
         m_ProcessId(processId),
         m_Activity(activity),
-        m_Type(type),
-        m_IsIdle(true)
+        m_Type(type)
     {
         if (Objects::IsNull((void *)name) && !Objects::IsNull(file)) {
             m_Name = file->m_Name;
         }
 
-        if (activity == nullptr)
+        m_Flags |= 0x01;
+
+        if (m_Activity == nullptr)
         {
-            
+            this->m_Activity = new Activity(this);
         }
 
-        Activity::CreateIfNull(this);
         ListNode<Thread> *mainThread = g_Scheduler->CreateThread(this);
 
         m_MainThread = &mainThread->obj;
@@ -46,8 +46,7 @@ namespace Task
     //     m_FilePtr(sourceFile),
     //     m_ProcessId(pid),
     //     m_Activity(activity),
-    //     m_Type(taskType),
-    //     m_IsIdle(true)
+    //     m_Type(taskType)
     // {
     //     Activity::CreateIfNull(this);
     //     ListNode<Thread> *mainThread = g_Scheduler->CreateThread(this);
@@ -63,12 +62,12 @@ namespace Task
 
     void Process::Start()
     {
-        this->m_IsIdle = false;
+        m_Flags &= ~0x01;
     }
 
     void Process::Suspend()
     {
-        this->m_IsIdle = true;
+        m_Flags |= 0x01;
     }
 
     void Process::Stop()

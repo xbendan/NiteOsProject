@@ -1,5 +1,4 @@
 #include <Proc/Process.h>
-#include <libkern/ref.h>
 #include <Utils/ArrayList.h>
 
 #define MAX_PROCESS_AMOUNT 65536

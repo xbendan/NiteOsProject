@@ -46,7 +46,7 @@ namespace Memory
     PageFrame *SlabAllocator::Request4KPage(slab_cache_t *cache, uint64_t *addrVirt)
     {
         page_t *page = nullptr;
-        uint64_t addr = Memory::KernelAllocate4KPages(1, &page);
+        uint64_t addr = Memory::KernelAllocate4KPages(1);
 
         if (addrVirt != nullptr)
         {

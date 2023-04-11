@@ -17,7 +17,7 @@
         "${workspaceFolder}/Kernel/include/**"
       ],
       "defines": [],
-      "compilerPath": "/home/plana/Builds/gcc-12.2.0-output/bin/x86_64-elf-g",
+      "compilerPath": "/home/mejiroardan/Builds/gcc-12.2.0-output/bin/x86_64-elf-g",
       "cStandard": "c17",
       "cppStandard": "c++17",
       "intelliSenseMode": "gcc-x64",

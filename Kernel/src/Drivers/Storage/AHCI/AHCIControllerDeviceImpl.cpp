@@ -8,9 +8,9 @@ namespace AHCI
     AHCIControllerDevice::AHCIControllerDevice(PCI::PCIInfo deviceInfo)
       : PCI::PCIDevice(deviceInfo),
         m_AddrBase(this->GetBaseAddressRegister(5)),
-        m_clbPhys(Memory::Allocate4KPages(8)),
-        m_fbPhys(Memory::Allocate4KPages(2)),
-        m_ctbaPhys(Memory::Allocate4KPages(64))
+        m_clbPhys(Memory::KernelAllocate4KPages(8)),
+        m_fbPhys(Memory::KernelAllocate4KPages(2)),
+        m_ctbaPhys(Memory::KernelAllocate4KPages(64))
     {
         m_Name = "AHCI Controller";
         m_Type = DeviceType::DeviceTypeDiskController;

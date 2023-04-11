@@ -24,6 +24,7 @@ public:
 
     inline uint64_t AllocatedPages() { return m_AllocatedPages; }
     inline uint64_t MappedPages() { return m_MappedPages; }
+    inline void *VirtualPages() { return m_VirtualPages; }
     virtual uintptr_t Allocate4KPages(size_t amount);
     virtual void Free4KPages(uintptr_t address, size_t amount);
     virtual bool IsPagePresent(uintptr_t address);

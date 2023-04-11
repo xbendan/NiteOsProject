@@ -31,7 +31,8 @@ namespace System
         vprintf(fmt, args);
         va_end(args);
 
-        Halt();
+        while (1)
+            Halt();
     }
 } // namespace System
 

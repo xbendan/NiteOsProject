@@ -165,6 +165,7 @@ KernelAddressSpace::KernelAddressSpace()
         pagemap->pageDirs[i] = &kernelPageDirs[i];
         SetPageFrame(&kernelPageDirs[i], (PAGE_SIZE_2M * i), (PagePresent | PageWritable));
     }
+    
 
     SetPageFrame(&(pagemap->pdpts[KERNEL_HEAP_PDPT_INDEX]), 
         (uint64_t)(&kernelHeapPageDirs - KERNEL_VIRTUAL_BASE), 
@@ -194,15 +195,47 @@ KernelAddressSpace::KernelAddressSpace()
     pagemap->pml4Phys = (&pagemap->pml4) - KERNEL_VIRTUAL_BASE;
 }
 
-uintptr_t KernelAddressSpace::Allocate4KPages(size_t amount, void **page = nullptr)
+uintptr_t KernelAddressSpace::Allocate4KPages(size_t amount)
 {
+    amount = ALIGN_PAGE(amount);
+
     uint64_t offset = 0, pageDirOffset = 0;
     uint64_t counter = 0;
     uintptr_t address;
+    uintptr_t phys = Memory::AllocatePhysMemory4K(amount);
     
     for (int i = 0; i < TABLES_PER_DIR; i++) {
-        
+        for (int j = 0; j < PAGES_PER_TABLE; j++) {
+            if (kernelHeapPageTables[i][j] & PagePresent) {
+                pageDirOffset = i;
+                offset = j + 1;
+                counter = 0;
+                continue;
+            }
+
+            counter++;
+            if (counter >= amount) {
+                adderss = ((pageDirOffset * PAGE_SIZE_2M) + (offset * PAGE_SIZE_4K)) | 0xFFFFFFFFC0000000;
+                uint64_t totalPageOffset = 0;
+                while (counter) {
+                    if (offset >= PAGES_PER_TABLE) {
+                        pageDirOffset++;
+                        offset = 0;
+                    }
+
+                    SetPageFrame(&(kernelHeapPageTables[pageDirOffset][offset]), 
+                        (phys + ((pageDirOffset * PAGES_PER_TABLE) + offset) * ARCH_PAGE_SIZE),
+                        (PagePresent | PageWritable));
+                    offset++;
+                }
+                m_AllocatedPages += amount;
+                m_MappedPages += amount;
+
+                return address;
+            }
+        }
     }
+    return 0;
 }
 
 void KernelAddressSpace::Free4KPages(uintptr_t address, size_t amount)

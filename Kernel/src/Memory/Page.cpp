@@ -1,5 +1,6 @@
 #include <Mem/Page.h>
 #include <Mem/MemZone.h>
+#include <Proc/Scheduler.h>
 
 #ifdef ARCH_X86_64
 #include <Arch/x86_64/MMU.h>
@@ -147,4 +148,7 @@ namespace Memory {
     void CombinePage(page_t *lpage, page_t *rpage) {
 
     }
+
+    uintptr_t KernelAllocate4KPages(size_t amount) { Task::g_KernelProcess.m_AddressSpace->Allocate4KPages(amount); }
+    uintptr_t KernelFree4KPages(uintptr_t address, size_t amount) { Task::g_KernelProcess.m_AddressSpace->Free4KPages(address, amount); }
 } // namespace Memory

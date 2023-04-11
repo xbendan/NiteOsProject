@@ -1,4 +1,5 @@
 #include <Arch/x86_64/CPU.h>
+#include <Arch/x86_64/MMU.h>
 #include <Proc/Scheduler.h>
 #include <Proc/Process.h>
 
@@ -13,7 +14,8 @@ namespace Task
 
         cpu->currentThread = newThread;
         cpu->tss.rsp[0] = reinterpret_cast<uint64_t>(newThread->m_KernelStack);
-        
+        Process *process = newThread->m_Parent;
+
         asm volatile(
             R"(mov %0, %%rsp;
             mov %1, %%rax;
@@ -36,7 +38,6 @@ namespace Task
             pop %%rax
             addq $8, %%rsp
             iretq)" ::"r"(&newThread->m_Registers),
-            "r"(newThread->m_Parent->m_Pagemap->pml4Phys)
-        );
+            "r"(reinterpret_cast<Paging::VirtualPages *>(process->m_AddressSpace->VirtualPages())->pml4Phys););
     }
 } // namespace Task

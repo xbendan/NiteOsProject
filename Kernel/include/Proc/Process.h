@@ -1,14 +1,14 @@
 #pragma once
 
 #include <Fs/VirtualFs.h>
+#include <Mem/AddressSpace.h>
 #include <Utils/LinkedList.h>
 #include <Utils/Spinlock.h>
-#include <Mem/AddressSpace.h>
 #include <macros>
 
 #ifdef ARCH_X86_64
-    #include <Arch/x86_64/CPU.h>
-    #include <Arch/x86_64/MMU.h>
+#include <Arch/x86_64/CPU.h>
+#include <Arch/x86_64/MMU.h>
 #elif ARCH_AARCH64
 
 #elif ARCH_RISCV
@@ -17,8 +17,6 @@
 
 typedef uint32_t tid_t;
 typedef uint32_t pid_t;
-
-using namespace Paging;
 
 namespace Task
 {
@@ -58,11 +56,11 @@ namespace Task
     public:
         Process();
         Process(
-            const char                 *name,
-            Fs::File                   *file,
-            uint32_t                    processId,
-            Activity                   *activity,
-            TaskType                    type);
+            const char *name,
+            Fs::File *file,
+            uint32_t processId,
+            Activity *activity,
+            TaskType type);
         ~Process();
 
         void Start();
@@ -71,44 +69,32 @@ namespace Task
 
         /**
          * @brief Send a message to terminate a process
-         * 
-         * This function will insert a message of terminating to the message 
+         *
+         * This function will insert a message of terminating to the message
          * queue of targeting process. It generally tells the process to stop
          * working and save all changes. Resources will be released manually
-         * by the process, so it's safe to stop a processunless the process 
-         * cannot handle this message. In that situation, sending a terminate 
+         * by the process, so it's safe to stop a processunless the process
+         * cannot handle this message. In that situation, sending a terminate
          * message won't do anything, call @code {.c}
          * KillProcess(struct Process *process)
          * @endcode instead.
-         * 
-         * @param process 
+         *
+         * @param process
          */
         void Terminate(int stopCode);
 
-        AddressSpace *AddressSpace() { return m_AddrSpace; }
+        const char *m_Name;      /* Name of the process */
+        const char *m_Publisher; /* Name of the publisher */
+        const char *m_Package;   /* Package Name */
+        pid_t m_ProcessId;      /* Process Id, 0~255 are reserved for kernel process */
+        TaskType m_Type;        /* Current process type */
+        Fs::File *m_FileSource; /* Pointer to the source file, can be NULL */
+        Activity *m_Activity;   /* Pointer to the Activity */
 
-    protected:
-        uint32_t m_NextThreadId;
+        bool IsIdle() { return (m_Flags & 0x01); }
 
-        friend Thread;
-        friend Scheduler;
-
-    private:
-        const char *m_Name;         /* Name of the process */
-        const char *m_Publisher;    /* Name of the publisher */
-        //char *m_FileName;     /* Executable file name of this process */
-        const char *m_Package;      /* Package Name */
-        pid_t m_ProcessId;    /* Process Id, 0~255 are reserved for kernel process */
-        TaskType m_Type;       /* Current process type */
-        Fs::File *m_FileSource;         /* Pointer to the source file, can be NULL */
-        Activity *m_Activity;    /* Pointer to the Activity */
-        struct
-        {
-            bool m_IsFocus: 1;
-            bool m_IsIdle: 1;
-            uint32_t __reserved__: 30;
-        } __attribute__((packed));
-        uint16_t m_Handles;   /* Register handles amount */
+        uint32_t m_Flags;
+        uint16_t m_Handles; /* Register handles amount */
 
         struct
         {
@@ -121,21 +107,27 @@ namespace Task
 
         uintptr_t m_EntryPoint;
         uintptr_t m_Heap;
+        
+        AddressSpace *m_AddressSpace;
 
-        AddressSpace *m_AddrSpace;
+    protected:
+        uint32_t m_NextThreadId;
+
+        friend Thread;
+        friend Scheduler;
+
     };
 
     struct ThreadBlocker
     {
-
     };
 
     struct Thread
     {
-        tid_t m_ThreadId;                  /* Thread ID, not duplicated in same progress */
+        tid_t m_ThreadId;     /* Thread ID, not duplicated in same progress */
         Process *m_Parent;    /* Parent process, indicates the owner of this thread */
-        Spinlock m_Lock;            /* Thread lock */
-        Spinlock m_StateLock;       /* Thread state lock */
+        Spinlock m_Lock;      /* Thread lock */
+        Spinlock m_StateLock; /* Thread state lock */
 
         struct
         {
@@ -151,18 +143,18 @@ namespace Task
         uint64_t m_FsBase;
         void *m_FxState;
 
-        RegisterContext m_Registers;  
+        RegisterContext m_Registers;
         RegisterContext m_LastSyscall;
 
-        TaskPriority m_ThreadPriority;       /* The priority when scheduling */
-        TaskState m_ThreadState = TaskState::TaskStateRunning;          /* Thread state */
+        TaskPriority m_ThreadPriority;                         /* The priority when scheduling */
+        TaskState m_ThreadState = TaskState::TaskStateRunning; /* Thread state */
 
         uint32_t m_TimeSlice = 0;
 
         Thread(Process *process)
-          : m_ThreadId(process->m_NextThreadId++),
-            m_Parent(process),
-            m_ThreadPriority(TaskPriority::PriorityNormal),
-            m_ThreadState(TaskState::TaskStateRunning) { }
+            : m_ThreadId(process->m_NextThreadId++),
+              m_Parent(process),
+              m_ThreadPriority(TaskPriority::PriorityNormal),
+              m_ThreadState(TaskState::TaskStateRunning) {}
     };
 } // namespace Process
