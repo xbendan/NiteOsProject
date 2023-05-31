@@ -10,8 +10,6 @@
 #include <Arch/x86_64/CPU.h>
 #include <Arch/x86_64/GDT.h>
 #include <Arch/x86_64/IDT.h>
-#include <Arch/x86_64/pic.h>
-#include <Arch/x86_64/pit.h>
 #include <Arch/x86_64/SystemManagementBIOS.h>
 #include <Arch/x86_64/SMP.h>
 
@@ -121,6 +119,7 @@ namespace Boot
         IDT::Initialize();
 
         Memory::Initialize();
+        Halt();
 
         Video::Initialize();
 

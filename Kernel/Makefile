@@ -57,11 +57,11 @@ build: $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM)
         -efi-boot-part --efi-boot-image --protective-msdos-label \
         ./target/${TARGET}/iso_limine -o ./dist/${TARGET}/nite.iso
 	../../limine/bin/limine-deploy ./dist/${TARGET}/nite.iso
-	cp ./dist/${TARGET}/nite.iso "/mnt/f/niteOS/${TARGET}/nite.iso"
+	cp ./dist/${TARGET}/nite.iso "/mnt/e/Codes/NiteProject/nite.iso"
 
 .PHONY: run
 run:
-	qemu-system-x86_64.exe -smp 4 -cdrom F:/niteOS/${TARGET}/nite.iso -m 512m
+	qemu-system-x86_64.exe -smp 4 -cdrom E:/Codes/NiteProject/nite.iso -m 512m
 
 .PHONY: clean
 clean:

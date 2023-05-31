@@ -28,6 +28,8 @@ namespace Memory
 
         Paging::InitializeVirtualMemory();
 
+        Halt();
+
         for (int i = 0; i < mem->m_MemoryMapSize; i++)
         {
             MemoryMapEntry *mapEntry = &mem->m_MemoryMapEntries[i];

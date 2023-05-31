@@ -5,6 +5,7 @@
 #include <Mem/AddressSpace.h>
 #include <Proc/Scheduler.h>
 #include <Utils/Spinlock.h>
+#include <System.h>
 
 #include <Arch/x86_64/MMU.h>
 #include <Arch/x86_64/Interrupts.h>
@@ -14,8 +15,8 @@
 
 namespace Paging
 {
-    KernelAddressSpace g_KernelSpace;
     VirtualPages g_KernelPagemap;
+    KernelAddressSpace g_KernelSpace = KernelAddressSpace(&g_KernelPagemap);
 
     pml4_t      kernelPages __attribute__((aligned(ARCH_PAGE_SIZE)));
     pdpt_t      kernelPdpts __attribute__((aligned(ARCH_PAGE_SIZE)));
@@ -58,39 +59,13 @@ namespace Paging
         //     }
         // }
         // kernelPdpts[0] = kernelPdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)];
-
-        g_KernelSpace = KernelAddressSpace();
+        
         Task::g_KernelProcess.m_AddressSpace = &g_KernelSpace;
+        g_KernelSpace = KernelAddressSpace(&g_KernelPagemap);
+        Halt();
 
-        asm("mov %%rax, %%cr3" ::"a"((uint64_t)&g_KernelPagemap.pml4Phys));
-    }
-
-    bool IsPagePresent(VirtualPages *pagemap, uint64_t addr) {
-        if (!pagemap)
-            return false;
-
-        size_t pml4Index = PML4_GET_INDEX(addr);
-        size_t pdptIndex = PDPT_GET_INDEX(addr);
-        size_t pdirIndex = PDIR_GET_INDEX(addr);
-        size_t pageIndex = PAGE_GET_INDEX(addr);
-
-        pml4e_t pml4Entry = pagemap->pml4[pml4Index];
-        if (!(pml4Entry & PAGE_PRESENT)) {
-            return false;
-        }
-
-        pdpte_t pdptEntry = pagemap->pdpts[pdptIndex];
-        if (!(pdptEntry & PAGE_PRESENT)) {
-            return false;
-        }
-
-        pde_t pdirEntry = (*(pagemap->pageDirs[pdptIndex]))[pdirIndex];
-        if (pdirEntry & PAGE_PRESENT) {
-            return (pdirEntry & PAGE_SIZE) ||
-                (*(pagemap->pageTables[pdptIndex][pdirIndex])[pageIndex] & PAGE_PRESENT);
-        }
-
-        return false;
+        asm("mov %%rax, %%cr3" ::"a"(g_KernelPagemap.pml4Phys));
+        Halt();
     }
 
     VirtualPages *CreatePagemap()
@@ -159,9 +134,9 @@ namespace Paging
             pagetable_t *pageTable = kernelPageTablePointers[pdptIndex][pdirIndex];
             if (!pageTable) {
                 System::Out("No page table present.");
-                uint64_t pageDirPhys = Memory::AllocatePhysMemory4K(1)->addr, pageDirVirt = KernelAllocate4KPages(1);
+                uint64_t pageDirPhys = Memory::AllocatePhysMemory4K(1)->address, pageDirVirt = KernelAllocate4KPages(1);
                 KernelMapVirtualMemory4K(pageDirPhys, pageDirVirt, 1);
-                uint64_t pageTablesPhys = Memory::AllocatePhysMemory4K(512)->addr, pageTablesVirt = KernelAllocate4KPages(512);
+                uint64_t pageTablesPhys = Memory::AllocatePhysMemory4K(512)->address, pageTablesVirt = KernelAllocate4KPages(512);
                 KernelMapVirtualMemory4K(pageTablesPhys, pageTablesVirt, 512);
 
                 SetPageFrame(&kernelPdpts[pdptIndex], pageDirPhys, 0x3);
@@ -297,7 +272,7 @@ namespace Paging
             uint64_t address = Task::g_KernelProcess.m_AddressSpace->Allocate4KPages(1);
             for (int i = 0; i < 64; i++)
             {
-                bitmaps[d][base + i] = address + (i * 64);
+                bitmaps[d][base + i] = (uint64_t *)(address + (i * 64));
             }
         }
     }
@@ -308,17 +283,21 @@ namespace Paging
 
         if (!(pdpts[d] & PagePresent) || !pageDirs[d])
         {
-            PageFrame *page;
-            pageDirs[d] = kernelSpace->Allocate4KPages(1, &page);
-            pageTables[d] = kernelSpace->Allocate4KPages(1);
-            SetPageFrame(&pdpts[d], page->address, (PagePresent | PageWritable | PageUser));
+            uint64_t phys;
+            pageDirs[d] = (pde_t *) kernelSpace->Allocate4KPages(1);
+            pageTables[d] = (page_t **) kernelSpace->Allocate4KPages(1);
+            phys = kernelSpace->ConvertVirtToPhys((uint64_t) pageDirs[d]);
+
+            SetPageFrame(&pdpts[d], phys, (PagePresent | PageWritable | PageUser));
         }
 
         if (!(pageDirs[d][t] & PagePresent) || !pageTables[d][t])
         {
-            PageFrame *page;
-            pageTables[d][t] = Task::g_KernelProcess.m_AddressSpace->Allocate4KPages(1, &page);
-            SetPageFrame(&pageDirs[d][t], page->address, (PagePresent | PageWritable | PageUser))
+            uint64_t phys;
+            pageTables[d][t] = (page_t *) Task::g_KernelProcess.m_AddressSpace->Allocate4KPages(1);
+            phys = kernelSpace->ConvertVirtToPhys((uint64_t) pageTables[d][t]);
+
+            SetPageFrame(&pageDirs[d][t], phys, (PagePresent | PageWritable | PageUser));
         }
     }
 } // namespace Memory
@@ -328,14 +307,4 @@ namespace Memory
     uint64_t GetIOMapping(uint64_t address) {
         return Paging::GetIOMapping(address);
     }
-}
-
-KernelAddressSpace::KernelAddressSpace()
-{
-
-}
-
-KernelAddressSpace::~KernelAddressSpace()
-{
-
 }

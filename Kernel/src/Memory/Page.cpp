@@ -28,7 +28,7 @@ namespace Memory {
                     {
                         pages[pageIndex].flags = PFLAGS_FREE;
                         pages[pageIndex].first = pages;
-                        pages[pageIndex].addr = current + (pageIndex * ARCH_PAGE_SIZE);
+                        pages[pageIndex].address = current + (pageIndex * ARCH_PAGE_SIZE);
                     }
                     pages->order = PAGE_MAX_ORDER;
 
@@ -129,7 +129,7 @@ namespace Memory {
      */
     page_t* CombinePage(page_t *page) {
         uint32_t orderSize = (1 << (page->order)) * sizeof(page_t);
-        bool align = !(page->addr % orderSize);
+        bool align = !(page->address % orderSize);
         BuddyZone *zone = &(zones[ZONE_NORMAL]);
 
         page_t *newPage = reinterpret_cast<page_t *>(align ? page + orderSize : page - orderSize);

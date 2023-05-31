@@ -9,9 +9,9 @@
 namespace AHCI
 {
     SATADiskDevice::SATADiskDevice(int port, HBAPortRegisters *portRegs, AHCIControllerDevice *controllerDevice)
-      : m_MemoryRegs(controllerDevice->MemoryRegisters()),
-        m_PortRegs(portRegs),
-        DiskDevice("Unidentified SATA Hard Disk Drive")
+        : m_PortRegs(portRegs),
+          m_MemoryRegs(controllerDevice->MemoryRegisters()),
+          DiskDevice("Unidentified SATA Hard Disk Drive")
     {
         StopCommand();
 
@@ -30,8 +30,8 @@ namespace AHCI
             uint64_t phys = controllerDevice->m_ctbaPhys + (port << 13) + (i << 8);
             m_CommandList[i].CTBA = (phys & 0xFFFFFFFF);
             m_CommandList[i].CTBAU = (phys >> 32);
-            memset((void *) m_CommandList[i].CTBA, 0, 256);
-            
+            memset((void *)m_CommandList[i].CTBA, 0, 256);
+
             m_CommandTable[i] = reinterpret_cast<HBACommandTable *>(Memory::GetIOMapping(phys));
         }
 
@@ -40,27 +40,24 @@ namespace AHCI
 
     SATADiskDevice::~SATADiskDevice()
     {
-
     }
 
     void SATADiskDevice::Enable()
     {
-
     }
 
     void SATADiskDevice::Disable()
     {
-
     }
 
     int SATADiskDevice::Read(uint64_t lba, uint32_t count, void *buffer)
     {
-        return Access(lba, count, (uintptr_t) buffer, false);
+        return Access(lba, count, (uintptr_t)buffer, false);
     }
 
     int SATADiskDevice::Write(uint64_t lba, uint32_t count, void *buffer)
     {
-        return Access(lba, count, (uintptr_t) buffer, true);
+        return Access(lba, count, (uintptr_t)buffer, true);
     }
 
     int SATADiskDevice::Access(uint64_t lba, uint32_t count, uintptr_t physBuffer, int write)
@@ -129,7 +126,7 @@ namespace AHCI
         {
             if (!(m_PortRegs->CI & (1 << slot)))
                 break;
-            
+
             if (m_PortRegs->IS & HBA_PxIS_TFES)
             {
                 //
@@ -146,7 +143,8 @@ namespace AHCI
 
     void SATADiskDevice::StartCommand()
     {
-        while (m_PortRegs->CMD & HBA_PxCMD_CR);
+        while (m_PortRegs->CMD & HBA_PxCMD_CR)
+            ;
         m_PortRegs->CMD |= (HBA_PxCMD_FRE | HBA_PxCMD_ST);
     }
 
@@ -168,6 +166,7 @@ namespace AHCI
     void SATADiskDevice::StopCommand()
     {
         m_PortRegs->CMD &= ~(HBA_PxCMD_ST | HBA_PxCMD_FRE);
-        while ((m_PortRegs->CMD & HBA_PxCMD_FR) || (m_PortRegs->CMD & HBA_PxCMD_CR));
+        while ((m_PortRegs->CMD & HBA_PxCMD_FR) || (m_PortRegs->CMD & HBA_PxCMD_CR))
+            ;
     }
 }

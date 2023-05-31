@@ -64,7 +64,7 @@ namespace Memory
         };
         void **freelist;
         Spinlock lock;
-        uint64_t addr;
+        uint64_t address;
     } page_t;
 
     struct BuddyZone {
@@ -97,7 +97,7 @@ namespace Memory
     page_t* CombinePage(page_t *page);
     void CombinePage(page_t *lpage, page_t *rpage);
 
-    static inline bool IsPageAligned(page_t* page) { return !((page->addr) % ((1 << page->order) * ARCH_PAGE_SIZE)); }
+    static inline bool IsPageAligned(page_t* page) { return !((page->address) % ((1 << page->order) * ARCH_PAGE_SIZE)); }
 
     uintptr_t KernelAllocate4KPages(size_t amount);
     uintptr_t KernelFree4KPages(uintptr_t address, size_t amount);

@@ -1,0 +1,1292 @@
+
+build/Arch/x86_64/AddressSpace.o:     file format elf64-x86-64
+
+
+Disassembly of section .group:
+
+0000000000000000 <Paging::VirtualPages::VirtualPages()>:
+   0:	01 00                	add    %eax,(%rax)
+   2:	00 00                	add    %al,(%rax)
+   4:	09 00                	or     %eax,(%rax)
+	...
+
+Disassembly of section .group:
+
+0000000000000000 <.group>:
+   0:	01 00                	add    %eax,(%rax)
+   2:	00 00                	add    %al,(%rax)
+   4:	0a 00                	or     (%rax),%al
+	...
+
+Disassembly of section .group:
+
+0000000000000000 <.group>:
+   0:	01 00                	add    %eax,(%rax)
+   2:	00 00                	add    %al,(%rax)
+   4:	0b 00                	or     (%rax),%eax
+   6:	00 00                	add    %al,(%rax)
+   8:	0c 00                	or     $0x0,%al
+	...
+
+Disassembly of section .group:
+
+0000000000000000 <.group>:
+   0:	01 00                	add    %eax,(%rax)
+   2:	00 00                	add    %al,(%rax)
+   4:	0d 00 00 00 0e       	or     $0xe000000,%eax
+   9:	00 00                	add    %al,(%rax)
+	...
+
+Disassembly of section .text:
+
+0000000000000000 <ALIGN_PAGE(unsigned long)>:
+   0:	55                   	push   %rbp
+   1:	48 89 e5             	mov    %rsp,%rbp
+   4:	48 83 ec 08          	sub    $0x8,%rsp
+   8:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
+   c:	48 83 6d f8 01       	subq   $0x1,-0x8(%rbp)
+  11:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+  15:	48 d1 e8             	shr    %rax
+  18:	48 09 45 f8          	or     %rax,-0x8(%rbp)
+  1c:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+  20:	48 c1 e8 02          	shr    $0x2,%rax
+  24:	48 09 45 f8          	or     %rax,-0x8(%rbp)
+  28:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+  2c:	48 c1 e8 04          	shr    $0x4,%rax
+  30:	48 09 45 f8          	or     %rax,-0x8(%rbp)
+  34:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+  38:	48 c1 e8 08          	shr    $0x8,%rax
+  3c:	48 09 45 f8          	or     %rax,-0x8(%rbp)
+  40:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+  44:	48 c1 e8 10          	shr    $0x10,%rax
+  48:	48 09 45 f8          	or     %rax,-0x8(%rbp)
+  4c:	48 83 45 f8 01       	addq   $0x1,-0x8(%rbp)
+  51:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+  55:	c9                   	leave  
+  56:	c3                   	ret    
+
+0000000000000057 <operator new(unsigned long)>:
+  57:	55                   	push   %rbp
+  58:	48 89 e5             	mov    %rsp,%rbp
+  5b:	48 83 ec 10          	sub    $0x10,%rsp
+  5f:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
+  63:	48 8b 05 00 00 00 00 	mov    0x0(%rip),%rax        # 6a <operator new(unsigned long)+0x13>
+  6a:	48 8b 55 f8          	mov    -0x8(%rbp),%rdx
+  6e:	48 89 d6             	mov    %rdx,%rsi
+  71:	48 89 c7             	mov    %rax,%rdi
+  74:	e8 00 00 00 00       	call   79 <operator new(unsigned long)+0x22>
+  79:	c9                   	leave  
+  7a:	c3                   	ret    
+  7b:	90                   	nop
+
+000000000000007c <AddressSpace::AddressSpace()>:
+  7c:	55                   	push   %rbp
+  7d:	48 89 e5             	mov    %rsp,%rbp
+  80:	53                   	push   %rbx
+  81:	48 83 ec 18          	sub    $0x18,%rsp
+  85:	48 89 7d e8          	mov    %rdi,-0x18(%rbp)
+  89:	be 00 10 00 00       	mov    $0x1000,%esi
+  8e:	bf 00 60 00 00       	mov    $0x6000,%edi
+  93:	e8 00 00 00 00       	call   98 <AddressSpace::AddressSpace()+0x1c>
+  98:	48 89 c3             	mov    %rax,%rbx
+  9b:	48 89 df             	mov    %rbx,%rdi
+  9e:	e8 00 00 00 00       	call   a3 <AddressSpace::AddressSpace()+0x27>
+  a3:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+  a7:	48 89 de             	mov    %rbx,%rsi
+  aa:	48 89 c7             	mov    %rax,%rdi
+  ad:	e8 00 00 00 00       	call   b2 <AddressSpace::AddressSpace()+0x36>
+  b2:	90                   	nop
+  b3:	48 8b 5d f8          	mov    -0x8(%rbp),%rbx
+  b7:	c9                   	leave  
+  b8:	c3                   	ret    
+  b9:	90                   	nop
+
+00000000000000ba <AddressSpace::AddressSpace(void*)>:
+  ba:	55                   	push   %rbp
+  bb:	48 89 e5             	mov    %rsp,%rbp
+  be:	48 83 ec 20          	sub    $0x20,%rsp
+  c2:	48 89 7d e8          	mov    %rdi,-0x18(%rbp)
+  c6:	48 89 75 e0          	mov    %rsi,-0x20(%rbp)
+  ca:	48 c7 c2 00 00 00 00 	mov    $0x0,%rdx
+  d1:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+  d5:	48 89 10             	mov    %rdx,(%rax)
+  d8:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+  dc:	48 c7 40 08 00 00 00 	movq   $0x0,0x8(%rax)
+  e3:	00 
+  e4:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+  e8:	48 c7 40 10 00 00 00 	movq   $0x0,0x10(%rax)
+  ef:	00 
+  f0:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+  f4:	48 8b 55 e0          	mov    -0x20(%rbp),%rdx
+  f8:	48 89 50 20          	mov    %rdx,0x20(%rax)
+  fc:	48 8b 45 e0          	mov    -0x20(%rbp),%rax
+ 100:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
+ 104:	48 b8 00 00 00 00 00 	movabs $0x0,%rax
+ 10b:	00 00 00 
+ 10e:	48 89 45 f0          	mov    %rax,-0x10(%rbp)
+ 112:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+ 116:	48 8d 88 f8 0f 00 00 	lea    0xff8(%rax),%rcx
+ 11d:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
+ 121:	ba 03 00 00 00       	mov    $0x3,%edx
+ 126:	48 89 c6             	mov    %rax,%rsi
+ 129:	48 89 cf             	mov    %rcx,%rdi
+ 12c:	e8 00 00 00 00       	call   131 <AddressSpace::AddressSpace(void*)+0x77>
+ 131:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+ 135:	48 c7 80 08 50 00 00 	movq   $0x0,0x5008(%rax)
+ 13c:	00 00 00 00 
+ 140:	90                   	nop
+ 141:	c9                   	leave  
+ 142:	c3                   	ret    
+ 143:	90                   	nop
+
+0000000000000144 <AddressSpace::~AddressSpace()>:
+ 144:	55                   	push   %rbp
+ 145:	48 89 e5             	mov    %rsp,%rbp
+ 148:	48 83 ec 08          	sub    $0x8,%rsp
+ 14c:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
+ 150:	48 c7 c2 00 00 00 00 	mov    $0x0,%rdx
+ 157:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+ 15b:	48 89 10             	mov    %rdx,(%rax)
+ 15e:	90                   	nop
+ 15f:	c9                   	leave  
+ 160:	c3                   	ret    
+ 161:	90                   	nop
+
+0000000000000162 <AddressSpace::Allocate4KPages(unsigned long)>:
+ 162:	55                   	push   %rbp
+ 163:	48 89 e5             	mov    %rsp,%rbp
+ 166:	48 83 ec 70          	sub    $0x70,%rsp
+ 16a:	48 89 7d 98          	mov    %rdi,-0x68(%rbp)
+ 16e:	48 89 75 90          	mov    %rsi,-0x70(%rbp)
+ 172:	48 83 7d 90 00       	cmpq   $0x0,-0x70(%rbp)
+ 177:	75 0a                	jne    183 <AddressSpace::Allocate4KPages(unsigned long)+0x21>
+ 179:	b8 00 00 00 00       	mov    $0x0,%eax
+ 17e:	e9 20 04 00 00       	jmp    5a3 <AddressSpace::Allocate4KPages(unsigned long)+0x441>
+ 183:	48 8b 45 98          	mov    -0x68(%rbp),%rax
+ 187:	48 8b 40 20          	mov    0x20(%rax),%rax
+ 18b:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
+ 18f:	48 8b 05 00 00 00 00 	mov    0x0(%rip),%rax        # 196 <AddressSpace::Allocate4KPages(unsigned long)+0x34>
+ 196:	48 89 45 c8          	mov    %rax,-0x38(%rbp)
+ 19a:	48 c7 45 f8 00 00 00 	movq   $0x0,-0x8(%rbp)
+ 1a1:	00 
+ 1a2:	48 c7 45 f0 00 00 00 	movq   $0x0,-0x10(%rbp)
+ 1a9:	00 
+ 1aa:	48 c7 45 e8 00 00 00 	movq   $0x0,-0x18(%rbp)
+ 1b1:	00 
+ 1b2:	c7 45 e4 00 00 00 00 	movl   $0x0,-0x1c(%rbp)
+ 1b9:	e9 d8 03 00 00       	jmp    596 <AddressSpace::Allocate4KPages(unsigned long)+0x434>
+ 1be:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+ 1c2:	8b 55 e4             	mov    -0x1c(%rbp),%edx
+ 1c5:	48 63 d2             	movslq %edx,%rdx
+ 1c8:	48 81 c2 00 08 00 00 	add    $0x800,%rdx
+ 1cf:	48 8b 04 d0          	mov    (%rax,%rdx,8),%rax
+ 1d3:	48 85 c0             	test   %rax,%rax
+ 1d6:	0f 85 c4 00 00 00    	jne    2a0 <AddressSpace::Allocate4KPages(unsigned long)+0x13e>
+ 1dc:	48 8b 45 c8          	mov    -0x38(%rbp),%rax
+ 1e0:	48 8b 00             	mov    (%rax),%rax
+ 1e3:	48 8b 10             	mov    (%rax),%rdx
+ 1e6:	48 8b 45 c8          	mov    -0x38(%rbp),%rax
+ 1ea:	be 01 00 00 00       	mov    $0x1,%esi
+ 1ef:	48 89 c7             	mov    %rax,%rdi
+ 1f2:	ff d2                	call   *%rdx
+ 1f4:	48 89 c1             	mov    %rax,%rcx
+ 1f7:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+ 1fb:	8b 55 e4             	mov    -0x1c(%rbp),%edx
+ 1fe:	48 63 d2             	movslq %edx,%rdx
+ 201:	48 81 c2 00 08 00 00 	add    $0x800,%rdx
+ 208:	48 89 0c d0          	mov    %rcx,(%rax,%rdx,8)
+ 20c:	48 8b 45 c8          	mov    -0x38(%rbp),%rax
+ 210:	48 8b 00             	mov    (%rax),%rax
+ 213:	48 8b 10             	mov    (%rax),%rdx
+ 216:	48 8b 45 c8          	mov    -0x38(%rbp),%rax
+ 21a:	be 01 00 00 00       	mov    $0x1,%esi
+ 21f:	48 89 c7             	mov    %rax,%rdi
+ 222:	ff d2                	call   *%rdx
+ 224:	48 89 c1             	mov    %rax,%rcx
+ 227:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+ 22b:	8b 55 e4             	mov    -0x1c(%rbp),%edx
+ 22e:	48 63 d2             	movslq %edx,%rdx
+ 231:	48 81 c2 00 06 00 00 	add    $0x600,%rdx
+ 238:	48 89 0c d0          	mov    %rcx,(%rax,%rdx,8)
+ 23c:	48 8b 45 c8          	mov    -0x38(%rbp),%rax
+ 240:	48 8b 00             	mov    (%rax),%rax
+ 243:	48 8b 10             	mov    (%rax),%rdx
+ 246:	48 8b 45 c8          	mov    -0x38(%rbp),%rax
+ 24a:	be 01 00 00 00       	mov    $0x1,%esi
+ 24f:	48 89 c7             	mov    %rax,%rdi
+ 252:	ff d2                	call   *%rdx
+ 254:	48 89 c1             	mov    %rax,%rcx
+ 257:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+ 25b:	8b 55 e4             	mov    -0x1c(%rbp),%edx
+ 25e:	48 63 d2             	movslq %edx,%rdx
+ 261:	48 81 c2 00 04 00 00 	add    $0x400,%rdx
+ 268:	48 89 0c d0          	mov    %rcx,(%rax,%rdx,8)
+ 26c:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ 270:	48 8b 40 30          	mov    0x30(%rax),%rax
+ 274:	8b 55 e4             	mov    -0x1c(%rbp),%edx
+ 277:	48 63 d2             	movslq %edx,%rdx
+ 27a:	48 81 c2 00 02 00 00 	add    $0x200,%rdx
+ 281:	48 8d 0c d5 00 00 00 	lea    0x0(,%rdx,8),%rcx
+ 288:	00 
+ 289:	48 8b 55 d0          	mov    -0x30(%rbp),%rdx
+ 28d:	48 01 d1             	add    %rdx,%rcx
+ 290:	ba 07 00 00 00       	mov    $0x7,%edx
+ 295:	48 89 c6             	mov    %rax,%rsi
+ 298:	48 89 cf             	mov    %rcx,%rdi
+ 29b:	e8 00 00 00 00       	call   2a0 <AddressSpace::Allocate4KPages(unsigned long)+0x13e>
+ 2a0:	c7 45 e0 00 00 00 00 	movl   $0x0,-0x20(%rbp)
+ 2a7:	83 7d e4 00          	cmpl   $0x0,-0x1c(%rbp)
+ 2ab:	0f 85 d4 02 00 00    	jne    585 <AddressSpace::Allocate4KPages(unsigned long)+0x423>
+ 2b1:	c7 45 e0 05 00 00 00 	movl   $0x5,-0x20(%rbp)
+ 2b8:	48 c7 45 f0 05 00 00 	movq   $0x5,-0x10(%rbp)
+ 2bf:	00 
+ 2c0:	e9 c0 02 00 00       	jmp    585 <AddressSpace::Allocate4KPages(unsigned long)+0x423>
+ 2c5:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 2c9:	48 3b 45 90          	cmp    -0x70(%rbp),%rax
+ 2cd:	0f 82 cf 01 00 00    	jb     4a2 <AddressSpace::Allocate4KPages(unsigned long)+0x340>
+ 2d3:	8b 45 e4             	mov    -0x1c(%rbp),%eax
+ 2d6:	c1 e0 1e             	shl    $0x1e,%eax
+ 2d9:	89 c1                	mov    %eax,%ecx
+ 2db:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
+ 2df:	48 c1 e0 09          	shl    $0x9,%rax
+ 2e3:	48 89 c2             	mov    %rax,%rdx
+ 2e6:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+ 2ea:	48 01 d0             	add    %rdx,%rax
+ 2ed:	48 c1 e0 0c          	shl    $0xc,%rax
+ 2f1:	48 01 c8             	add    %rcx,%rax
+ 2f4:	48 89 45 b8          	mov    %rax,-0x48(%rbp)
+ 2f8:	e9 9a 01 00 00       	jmp    497 <AddressSpace::Allocate4KPages(unsigned long)+0x335>
+ 2fd:	48 81 7d e8 ff 01 00 	cmpq   $0x1ff,-0x18(%rbp)
+ 304:	00 
+ 305:	0f 86 a6 00 00 00    	jbe    3b1 <AddressSpace::Allocate4KPages(unsigned long)+0x24f>
+ 30b:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+ 30f:	25 ff 01 00 00       	and    $0x1ff,%eax
+ 314:	48 85 c0             	test   %rax,%rax
+ 317:	0f 85 94 00 00 00    	jne    3b1 <AddressSpace::Allocate4KPages(unsigned long)+0x24f>
+ 31d:	48 8b 45 98          	mov    -0x68(%rbp),%rax
+ 321:	48 8b 40 18          	mov    0x18(%rax),%rax
+ 325:	48 8b 55 d0          	mov    -0x30(%rbp),%rdx
+ 329:	8b 4d e4             	mov    -0x1c(%rbp),%ecx
+ 32c:	48 63 c9             	movslq %ecx,%rcx
+ 32f:	48 81 c1 00 04 00 00 	add    $0x400,%rcx
+ 336:	48 8b 14 ca          	mov    (%rdx,%rcx,8),%rdx
+ 33a:	48 8b 4d f0          	mov    -0x10(%rbp),%rcx
+ 33e:	48 c1 e1 03          	shl    $0x3,%rcx
+ 342:	48 01 d1             	add    %rdx,%rcx
+ 345:	ba 05 00 00 00       	mov    $0x5,%edx
+ 34a:	48 89 c6             	mov    %rax,%rsi
+ 34d:	48 89 cf             	mov    %rcx,%rdi
+ 350:	e8 00 00 00 00       	call   355 <AddressSpace::Allocate4KPages(unsigned long)+0x1f3>
+ 355:	48 83 45 f0 01       	addq   $0x1,-0x10(%rbp)
+ 35a:	c7 45 dc 00 00 00 00 	movl   $0x0,-0x24(%rbp)
+ 361:	eb 3b                	jmp    39e <AddressSpace::Allocate4KPages(unsigned long)+0x23c>
+ 363:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+ 367:	8b 55 e4             	mov    -0x1c(%rbp),%edx
+ 36a:	48 63 d2             	movslq %edx,%rdx
+ 36d:	48 81 c2 00 08 00 00 	add    $0x800,%rdx
+ 374:	48 8b 04 d0          	mov    (%rax,%rdx,8),%rax
+ 378:	48 8b 55 f0          	mov    -0x10(%rbp),%rdx
+ 37c:	48 c1 e2 03          	shl    $0x3,%rdx
+ 380:	48 01 d0             	add    %rdx,%rax
+ 383:	48 8b 00             	mov    (%rax),%rax
+ 386:	8b 55 dc             	mov    -0x24(%rbp),%edx
+ 389:	48 63 d2             	movslq %edx,%rdx
+ 38c:	48 c1 e2 03          	shl    $0x3,%rdx
+ 390:	48 01 d0             	add    %rdx,%rax
+ 393:	48 c7 00 ff ff ff ff 	movq   $0xffffffffffffffff,(%rax)
+ 39a:	83 45 dc 01          	addl   $0x1,-0x24(%rbp)
+ 39e:	83 7d dc 1f          	cmpl   $0x1f,-0x24(%rbp)
+ 3a2:	7e bf                	jle    363 <AddressSpace::Allocate4KPages(unsigned long)+0x201>
+ 3a4:	48 81 6d e8 00 02 00 	subq   $0x200,-0x18(%rbp)
+ 3ab:	00 
+ 3ac:	e9 e6 00 00 00       	jmp    497 <AddressSpace::Allocate4KPages(unsigned long)+0x335>
+ 3b1:	8b 45 e4             	mov    -0x1c(%rbp),%eax
+ 3b4:	48 63 c8             	movslq %eax,%rcx
+ 3b7:	48 8b 55 f0          	mov    -0x10(%rbp),%rdx
+ 3bb:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+ 3bf:	48 89 ce             	mov    %rcx,%rsi
+ 3c2:	48 89 c7             	mov    %rax,%rdi
+ 3c5:	e8 00 00 00 00       	call   3ca <AddressSpace::Allocate4KPages(unsigned long)+0x268>
+ 3ca:	48 8b 45 98          	mov    -0x68(%rbp),%rax
+ 3ce:	48 8b 40 18          	mov    0x18(%rax),%rax
+ 3d2:	48 8b 55 d0          	mov    -0x30(%rbp),%rdx
+ 3d6:	8b 4d e4             	mov    -0x1c(%rbp),%ecx
+ 3d9:	48 63 c9             	movslq %ecx,%rcx
+ 3dc:	48 81 c1 00 06 00 00 	add    $0x600,%rcx
+ 3e3:	48 8b 14 ca          	mov    (%rdx,%rcx,8),%rdx
+ 3e7:	48 8b 4d f0          	mov    -0x10(%rbp),%rcx
+ 3eb:	48 c1 e1 03          	shl    $0x3,%rcx
+ 3ef:	48 01 ca             	add    %rcx,%rdx
+ 3f2:	48 8b 12             	mov    (%rdx),%rdx
+ 3f5:	48 8b 4d f8          	mov    -0x8(%rbp),%rcx
+ 3f9:	48 c1 e1 03          	shl    $0x3,%rcx
+ 3fd:	48 01 d1             	add    %rdx,%rcx
+ 400:	ba 05 00 00 00       	mov    $0x5,%edx
+ 405:	48 89 c6             	mov    %rax,%rsi
+ 408:	48 89 cf             	mov    %rcx,%rdi
+ 40b:	e8 00 00 00 00       	call   410 <AddressSpace::Allocate4KPages(unsigned long)+0x2ae>
+ 410:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+ 414:	8b 55 e4             	mov    -0x1c(%rbp),%edx
+ 417:	48 63 d2             	movslq %edx,%rdx
+ 41a:	48 81 c2 00 08 00 00 	add    $0x800,%rdx
+ 421:	48 8b 04 d0          	mov    (%rax,%rdx,8),%rax
+ 425:	48 8b 55 f0          	mov    -0x10(%rbp),%rdx
+ 429:	48 c1 e2 03          	shl    $0x3,%rdx
+ 42d:	48 01 d0             	add    %rdx,%rax
+ 430:	48 8b 00             	mov    (%rax),%rax
+ 433:	48 8b 55 f8          	mov    -0x8(%rbp),%rdx
+ 437:	48 83 e2 f8          	and    $0xfffffffffffffff8,%rdx
+ 43b:	48 01 d0             	add    %rdx,%rax
+ 43e:	48 8b 30             	mov    (%rax),%rsi
+ 441:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+ 445:	83 e0 07             	and    $0x7,%eax
+ 448:	ba 01 00 00 00       	mov    $0x1,%edx
+ 44d:	89 c1                	mov    %eax,%ecx
+ 44f:	d3 e2                	shl    %cl,%edx
+ 451:	89 d0                	mov    %edx,%eax
+ 453:	48 63 c8             	movslq %eax,%rcx
+ 456:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+ 45a:	8b 55 e4             	mov    -0x1c(%rbp),%edx
+ 45d:	48 63 d2             	movslq %edx,%rdx
+ 460:	48 81 c2 00 08 00 00 	add    $0x800,%rdx
+ 467:	48 8b 04 d0          	mov    (%rax,%rdx,8),%rax
+ 46b:	48 8b 55 f0          	mov    -0x10(%rbp),%rdx
+ 46f:	48 c1 e2 03          	shl    $0x3,%rdx
+ 473:	48 01 d0             	add    %rdx,%rax
+ 476:	48 8b 00             	mov    (%rax),%rax
+ 479:	48 8b 55 f8          	mov    -0x8(%rbp),%rdx
+ 47d:	48 83 e2 f8          	and    $0xfffffffffffffff8,%rdx
+ 481:	48 01 d0             	add    %rdx,%rax
+ 484:	48 21 ce             	and    %rcx,%rsi
+ 487:	48 89 f2             	mov    %rsi,%rdx
+ 48a:	48 89 10             	mov    %rdx,(%rax)
+ 48d:	48 83 45 f8 01       	addq   $0x1,-0x8(%rbp)
+ 492:	48 83 6d e8 01       	subq   $0x1,-0x18(%rbp)
+ 497:	48 83 7d e8 00       	cmpq   $0x0,-0x18(%rbp)
+ 49c:	0f 85 5b fe ff ff    	jne    2fd <AddressSpace::Allocate4KPages(unsigned long)+0x19b>
+ 4a2:	8b 45 e0             	mov    -0x20(%rbp),%eax
+ 4a5:	48 63 d0             	movslq %eax,%rdx
+ 4a8:	8b 45 e4             	mov    -0x1c(%rbp),%eax
+ 4ab:	48 63 c8             	movslq %eax,%rcx
+ 4ae:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+ 4b2:	48 89 ce             	mov    %rcx,%rsi
+ 4b5:	48 89 c7             	mov    %rax,%rdi
+ 4b8:	e8 00 00 00 00       	call   4bd <AddressSpace::Allocate4KPages(unsigned long)+0x35b>
+ 4bd:	c7 45 b4 00 00 00 00 	movl   $0x0,-0x4c(%rbp)
+ 4c4:	e9 ab 00 00 00       	jmp    574 <AddressSpace::Allocate4KPages(unsigned long)+0x412>
+ 4c9:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+ 4cd:	8b 55 e4             	mov    -0x1c(%rbp),%edx
+ 4d0:	48 63 d2             	movslq %edx,%rdx
+ 4d3:	48 81 c2 00 08 00 00 	add    $0x800,%rdx
+ 4da:	48 8b 04 d0          	mov    (%rax,%rdx,8),%rax
+ 4de:	8b 55 e0             	mov    -0x20(%rbp),%edx
+ 4e1:	48 63 d2             	movslq %edx,%rdx
+ 4e4:	48 c1 e2 03          	shl    $0x3,%rdx
+ 4e8:	48 01 d0             	add    %rdx,%rax
+ 4eb:	48 8b 08             	mov    (%rax),%rcx
+ 4ee:	8b 55 b4             	mov    -0x4c(%rbp),%edx
+ 4f1:	89 d0                	mov    %edx,%eax
+ 4f3:	c1 f8 1f             	sar    $0x1f,%eax
+ 4f6:	c1 e8 1a             	shr    $0x1a,%eax
+ 4f9:	01 c2                	add    %eax,%edx
+ 4fb:	83 e2 3f             	and    $0x3f,%edx
+ 4fe:	29 c2                	sub    %eax,%edx
+ 500:	89 d0                	mov    %edx,%eax
+ 502:	48 98                	cltq   
+ 504:	48 c1 e0 03          	shl    $0x3,%rax
+ 508:	48 01 c8             	add    %rcx,%rax
+ 50b:	48 8b 00             	mov    (%rax),%rax
+ 50e:	48 89 45 a8          	mov    %rax,-0x58(%rbp)
+ 512:	48 83 7d a8 ff       	cmpq   $0xffffffffffffffff,-0x58(%rbp)
+ 517:	75 0a                	jne    523 <AddressSpace::Allocate4KPages(unsigned long)+0x3c1>
+ 519:	48 c7 45 e8 00 00 00 	movq   $0x0,-0x18(%rbp)
+ 520:	00 
+ 521:	eb 51                	jmp    574 <AddressSpace::Allocate4KPages(unsigned long)+0x412>
+ 523:	48 83 7d a8 00       	cmpq   $0x0,-0x58(%rbp)
+ 528:	74 42                	je     56c <AddressSpace::Allocate4KPages(unsigned long)+0x40a>
+ 52a:	8b 45 b4             	mov    -0x4c(%rbp),%eax
+ 52d:	83 e0 3f             	and    $0x3f,%eax
+ 530:	ba 01 00 00 00       	mov    $0x1,%edx
+ 535:	89 c1                	mov    %eax,%ecx
+ 537:	d3 e2                	shl    %cl,%edx
+ 539:	89 d0                	mov    %edx,%eax
+ 53b:	48 98                	cltq   
+ 53d:	48 23 45 a8          	and    -0x58(%rbp),%rax
+ 541:	48 85 c0             	test   %rax,%rax
+ 544:	74 1f                	je     565 <AddressSpace::Allocate4KPages(unsigned long)+0x403>
+ 546:	8b 45 e0             	mov    -0x20(%rbp),%eax
+ 549:	48 98                	cltq   
+ 54b:	48 89 45 f0          	mov    %rax,-0x10(%rbp)
+ 54f:	8b 45 b4             	mov    -0x4c(%rbp),%eax
+ 552:	83 c0 01             	add    $0x1,%eax
+ 555:	48 98                	cltq   
+ 557:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
+ 55b:	48 c7 45 e8 00 00 00 	movq   $0x0,-0x18(%rbp)
+ 562:	00 
+ 563:	eb 0f                	jmp    574 <AddressSpace::Allocate4KPages(unsigned long)+0x412>
+ 565:	48 83 45 e8 01       	addq   $0x1,-0x18(%rbp)
+ 56a:	eb 08                	jmp    574 <AddressSpace::Allocate4KPages(unsigned long)+0x412>
+ 56c:	48 81 45 e8 00 02 00 	addq   $0x200,-0x18(%rbp)
+ 573:	00 
+ 574:	81 7d b4 ff 01 00 00 	cmpl   $0x1ff,-0x4c(%rbp)
+ 57b:	0f 8e 48 ff ff ff    	jle    4c9 <AddressSpace::Allocate4KPages(unsigned long)+0x367>
+ 581:	83 45 e0 01          	addl   $0x1,-0x20(%rbp)
+ 585:	81 7d e0 ff 01 00 00 	cmpl   $0x1ff,-0x20(%rbp)
+ 58c:	0f 8e 33 fd ff ff    	jle    2c5 <AddressSpace::Allocate4KPages(unsigned long)+0x163>
+ 592:	83 45 e4 01          	addl   $0x1,-0x1c(%rbp)
+ 596:	81 7d e4 ff 01 00 00 	cmpl   $0x1ff,-0x1c(%rbp)
+ 59d:	0f 8e 1b fc ff ff    	jle    1be <AddressSpace::Allocate4KPages(unsigned long)+0x5c>
+ 5a3:	c9                   	leave  
+ 5a4:	c3                   	ret    
+ 5a5:	90                   	nop
+
+00000000000005a6 <AddressSpace::Free4KPages(unsigned long, unsigned long)>:
+ 5a6:	55                   	push   %rbp
+ 5a7:	48 89 e5             	mov    %rsp,%rbp
+ 5aa:	48 83 ec 48          	sub    $0x48,%rsp
+ 5ae:	48 89 7d c8          	mov    %rdi,-0x38(%rbp)
+ 5b2:	48 89 75 c0          	mov    %rsi,-0x40(%rbp)
+ 5b6:	48 89 55 b8          	mov    %rdx,-0x48(%rbp)
+ 5ba:	48 8b 45 c8          	mov    -0x38(%rbp),%rax
+ 5be:	48 8b 40 20          	mov    0x20(%rax),%rax
+ 5c2:	48 89 45 e8          	mov    %rax,-0x18(%rbp)
+ 5c6:	e9 5f 01 00 00       	jmp    72a <AddressSpace::Free4KPages(unsigned long, unsigned long)+0x184>
+ 5cb:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ 5cf:	48 c1 e8 1e          	shr    $0x1e,%rax
+ 5d3:	25 ff 01 00 00       	and    $0x1ff,%eax
+ 5d8:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
+ 5dc:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ 5e0:	48 c1 e8 15          	shr    $0x15,%rax
+ 5e4:	25 ff 01 00 00       	and    $0x1ff,%eax
+ 5e9:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
+ 5ed:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 5f1:	48 8b 55 e0          	mov    -0x20(%rbp),%rdx
+ 5f5:	48 81 c2 00 04 00 00 	add    $0x400,%rdx
+ 5fc:	48 8b 04 d0          	mov    (%rax,%rdx,8),%rax
+ 600:	48 8b 55 d8          	mov    -0x28(%rbp),%rdx
+ 604:	48 c1 e2 03          	shl    $0x3,%rdx
+ 608:	48 01 d0             	add    %rdx,%rax
+ 60b:	48 8b 00             	mov    (%rax),%rax
+ 60e:	25 80 00 00 00       	and    $0x80,%eax
+ 613:	48 85 c0             	test   %rax,%rax
+ 616:	0f 85 97 00 00 00    	jne    6b3 <AddressSpace::Free4KPages(unsigned long, unsigned long)+0x10d>
+ 61c:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ 620:	48 c1 e8 0c          	shr    $0xc,%rax
+ 624:	25 ff 01 00 00       	and    $0x1ff,%eax
+ 629:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
+ 62d:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 631:	48 8b 55 e0          	mov    -0x20(%rbp),%rdx
+ 635:	48 81 c2 00 08 00 00 	add    $0x800,%rdx
+ 63c:	48 8b 04 d0          	mov    (%rax,%rdx,8),%rax
+ 640:	48 8b 55 d8          	mov    -0x28(%rbp),%rdx
+ 644:	48 c1 e2 03          	shl    $0x3,%rdx
+ 648:	48 01 d0             	add    %rdx,%rax
+ 64b:	48 8b 08             	mov    (%rax),%rcx
+ 64e:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+ 652:	48 c1 e8 06          	shr    $0x6,%rax
+ 656:	48 8d 14 c5 00 00 00 	lea    0x0(,%rax,8),%rdx
+ 65d:	00 
+ 65e:	48 01 ca             	add    %rcx,%rdx
+ 661:	48 8b 3a             	mov    (%rdx),%rdi
+ 664:	48 8b 55 f8          	mov    -0x8(%rbp),%rdx
+ 668:	83 e2 3f             	and    $0x3f,%edx
+ 66b:	be 01 00 00 00       	mov    $0x1,%esi
+ 670:	89 d1                	mov    %edx,%ecx
+ 672:	d3 e6                	shl    %cl,%esi
+ 674:	89 f2                	mov    %esi,%edx
+ 676:	f7 d2                	not    %edx
+ 678:	48 63 f2             	movslq %edx,%rsi
+ 67b:	48 8b 55 e8          	mov    -0x18(%rbp),%rdx
+ 67f:	48 8b 4d e0          	mov    -0x20(%rbp),%rcx
+ 683:	48 81 c1 00 08 00 00 	add    $0x800,%rcx
+ 68a:	48 8b 14 ca          	mov    (%rdx,%rcx,8),%rdx
+ 68e:	48 8b 4d d8          	mov    -0x28(%rbp),%rcx
+ 692:	48 c1 e1 03          	shl    $0x3,%rcx
+ 696:	48 01 ca             	add    %rcx,%rdx
+ 699:	48 8b 12             	mov    (%rdx),%rdx
+ 69c:	48 c1 e0 03          	shl    $0x3,%rax
+ 6a0:	48 01 d0             	add    %rdx,%rax
+ 6a3:	48 21 f7             	and    %rsi,%rdi
+ 6a6:	48 89 fa             	mov    %rdi,%rdx
+ 6a9:	48 89 10             	mov    %rdx,(%rax)
+ 6ac:	48 83 6d b8 01       	subq   $0x1,-0x48(%rbp)
+ 6b1:	eb 77                	jmp    72a <AddressSpace::Free4KPages(unsigned long, unsigned long)+0x184>
+ 6b3:	c7 45 f4 00 00 00 00 	movl   $0x0,-0xc(%rbp)
+ 6ba:	eb 3b                	jmp    6f7 <AddressSpace::Free4KPages(unsigned long, unsigned long)+0x151>
+ 6bc:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 6c0:	48 8b 55 e0          	mov    -0x20(%rbp),%rdx
+ 6c4:	48 81 c2 00 08 00 00 	add    $0x800,%rdx
+ 6cb:	48 8b 04 d0          	mov    (%rax,%rdx,8),%rax
+ 6cf:	48 8b 55 d8          	mov    -0x28(%rbp),%rdx
+ 6d3:	48 c1 e2 03          	shl    $0x3,%rdx
+ 6d7:	48 01 d0             	add    %rdx,%rax
+ 6da:	48 8b 00             	mov    (%rax),%rax
+ 6dd:	48 8b 55 f8          	mov    -0x8(%rbp),%rdx
+ 6e1:	48 c1 ea 06          	shr    $0x6,%rdx
+ 6e5:	48 c1 e2 03          	shl    $0x3,%rdx
+ 6e9:	48 01 d0             	add    %rdx,%rax
+ 6ec:	48 c7 00 00 00 00 00 	movq   $0x0,(%rax)
+ 6f3:	83 45 f4 01          	addl   $0x1,-0xc(%rbp)
+ 6f7:	83 7d f4 3f          	cmpl   $0x3f,-0xc(%rbp)
+ 6fb:	7e bf                	jle    6bc <AddressSpace::Free4KPages(unsigned long, unsigned long)+0x116>
+ 6fd:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 701:	48 8b 55 e0          	mov    -0x20(%rbp),%rdx
+ 705:	48 81 c2 00 04 00 00 	add    $0x400,%rdx
+ 70c:	48 8b 04 d0          	mov    (%rax,%rdx,8),%rax
+ 710:	48 8b 55 d8          	mov    -0x28(%rbp),%rdx
+ 714:	48 c1 e2 03          	shl    $0x3,%rdx
+ 718:	48 01 d0             	add    %rdx,%rax
+ 71b:	48 c7 00 00 00 00 00 	movq   $0x0,(%rax)
+ 722:	48 81 6d b8 00 02 00 	subq   $0x200,-0x48(%rbp)
+ 729:	00 
+ 72a:	48 83 7d b8 00       	cmpq   $0x0,-0x48(%rbp)
+ 72f:	0f 85 96 fe ff ff    	jne    5cb <AddressSpace::Free4KPages(unsigned long, unsigned long)+0x25>
+ 735:	90                   	nop
+ 736:	90                   	nop
+ 737:	c9                   	leave  
+ 738:	c3                   	ret    
+ 739:	90                   	nop
+
+000000000000073a <AddressSpace::IsPagePresent(unsigned long)>:
+ 73a:	55                   	push   %rbp
+ 73b:	48 89 e5             	mov    %rsp,%rbp
+ 73e:	48 83 ec 10          	sub    $0x10,%rsp
+ 742:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
+ 746:	48 89 75 f0          	mov    %rsi,-0x10(%rbp)
+ 74a:	b8 00 00 00 00       	mov    $0x0,%eax
+ 74f:	c9                   	leave  
+ 750:	c3                   	ret    
+ 751:	90                   	nop
+
+0000000000000752 <AddressSpace::ConvertVirtToPhys(unsigned long)>:
+ 752:	55                   	push   %rbp
+ 753:	48 89 e5             	mov    %rsp,%rbp
+ 756:	48 83 ec 10          	sub    $0x10,%rsp
+ 75a:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
+ 75e:	48 89 75 f0          	mov    %rsi,-0x10(%rbp)
+ 762:	b8 00 00 00 00       	mov    $0x0,%eax
+ 767:	c9                   	leave  
+ 768:	c3                   	ret    
+ 769:	90                   	nop
+
+000000000000076a <KernelAddressSpace::KernelAddressSpace(void*)>:
+ 76a:	55                   	push   %rbp
+ 76b:	48 89 e5             	mov    %rsp,%rbp
+ 76e:	48 83 ec 30          	sub    $0x30,%rsp
+ 772:	48 89 7d d8          	mov    %rdi,-0x28(%rbp)
+ 776:	48 89 75 d0          	mov    %rsi,-0x30(%rbp)
+ 77a:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
+ 77e:	48 8b 55 d0          	mov    -0x30(%rbp),%rdx
+ 782:	48 89 d6             	mov    %rdx,%rsi
+ 785:	48 89 c7             	mov    %rax,%rdi
+ 788:	e8 00 00 00 00       	call   78d <KernelAddressSpace::KernelAddressSpace(void*)+0x23>
+ 78d:	48 c7 c2 00 00 00 00 	mov    $0x0,%rdx
+ 794:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
+ 798:	48 89 10             	mov    %rdx,(%rax)
+ 79b:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+ 79f:	48 89 45 e8          	mov    %rax,-0x18(%rbp)
+ 7a3:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 7a7:	ba 00 10 00 00       	mov    $0x1000,%edx
+ 7ac:	be 00 00 00 00       	mov    $0x0,%esi
+ 7b1:	48 89 c7             	mov    %rax,%rdi
+ 7b4:	e8 00 00 00 00       	call   7b9 <KernelAddressSpace::KernelAddressSpace(void*)+0x4f>
+ 7b9:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 7bd:	48 05 00 10 00 00    	add    $0x1000,%rax
+ 7c3:	ba 00 10 00 00       	mov    $0x1000,%edx
+ 7c8:	be 00 00 00 00       	mov    $0x0,%esi
+ 7cd:	48 89 c7             	mov    %rax,%rdi
+ 7d0:	e8 00 00 00 00       	call   7d5 <KernelAddressSpace::KernelAddressSpace(void*)+0x6b>
+ 7d5:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 7d9:	48 8d 90 00 10 00 00 	lea    0x1000(%rax),%rdx
+ 7e0:	48 b8 00 00 00 00 00 	movabs $0x80000000000,%rax
+ 7e7:	08 00 00 
+ 7ea:	48 01 d0             	add    %rdx,%rax
+ 7ed:	48 89 c1             	mov    %rax,%rcx
+ 7f0:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 7f4:	48 05 f8 0f 00 00    	add    $0xff8,%rax
+ 7fa:	ba 03 00 00 00       	mov    $0x3,%edx
+ 7ff:	48 89 ce             	mov    %rcx,%rsi
+ 802:	48 89 c7             	mov    %rax,%rdi
+ 805:	e8 00 00 00 00       	call   80a <KernelAddressSpace::KernelAddressSpace(void*)+0xa0>
+ 80a:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 80e:	48 8b 90 f8 0f 00 00 	mov    0xff8(%rax),%rdx
+ 815:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 819:	48 89 10             	mov    %rdx,(%rax)
+ 81c:	48 b8 00 00 00 00 00 	movabs $0x0,%rax
+ 823:	00 00 00 
+ 826:	48 89 c1             	mov    %rax,%rcx
+ 829:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 82d:	48 05 f0 1f 00 00    	add    $0x1ff0,%rax
+ 833:	ba 03 00 00 00       	mov    $0x3,%edx
+ 838:	48 89 ce             	mov    %rcx,%rsi
+ 83b:	48 89 c7             	mov    %rax,%rdi
+ 83e:	e8 00 00 00 00       	call   843 <KernelAddressSpace::KernelAddressSpace(void*)+0xd9>
+ 843:	c7 45 fc 00 00 00 00 	movl   $0x0,-0x4(%rbp)
+ 84a:	eb 50                	jmp    89c <KernelAddressSpace::KernelAddressSpace(void*)+0x132>
+ 84c:	8b 45 fc             	mov    -0x4(%rbp),%eax
+ 84f:	48 98                	cltq   
+ 851:	48 c1 e0 03          	shl    $0x3,%rax
+ 855:	48 8d 88 00 00 00 00 	lea    0x0(%rax),%rcx
+ 85c:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 860:	8b 55 fc             	mov    -0x4(%rbp),%edx
+ 863:	48 63 d2             	movslq %edx,%rdx
+ 866:	48 81 c2 00 04 00 00 	add    $0x400,%rdx
+ 86d:	48 89 0c d0          	mov    %rcx,(%rax,%rdx,8)
+ 871:	8b 45 fc             	mov    -0x4(%rbp),%eax
+ 874:	c1 e0 15             	shl    $0x15,%eax
+ 877:	89 c1                	mov    %eax,%ecx
+ 879:	8b 45 fc             	mov    -0x4(%rbp),%eax
+ 87c:	48 98                	cltq   
+ 87e:	48 c1 e0 03          	shl    $0x3,%rax
+ 882:	48 05 00 00 00 00    	add    $0x0,%rax
+ 888:	ba 03 00 00 00       	mov    $0x3,%edx
+ 88d:	48 89 ce             	mov    %rcx,%rsi
+ 890:	48 89 c7             	mov    %rax,%rdi
+ 893:	e8 00 00 00 00       	call   898 <KernelAddressSpace::KernelAddressSpace(void*)+0x12e>
+ 898:	83 45 fc 01          	addl   $0x1,-0x4(%rbp)
+ 89c:	81 7d fc ff 01 00 00 	cmpl   $0x1ff,-0x4(%rbp)
+ 8a3:	7e a7                	jle    84c <KernelAddressSpace::KernelAddressSpace(void*)+0xe2>
+ 8a5:	48 b8 00 00 00 00 00 	movabs $0x0,%rax
+ 8ac:	00 00 00 
+ 8af:	48 89 c1             	mov    %rax,%rcx
+ 8b2:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 8b6:	48 05 f8 1f 00 00    	add    $0x1ff8,%rax
+ 8bc:	ba 03 00 00 00       	mov    $0x3,%edx
+ 8c1:	48 89 ce             	mov    %rcx,%rsi
+ 8c4:	48 89 c7             	mov    %rax,%rdi
+ 8c7:	e8 00 00 00 00       	call   8cc <KernelAddressSpace::KernelAddressSpace(void*)+0x162>
+ 8cc:	c7 45 f8 00 00 00 00 	movl   $0x0,-0x8(%rbp)
+ 8d3:	eb 61                	jmp    936 <KernelAddressSpace::KernelAddressSpace(void*)+0x1cc>
+ 8d5:	8b 45 f8             	mov    -0x8(%rbp),%eax
+ 8d8:	48 98                	cltq   
+ 8da:	48 c1 e0 0c          	shl    $0xc,%rax
+ 8de:	48 05 00 00 00 00    	add    $0x0,%rax
+ 8e4:	48 89 c2             	mov    %rax,%rdx
+ 8e7:	b8 00 00 00 80       	mov    $0x80000000,%eax
+ 8ec:	48 8d 0c 02          	lea    (%rdx,%rax,1),%rcx
+ 8f0:	8b 45 f8             	mov    -0x8(%rbp),%eax
+ 8f3:	48 98                	cltq   
+ 8f5:	48 c1 e0 03          	shl    $0x3,%rax
+ 8f9:	48 05 00 00 00 00    	add    $0x0,%rax
+ 8ff:	ba 03 00 00 00       	mov    $0x3,%edx
+ 904:	48 89 ce             	mov    %rcx,%rsi
+ 907:	48 89 c7             	mov    %rax,%rdi
+ 90a:	e8 00 00 00 00       	call   90f <KernelAddressSpace::KernelAddressSpace(void*)+0x1a5>
+ 90f:	8b 45 f8             	mov    -0x8(%rbp),%eax
+ 912:	48 98                	cltq   
+ 914:	48 c1 e0 0c          	shl    $0xc,%rax
+ 918:	48 8d 90 00 00 00 00 	lea    0x0(%rax),%rdx
+ 91f:	8b 45 f8             	mov    -0x8(%rbp),%eax
+ 922:	48 98                	cltq   
+ 924:	48 05 00 fe 03 00    	add    $0x3fe00,%rax
+ 92a:	48 89 14 c5 00 00 00 	mov    %rdx,0x0(,%rax,8)
+ 931:	00 
+ 932:	83 45 f8 01          	addl   $0x1,-0x8(%rbp)
+ 936:	81 7d f8 ff 01 00 00 	cmpl   $0x1ff,-0x8(%rbp)
+ 93d:	7e 96                	jle    8d5 <KernelAddressSpace::KernelAddressSpace(void*)+0x16b>
+ 93f:	c7 45 f4 00 00 00 00 	movl   $0x0,-0xc(%rbp)
+ 946:	e9 a3 00 00 00       	jmp    9ee <KernelAddressSpace::KernelAddressSpace(void*)+0x284>
+ 94b:	8b 45 f4             	mov    -0xc(%rbp),%eax
+ 94e:	48 98                	cltq   
+ 950:	48 c1 e0 0c          	shl    $0xc,%rax
+ 954:	48 05 00 00 00 00    	add    $0x0,%rax
+ 95a:	48 89 c2             	mov    %rax,%rdx
+ 95d:	b8 00 00 00 80       	mov    $0x80000000,%eax
+ 962:	48 8d 0c 02          	lea    (%rdx,%rax,1),%rcx
+ 966:	8b 45 f4             	mov    -0xc(%rbp),%eax
+ 969:	48 98                	cltq   
+ 96b:	48 05 fa 01 00 00    	add    $0x1fa,%rax
+ 971:	48 05 00 02 00 00    	add    $0x200,%rax
+ 977:	48 8d 14 c5 00 00 00 	lea    0x0(,%rax,8),%rdx
+ 97e:	00 
+ 97f:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 983:	48 01 d0             	add    %rdx,%rax
+ 986:	ba 03 00 00 00       	mov    $0x3,%edx
+ 98b:	48 89 ce             	mov    %rcx,%rsi
+ 98e:	48 89 c7             	mov    %rax,%rdi
+ 991:	e8 00 00 00 00       	call   996 <KernelAddressSpace::KernelAddressSpace(void*)+0x22c>
+ 996:	c7 45 f0 00 00 00 00 	movl   $0x0,-0x10(%rbp)
+ 99d:	eb 42                	jmp    9e1 <KernelAddressSpace::KernelAddressSpace(void*)+0x277>
+ 99f:	8b 45 f4             	mov    -0xc(%rbp),%eax
+ 9a2:	c1 e0 09             	shl    $0x9,%eax
+ 9a5:	89 c2                	mov    %eax,%edx
+ 9a7:	8b 45 f0             	mov    -0x10(%rbp),%eax
+ 9aa:	01 d0                	add    %edx,%eax
+ 9ac:	c1 e0 15             	shl    $0x15,%eax
+ 9af:	89 c1                	mov    %eax,%ecx
+ 9b1:	8b 45 f0             	mov    -0x10(%rbp),%eax
+ 9b4:	48 98                	cltq   
+ 9b6:	8b 55 f4             	mov    -0xc(%rbp),%edx
+ 9b9:	48 63 d2             	movslq %edx,%rdx
+ 9bc:	48 c1 e2 09          	shl    $0x9,%rdx
+ 9c0:	48 01 d0             	add    %rdx,%rax
+ 9c3:	48 c1 e0 03          	shl    $0x3,%rax
+ 9c7:	48 05 00 00 00 00    	add    $0x0,%rax
+ 9cd:	ba 93 00 00 00       	mov    $0x93,%edx
+ 9d2:	48 89 ce             	mov    %rcx,%rsi
+ 9d5:	48 89 c7             	mov    %rax,%rdi
+ 9d8:	e8 00 00 00 00       	call   9dd <KernelAddressSpace::KernelAddressSpace(void*)+0x273>
+ 9dd:	83 45 f0 01          	addl   $0x1,-0x10(%rbp)
+ 9e1:	81 7d f0 ff 01 00 00 	cmpl   $0x1ff,-0x10(%rbp)
+ 9e8:	7e b5                	jle    99f <KernelAddressSpace::KernelAddressSpace(void*)+0x235>
+ 9ea:	83 45 f4 01          	addl   $0x1,-0xc(%rbp)
+ 9ee:	83 7d f4 03          	cmpl   $0x3,-0xc(%rbp)
+ 9f2:	0f 8e 53 ff ff ff    	jle    94b <KernelAddressSpace::KernelAddressSpace(void*)+0x1e1>
+ 9f8:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ 9fc:	48 8b 90 f0 1f 00 00 	mov    0x1ff0(%rax),%rdx
+ a03:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ a07:	48 89 90 00 10 00 00 	mov    %rdx,0x1000(%rax)
+ a0e:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ a12:	48 89 c2             	mov    %rax,%rdx
+ a15:	b8 00 00 00 80       	mov    $0x80000000,%eax
+ a1a:	48 01 c2             	add    %rax,%rdx
+ a1d:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ a21:	48 89 90 00 50 00 00 	mov    %rdx,0x5000(%rax)
+ a28:	90                   	nop
+ a29:	c9                   	leave  
+ a2a:	c3                   	ret    
+ a2b:	90                   	nop
+
+0000000000000a2c <KernelAddressSpace::~KernelAddressSpace()>:
+ a2c:	55                   	push   %rbp
+ a2d:	48 89 e5             	mov    %rsp,%rbp
+ a30:	48 83 ec 08          	sub    $0x8,%rsp
+ a34:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
+ a38:	48 c7 c2 00 00 00 00 	mov    $0x0,%rdx
+ a3f:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+ a43:	48 89 10             	mov    %rdx,(%rax)
+ a46:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+ a4a:	48 89 c7             	mov    %rax,%rdi
+ a4d:	e8 00 00 00 00       	call   a52 <KernelAddressSpace::~KernelAddressSpace()+0x26>
+ a52:	90                   	nop
+ a53:	c9                   	leave  
+ a54:	c3                   	ret    
+ a55:	90                   	nop
+
+0000000000000a56 <KernelAddressSpace::Allocate4KPages(unsigned long)>:
+ a56:	55                   	push   %rbp
+ a57:	48 89 e5             	mov    %rsp,%rbp
+ a5a:	48 83 ec 50          	sub    $0x50,%rsp
+ a5e:	48 89 7d b8          	mov    %rdi,-0x48(%rbp)
+ a62:	48 89 75 b0          	mov    %rsi,-0x50(%rbp)
+ a66:	48 8b 45 b0          	mov    -0x50(%rbp),%rax
+ a6a:	48 89 c7             	mov    %rax,%rdi
+ a6d:	e8 8e f5 ff ff       	call   0 <ALIGN_PAGE(unsigned long)>
+ a72:	48 89 45 b0          	mov    %rax,-0x50(%rbp)
+ a76:	48 c7 45 f8 00 00 00 	movq   $0x0,-0x8(%rbp)
+ a7d:	00 
+ a7e:	48 c7 45 f0 00 00 00 	movq   $0x0,-0x10(%rbp)
+ a85:	00 
+ a86:	48 c7 45 e8 00 00 00 	movq   $0x0,-0x18(%rbp)
+ a8d:	00 
+ a8e:	48 8b 45 b0          	mov    -0x50(%rbp),%rax
+ a92:	48 89 c7             	mov    %rax,%rdi
+ a95:	e8 00 00 00 00       	call   a9a <KernelAddressSpace::Allocate4KPages(unsigned long)+0x44>
+ a9a:	48 8b 40 30          	mov    0x30(%rax),%rax
+ a9e:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
+ aa2:	c7 45 e4 00 00 00 00 	movl   $0x0,-0x1c(%rbp)
+ aa9:	e9 46 01 00 00       	jmp    bf4 <KernelAddressSpace::Allocate4KPages(unsigned long)+0x19e>
+ aae:	c7 45 e0 00 00 00 00 	movl   $0x0,-0x20(%rbp)
+ ab5:	e9 29 01 00 00       	jmp    be3 <KernelAddressSpace::Allocate4KPages(unsigned long)+0x18d>
+ aba:	8b 45 e0             	mov    -0x20(%rbp),%eax
+ abd:	48 98                	cltq   
+ abf:	8b 55 e4             	mov    -0x1c(%rbp),%edx
+ ac2:	48 63 d2             	movslq %edx,%rdx
+ ac5:	48 c1 e2 09          	shl    $0x9,%rdx
+ ac9:	48 01 d0             	add    %rdx,%rax
+ acc:	48 8b 04 c5 00 00 00 	mov    0x0(,%rax,8),%rax
+ ad3:	00 
+ ad4:	83 e0 01             	and    $0x1,%eax
+ ad7:	48 85 c0             	test   %rax,%rax
+ ada:	74 22                	je     afe <KernelAddressSpace::Allocate4KPages(unsigned long)+0xa8>
+ adc:	8b 45 e4             	mov    -0x1c(%rbp),%eax
+ adf:	48 98                	cltq   
+ ae1:	48 89 45 f0          	mov    %rax,-0x10(%rbp)
+ ae5:	8b 45 e0             	mov    -0x20(%rbp),%eax
+ ae8:	83 c0 01             	add    $0x1,%eax
+ aeb:	48 98                	cltq   
+ aed:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
+ af1:	48 c7 45 e8 00 00 00 	movq   $0x0,-0x18(%rbp)
+ af8:	00 
+ af9:	e9 e1 00 00 00       	jmp    bdf <KernelAddressSpace::Allocate4KPages(unsigned long)+0x189>
+ afe:	48 83 45 e8 01       	addq   $0x1,-0x18(%rbp)
+ b03:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ b07:	48 3b 45 b0          	cmp    -0x50(%rbp),%rax
+ b0b:	0f 82 ce 00 00 00    	jb     bdf <KernelAddressSpace::Allocate4KPages(unsigned long)+0x189>
+ b11:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
+ b15:	48 c1 e0 09          	shl    $0x9,%rax
+ b19:	48 89 c2             	mov    %rax,%rdx
+ b1c:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+ b20:	48 01 d0             	add    %rdx,%rax
+ b23:	48 c1 e0 0c          	shl    $0xc,%rax
+ b27:	48 0d 00 00 00 c0    	or     $0xffffffffc0000000,%rax
+ b2d:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
+ b31:	48 c7 45 c8 00 00 00 	movq   $0x0,-0x38(%rbp)
+ b38:	00 
+ b39:	eb 69                	jmp    ba4 <KernelAddressSpace::Allocate4KPages(unsigned long)+0x14e>
+ b3b:	48 81 7d f8 ff 01 00 	cmpq   $0x1ff,-0x8(%rbp)
+ b42:	00 
+ b43:	76 0d                	jbe    b52 <KernelAddressSpace::Allocate4KPages(unsigned long)+0xfc>
+ b45:	48 83 45 f0 01       	addq   $0x1,-0x10(%rbp)
+ b4a:	48 c7 45 f8 00 00 00 	movq   $0x0,-0x8(%rbp)
+ b51:	00 
+ b52:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
+ b56:	48 c1 e0 09          	shl    $0x9,%rax
+ b5a:	48 89 c2             	mov    %rax,%rdx
+ b5d:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+ b61:	48 01 d0             	add    %rdx,%rax
+ b64:	48 c1 e0 0c          	shl    $0xc,%rax
+ b68:	48 89 c2             	mov    %rax,%rdx
+ b6b:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
+ b6f:	48 8d 0c 02          	lea    (%rdx,%rax,1),%rcx
+ b73:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
+ b77:	48 c1 e0 09          	shl    $0x9,%rax
+ b7b:	48 89 c2             	mov    %rax,%rdx
+ b7e:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+ b82:	48 01 d0             	add    %rdx,%rax
+ b85:	48 c1 e0 03          	shl    $0x3,%rax
+ b89:	48 05 00 00 00 00    	add    $0x0,%rax
+ b8f:	ba 03 00 00 00       	mov    $0x3,%edx
+ b94:	48 89 ce             	mov    %rcx,%rsi
+ b97:	48 89 c7             	mov    %rax,%rdi
+ b9a:	e8 00 00 00 00       	call   b9f <KernelAddressSpace::Allocate4KPages(unsigned long)+0x149>
+ b9f:	48 83 45 f8 01       	addq   $0x1,-0x8(%rbp)
+ ba4:	48 83 7d e8 00       	cmpq   $0x0,-0x18(%rbp)
+ ba9:	75 90                	jne    b3b <KernelAddressSpace::Allocate4KPages(unsigned long)+0xe5>
+ bab:	48 8b 45 b8          	mov    -0x48(%rbp),%rax
+ baf:	48 8b 50 08          	mov    0x8(%rax),%rdx
+ bb3:	48 8b 45 b0          	mov    -0x50(%rbp),%rax
+ bb7:	48 01 c2             	add    %rax,%rdx
+ bba:	48 8b 45 b8          	mov    -0x48(%rbp),%rax
+ bbe:	48 89 50 08          	mov    %rdx,0x8(%rax)
+ bc2:	48 8b 45 b8          	mov    -0x48(%rbp),%rax
+ bc6:	48 8b 50 10          	mov    0x10(%rax),%rdx
+ bca:	48 8b 45 b0          	mov    -0x50(%rbp),%rax
+ bce:	48 01 c2             	add    %rax,%rdx
+ bd1:	48 8b 45 b8          	mov    -0x48(%rbp),%rax
+ bd5:	48 89 50 10          	mov    %rdx,0x10(%rax)
+ bd9:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
+ bdd:	eb 27                	jmp    c06 <KernelAddressSpace::Allocate4KPages(unsigned long)+0x1b0>
+ bdf:	83 45 e0 01          	addl   $0x1,-0x20(%rbp)
+ be3:	81 7d e0 ff 01 00 00 	cmpl   $0x1ff,-0x20(%rbp)
+ bea:	0f 8e ca fe ff ff    	jle    aba <KernelAddressSpace::Allocate4KPages(unsigned long)+0x64>
+ bf0:	83 45 e4 01          	addl   $0x1,-0x1c(%rbp)
+ bf4:	81 7d e4 ff 01 00 00 	cmpl   $0x1ff,-0x1c(%rbp)
+ bfb:	0f 8e ad fe ff ff    	jle    aae <KernelAddressSpace::Allocate4KPages(unsigned long)+0x58>
+ c01:	b8 00 00 00 00       	mov    $0x0,%eax
+ c06:	c9                   	leave  
+ c07:	c3                   	ret    
+
+0000000000000c08 <KernelAddressSpace::Free4KPages(unsigned long, unsigned long)>:
+ c08:	55                   	push   %rbp
+ c09:	48 89 e5             	mov    %rsp,%rbp
+ c0c:	48 83 ec 18          	sub    $0x18,%rsp
+ c10:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
+ c14:	48 89 75 f0          	mov    %rsi,-0x10(%rbp)
+ c18:	48 89 55 e8          	mov    %rdx,-0x18(%rbp)
+ c1c:	90                   	nop
+ c1d:	c9                   	leave  
+ c1e:	c3                   	ret    
+ c1f:	90                   	nop
+
+0000000000000c20 <KernelAddressSpace::IsPagePresent(unsigned long)>:
+ c20:	55                   	push   %rbp
+ c21:	48 89 e5             	mov    %rsp,%rbp
+ c24:	48 83 ec 40          	sub    $0x40,%rsp
+ c28:	48 89 7d c8          	mov    %rdi,-0x38(%rbp)
+ c2c:	48 89 75 c0          	mov    %rsi,-0x40(%rbp)
+ c30:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ c34:	48 c1 e8 27          	shr    $0x27,%rax
+ c38:	25 ff 01 00 00       	and    $0x1ff,%eax
+ c3d:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
+ c41:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ c45:	48 c1 e8 1e          	shr    $0x1e,%rax
+ c49:	25 ff 01 00 00       	and    $0x1ff,%eax
+ c4e:	48 89 45 f0          	mov    %rax,-0x10(%rbp)
+ c52:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ c56:	48 c1 e8 15          	shr    $0x15,%rax
+ c5a:	25 ff 01 00 00       	and    $0x1ff,%eax
+ c5f:	48 89 45 e8          	mov    %rax,-0x18(%rbp)
+ c63:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ c67:	48 c1 e8 0c          	shr    $0xc,%rax
+ c6b:	25 ff 01 00 00       	and    $0x1ff,%eax
+ c70:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
+ c74:	48 81 7d f8 ff 01 00 	cmpq   $0x1ff,-0x8(%rbp)
+ c7b:	00 
+ c7c:	74 07                	je     c85 <KernelAddressSpace::IsPagePresent(unsigned long)+0x65>
+ c7e:	b8 00 00 00 00       	mov    $0x0,%eax
+ c83:	eb 41                	jmp    cc6 <KernelAddressSpace::IsPagePresent(unsigned long)+0xa6>
+ c85:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
+ c89:	48 c1 e0 09          	shl    $0x9,%rax
+ c8d:	48 89 c2             	mov    %rax,%rdx
+ c90:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ c94:	48 01 d0             	add    %rdx,%rax
+ c97:	48 8b 04 c5 00 00 00 	mov    0x0(,%rax,8),%rax
+ c9e:	00 
+ c9f:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
+ ca3:	48 83 7d d8 00       	cmpq   $0x0,-0x28(%rbp)
+ ca8:	74 17                	je     cc1 <KernelAddressSpace::IsPagePresent(unsigned long)+0xa1>
+ caa:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
+ cae:	48 8b 55 e0          	mov    -0x20(%rbp),%rdx
+ cb2:	48 8b 04 d0          	mov    (%rax,%rdx,8),%rax
+ cb6:	83 e0 01             	and    $0x1,%eax
+ cb9:	48 85 c0             	test   %rax,%rax
+ cbc:	0f 95 c0             	setne  %al
+ cbf:	eb 05                	jmp    cc6 <KernelAddressSpace::IsPagePresent(unsigned long)+0xa6>
+ cc1:	b8 00 00 00 00       	mov    $0x0,%eax
+ cc6:	c9                   	leave  
+ cc7:	c3                   	ret    
+
+0000000000000cc8 <KernelAddressSpace::ConvertVirtToPhys(unsigned long)>:
+ cc8:	55                   	push   %rbp
+ cc9:	48 89 e5             	mov    %rsp,%rbp
+ ccc:	48 83 ec 40          	sub    $0x40,%rsp
+ cd0:	48 89 7d c8          	mov    %rdi,-0x38(%rbp)
+ cd4:	48 89 75 c0          	mov    %rsi,-0x40(%rbp)
+ cd8:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ cdc:	48 c1 e8 27          	shr    $0x27,%rax
+ ce0:	25 ff 01 00 00       	and    $0x1ff,%eax
+ ce5:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
+ ce9:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ ced:	48 c1 e8 1e          	shr    $0x1e,%rax
+ cf1:	25 ff 01 00 00       	and    $0x1ff,%eax
+ cf6:	48 89 45 f0          	mov    %rax,-0x10(%rbp)
+ cfa:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ cfe:	48 c1 e8 15          	shr    $0x15,%rax
+ d02:	25 ff 01 00 00       	and    $0x1ff,%eax
+ d07:	48 89 45 e8          	mov    %rax,-0x18(%rbp)
+ d0b:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ d0f:	48 c1 e8 0c          	shr    $0xc,%rax
+ d13:	25 ff 01 00 00       	and    $0x1ff,%eax
+ d18:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
+ d1c:	48 81 7d f8 ff 01 00 	cmpq   $0x1ff,-0x8(%rbp)
+ d23:	00 
+ d24:	74 0a                	je     d30 <KernelAddressSpace::ConvertVirtToPhys(unsigned long)+0x68>
+ d26:	b8 00 00 00 00       	mov    $0x0,%eax
+ d2b:	e9 8b 00 00 00       	jmp    dbb <KernelAddressSpace::ConvertVirtToPhys(unsigned long)+0xf3>
+ d30:	48 81 7d f0 fe 01 00 	cmpq   $0x1fe,-0x10(%rbp)
+ d37:	00 
+ d38:	75 19                	jne    d53 <KernelAddressSpace::ConvertVirtToPhys(unsigned long)+0x8b>
+ d3a:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ d3e:	48 c1 e0 15          	shl    $0x15,%rax
+ d42:	48 89 c2             	mov    %rax,%rdx
+ d45:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ d49:	25 ff ff 1f 00       	and    $0x1fffff,%eax
+ d4e:	48 01 d0             	add    %rdx,%rax
+ d51:	eb 68                	jmp    dbb <KernelAddressSpace::ConvertVirtToPhys(unsigned long)+0xf3>
+ d53:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
+ d57:	48 c1 e0 09          	shl    $0x9,%rax
+ d5b:	48 89 c2             	mov    %rax,%rdx
+ d5e:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+ d62:	48 01 d0             	add    %rdx,%rax
+ d65:	48 8b 04 c5 00 00 00 	mov    0x0(,%rax,8),%rax
+ d6c:	00 
+ d6d:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
+ d71:	48 83 7d d8 00       	cmpq   $0x0,-0x28(%rbp)
+ d76:	74 3e                	je     db6 <KernelAddressSpace::ConvertVirtToPhys(unsigned long)+0xee>
+ d78:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
+ d7c:	48 8b 55 e0          	mov    -0x20(%rbp),%rdx
+ d80:	48 8b 04 d0          	mov    (%rax,%rdx,8),%rax
+ d84:	83 e0 01             	and    $0x1,%eax
+ d87:	48 85 c0             	test   %rax,%rax
+ d8a:	74 2a                	je     db6 <KernelAddressSpace::ConvertVirtToPhys(unsigned long)+0xee>
+ d8c:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
+ d90:	48 8b 55 e0          	mov    -0x20(%rbp),%rdx
+ d94:	48 8b 0c d0          	mov    (%rax,%rdx,8),%rcx
+ d98:	48 8b 45 c0          	mov    -0x40(%rbp),%rax
+ d9c:	25 ff 0f 00 00       	and    $0xfff,%eax
+ da1:	48 89 c2             	mov    %rax,%rdx
+ da4:	48 b8 00 f0 ff ff ff 	movabs $0xfffffffff000,%rax
+ dab:	ff 00 00 
+ dae:	48 01 d0             	add    %rdx,%rax
+ db1:	48 21 c8             	and    %rcx,%rax
+ db4:	eb 05                	jmp    dbb <KernelAddressSpace::ConvertVirtToPhys(unsigned long)+0xf3>
+ db6:	b8 00 00 00 00       	mov    $0x0,%eax
+ dbb:	c9                   	leave  
+ dbc:	c3                   	ret    
+
+Disassembly of section .text._ZN6Paging12VirtualPagesC2Ev:
+
+0000000000000000 <Paging::VirtualPages::VirtualPages()>:
+   0:	55                   	push   %rbp
+   1:	48 89 e5             	mov    %rsp,%rbp
+   4:	48 83 ec 08          	sub    $0x8,%rsp
+   8:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
+   c:	90                   	nop
+   d:	c9                   	leave  
+   e:	c3                   	ret    
+
+Disassembly of section .text._ZN6Paging12SetPageFrameEPmmm:
+
+0000000000000000 <Paging::SetPageFrame(unsigned long*, unsigned long, unsigned long)>:
+   0:	55                   	push   %rbp
+   1:	48 89 e5             	mov    %rsp,%rbp
+   4:	48 83 ec 18          	sub    $0x18,%rsp
+   8:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
+   c:	48 89 75 f0          	mov    %rsi,-0x10(%rbp)
+  10:	48 89 55 e8          	mov    %rdx,-0x18(%rbp)
+  14:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+  18:	48 8b 00             	mov    (%rax),%rax
+  1b:	48 ba ff 0f 00 00 00 	movabs $0xffff000000000fff,%rdx
+  22:	00 ff ff 
+  25:	48 21 c2             	and    %rax,%rdx
+  28:	48 b8 00 f0 ff ff ff 	movabs $0xfffffffff000,%rax
+  2f:	ff 00 00 
+  32:	48 23 45 f0          	and    -0x10(%rbp),%rax
+  36:	48 09 d0             	or     %rdx,%rax
+  39:	48 0b 45 e8          	or     -0x18(%rbp),%rax
+  3d:	48 89 c2             	mov    %rax,%rdx
+  40:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+  44:	48 89 10             	mov    %rdx,(%rax)
+  47:	90                   	nop
+  48:	c9                   	leave  
+  49:	c3                   	ret    
+
+Disassembly of section .rodata._ZTV18KernelAddressSpace:
+
+0000000000000000 <vtable for KernelAddressSpace>:
+	...
+
+Disassembly of section .rodata._ZTV12AddressSpace:
+
+0000000000000000 <vtable for AddressSpace>:
+	...
+
+Disassembly of section .comment:
+
+0000000000000000 <.comment>:
+   0:	00 47 43             	add    %al,0x43(%rdi)
+   3:	43 3a 20             	rex.XB cmp (%r8),%spl
+   6:	28 47 4e             	sub    %al,0x4e(%rdi)
+   9:	55                   	push   %rbp
+   a:	29 20                	sub    %esp,(%rax)
+   c:	31 32                	xor    %esi,(%rdx)
+   e:	2e 32 2e             	cs xor (%rsi),%ch
+  11:	30 00                	xor    %al,(%rax)
+
+Disassembly of section .eh_frame:
+
+0000000000000000 <.eh_frame>:
+   0:	14 00                	adc    $0x0,%al
+   2:	00 00                	add    %al,(%rax)
+   4:	00 00                	add    %al,(%rax)
+   6:	00 00                	add    %al,(%rax)
+   8:	01 7a 52             	add    %edi,0x52(%rdx)
+   b:	00 01                	add    %al,(%rcx)
+   d:	78 10                	js     1f <.eh_frame+0x1f>
+   f:	01 1b                	add    %ebx,(%rbx)
+  11:	0c 07                	or     $0x7,%al
+  13:	08 90 01 00 00 1c    	or     %dl,0x1c000001(%rax)
+  19:	00 00                	add    %al,(%rax)
+  1b:	00 1c 00             	add    %bl,(%rax,%rax,1)
+  1e:	00 00                	add    %al,(%rax)
+  20:	00 00                	add    %al,(%rax)
+  22:	00 00                	add    %al,(%rax)
+  24:	0f 00 00             	sldt   (%rax)
+  27:	00 00                	add    %al,(%rax)
+  29:	41 0e                	rex.B (bad) 
+  2b:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+  31:	4a c6                	rex.WX (bad) 
+  33:	0c 07                	or     $0x7,%al
+  35:	08 00                	or     %al,(%rax)
+  37:	00 1c 00             	add    %bl,(%rax,%rax,1)
+  3a:	00 00                	add    %al,(%rax)
+  3c:	3c 00                	cmp    $0x0,%al
+  3e:	00 00                	add    %al,(%rax)
+  40:	00 00                	add    %al,(%rax)
+  42:	00 00                	add    %al,(%rax)
+  44:	4a 00 00             	rex.WX add %al,(%rax)
+  47:	00 00                	add    %al,(%rax)
+  49:	41 0e                	rex.B (bad) 
+  4b:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+  51:	02 45 c6             	add    -0x3a(%rbp),%al
+  54:	0c 07                	or     $0x7,%al
+  56:	08 00                	or     %al,(%rax)
+  58:	1c 00                	sbb    $0x0,%al
+  5a:	00 00                	add    %al,(%rax)
+  5c:	5c                   	pop    %rsp
+  5d:	00 00                	add    %al,(%rax)
+  5f:	00 00                	add    %al,(%rax)
+  61:	00 00                	add    %al,(%rax)
+  63:	00 57 00             	add    %dl,0x0(%rdi)
+  66:	00 00                	add    %al,(%rax)
+  68:	00 41 0e             	add    %al,0xe(%rcx)
+  6b:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+  71:	02 52 c6             	add    -0x3a(%rdx),%dl
+  74:	0c 07                	or     $0x7,%al
+  76:	08 00                	or     %al,(%rax)
+  78:	1c 00                	sbb    $0x0,%al
+  7a:	00 00                	add    %al,(%rax)
+  7c:	7c 00                	jl     7e <.eh_frame+0x7e>
+  7e:	00 00                	add    %al,(%rax)
+  80:	00 00                	add    %al,(%rax)
+  82:	00 00                	add    %al,(%rax)
+  84:	24 00                	and    $0x0,%al
+  86:	00 00                	add    %al,(%rax)
+  88:	00 41 0e             	add    %al,0xe(%rcx)
+  8b:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+  91:	5f                   	pop    %rdi
+  92:	c6                   	(bad)  
+  93:	0c 07                	or     $0x7,%al
+  95:	08 00                	or     %al,(%rax)
+  97:	00 20                	add    %ah,(%rax)
+  99:	00 00                	add    %al,(%rax)
+  9b:	00 9c 00 00 00 00 00 	add    %bl,0x0(%rax,%rax,1)
+  a2:	00 00                	add    %al,(%rax)
+  a4:	3d 00 00 00 00       	cmp    $0x0,%eax
+  a9:	41 0e                	rex.B (bad) 
+  ab:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+  b1:	45 83 03 73          	rex.RB addl $0x73,(%r11)
+  b5:	c6 c3 0c             	mov    $0xc,%bl
+  b8:	07                   	(bad)  
+  b9:	08 00                	or     %al,(%rax)
+  bb:	00 1c 00             	add    %bl,(%rax,%rax,1)
+  be:	00 00                	add    %al,(%rax)
+  c0:	c0 00 00             	rolb   $0x0,(%rax)
+  c3:	00 00                	add    %al,(%rax)
+  c5:	00 00                	add    %al,(%rax)
+  c7:	00 89 00 00 00 00    	add    %cl,0x0(%rcx)
+  cd:	41 0e                	rex.B (bad) 
+  cf:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+  d5:	02 84 c6 0c 07 08 00 	add    0x8070c(%rsi,%rax,8),%al
+  dc:	1c 00                	sbb    $0x0,%al
+  de:	00 00                	add    %al,(%rax)
+  e0:	e0 00                	loopne e2 <.eh_frame+0xe2>
+  e2:	00 00                	add    %al,(%rax)
+  e4:	00 00                	add    %al,(%rax)
+  e6:	00 00                	add    %al,(%rax)
+  e8:	1d 00 00 00 00       	sbb    $0x0,%eax
+  ed:	41 0e                	rex.B (bad) 
+  ef:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+  f5:	58                   	pop    %rax
+  f6:	c6                   	(bad)  
+  f7:	0c 07                	or     $0x7,%al
+  f9:	08 00                	or     %al,(%rax)
+  fb:	00 1c 00             	add    %bl,(%rax,%rax,1)
+  fe:	00 00                	add    %al,(%rax)
+ 100:	00 01                	add    %al,(%rcx)
+ 102:	00 00                	add    %al,(%rax)
+ 104:	00 00                	add    %al,(%rax)
+ 106:	00 00                	add    %al,(%rax)
+ 108:	43 04 00             	rex.XB add $0x0,%al
+ 10b:	00 00                	add    %al,(%rax)
+ 10d:	41 0e                	rex.B (bad) 
+ 10f:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+ 115:	03 3e                	add    (%rsi),%edi
+ 117:	04 c6                	add    $0xc6,%al
+ 119:	0c 07                	or     $0x7,%al
+ 11b:	08 1c 00             	or     %bl,(%rax,%rax,1)
+ 11e:	00 00                	add    %al,(%rax)
+ 120:	20 01                	and    %al,(%rcx)
+ 122:	00 00                	add    %al,(%rax)
+ 124:	00 00                	add    %al,(%rax)
+ 126:	00 00                	add    %al,(%rax)
+ 128:	93                   	xchg   %eax,%ebx
+ 129:	01 00                	add    %eax,(%rax)
+ 12b:	00 00                	add    %al,(%rax)
+ 12d:	41 0e                	rex.B (bad) 
+ 12f:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+ 135:	03 8e 01 c6 0c 07    	add    0x70cc601(%rsi),%ecx
+ 13b:	08 1c 00             	or     %bl,(%rax,%rax,1)
+ 13e:	00 00                	add    %al,(%rax)
+ 140:	40 01 00             	rex add %eax,(%rax)
+ 143:	00 00                	add    %al,(%rax)
+ 145:	00 00                	add    %al,(%rax)
+ 147:	00 17                	add    %dl,(%rdi)
+ 149:	00 00                	add    %al,(%rax)
+ 14b:	00 00                	add    %al,(%rax)
+ 14d:	41 0e                	rex.B (bad) 
+ 14f:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+ 155:	52                   	push   %rdx
+ 156:	c6                   	(bad)  
+ 157:	0c 07                	or     $0x7,%al
+ 159:	08 00                	or     %al,(%rax)
+ 15b:	00 1c 00             	add    %bl,(%rax,%rax,1)
+ 15e:	00 00                	add    %al,(%rax)
+ 160:	60                   	(bad)  
+ 161:	01 00                	add    %eax,(%rax)
+ 163:	00 00                	add    %al,(%rax)
+ 165:	00 00                	add    %al,(%rax)
+ 167:	00 17                	add    %dl,(%rdi)
+ 169:	00 00                	add    %al,(%rax)
+ 16b:	00 00                	add    %al,(%rax)
+ 16d:	41 0e                	rex.B (bad) 
+ 16f:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+ 175:	52                   	push   %rdx
+ 176:	c6                   	(bad)  
+ 177:	0c 07                	or     $0x7,%al
+ 179:	08 00                	or     %al,(%rax)
+ 17b:	00 1c 00             	add    %bl,(%rax,%rax,1)
+ 17e:	00 00                	add    %al,(%rax)
+ 180:	80 01 00             	addb   $0x0,(%rcx)
+ 183:	00 00                	add    %al,(%rax)
+ 185:	00 00                	add    %al,(%rax)
+ 187:	00 c1                	add    %al,%cl
+ 189:	02 00                	add    (%rax),%al
+ 18b:	00 00                	add    %al,(%rax)
+ 18d:	41 0e                	rex.B (bad) 
+ 18f:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+ 195:	03 bc 02 c6 0c 07 08 	add    0x8070cc6(%rdx,%rax,1),%edi
+ 19c:	1c 00                	sbb    $0x0,%al
+ 19e:	00 00                	add    %al,(%rax)
+ 1a0:	a0 01 00 00 00 00 00 	movabs 0x2900000000000001,%al
+ 1a7:	00 29 
+ 1a9:	00 00                	add    %al,(%rax)
+ 1ab:	00 00                	add    %al,(%rax)
+ 1ad:	41 0e                	rex.B (bad) 
+ 1af:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+ 1b5:	64 c6                	fs (bad) 
+ 1b7:	0c 07                	or     $0x7,%al
+ 1b9:	08 00                	or     %al,(%rax)
+ 1bb:	00 1c 00             	add    %bl,(%rax,%rax,1)
+ 1be:	00 00                	add    %al,(%rax)
+ 1c0:	c0 01 00             	rolb   $0x0,(%rcx)
+ 1c3:	00 00                	add    %al,(%rax)
+ 1c5:	00 00                	add    %al,(%rax)
+ 1c7:	00 b2 01 00 00 00    	add    %dh,0x1(%rdx)
+ 1cd:	41 0e                	rex.B (bad) 
+ 1cf:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+ 1d5:	03 ad 01 c6 0c 07    	add    0x70cc601(%rbp),%ebp
+ 1db:	08 1c 00             	or     %bl,(%rax,%rax,1)
+ 1de:	00 00                	add    %al,(%rax)
+ 1e0:	e0 01                	loopne 1e3 <.eh_frame+0x1e3>
+ 1e2:	00 00                	add    %al,(%rax)
+ 1e4:	00 00                	add    %al,(%rax)
+ 1e6:	00 00                	add    %al,(%rax)
+ 1e8:	17                   	(bad)  
+ 1e9:	00 00                	add    %al,(%rax)
+ 1eb:	00 00                	add    %al,(%rax)
+ 1ed:	41 0e                	rex.B (bad) 
+ 1ef:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+ 1f5:	52                   	push   %rdx
+ 1f6:	c6                   	(bad)  
+ 1f7:	0c 07                	or     $0x7,%al
+ 1f9:	08 00                	or     %al,(%rax)
+ 1fb:	00 1c 00             	add    %bl,(%rax,%rax,1)
+ 1fe:	00 00                	add    %al,(%rax)
+ 200:	00 02                	add    %al,(%rdx)
+ 202:	00 00                	add    %al,(%rax)
+ 204:	00 00                	add    %al,(%rax)
+ 206:	00 00                	add    %al,(%rax)
+ 208:	a8 00                	test   $0x0,%al
+ 20a:	00 00                	add    %al,(%rax)
+ 20c:	00 41 0e             	add    %al,0xe(%rcx)
+ 20f:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+ 215:	02 a3 c6 0c 07 08    	add    0x8070cc6(%rbx),%ah
+ 21b:	00 20                	add    %ah,(%rax)
+ 21d:	00 00                	add    %al,(%rax)
+ 21f:	00 20                	add    %ah,(%rax)
+ 221:	02 00                	add    (%rax),%al
+ 223:	00 00                	add    %al,(%rax)
+ 225:	00 00                	add    %al,(%rax)
+ 227:	00 f5                	add    %dh,%ch
+ 229:	00 00                	add    %al,(%rax)
+ 22b:	00 00                	add    %al,(%rax)
+ 22d:	41 0e                	rex.B (bad) 
+ 22f:	10 86 02 43 0d 06    	adc    %al,0x60d4302(%rsi)
+ 235:	02 f0                	add    %al,%dh
+ 237:	c6                   	(bad)  
+ 238:	0c 07                	or     $0x7,%al
+ 23a:	08 00                	or     %al,(%rax)
+ 23c:	00 00                	add    %al,(%rax)
+	...

@@ -82,6 +82,9 @@ namespace Paging
         uint64_t pml4Phys;
         pdpt_t *kernelPdpts;
 
+        VirtualPages() { }
+        ~VirtualPages() { }
+
         void CheckBitmap(uint64_t d, uint64_t t);
         void CheckPageTable(uint64_t d, uint64_t t);
     };

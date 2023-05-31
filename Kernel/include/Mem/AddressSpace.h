@@ -16,15 +16,16 @@ protected:
     uint64_t m_AllocatedPages;
     uint64_t m_MappedPages;
     uintptr_t m_ZeroPage;
-    void *m_VirtualPages;
 
 public:
-    AddressSpace();
+    void *m_VirtualPages;
+
+    AddressSpace() { }
+    AddressSpace(void *pages);
     ~AddressSpace();
 
     inline uint64_t AllocatedPages() { return m_AllocatedPages; }
     inline uint64_t MappedPages() { return m_MappedPages; }
-    inline void *VirtualPages() { return m_VirtualPages; }
     virtual uintptr_t Allocate4KPages(size_t amount);
     virtual void Free4KPages(uintptr_t address, size_t amount);
     virtual bool IsPagePresent(uintptr_t address);
@@ -36,6 +37,7 @@ class KernelAddressSpace : public AddressSpace
 {
 public:
     KernelAddressSpace();
+    KernelAddressSpace(void *kernelPagemap);
     ~KernelAddressSpace();
 
     uintptr_t Allocate4KPages(size_t amount) override;

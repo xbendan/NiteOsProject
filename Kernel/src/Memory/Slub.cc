@@ -62,7 +62,7 @@ namespace Memory
     {
         page_t *page = Request4KPage(cache);
         uintptr_t _addrVirt = Paging::KernelAllocate4KPages(1);
-        Paging::KernelMapVirtualMemory4K(page->addr, _addrVirt, 1);
+        Paging::KernelMapVirtualMemory4K(page->address, _addrVirt, 1);
 
         if (!Objects::IsNull(addrVirt)) {
             *addrVirt = _addrVirt;
