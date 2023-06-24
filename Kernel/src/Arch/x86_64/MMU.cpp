@@ -16,7 +16,7 @@
 namespace Paging
 {
     VirtualPages g_KernelPagemap;
-    KernelAddressSpace g_KernelSpace = KernelAddressSpace(&g_KernelPagemap);
+    KernelAddressSpace g_KernelSpace = KernelAddressSpace();
 
     pml4_t      kernelPages __attribute__((aligned(ARCH_PAGE_SIZE)));
     pdpt_t      kernelPdpts __attribute__((aligned(ARCH_PAGE_SIZE)));
@@ -59,13 +59,12 @@ namespace Paging
         //     }
         // }
         // kernelPdpts[0] = kernelPdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)];
-        
-        Task::g_KernelProcess.m_AddressSpace = &g_KernelSpace;
+
         g_KernelSpace = KernelAddressSpace(&g_KernelPagemap);
-        Halt();
+        Task::g_KernelProcess.m_AddressSpace = &g_KernelSpace;
+        System::Out("%x", &Task::g_KernelProcess.m_AddressSpace);
 
         asm("mov %%rax, %%cr3" ::"a"(g_KernelPagemap.pml4Phys));
-        Halt();
     }
 
     VirtualPages *CreatePagemap()

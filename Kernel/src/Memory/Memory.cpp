@@ -28,8 +28,6 @@ namespace Memory
 
         Paging::InitializeVirtualMemory();
 
-        Halt();
-
         for (int i = 0; i < mem->m_MemoryMapSize; i++)
         {
             MemoryMapEntry *mapEntry = &mem->m_MemoryMapEntries[i];
@@ -79,7 +77,9 @@ namespace Memory
         g_Blocks.ForEach([&](ValueRange &vals, int index) -> void { _lambda_SectionPresent(index, vals); });
 
         BuddyInit();
-        *(g_KernelAllocator = reinterpret_cast<SlabAllocator *>(KernelAllocate4KPages(1))) = SlabAllocator();
-        
+        System::Out("111");
+        uint64_t slabPhys = KernelAllocate4KPages(1);
+        System::Out("%x", slabPhys);
+        *(g_KernelAllocator = reinterpret_cast<SlabAllocator *>(slabPhys)) = SlabAllocator();
     }
 } // namespace Memory

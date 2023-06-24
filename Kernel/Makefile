@@ -49,7 +49,7 @@ $(KERNEL_FILES_OUT_ASM): build/%.o : src/%.asm
 build: $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM)
 	mkdir -p ./dist/${TARGET}
 #	$(CXX) -Iinclude $(KERNEL_C_FLAGS) $(KERNEL_LD_FLAGS) $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM) -o ./dist/${TARGET}/atrikrnl.elf -O0 -T ./target/LinkerScript-${TARGET}.ld
-	$(LD) $(KERNEL_LD_FLAGS) -o ./dist/${TARGET}/atrikrnl.elf -T ./target/LinkerScript-${TARGET}.ld $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM)
+	$(LD) $(KERNEL_LD_FLAGS) -o ./dist/${TARGET}/atrikrnl.elf -T ./target/LinkerScript-${TARGET}.ld $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM) -Map ld_struct
 	cp ./dist/${TARGET}/atrikrnl.elf ./target/${TARGET}/iso_limine/atrikrnl.elf
 	xorriso -as mkisofs -b limine-cd.bin \
         -no-emul-boot -boot-load-size 4 -boot-info-table \
@@ -57,11 +57,11 @@ build: $(KERNEL_FILES_OUT_CPP) $(KERNEL_FILES_OUT_ASM)
         -efi-boot-part --efi-boot-image --protective-msdos-label \
         ./target/${TARGET}/iso_limine -o ./dist/${TARGET}/nite.iso
 	../../limine/bin/limine-deploy ./dist/${TARGET}/nite.iso
-	cp ./dist/${TARGET}/nite.iso "/mnt/e/Codes/NiteProject/nite.iso"
+	cp ./dist/${TARGET}/nite.iso "/mnt/c/Users/TokaiTeio/Codes/Cpp/NiteProject/nite.iso"
 
 .PHONY: run
 run:
-	qemu-system-x86_64.exe -smp 4 -cdrom E:/Codes/NiteProject/nite.iso -m 512m
+	qemu-system-x86_64.exe -smp 4 -cdrom C:/Users/TokaiTeio/Codes/Cpp/NiteProject/nite.iso -m 512m
 
 .PHONY: clean
 clean:

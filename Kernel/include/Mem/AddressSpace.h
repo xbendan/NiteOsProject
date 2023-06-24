@@ -26,6 +26,7 @@ public:
 
     inline uint64_t AllocatedPages() { return m_AllocatedPages; }
     inline uint64_t MappedPages() { return m_MappedPages; }
+
     virtual uintptr_t Allocate4KPages(size_t amount);
     virtual void Free4KPages(uintptr_t address, size_t amount);
     virtual bool IsPagePresent(uintptr_t address);
@@ -36,7 +37,7 @@ public:
 class KernelAddressSpace : public AddressSpace
 {
 public:
-    KernelAddressSpace();
+    KernelAddressSpace() { }
     KernelAddressSpace(void *kernelPagemap);
     ~KernelAddressSpace();
 

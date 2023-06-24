@@ -106,22 +106,19 @@ namespace Boot
 
     void Start()
     {
-        if (bootInfo.m_Checksum != 0xDEADC0DE)
-        {
+        if (bootInfo.m_Checksum != 0xDEADC0DE) {
             return;
         }
 
-        DisableInterrupts();
+        // DisableInterrupts();
 
         asmw_enable_sse();
 
         GDT::Initialize();
         IDT::Initialize();
 
-        Memory::Initialize();
-        Halt();
-
         Video::Initialize();
+        Memory::Initialize();
 
         CPUIDInfo cpuId = CPUID();
         // Check hardware features

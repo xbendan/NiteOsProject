@@ -11,13 +11,13 @@ AddressSpace::AddressSpace(void *pages)
       m_MappedPages(0),
       m_VirtualPages(pages)
 {
-    VirtualPages *pagemap = reinterpret_cast<VirtualPages *>(pages);
-    uint64_t kernelPdptPhys = (uint64_t)(&g_KernelPagemap.pdpts - KERNEL_VIRTUAL_BASE);
+    // VirtualPages *pagemap = reinterpret_cast<VirtualPages *>(pages);
+    // uint64_t kernelPdptPhys = (uint64_t)(&g_KernelPagemap.pdpts - KERNEL_VIRTUAL_BASE);
 
-    SetPageFrame(&(pagemap->pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]),
-                 kernelPdptPhys,
-                 (PagePresent | PageWritable));
-    pagemap->kernelPdpts = (pdpt_t *)&g_KernelPagemap.pdpts;
+    // SetPageFrame(&(pagemap->pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]),
+    //              kernelPdptPhys,
+    //              (PagePresent | PageWritable));
+    // pagemap->kernelPdpts = (pdpt_t *)&g_KernelPagemap.pdpts;
 }
 
 AddressSpace::~AddressSpace()
@@ -27,6 +27,7 @@ AddressSpace::~AddressSpace()
 
 uintptr_t AddressSpace::Allocate4KPages(size_t amount)
 {
+    System::Out("allocate");
     if (!amount)
         return 0;
 
@@ -165,18 +166,17 @@ KernelAddressSpace::KernelAddressSpace(void *kernelPagemap)
 
     memset(&pagemap->pml4, 0, sizeof(pml4_t));
     memset(&pagemap->pdpts, 0, sizeof(pdpt_t));
-
-    SetPageFrame(&(pagemap->pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]), 
-        ((uint64_t)&pagemap->pdpts) - KERNEL_VIRTUAL_BASE, 
-        (PagePresent | PageWritable));
+    
+    // Set kernel PML4 entries
+    SetPageFrame(&(pagemap->pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]), ((uint64_t)&pagemap->pdpts) - KERNEL_VIRTUAL_BASE, (PagePresent | PageWritable));
     pagemap->pml4[0] = pagemap->pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)];
 
-    SetPageFrame(&(pagemap->pdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)]), 
-        ((uint64_t)&kernelPageDirs) - KERNEL_VIRTUAL_BASE, 
-        (PagePresent | PageWritable));
-    for (int i = 0; i < TABLES_PER_DIR; i++) {
-        pagemap->pageDirs[i] = &kernelPageDirs[i];
-        SetPageFrame(&kernelPageDirs[i], (PAGE_SIZE_2M * i), (PagePresent | PageWritable | PageCacheDisabled));
+    // Set kernel PDPT entries
+    SetPageFrame(&(pagemap->pdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)]), ((uint64_t)&kernelPageDirs) - KERNEL_VIRTUAL_BASE, (PagePresent | PageWritable));
+    pagemap->pageDirs[0] = &kernelPageDirs[0];
+    for (int i = 0; i < TABLES_PER_DIR; i++)
+    {
+        SetPageFrame(&(kernelPageDirs[i]), (PAGE_SIZE_2M * i), (PagePresent | PageWritable | PageCacheDisabled | PageDirectAddress));
     }
 
     SetPageFrame(&(pagemap->pdpts[KERNEL_HEAP_PDPT_INDEX]), 
@@ -214,6 +214,7 @@ KernelAddressSpace::~KernelAddressSpace()
 
 uintptr_t KernelAddressSpace::Allocate4KPages(size_t amount)
 {
+    System::Out("allocate");
     amount = ALIGN_PAGE(amount);
 
     uint64_t offset = 0, pageDirOffset = 0;

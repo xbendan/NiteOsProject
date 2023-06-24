@@ -78,8 +78,8 @@ namespace Paging
          * - A 4K page contains 512 pointers to bits. PDIR 2MB for each
          * - 512 bits total, 32 bytes
          */
-        uint64_t **bitmaps[DIRS_PER_PDPT];
         uint64_t pml4Phys;
+        uint64_t **bitmaps[DIRS_PER_PDPT];
         pdpt_t *kernelPdpts;
 
         VirtualPages() { }
@@ -87,7 +87,7 @@ namespace Paging
 
         void CheckBitmap(uint64_t d, uint64_t t);
         void CheckPageTable(uint64_t d, uint64_t t);
-    };
+    } __attribute__((packed));
 
     /**
      * @brief Initialize kernel page map and virtual memory management
