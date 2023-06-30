@@ -26,6 +26,8 @@ namespace Memory
         g_Statistics[MemValTotal] = mem->m_TotalSize;
         g_Statistics[MemValAvailable] = mem->m_Usable;
 
+        System::Out("111");
+
         Paging::InitializeVirtualMemory();
 
         for (int i = 0; i < mem->m_MemoryMapSize; i++)
@@ -77,7 +79,6 @@ namespace Memory
         g_Blocks.ForEach([&](ValueRange &vals, int index) -> void { _lambda_SectionPresent(index, vals); });
 
         BuddyInit();
-        System::Out("111");
         uint64_t slabPhys = KernelAllocate4KPages(1);
         System::Out("%x", slabPhys);
         *(g_KernelAllocator = reinterpret_cast<SlabAllocator *>(slabPhys)) = SlabAllocator();

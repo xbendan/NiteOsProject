@@ -52,20 +52,18 @@ extern "C" void* DispatchInterrupts(void *rsp)
     RegisterContext *context = reinterpret_cast<RegisterContext *>(rsp);
     InterruptData *data = &g_IntData[context->intno];
 
-    Halt();
-
     if (data->handler != nullptr)
     {
         data->handler(data, context);
     }
     else if (!(context->ss & 0x3))
     {
-        Halt();
         System::Out("Interrupt=%u", context->intno);
         System::Out("RIP=%x, RSP=%x, RBP=%x", context->rip, context->rsp, context->rbp);
         System::Out("Stack Pointer=%x", *((uint64_t *) context->rsp));
         System::Out("RAX=%x, RBX=%x, RCX=%x", context->rax, context->rbx, context->rcx);
         System::Out("RDX=%x, RDI=%x", context->rdx, context->rdi);
+        Halt();
     }
 
     if (context->intno >= 0x20)

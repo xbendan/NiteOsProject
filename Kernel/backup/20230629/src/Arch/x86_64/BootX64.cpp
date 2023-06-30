@@ -110,7 +110,7 @@ namespace Boot
             return;
         }
 
-        // DisableInterrupts();
+        DisableInterrupts();
 
         asmw_enable_sse();
 

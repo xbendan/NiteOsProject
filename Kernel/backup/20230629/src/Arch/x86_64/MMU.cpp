@@ -62,7 +62,6 @@ namespace Paging
 
         g_KernelSpace = KernelAddressSpace(&g_KernelPagemap);
         Task::g_KernelProcess.m_AddressSpace = &g_KernelSpace;
-        System::Out("%x", &Task::g_KernelProcess.m_AddressSpace);
 
         asm("mov %%rax, %%cr3" ::"a"(g_KernelPagemap.pml4Phys));
     }

@@ -1,6 +1,7 @@
 #include <Mem/Page.h>
 #include <Mem/MemZone.h>
 #include <Proc/Scheduler.h>
+#include <stdint.h>
 
 #ifdef ARCH_X86_64
 #include <Arch/x86_64/MMU.h>

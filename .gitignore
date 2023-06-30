@@ -31,10 +31,8 @@
 *.out
 *.app
 
-.vscode
 .vscode/*
-.VSCodeCounter/
-.vscode/
+.VSCodeCounter/*
 Thirdparty
 Thirdparty/
 

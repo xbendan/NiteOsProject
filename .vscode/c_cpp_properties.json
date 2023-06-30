@@ -12,12 +12,12 @@
       "intelliSenseMode": "linux-gcc-x64"
     },
     {
-      "name": "BareMetalX64",
+      "name": "bare-metal-x64",
       "includePath": [
-        "${workspaceFolder}/Kernel/include/**"
+        "${workspaceFolder}/Kernel/include/*"
       ],
       "defines": [],
-      "compilerPath": "/home/mejiroardan/Builds/gcc-12.2.0-output/bin/x86_64-elf-g",
+      "compilerPath": "/home/mejiroardan/Builds/gcc-13.1.0-compiler/bin/x86_64-elf-g",
       "cStandard": "c17",
       "cppStandard": "c++17",
       "intelliSenseMode": "gcc-x64",
