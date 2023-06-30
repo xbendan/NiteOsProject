@@ -1,0 +1,6 @@
+#include <macros>
+
+class Logger
+{
+
+};
