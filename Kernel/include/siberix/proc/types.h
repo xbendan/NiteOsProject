@@ -1,3 +1,5 @@
+#include <common/typedefs.h>
+
 namespace Process {
     enum TaskPriority
     {
@@ -25,7 +27,7 @@ namespace Process {
         TaskTypeService = 3,
         TaskTypeBackground = 4
     };
-
+    
     class Process
     {
     public:
@@ -33,7 +35,7 @@ namespace Process {
         Process(
             const char *name,
             Fs::File *file,
-            uint32_t processId,
+            u32 processId,
             Activity *activity,
             TaskType type);
         ~Process();

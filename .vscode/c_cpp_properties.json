@@ -17,9 +17,9 @@
         "${workspaceFolder}/Kernel/include/*"
       ],
       "defines": [],
-      "compilerPath": "/home/mejiroardan/Builds/gcc-13.1.0-compiler/bin/x86_64-elf-g",
-      "cStandard": "c17",
-      "cppStandard": "c++17",
+      "compilerPath": "/home/mejiroardan/Builds/gcc-13.1.0-output/bin/x86_64-elf-g++",
+      "cStandard": "c23",
+      "cppStandard": "c++23",
       "intelliSenseMode": "gcc-x64",
       "configurationProvider": "ms-vscode.makefile-tools"
     }
