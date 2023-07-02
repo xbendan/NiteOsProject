@@ -73,7 +73,7 @@ namespace Task
          * This function will insert a message of terminating to the message
          * queue of targeting process. It generally tells the process to stop
          * working and save all changes. Resources will be released manually
-         * by the process, so it's safe to stop a processunless the process
+         * by the process, so it's safe to stop a process unless the process
          * cannot handle this message. In that situation, sending a terminate
          * message won't do anything, call @code {.c}
          * KillProcess(struct Process *process)

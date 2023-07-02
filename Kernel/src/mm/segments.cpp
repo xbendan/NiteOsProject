@@ -1,16 +1,27 @@
-#include <siberix/mm/segments.hpp>
+#include <siberix/mm/page.hpp>
 
-static SegmentAlloc segAlloc;
-static SizedArrayList<AddressSegment, 128> addressSegments;
+namespace Memory {
+    SegAlloc::SegAlloc() {
+        getSegments()->
+    }
 
-SegmentAlloc::SegmentAlloc() {
+    SegAlloc::~SegAlloc() {
 
-}
+    }
 
-SegmentAlloc::~SegmentAlloc() {
+    Pageframe* SegAlloc::allocatePhysMemory4K(u64 amount) {
+        
+    }
 
-}
+    void SegAlloc::freePhysMemory4K(u64 address) {
 
-SegmentAlloc::allocatePhysMemory4K() {
-    
+    }
+
+    void SegAlloc::freePhysMemory4K(Pageframe *page) {
+
+    }
+
+    void SegAlloc::addSegment(u64 start, u64 end, AddressSegmentType type) {
+        this->segments.add(AddressSegment(start, end, type));
+    }
 }

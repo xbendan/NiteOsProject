@@ -1,4 +1,5 @@
 #include <siberix/mm/types.h>
+#include <utils/linked_list.h>
 
 namespace Memory
 {
@@ -11,6 +12,21 @@ namespace Memory
         virtual Pageframe *allocatePhysMemory4K(u64 amount) = 0;
         virtual void freePhysMemory4K(u64 address) = 0;
         virtual void freePhysMemory4K(Pageframe *page) = 0;
+    };
+
+    class SegAlloc : public PageAlloc {
+    public:
+        SegAlloc();
+        ~SegAlloc();
+
+        Pageframe *allocatePhysMemory4K(u64 amount) override;
+        void freePhysMemory4K(u64 address) override;
+        void freePhysMemory4K(Pageframe *page) override;
+        void addSegment(u64 start, u64 end, AddressSegmentType type);
+        SizedArrayList<AddressSegment, 256> *getSegments();
+
+    private:
+        SizedArrayList<AddressSegment, 256> segments;
     };
 
     class BuddyAlloc : public PageframeAllocator{

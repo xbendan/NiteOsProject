@@ -40,9 +40,9 @@ namespace Process {
             TaskType type);
         ~Process();
 
-        void Start();
-        void Suspend();
-        void Stop();
+        void start();
+        void suspend();
+        void stop();
 
         /**
          * @brief Send a message to terminate a process
@@ -50,7 +50,7 @@ namespace Process {
          * This function will insert a message of terminating to the message
          * queue of targeting process. It generally tells the process to stop
          * working and save all changes. Resources will be released manually
-         * by the process, so it's safe to stop a processunless the process
+         * by the process, so it's safe to stop a process unless the process
          * cannot handle this message. In that situation, sending a terminate
          * message won't do anything, call @code {.c}
          * KillProcess(struct Process *process)
@@ -58,37 +58,37 @@ namespace Process {
          *
          * @param process
          */
-        void Terminate(int stopCode);
+        void terminate(int stopCode);
 
-        const char *m_Name;      /* Name of the process */
-        const char *m_Publisher; /* Name of the publisher */
-        const char *m_Package;   /* Package Name */
-        pid_t m_ProcessId;      /* Process Id, 0~255 are reserved for kernel process */
-        TaskType m_Type;        /* Current process type */
-        Fs::File *m_FileSource; /* Pointer to the source file, can be NULL */
-        Activity *m_Activity;   /* Pointer to the Activity */
+        const char *name;      /* Name of the process */
+        const char *publisher; /* Name of the publisher */
+        const char *package;   /* Package Name */
+        u32 processId;      /* Process Id, 0~255 are reserved for kernel process */
+        TaskType type;        /* Current process type */
+        Fs::File *file; /* Pointer to the source file, can be NULL */
+        Activity *activity;   /* Pointer to the Activity */
 
-        bool IsIdle() { return (m_Flags & 0x01); }
+        bool isIdle() { return (flags & 0x01); }
 
-        uint32_t m_Flags;
-        uint16_t m_Handles; /* Register handles amount */
+        u32 flags;
+        u16 handles; /* Register handles amount */
 
         struct
         {
-            Spinlock m_Lock;
-            Spinlock m_HandleLock;
+            Spinlock lock;
+            Spinlock handleLock;
         };
 
-        Thread *m_MainThread;
-        LinkedList<Thread> m_ChildrenThreadList;
+        Thread *mainThread;
+        LinkedList<Thread> childrenThreadList;
 
-        uintptr_t m_EntryPoint;
-        uintptr_t m_Heap;
+        u64 entryPoint;
+        u64 heap;
         
-        AddressSpace *m_AddressSpace;
+        AddressSpace *addressSpace;
 
     protected:
-        uint32_t m_NextThreadId;
+        u32 nextThreadId;
 
         friend Thread;
         friend Scheduler;
@@ -101,37 +101,37 @@ namespace Process {
 
     struct Thread
     {
-        tid_t m_ThreadId;     /* Thread ID, not duplicated in same progress */
-        Process *m_Parent;    /* Parent process, indicates the owner of this thread */
-        Spinlock m_Lock;      /* Thread lock */
-        Spinlock m_StateLock; /* Thread state lock */
+        u32 threadId;     /* Thread ID, not duplicated in same progress */
+        Process *parent;    /* Parent process, indicates the owner of this thread */
+        Spinlock lock;      /* Thread lock */
+        Spinlock stateLock; /* Thread state lock */
 
         struct
         {
-            uint32_t esp0;
-            uint32_t ss0;
+            u32 esp0;
+            u32 ss0;
         };
 
-        void *m_UserStack;
-        void *m_UserStackBase;
-        void *m_KernelStack;
-        void *m_KernelStackBase;
+        void *userStack;
+        void *userStack;
+        void *kernelStack;
+        void *kernelStackBase;
 
-        uint64_t m_FsBase;
-        void *m_FxState;
+        uint64_t fsBase;
+        void *fxState;
 
-        RegisterContext m_Registers;
-        RegisterContext m_LastSyscall;
+        RegisterContext registers;
+        RegisterContext lastSyscall;
 
-        TaskPriority m_ThreadPriority;                         /* The priority when scheduling */
-        TaskState m_ThreadState = TaskState::TaskStateRunning; /* Thread state */
+        TaskPriority priority;        /* The priority when scheduling */
+        TaskState state = TaskStateRunning; /* Thread state */
 
-        uint32_t m_TimeSlice = 0;
+        u32 timeSlice = 0;
 
         Thread(Process *process)
-            : m_ThreadId(process->m_NextThreadId++),
-              m_Parent(process),
-              m_ThreadPriority(TaskPriority::PriorityNormal),
-              m_ThreadState(TaskState::TaskStateRunning) {}
+            : threadId(process->nextThreadId++),
+              parent(process),
+              priority(PriorityNormal),
+              state(TaskStateRunning) {}
     };
 }
