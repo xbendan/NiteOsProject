@@ -25,15 +25,15 @@ class LinkedList
 public:
     LinkedList()
     {
-        m_Front = NULL;
-        m_Back = NULL;
-        m_Count = 0;
-        m_Lock.m_Lock = 0;
+        front = NULL;
+        back = NULL;
+        count = 0;
+        lock.lock = 0;
     }
 
     ~LinkedList()
     {
-        m_Lock.Release();
+        lock.Release();
     }
 
     LinkedList &operator=(const LinkedList &list)
@@ -42,35 +42,35 @@ public:
 
     void Clear()
     {
-        m_Lock.Acquire();
+        lock.Acquire();
 
-        ListNode<T> *node = m_Front;
-        while (node && node->m_Back)
+        ListNode<T> *node = front;
+        while (node && node->back)
         {
-            ListNode<T> *n = node->m_Back;
+            ListNode<T> *n = node->back;
 
             node->obj.~T();
             node = n;
         }
-        m_Front = nullptr;
-        m_Back = nullptr;
-        m_Count = 0;
+        front = nullptr;
+        back = nullptr;
+        count = 0;
 
-        m_Lock.Release();
+        lock.Release();
     }
 
     void Add(ListHead *head)
     {
-        m_Lock.Acquire();
-        if (!m_Count)
-            m_Front = m_Back = reinterpret_cast<ListNode<T> *>(head);
+        lock.Acquire();
+        if (!count)
+            front = back = reinterpret_cast<ListNode<T> *>(head);
         else
         {
-            m_Back->head.next = head;
-            head->prev = &m_Back->head;
+            back->head.next = head;
+            head->prev = &back->head;
         }
-        m_Count++;
-        m_Lock.Release();
+        count++;
+        lock.Release();
     }
 
     void Add(ListNode<T> *obj)
@@ -78,21 +78,21 @@ public:
         if (obj == nullptr)
             return;
 
-        m_Lock.Acquire();
+        lock.Acquire();
 
-        if (m_Count > 0)
+        if (count > 0)
         {
-            obj->prev = m_Back;
-            m_Back->next = obj;
+            obj->prev = back;
+            back->next = obj;
         }
         else
         {
-            m_Front = obj;
-            m_Back = obj;
+            front = obj;
+            back = obj;
         }
-        m_Count++;
+        count++;
 
-        m_Lock.Release();
+        lock.Release();
     }
 
     ListNode<T> *Add(T obj)
@@ -113,7 +113,7 @@ public:
 
     void Remove(ListNode<T> *obj)
     {
-        if (m_Count && Contains(obj)) {
+        if (count && Contains(obj)) {
             ListNode<T> *_prev = obj->prev;
             ListNode<T> *_next = obj->next;
 
@@ -122,12 +122,12 @@ public:
             if (!Objects::IsNull(_next))
                 _next->prev = _prev;
 
-            if (Objects::Equals(obj, m_Front))
-                m_Front = _next;
-            if (Objects::Equals(obj, m_Back))
-                m_Back = _prev;
+            if (Objects::Equals(obj, front))
+                front = _next;
+            if (Objects::Equals(obj, back))
+                back = _prev;
 
-            m_Count--;
+            count--;
         }
     }
 
@@ -141,10 +141,10 @@ public:
         while (obj->prev != nullptr)
         {
             obj = obj->prev;
-            if (obj == m_Front)
+            if (obj == front)
                 return true;
         }
-        return obj == m_Front;
+        return obj == front;
     }
 
     bool Contains(T &t)
@@ -168,15 +168,15 @@ public:
 
     uint32_t Count()
     {
-        return m_Count;
+        return count;
     }
 
     T *Get(uint32_t index)
     {
-        if (index < 0 || index < m_Count || !m_Count)
+        if (index < 0 || index < count || !count)
             return NULL;
 
-        ListNode<T> *current = m_Front;
+        ListNode<T> *current = front;
         for (unsigned i = 0; i < index && current->next; i++)
             current = current->next;
 
@@ -185,25 +185,25 @@ public:
 
     ListNode<T> *First()
     {
-        return m_Front;
+        return front;
     }
 
     ListNode<T> *Extract()
     {
         ListNode<T> *obj = NULL;
-        if (m_Count)
+        if (count)
         {
             obj = First();
-            if (m_Count > 1)
+            if (count > 1)
             {
-                m_Front = reinterpret_cast<ListNode<T> *>(obj->next);
-                m_Front->prev = NULL;
+                front = reinterpret_cast<ListNode<T> *>(obj->next);
+                front->prev = NULL;
                 obj->next = NULL;
             }
             else
-                m_Front = m_Back = NULL;
+                front = back = NULL;
         }
-        m_Count--;
+        count--;
 
         return obj;
     }
@@ -214,7 +214,7 @@ public:
     // inline T* operator->() const { return Get(pos); }
 
 private:
-    ListNode<T> *m_Front, *m_Back;
-    uint32_t m_Count;
-    Spinlock m_Lock;
+    ListNode<T> *front, *back;
+    uint32_t count;
+    Spinlock lock;
 };
