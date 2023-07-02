@@ -1,5 +1,11 @@
 #include <common/typedefs.h>
 
+#ifdef ARCH_X86_64
+#define BUILD_ARCH "x86_64"
+#else ARCH_RISCV
+#define BUILD_ARCH "riscv"
+#endif
+
 enum BootloaderName
 {
     BL_LIMINE,
@@ -18,4 +24,5 @@ struct BootConfig {
     } graphic;
 }
 
-void main(BootConfig& bootConfig)
+void
+main(BootConfig &bootConfig);
