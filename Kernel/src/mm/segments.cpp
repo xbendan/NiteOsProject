@@ -4,8 +4,6 @@
 #include <siberix/mm/page.hpp>
 #include <utils/alignment.h>
 
-#define SECTION_PAGE_SIZE 0x1000000
-
 namespace Memory
 {
     SegAlloc::SegAlloc() {
@@ -56,7 +54,9 @@ namespace Memory
                 break;
             }
         }
-        return address;
+        Pageframe* page = service.addr2page(address);
+        if (!page->address) { page->address = address; }
+        return page;
     }
 
     void SegAlloc::freePhysMemory4K(u64 address) {}

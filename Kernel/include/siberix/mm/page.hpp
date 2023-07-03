@@ -3,19 +3,24 @@
 #include <utils/linked_list.h>
 #include <utils/spinlock.h>
 
+#define SECTION_PAGE_SIZE 0x1000000
 #define PAGES_PER_SECTION 262144
+#define PAGES_PER_SET 1024
+#define PAGE_MAX_SIZE (PAGE_SIZE_4K * PAGES_PER_SET)
 #define PAGE_MAX_ORDER 10
 #define PAGE_MIN_ORDER 0
 
 namespace Memory
 {
     class MemoryAlloc {
+    public:
         virtual u64 alloc(u64 size) = 0;
         virtual void free(u64 address) = 0;
     };
 
     class PageAlloc {
-        virtual u64 allocatePhysMemory4K(u64 amount) = 0;
+    public:
+        virtual Pageframe* allocatePhysMemory4K(u64 amount) = 0;
         virtual void freePhysMemory4K(u64 address) = 0;
         virtual void freePhysMemory4K(Pageframe* page) = 0;
     };
@@ -37,7 +42,7 @@ namespace Memory
 
     class BuddyAlloc : public PageframeAllocator {
     public:
-        BuddyAlloc();
+        BuddyAlloc(MemoryService& service);
         ~BuddyAlloc();
 
         Pageframe* allocatePhysMemory4K(u64 amount) override;

@@ -55,6 +55,7 @@ public:
 
     SizedArrayList<PageBlock, 256> getPageBlocks() { return pageBlocks; }
     SizedArrayList<PageSection, 256> getPageSections() { return pageSections; }
+    PageBlock& getBlock(u8 index) { return pageBlocks[index]; }
     PageSection& getSectionAt(u64 address) { return sections[address >> 30]; }
 
 private:

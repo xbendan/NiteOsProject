@@ -1,9 +1,21 @@
+#include <common/arch.h>
+#include <common/string.h>
 #include <siberix/mm/service.hpp>
 
 static SegAlloc _segmentAlloc;
 static BuddyAlloc _buddyAlloc;
 
-MemoryService::MemoryService() { this->pageAlloc = &(_segmentAlloc = Memory::SegAlloc()); }
+MemoryService::MemoryService() {
+    this->pageAlloc = &(_segmentAlloc = Memory::SegAlloc());
+    u64 maxSize = runtime()->getBootConfig().memory.maxSize;
+    u64 current = 0;
+    while (current < maxSize)
+    {
+        PageSection& section = getSectionAt(current);
+        section.pages = alloc4KPages(SECTION_PAGE_SIZE / PAGE_SIZE_4K);
+        current += PAGE_SIZE_1G;
+    }
+}
 
 MemoryService::~MemoryService() {}
 
@@ -11,7 +23,7 @@ u64 MemoryService::alloc4KPages(u64 amount) {}
 
 void MemoryService::free4KPages(u64 address) {}
 
-Pageframe* MemoryService::allocPhysMemory4KPages(u64 amount) {}
+Pageframe* MemoryService::allocPhysMemory4KPages(u64 amount){return getPageAllocator()}
 
 u64 MemoryService::allocPhysMemory4K(u64 amount) {}
 
