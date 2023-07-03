@@ -15,7 +15,7 @@ struct BootConfig {
     struct {
         u64 totalSize;
         u64 maxSize;
-        AddressSegment[64] ranges;
+        PageBlock[64] ranges;
     } memory;
     struct {
         u16 width;

@@ -2,59 +2,41 @@
 #include <utils/linked_list.h>
 #include <utils/spinlock.h>
 
-enum AddressSegmentType
-{
-    AST_AVAILABLE,
-    AST_KERNEL,
-    AST_RESERVED,
-    AST_BADRAM
-};
+enum PageBlockType { BlkTypeAvailable, BlkTypeKernel, BlkTypeReserved, BlkTypeBadram };
 
-struct AddressSegment
-{
+struct PageBlock {
     u64 start, end;
-    AddressSegmentType type;
+    PageBlockType type;
 
-    AddressSegment(u64 start, u64 end, AddressSegmentType type)
-        : start(start),
-          end(end),
-          type(type) {}
+    PageBlock(u64 _start, u64 _end, PageBlockType _type) : start(_start), end(_end), type(_type) {}
 };
 
 #define PAGE_SIZE_4K 0x1000
-#define PAGE_SIZE_2M 0x1000000
-#define PAGE_SIZE_1G 0x1000000000
+#define PAGE_SIZE_2M 0x200000
+#define PAGE_SIZE_1G 0x40000000
 
-struct Pageframe
-{
+struct Pageframe {
     listhead_t lru;
     u8 order;
     u8 flags;
-    struct
-    {
+    struct {
         u32 slabInuse : 16;
         u32 slabObjects : 15;
         u32 slabFrozen : 1;
     } __attribute__((packed));
-    union
-    {
+    union {
         u64 priv;
-        void *slabCache;
-        Pageframe *first;
+        void* slabCache;
+        Pageframe* first;
     };
-    void **freelist;
+    void** freelist;
     spinlock_t lock;
     u64 address;
 };
 
-struct PageSection
-{
+struct PageSection {
     u16 nid;
-    u64 *pages;
+    u64* pages;
 };
 
-enum MemoryModelType
-{
-    MmTypeFlat,
-    MmTypeSparse
-};
+enum MemoryModelType { MmTypeFlat, MmTypeSparse };

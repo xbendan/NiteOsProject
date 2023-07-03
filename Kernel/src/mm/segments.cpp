@@ -1,50 +1,69 @@
 #include <common/arch.h>
+#include <common/logger.h>
 #include <siberix/init/boot.h>
 #include <siberix/mm/page.hpp>
 #include <utils/alignment.h>
 
+#define SECTION_PAGE_SIZE 0x1000000
+
 namespace Memory
 {
     SegAlloc::SegAlloc() {
-        BootConfig& bootConfig = getBootConfig();
-        MemoryService& service = runtime()->getMemoryService();
-        AddressSegment[256]& segments = bootConfig.memory.segments;
-        u64 sectionPages = alignUp(alignUp(bootConfig.memory.maxSize, PAGE_SIZE_1G) / PAGE_SIZE_1G / 8, PAGE_SIZE_4K);
+        BootConfig& bootConfig = runtime()->getBootConfig();
+        MemoryService& memoryService = runtime()->memory();
+        PageBlock* blocks = &bootConfig.memory.ranges;
 
         for (int i = 0; i < 256; i++)
         {
-            AddressSegment& seg = getSegments()[i];
+            PageBlock& block = blocks[i];
+            alignUpRef(block.start, PAGE_SIZE_4K);
+            alignDownRef(block.end, PAGE_SIZE_4K);
+            if (block.type != BlkTypeAvailable || (block.end - block.start < PAGE_SIZE_4K)) { continue; }
 
-            alignUpRef(seg.start, PAGE_SIZE_4K);
-            alignDownRef(seg.end, PAGE_SIZE_4K);
-            if (seg.type != AST_AVAILABLE || (seg.end - seg.start < PAGE_SIZE_4K)) { continue; }
+            getSegments()->add(block);
+        }
 
-            if (service.sections == nullptr && (seg.end - seg.start) / PAGE_SIZE_4K > sectionPages)
+        u64 current = 0;
+        while (current < bootConfig.memory.maxSize)
+        {
+            u64 phys = this->allocatePhysMemory4K(SECTION_PAGE_SIZE / PAGE_SIZE_4K);
+            u64 virt = memoryService.allocVirtMemory4KPages(SECTION_PAGE_SIZE / PAGE_SIZE_4K);
+            if (!(phys && virt))
             {
-                // allocate virtual memory
-                service.sections = seg.start;
-                seg.start += (sectionPages * PAGE_SIZE_4K);
+                Logger::getAnonymousLogger().error("Cannot allocate memory in startup environment.");
+                return;
             }
 
-            u64 totalPageSize = PAGES_PER_SECTION * sizeof(Pageframe);
-            u64 cur = seg.start;
-            while (cur < seg.end)
-            {
-                PageSection* section = service.sectionAt(cur);
-                if (!(section->pages)) {}
-            }
+            Pageframe* pages = reinterpret_cast<Pageframe*>(virt);
+            memoryService.getSectionAt(current).pages = pages;
+            current += PAGE_SIZE_1G;
         }
     }
 
     SegAlloc::~SegAlloc() {}
 
-    Pageframe* SegAlloc::allocatePhysMemory4K(u64 amount) {}
+    Pageframe* SegAlloc::allocatePhysMemory4K(u64 amount) {
+        u64 address;
+        int i = 0;
+        MemoryService service = runtime()->memory();
+        while (!address && i < 256)
+        {
+            PageBlock& block = service.getPageBlocks()[i];
+            if (block.end - block.start > (amount * PAGE_SIZE_4K))
+            {
+                address = block.start;
+                block.start += (amount * PAGE_SIZE_4K);
+                break;
+            }
+        }
+        return address;
+    }
 
     void SegAlloc::freePhysMemory4K(u64 address) {}
 
     void SegAlloc::freePhysMemory4K(Pageframe* page) {}
 
-    void SegAlloc::addSegment(u64 start, u64 end, AddressSegmentType type) {
-        this->segments.add(AddressSegment(start, end, type));
+    void SegAlloc::addSegment(u64 start, u64 end, PageBlockType type) {
+        this->segments.add(PageBlock(start, end, type));
     }
 } // namespace Memory

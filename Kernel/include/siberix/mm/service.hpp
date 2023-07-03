@@ -33,9 +33,14 @@ public:
     u64 alloc(u64 size);
     void free(u64 address);
 
-    PageSection* sectionAt(u64 address);
-    Pageframe* pfn2page(u64 pfn);
-    u64 page2pfn(Pageframe& page);
+    u64 page2pfn(Pageframe& page) { return page.address / PAGE_SIZE_4K; }
+    Pageframe* pfn2page(u64 pfn) {
+        u32 sectionId = pfn >> 18;
+        u32 offset = pfn - (sectionId * 262144);
+        return sections[sectionId].pages[offset];
+    };
+    Pageframe* addr2page(u64 address) { return pfn2page(address >> 12); }
+    PageSection* addr2sect(u64 address) { return &(sections[address >> 30]); }
 
     MemoryModelType getModelType() { return this->mmType; }
     PageAlloc* getPageAllocator() { return this->pageAlloc; }
@@ -48,11 +53,15 @@ public:
     u64 getSwappedPages() { return this->swappedPages; }
     void calculate();
 
-    PageSection** sections;
+    SizedArrayList<PageBlock, 256> getPageBlocks() { return pageBlocks; }
+    SizedArrayList<PageSection, 256> getPageSections() { return pageSections; }
+    PageSection& getSectionAt(u64 address) { return sections[address >> 30]; }
 
 private:
     u64 totalPages, availablePages, allocatedPages, cachedPages, swappedPages;
     MemoryModelType mmType;
     PageAlloc* pageAlloc;
     MemoryAlloc* memoryAlloc;
+    SizedArrayList<PageBlock, 256> pageBlocks;
+    SizedArrayList<PageSection, 256> pageSections;
 };
