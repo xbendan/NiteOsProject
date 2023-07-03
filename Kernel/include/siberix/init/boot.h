@@ -1,4 +1,5 @@
 #include <common/typedefs.h>
+#include <siberix/mm/types.h>
 
 #ifdef ARCH_X86_64
 #define BUILD_ARCH "x86_64"
@@ -6,15 +7,16 @@
 #define BUILD_ARCH "riscv"
 #endif
 
-enum BootloaderName
-{
-    BL_LIMINE,
-    BL_NBW
-};
+enum BootloaderName { BL_LIMINE, BL_NBW };
 
 struct BootConfig {
     u64 checksum;
     BootloaderName blName;
+    struct {
+        u64 totalSize;
+        u64 maxSize;
+        AddressSegment[64] ranges;
+    } memory;
     struct {
         u16 width;
         u16 height;
@@ -22,7 +24,8 @@ struct BootConfig {
         u16 pitch;
         u16 bpp;
     } graphic;
-}
+};
 
-void
-main(BootConfig &bootConfig);
+BootConfig& getBootConfig();
+
+void main(BootConfig& bootConfig);

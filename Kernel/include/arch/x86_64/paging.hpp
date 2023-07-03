@@ -32,7 +32,7 @@ namespace Paging
         PageDirectAddress = 0x80
     };
 
-    class VirtualPages 
+    class X64AddressSpace 
     {
     public:
         pml4_t pml4 __attribute__((aligned(PAGE_SIZE_4K)));

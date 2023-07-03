@@ -1,13 +1,12 @@
 #include <common/arch.h>
 #include <siberix/mm/page.hpp>
 
-class X64RuntimeSupport : public RuntimeSupport {
+class X64SystemRuntime : public SystemRuntime {
 public:
-    X64RuntimeSupport();
-    ~X64RuntimeSupport();
+    X64SystemRuntime();
+    ~X64SystemRuntime();
 
     void setup() override;
     void loadMemory() override;
     void loadDevices() override;
-    void setupPaging();
 };

@@ -1,4 +1,5 @@
 #include <siberix/mm/page.hpp>
+#include <siberix/mm/service.hpp>
 
 enum ArchType 
 {
@@ -8,10 +9,10 @@ enum ArchType
     CA_RISCV = 2
 };
 
-class RuntimeSupport
+class SystemRuntime
 {
 public:
-    RuntimeSupport(ArchType _type)
+    SystemRuntime(ArchType _type)
       : type(_type),
         initialized(false) { }
 
@@ -20,17 +21,12 @@ public:
     virtual void loadDevices();
     ArchType getArchType();
     bool isInitialized() { return isInitialized; }
-
-    Memory::PageAlloc *getPageAlloc() { return this->pageAlloc; }
-    Memory::MemoryAlloc *getKernAlloc() { return this->kernelAlloc; }
-    // void setPageAlloc(Memory::PageAlloc *pageAlloc) { this->pageAlloc = pageAlloc; }
-    // void setKernAlloc(Memory::MemoryAlloc *kernAlloc) { this->kernelAlloc = kernAlloc; }
+    MemoryService &getMemoryService();
 
 protected:
     const ArchType archType;
     bool initialized;
-    Memory::PageAlloc *pageAlloc;
-    Memory::MemoryAlloc *kernelAlloc;
+    MemoryService memoryService;
 };
 
-RuntimeSupport& getRuntimeArch();
+SystemRuntime *runtime();

@@ -11,7 +11,7 @@ private:
 public:
     Array()
       : count(0) { }
-}
+};
 
 template <typename T, int size>
 class SizedArrayList
@@ -73,4 +73,4 @@ public:
         }
         return -1;
     }
-}
+};

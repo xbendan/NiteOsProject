@@ -4,13 +4,13 @@
 #include <arch/x86_64/paging.hpp>
 #include <siberix/mm/page.hpp>
 
-static X64RuntimeSupport x64rt;
+static X64SystemRuntime x64rt;
 extern "C" void _lgdt(u64);
 extern "C" void _lidt(u64);
 
-RuntimeSupport& getRuntimeArch() {
+SystemRuntime& getRuntimeArch() {
     if (!x64rt.isInitialized()) {
-        x64rt = X64RuntimeSupport();
+        x64rt = X64SystemRuntime();
     }
     return x64rt;
 }
@@ -26,7 +26,7 @@ IdtPtr idtPtr;
 static Memory::SegAlloc _segAlloc;
 static Memory::BuddyAlloc _buddyAlloc;
 
-void X64RuntimeSupport::setup()
+void X64SystemRuntime::setup()
 {
     /* load global descriptor table */
     gdtPackage = GdtPackage(tss);
@@ -42,6 +42,6 @@ void X64RuntimeSupport::setup()
     this->loadMemory();
 }
 
-void X64RuntimeSupport::loadMemory() {
-    this->pageAlloc = &(_segAlloc = Memory::SegAlloc());
+void X64SystemRuntime::loadMemory() {
+    
 }

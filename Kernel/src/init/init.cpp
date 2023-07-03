@@ -4,6 +4,6 @@
 static Memory::SegAlloc _segAlloc;
 static Memory::BuddyAlloc _buddyAlloc;
 
-RuntimeSupport::loadMemory() {
+SystemRuntime::loadMemory() {
     this->pageAlloc = &(_segAlloc = Memory::SegAlloc());
 }
