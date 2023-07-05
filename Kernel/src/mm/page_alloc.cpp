@@ -5,6 +5,7 @@
 
 namespace Memory
 {
+    Logger& logger;
     BuddyAlloc::BuddyAlloc(MemoryService& service) {
         SizedArrayList<PageBlock, 256>& pageBlocks = service.getPageBlocks();
         for (int i = 0; i < 256; i++)
@@ -40,17 +41,57 @@ namespace Memory
 
     BuddyAlloc::~BuddyAlloc() {}
 
-    Pageframe* BuddyAlloc::allocatePhysMemory4K(u64 amount) {}
+    Pageframe* BuddyAlloc::allocatePhysMemory4K(u64 amount) {
+        u8 order = getPageOrder(getPageAlignment(amount));
+        if (order > PAGE_MAX_ORDER) {
+            return nullptr;
+        }
+
+        Pageframe* page;
+        u8 _order = order;
+        LinkedList<Pageframe> list;
+        while (_order <= PAGE_MAX_ORDER) {
+            if (pageList[_order].count()) {
+                list = &(pageList[_order]);
+                break;
+            }
+            _order++;
+        }
+
+        if (list != nullptr) {
+            page = reinterpret_cast<Pageframe*>(list->extract());
+            while (_order-- > order) {
+                page = expand(page);
+            }
+            page->flags &= ~PFLAGS_FREE;
+            return page;
+        } else {
+            logger.error("Cannot find any page with specific size. Out of Memory!");
+            return nullptr;
+        }
+    }
 
     void BuddyAlloc::freePhysMemory4K(u64 address) {}
 
-    void BuddyAlloc::freePhysMemory4K(Pageframe& pageframe) {}
+    void BuddyAlloc::freePhysMemory4K(Pageframe& page) {}
 
     void BuddyAlloc::markPagesUsed(u64 addressStart, u64 addressEnd) {}
 
-    Pageframe* BuddyAlloc::expand(Pageframe& pageframe) {}
+    Pageframe* BuddyAlloc::expand(Pageframe& page) {
+        if (page.flags & PFLAGS_KMEM) {
+            logger.warn("Unable to expand page because it belongs to kernel allocator.");
+            return nullptr;
+        }
 
-    Pageframe* BuddyAlloc::combine(Pageframe& pageframe) {}
+        /* Remove this page from upper order list */
+        pageList[page.order].remove(reinterpret_cast<Pageframe*>(page));
+        /* Decrease the order and find the lower tier list */
+        LinkedList<Pageframe>& freelist = pageList[--page.order];
+
+        Pageframe* newPage = reinterpret_cast<Pageframe*>(((uint64_t)&page) + ((1 << page.order) * sizeof(Pageframe)));
+    }
+
+    Pageframe* BuddyAlloc::combine(Pageframe& page) {}
 
     Pageframe* BuddyAlloc::combine(Pageframe& lpage, Pageframe& rpage) {}
 } // namespace Memory
