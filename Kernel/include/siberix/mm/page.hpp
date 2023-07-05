@@ -9,6 +9,8 @@
 #define PAGE_MAX_SIZE (PAGE_SIZE_4K * PAGES_PER_SET)
 #define PAGE_MAX_ORDER 10
 #define PAGE_MIN_ORDER 0
+#define PFLAGS_FREE (1 << 0)
+#define PFLAGS_KMEM (1 << 1)
 
 namespace Memory
 {
@@ -40,7 +42,7 @@ namespace Memory
         SizedArrayList<PageBlock, 256> segments;
     };
 
-    class BuddyAlloc : public PageframeAllocator {
+    class BuddyAlloc : public PageAlloc {
     public:
         BuddyAlloc(MemoryService& service);
         ~BuddyAlloc();

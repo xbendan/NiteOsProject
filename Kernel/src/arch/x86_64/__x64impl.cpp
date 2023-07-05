@@ -41,7 +41,3 @@ void X64SystemRuntime::setup()
     Paging::init();
     this->loadMemory();
 }
-
-void X64SystemRuntime::loadMemory() {
-    
-}

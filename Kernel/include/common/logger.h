@@ -57,7 +57,7 @@ public:
      * @param name Logger name
      * @return The pointer to new logger.
      */
-    static Logger* getLogger(const char* name);
+    static Logger& getLogger(const char* name);
     /**
      * @brief Get an anonymous logger.
      *
