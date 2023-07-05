@@ -1,8 +1,0 @@
-# -*- makefile -*-
-#
-# klibc files for x86_64
-
-always  := crt0.o
-targets := crt0.o
-
-klib-y := setjmp.o syscall.o sigreturn.o vfork.o

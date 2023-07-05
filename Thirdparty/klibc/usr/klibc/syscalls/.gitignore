@@ -1,6 +1,0 @@
-*.S
-SYSCALLS.i
-syscalls.mk
-syscalls.nrs
-typesize.bin
-typesize.c

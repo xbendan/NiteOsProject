@@ -34,6 +34,7 @@
 .vscode/**
 .VSCodeCounter/*
 Thirdparty
-Thirdparty/
+Thirdparty/*
 
 Kernel/dist/*
+.vscode/c_cpp_properties.json
