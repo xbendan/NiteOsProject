@@ -9,45 +9,42 @@
 #include <Arch/x86_64/CPU.h>
 #endif
 
-#define SLAB_MAX_BLOCK_ORDER        16
-#define SLAB_MAX_STRUCT_ORDER       1
-#define SLAB_MAX_SIZE               ARCH_PAGE_SIZE
-#define MAX_NUMA_COUNT              4
+#define SLAB_MAX_BLOCK_ORDER 16
+#define SLAB_MAX_STRUCT_ORDER 1
+#define SLAB_MAX_SIZE ARCH_PAGE_SIZE
+#define MAX_NUMA_COUNT 4
 
 namespace Memory
 {
     /**
      * @brief Manages the resource for specific CPU
-     * 
+     *
      * This struct provides fast accessing for CPU
      * Check whether there is free objects in the cpu cache
      * before getting object from memory node.
      */
-    typedef struct SlabCPUCache
-    {
-        /* 
+    typedef struct SlabCPUCache {
+        /*
          * Pointer to the next object, this is a double pointer
          * because the area this pointer point to is also a pointer
          * to the next object.
          */
-        void **freelist;
-        PageFrame *page;
+        void** freelist;
+        PageFrame* page;
         LinkedList<PageFrame> partial;
     } slab_cpu_t;
 
-    typedef struct SlabMemoryNode
-    {
+    typedef struct SlabNode {
         Spinlock lock;
         uint64_t nr_partial;
         LinkedList<PageFrame> partial;
     } slab_node_t;
 
-    typedef struct SlabCache
-    {
+    typedef struct SlabCache {
         /* The list head to connect different cache */
         // listhead_t lru;
         /* Name of the object this cache managed */
-        const char *name;
+        const char* name;
 
         /* Indicate the cache for individual CPU core */
         slab_cpu_t cpu_slab[MAX_CPU_AMOUNT];
@@ -56,24 +53,23 @@ namespace Memory
         int object_size;
         int object_align;
         int offset;
-        slab_node_t *node[MAX_NUMA_COUNT];
+        slab_node_t* node[MAX_NUMA_COUNT];
         uint64_t min_partial;
         int reserved;
     } slab_cache_t;
 
-    class SlabAllocator
-    {
+    class SlabAllocator {
     private:
-        slab_cache_t *m_Caches[SLAB_MAX_BLOCK_ORDER];
+        slab_cache_t* m_Caches[SLAB_MAX_BLOCK_ORDER];
 
     public:
         SlabAllocator();
         ~SlabAllocator();
 
-        PageFrame *Request4KPage(slab_cache_t *cache, uint64_t *addrVirt = nullptr);
+        PageFrame* Request4KPage(slab_cache_t* cache, uint64_t* addrVirt = nullptr);
         /**
          * @brief Find a free object
-         * 
+         *
          * The sequence of allocating kernel memory:
          * 1. Use [freelist] in cpu slab
          *      Yes -> Make [freelist] point to the next object
@@ -90,21 +86,21 @@ namespace Memory
          * 4. Allocate from buddy allocator
          *      Yes -> Assign all values
          *      No  -> PANIC! Out of memory.
-         * @param cache 
-         * @return uintptr_t 
+         * @param cache
+         * @return uintptr_t
          */
         uintptr_t Allocate(size_t size);
         void Free(uintptr_t address);
     };
 
-    extern SlabAllocator *g_KernelAllocator;
+    extern SlabAllocator* g_KernelAllocator;
 
-    page_t *Request4KPageMapped(slab_cache_t *cache, uint64_t *addrVirt);
-    page_t *Request4KPage(slab_cache_t *cache);
-    void SetPageSlub(slab_cache_t *cache, page_t *page, uintptr_t virt);
-    
-    slab_cpu_t *SlubGetCPU(slab_cache_t *cache);
-    slab_cache_t *SlubGetCache(size_t size);
-    page_t *SlubGetPartial(slab_cache_t *cache);
-    page_t SlabFillCpuSlot(slab_cpu_t *slab_cpu, page_t *page);
+    page_t* Request4KPageMapped(slab_cache_t* cache, uint64_t* addrVirt);
+    page_t* Request4KPage(slab_cache_t* cache);
+    void SetPageSlub(slab_cache_t* cache, page_t* page, uintptr_t virt);
+
+    slab_cpu_t* SlubGetCPU(slab_cache_t* cache);
+    slab_cache_t* SlubGetCache(size_t size);
+    page_t* SlubGetPartial(slab_cache_t* cache);
+    page_t SlabFillCpuSlot(slab_cpu_t* slab_cpu, page_t* page);
 } // namespace Memory

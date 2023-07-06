@@ -9,6 +9,11 @@ public:
     /// @return
     u64 alloc4KPages(u64 amount);
     /// @brief
+    /// @param amount
+    /// @param _pointer
+    /// @return
+    u64 alloc4KPages(u64 amount, Pageframe** _pointer);
+    /// @brief
     /// @param address
     void free4KPages(u64 address);
 

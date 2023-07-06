@@ -1,5 +1,5 @@
 #include <siberix/init/boot.h>
-#include <common/arch.h>
+#include <common/runtime.hpp>
 
 static const char[] splash = [
     " _____  _  _                  _       ",

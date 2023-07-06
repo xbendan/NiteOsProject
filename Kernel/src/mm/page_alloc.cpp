@@ -43,29 +43,30 @@ namespace Memory
 
     Pageframe* BuddyAlloc::allocatePhysMemory4K(u64 amount) {
         u8 order = getPageOrder(getPageAlignment(amount));
-        if (order > PAGE_MAX_ORDER) {
-            return nullptr;
-        }
+        if (order > PAGE_MAX_ORDER) { return nullptr; }
 
         Pageframe* page;
         u8 _order = order;
         LinkedList<Pageframe> list;
-        while (_order <= PAGE_MAX_ORDER) {
-            if (pageList[_order].count()) {
+        while (_order <= PAGE_MAX_ORDER)
+        {
+            if (pageList[_order].count())
+            {
                 list = &(pageList[_order]);
                 break;
             }
             _order++;
         }
 
-        if (list != nullptr) {
+        if (list != nullptr)
+        {
             page = reinterpret_cast<Pageframe*>(list->extract());
-            while (_order-- > order) {
-                page = expand(page);
-            }
+            while (_order-- > order)
+            { page = expand(page); }
             page->flags &= ~PFLAGS_FREE;
             return page;
-        } else {
+        } else
+        {
             logger.error("Cannot find any page with specific size. Out of Memory!");
             return nullptr;
         }
@@ -78,7 +79,8 @@ namespace Memory
     void BuddyAlloc::markPagesUsed(u64 addressStart, u64 addressEnd) {}
 
     Pageframe* BuddyAlloc::expand(Pageframe& page) {
-        if (page.flags & PFLAGS_KMEM) {
+        if (page.flags & PFLAGS_KMEM)
+        {
             logger.warn("Unable to expand page because it belongs to kernel allocator.");
             return nullptr;
         }
@@ -89,9 +91,34 @@ namespace Memory
         LinkedList<Pageframe>& freelist = pageList[--page.order];
 
         Pageframe* newPage = reinterpret_cast<Pageframe*>(((uint64_t)&page) + ((1 << page.order) * sizeof(Pageframe)));
+
+        newPage->order = page.order;
+        newPage->flags |= PFLAGS_FREE;
+
+        /* Insert this page into the lower tier free list */
+        freelist.add(reinterpret_cast<ListNode<Pageframe>*>(newPage));
+
+        return page;
     }
 
-    Pageframe* BuddyAlloc::combine(Pageframe& page) {}
+    Pageframe* BuddyAlloc::combine(Pageframe& page) {
+        u32 osize = (1 << (page.order)) * sizeof(Pageframe);
+        bool align = !(page->address % osize);
+
+        Pageframe* newPage = reinterpret_cast<Pageframe*>(align ? &page + osize : &page - osize);
+        if (newPage->flags & PFLAGS_FREE)
+        {
+            Pageframe* result = align ? page : newPage;
+            pageList[newPage->order].remove((ListNode<Pageframe>*)newPage);
+            pageList[++result->order].add((ListNode<Pageframe>*)result);
+
+            return result;
+        } else
+        {
+            pageList[page.order].add((ListNode<Pageframe>*)page);
+            return nullptr;
+        }
+    }
 
     Pageframe* BuddyAlloc::combine(Pageframe& lpage, Pageframe& rpage) {}
 } // namespace Memory

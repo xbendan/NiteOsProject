@@ -31,10 +31,8 @@
 *.out
 *.app
 
-.vscode/**
-.VSCodeCounter/*
+.vscode
+.VSCodeCounter
 Thirdparty
-Thirdparty/*
 
 Kernel/dist/*
-.vscode/c_cpp_properties.json

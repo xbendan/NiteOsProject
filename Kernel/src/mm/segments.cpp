@@ -1,4 +1,4 @@
-#include <common/arch.h>
+#include <common/runtime.hpp>
 #include <common/logger.h>
 #include <siberix/init/boot.h>
 #include <siberix/mm/page.hpp>

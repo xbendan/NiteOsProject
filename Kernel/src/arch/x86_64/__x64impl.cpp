@@ -1,4 +1,4 @@
-#include <common/arch.h>
+#include <common/runtime.hpp>
 #include <arch/x86_64/arch.h>
 #include <arch/x86_64/types.h>
 #include <arch/x86_64/paging.hpp>

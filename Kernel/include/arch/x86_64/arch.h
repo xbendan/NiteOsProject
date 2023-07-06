@@ -1,4 +1,4 @@
-#include <common/arch.h>
+#include <common/runtime.hpp>
 #include <siberix/mm/page.hpp>
 
 class X64SystemRuntime : public SystemRuntime {
