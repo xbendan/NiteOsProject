@@ -1,5 +1,5 @@
-#include <common/runtime.hpp>
 #include <common/logger.h>
+#include <siberix/core/runtimes.hpp>
 #include <siberix/init/boot.h>
 #include <siberix/mm/page.hpp>
 #include <utils/alignment.h>
@@ -8,7 +8,7 @@ namespace Memory
 {
     SegAlloc::SegAlloc() {
         BootConfig& bootConfig = runtime()->getBootConfig();
-        MemoryService& memoryService = runtime()->memory();
+        MemoryService& memoryService = runtime()->getMemory();
         PageBlock* blocks = &bootConfig.memory.ranges;
 
         for (int i = 0; i < 256; i++)
@@ -16,7 +16,8 @@ namespace Memory
             PageBlock& block = blocks[i];
             alignUpRef(block.start, PAGE_SIZE_4K);
             alignDownRef(block.end, PAGE_SIZE_4K);
-            if (block.type != BlkTypeAvailable || (block.end - block.start < PAGE_SIZE_4K)) { continue; }
+            if (block.type != BlkTypeAvailable || (block.end - block.start < PAGE_SIZE_4K))
+            { continue; }
 
             getSegments()->add(block);
         }
@@ -43,7 +44,7 @@ namespace Memory
     Pageframe* SegAlloc::allocatePhysMemory4K(u64 amount) {
         u64 address;
         int i = 0;
-        MemoryService service = runtime()->memory();
+        MemoryService service = runtime()->getMemory();
         while (!address && i < 256)
         {
             PageBlock& block = service.getPageBlocks()[i];
@@ -55,7 +56,8 @@ namespace Memory
             }
         }
         Pageframe* page = service.addr2page(address);
-        if (!page->address) { page->address = address; }
+        if (!page->address)
+        { page->address = address; }
         return page;
     }
 

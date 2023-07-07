@@ -1,4 +1,4 @@
-#include <common/runtime.hpp>
+#include <siberix/core/runtimes.hpp>
 #include <siberix/mm/slab.hpp>
 #include <utils/alignment.h>
 
@@ -28,7 +28,7 @@ namespace Memory
 
     u64 SlabAlloc::alloc(u64 size) {
         if (size > PAGE_SIZE_4K)
-            return runtime()->memory().alloc4KPages(alignUp(size, PAGE_SIZE_4K));
+            return runtime()->getMemory().alloc4KPages(alignUp(size, PAGE_SIZE_4K));
         /*
          * Find the cache with suitable size
          * request size >= cache size
@@ -78,7 +78,7 @@ namespace Memory
 
     Pageframe* SlabCache::request4KPage(u64* addrVirt) {
         Pageframe* page;
-        u64 addr = runtime()->memory().alloc4KPages(1, &page);
+        u64 addr = runtime()->getMemory().alloc4KPages(1, &page);
 
         if (addrVirt != nullptr)
         { *addrVirt = addr; }

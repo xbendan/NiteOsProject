@@ -1,4 +1,3 @@
-#include <common/runtime.hpp>
 #include <common/string.h>
 #include <siberix/mm/service.hpp>
 
@@ -24,14 +23,16 @@ u64 MemoryService::alloc4KPages(u64 amount) { return alloc4KPages(amount, nullpt
 u64 MemoryService::alloc4KPages(u64 amount, Pageframe** _pointer) {
     Pageframe* page = allocPhysMemory4KPages(amount);
 
-    if (_pointer != nullptr) *_pointer = page;
+    if (_pointer != nullptr)
+        *_pointer = page;
     u64 phys = page->address;
     u64 virt = allocVirtMemory4KPages(amount);
-    if (!(phys && virt)) }
+    if (!(phys && virt))
+}
 
 void MemoryService::free4KPages(u64 address) {}
 
-Pageframe* MemoryService::allocPhysMemory4KPages(u64 amount){return getPageAllocator()}
+Pageframe* MemoryService::allocPhysMemory4KPages(u64 amount) { return pageAlloc->allocatePhysMemory4K(amount); }
 
 u64 MemoryService::allocPhysMemory4K(u64 amount) {}
 

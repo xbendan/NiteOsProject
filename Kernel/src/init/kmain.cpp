@@ -1,5 +1,5 @@
+#include <siberix/core/runtimes.hpp>
 #include <siberix/init/boot.h>
-#include <common/runtime.hpp>
 
 static const char[] splash = [
     " _____  _  _                  _       ",
@@ -10,6 +10,4 @@ static const char[] splash = [
     "\\____/ |_||_.__/  \\___||_|   |_|/_/\\_\\"
 ];
 
-void main(BootConfig& bootConfig) {
-    getRuntimeArch()->setup();
-}
+void main(BootConfig& bootConfig) { runtime()->setup(); }
