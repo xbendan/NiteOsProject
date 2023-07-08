@@ -2,7 +2,7 @@
 
 # Introduction 
 **What is NITE?**  
-Nite is a full system project written in C/C++ (primarily C++, with OOP features), aim to run in modern desktop and laptop devices. This repository includes Kernel **「ATRI」**, Runtime libraries and basic applications and an XML-like UI framework to build UI-based program.
+Nite is a full system project written in C/C++ (primarily C++, with OOP features), aim to run in modern desktop and laptop devices. This repository includes Kernel **「Siberix」**, Runtime libraries and basic applications and an XML-like UI framework to build UI-based program.
 
 # Build and Test
 ### Requirements

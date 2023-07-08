@@ -1,3 +1,4 @@
+#include <siberix/device/device_tree.hpp>
 #include <siberix/init/boot.h>
 #include <siberix/mm/page.hpp>
 #include <siberix/mm/service.hpp>
@@ -20,12 +21,14 @@ public:
     bool isInitialized() { return initialized; }
     MemoryService& getMemory();
     BootConfig& getBootConfig();
+    DeviceTree* getDeviceTree();
 
     const CompiledArchitecture arch;
 
 protected:
     bool initialized;
     MemoryService memoryService;
+    DeviceTree* deviceTree;
     BootConfig& bootConfig;
 };
 

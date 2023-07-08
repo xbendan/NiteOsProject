@@ -5,12 +5,12 @@ struct AcpiRsdp {
     u8 checksum;
     char oemId[6];
     u8 revision;
-    u32 rsdt;
+    u32 rsdtAddress;
 } __attribute__((packed));
 
 struct AcpiXsdp : public AcpiRsdp {
     u32 length;
-    u64 xsdt;
+    u64 xsdtAddress;
     u8 checksumEx;
     u8 reserved[3];
 };
@@ -79,6 +79,43 @@ struct MadtNmi : public MadtEntry {
     u16 flags;
     u8 lInt;
 } __attribute__((packed));
+
+struct MadtLocalx2Apic : public MadtEntry {
+    u16 __reserved__;
+    u32 x2apicId;
+    u32 flags;
+    u32 uid;
+} __attribute__((packed));
+
+struct MadtNmix2Apic : public MadtEntry {
+    u16 flags;
+    u32 uid;
+    u8 lInt;
+    u8 __reserved__[3];
+} __attribute__((packed));
+
+struct Hpet : public AcpiTable {
+    u8 hwrevId;
+    u8 info;
+    u16 pciVendorId;
+    AcpiAddress address;
+    u8 hpetNumber;
+    u16 minTick;
+    u8 pageProtection;
+};
+
+struct McfgAddress {
+    u64 base;
+    u16 segmentGroupNum;
+    u8 busStart;
+    u8 busEnd;
+    u32 __reserved__;
+};
+
+struct PciMcfg : public AcpiTable {
+    u64 __reserved__;
+    McfgAddress baseAddresses[];
+};
 
 struct AcpiFadt /* Fixed ACPI Description Table */ : public AcpiTable {
     u32 fwctrl;

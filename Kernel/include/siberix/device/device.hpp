@@ -1,10 +1,10 @@
 #include <common/typedefs.h>
 #include <utils/linked_list.h>
 
-extern char[16] _unknownDeviceName;
+extern const char[16] _unknownDeviceName = "<Unknown Device>";
 
 enum DeviceType {
-    DeviceTypeBattery,
+    DeviceTypeBiometric,
     DeviceTypeBluetooth,
     DeviceTypeDiskDrive,
     DeviceTypeDiskController,
@@ -18,11 +18,13 @@ enum DeviceType {
     DeviceTypePortable,
     DeviceTypePointerDevice,
     DeviceTypePrinter,
+    DeviceTypePowerSupply,
     DeviceTypeSecurity,
     DeviceTypeSoftwareDevice,
     DeviceTypeProcessor,
     DeviceTypeSystemDevices,
     DeviceTypeUSBController,
+    DeviceTypeSensor,
 
     DeviceTypeUnknown
 };
@@ -47,10 +49,10 @@ public:
     inline DeviceType getType() { return this->type; }
     inline DeviceBus getBus() { return this->bus; }
     inline LinkedList<Device&>& getDependencies() { return this->dependencies; }
-    inline bool isDependent(Device& device) { return dependencies.contains(device); }
+    inline bool isDependentWith(Device& device) { return dependencies.contains(device); }
 
-    virtual void Enable() = 0;
-    virtual void Disable() = 0;
+    virtual void enable() = 0;
+    virtual void disable() = 0;
 
 protected:
     const char* name;

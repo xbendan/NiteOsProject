@@ -98,10 +98,10 @@ BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
 
 # 在三元运算符前换行
-BreakBeforeTernaryOperators: false
+BreakBeforeTernaryOperators: true
 
 # 在构造函数的初始化列表的冒号后换行
-BreakConstructorInitializers: AfterColon
+BreakConstructorInitializers: true
 
 #BreakInheritanceList: AfterColon
 
