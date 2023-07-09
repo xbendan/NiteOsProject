@@ -2,7 +2,9 @@
 #include <common/string.h>
 #include <siberix/drivers/acpi/acpi_device.hpp>
 
-AcpiPmDevice::AcpiPmDevice() {
+AcpiPmDevice::AcpiPmDevice() 
+    : name("ACPI Power Management")
+{
     const char* signature = "RSD PTR ";
 
     u64 address = 0x0;

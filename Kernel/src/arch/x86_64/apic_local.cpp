@@ -1,6 +1,6 @@
 #include <arch/x86_64/apic.hpp>
 
-ApicLocalInterface::ApicLocalInterface(u8 _apicId, ApicManagementDevice* _apic)
+ApicLocalInterface::ApicLocalInterface(u8 _apicId, ApicDevice* _apic)
     : apicId(_apicId)
       apic(_apic) {
     basePhys = apic->lReadBase();
@@ -11,9 +11,9 @@ ApicLocalInterface::ApicLocalInterface(u8 _apicId, ApicManagementDevice* _apic)
 
 ApicLocalInterface::~ApicLocalInterface() {}
 
-void ApicLocalInterface::write(u32 reg, u32 data) { *((volatile u32*)(ApicManagementDevice::baseVirtIO + reg)) = data; }
+void ApicLocalInterface::write(u32 reg, u32 data) { *((volatile u32*)(ApicDevice::baseVirtIO + reg)) = data; }
 
-u32 ApicLocalInterface::read(u32 reg) { return *((volatile u32*)(ApicManagementDevice::baseVirtIO + reg)); }
+u32 ApicLocalInterface::read(u32 reg) { return *((volatile u32*)(ApicDevice::baseVirtIO + reg)); }
 
 void ApicLocalInterface::sendInterrupt(u32 vector) {
     write(LOCAL_APIC_ICR_HIGH, ((u32)apicId) << 24);

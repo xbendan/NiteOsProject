@@ -4,7 +4,12 @@
 #include <siberix/device/types.hpp>
 #include <siberix/drivers/acpi/acpi_device.hpp>
 
-ApicManagementDevice::ApicManagementDevice() {
+ApicDevice::apicInterfaces;
+ApicDevice::overrides;
+
+ApicDevice::ApicDevice()
+    : name("Advanced Programmable Interrupt Controller")
+{
     AcpiPmDevice* acpiDevice;
     if (acpiDevice == nullptr)
     {
@@ -24,7 +29,7 @@ ApicManagementDevice::ApicManagementDevice() {
                 if ((apicLocal->flags & 0x3) && apicLocal->apicId)
                 {
                     runtime()->getDeviceTree()->registerDevice(new ProcessorDevice(apicLocal->apicId));
-                    _locals[apicLocal->apicId] = ApicLocalInterface(apicLocal->apicId);
+                    apicInterfaces[apicLocal->apicId] = ApicLocalInterface(apicLocal->apicId);
                 }
                 break;
             }
@@ -78,16 +83,39 @@ ApicManagementDevice::ApicManagementDevice() {
     }
 }
 
-ApicManagementDevice::~ApicManagementDevice() {}
+ApicDevice::~ApicDevice() {}
 
-void ApicManagementDevice::ioWrite(u32 reg, u32 data) {}
+void ApicDevice::ioWrite(u32 reg, u32 data) {
+    *ioRegSelect = reg;
+    *ioWindow = data;
+}
 
-u32 ApicManagementDevice::ioRead64(u32 reg) {}
+u32 ApicDevice::ioRead(u32 reg) {
+    *ioRegSelect = reg;
+    return *ioWindow;
+}
 
-void ApicManagementDevice::ioWrite64(u32 reg, u64 data) {}
+void ApicDevice::ioWrite64(u32 reg, u64 data) {
+    u32 low = (data & 0xffffffff), high = (data >> 32);
+    ioWrite(reg, low);
+    ioWrite(reg + 1, high);
+}
 
-u64 ApicManagementDevice::ioRead64(u32 reg) {}
+u64 ApicDevice::ioRead64(u32 reg) {
+    u32 low = ioRead(reg), high = ioRead(reg + 1);
+    return low | ((u64)high << 32);
+}
 
-void ApicManagementDevice::lWriteBase(u64 val) {}
+void ApicDevice::lWriteBase(u64 val) {
+    u64 low = (val & 0xffffffff) | 0x800;
+    u64 high = val >> 32;
+    asm("wrmsr"::"a"(low), "d"(high), "c"(0x1b));
+}
 
-void ApicManagementDevice::lReadBase() {}
+void ApicDevice::lReadBase() {
+    u64 low, high;
+    asm("rdmsr"
+        : "=a"(low), "=d"(high)
+        : "c"(0x1b));
+    return ((high & 0x0f) << 32) | (low & 0xffffffff);
+}

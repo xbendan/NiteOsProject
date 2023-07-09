@@ -56,7 +56,7 @@
 
 class ApicLocalInterface {
 public:
-    ApicLocalInterface(u8 _apicId, ApicManagementDevice* _apic);
+    ApicLocalInterface(u8 _apicId, ApicDevice* _apic);
     ~ApicLocalInterface();
 
     void sendInterrupt(u32 vector);
@@ -67,15 +67,15 @@ public:
 
 private:
     u8 apicId;
-    ApicManagementDevice* apic;
+    ApicDevice* apic;
     u64 basePhys;
     u64 baseVirtIO;
 };
 
-class ApicManagementDevice : public Device {
+class ApicDevice : public Device {
 public:
-    ApicManagementDevice();
-    ~ApicManagementDevice();
+    ApicDevice();
+    ~ApicDevice();
 
     void ioWrite(u32 reg, u32 data);
     u32 ioRead(u32 reg);
@@ -83,7 +83,8 @@ public:
     u64 ioRead64(u32 reg);
     void lWriteBase(u64 val);
     u64 lReadBase();
-    ApicLocalInterface& local(u8 apicId) { return _locals[apicId]; }
+    static inline ApicLocalInterface& getLocalApicId(u8 apicId) { return apicInterfaces[apicId]; }
+    static inline ApicLocalInterface& getLocal()
 
 private:
     u64 basePhys;
@@ -91,6 +92,6 @@ private:
     volatile u32* ioRegSelect;
     volatile u32* ioWindow;
 
-    ApicLocalInterface _locals[256];
-    SizedArrayList<MadtIso*, 256> overrides;
+    static ApicLocalInterface apicInterfaces[256];
+    static SizedArrayList<MadtIso*, 256> overrides;
 };

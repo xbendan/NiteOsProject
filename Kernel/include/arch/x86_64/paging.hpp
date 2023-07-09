@@ -1,4 +1,5 @@
 #include <common/typedefs.h>
+#include <siberix/mm/addrspace.hpp>
 #include <siberix/mm/page.hpp>
 
 #define PAGES_PER_TABLE             512
@@ -32,7 +33,7 @@ namespace Paging
         PageDirectAddress = 0x80
     };
 
-    class X64AddressSpace 
+    class X64AddressSpace : public AddressSpace
     {
     public:
         pml4_t pml4 __attribute__((aligned(PAGE_SIZE_4K)));
@@ -42,9 +43,7 @@ namespace Paging
         u64 pml4Phys;
         pdpt_t *kernelPdpts;
 
-        VirtualPages();
-        ~VirtualPages();
+        X64AddressSpace();
+        ~X64AddressSpace();
     } __attribute__((packed));
-
-    void init();
 }
