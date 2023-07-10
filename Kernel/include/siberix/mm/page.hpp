@@ -32,7 +32,7 @@ namespace Memory
 
     class BuddyAlloc : public PageAlloc {
     public:
-        BuddyAlloc(MemoryService& service);
+        BuddyAlloc(MemoryManagement& service);
         ~BuddyAlloc();
 
         Pageframe* allocatePhysMemory4K(u64 amount) override;

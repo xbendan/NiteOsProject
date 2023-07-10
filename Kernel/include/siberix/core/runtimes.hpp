@@ -1,5 +1,6 @@
 #include <siberix/init/boot.h>
 
+#include <siberix/core/time.hpp>
 #include <siberix/device/connectivity.hpp>
 #include <siberix/mm/page.hpp>
 #include <siberix/mm/service.hpp>
@@ -10,38 +11,33 @@ enum CompiledArchitecture {
     CA_UNDEFINED = 0,
     CA_X86_64    = 1,
     CA_ARMV7     = 2,
-    CA_RISCV     = 2
+    CA_RISCV     = 3
 };
 
 class SystemRuntime {
 public:
-    SystemRuntime(CompiledArchitecture _type)
-        : type(_type),
-          initialized(false) {}
+    SystemRuntime(CompiledArchitecture arch)
+        : m_arch(arch),
+          m_isInitialized(false) {}
     ~SystemRuntime();
 
-    virtual bool setup()           = 0;
-    virtual void loadMemory()      = 0;
-    virtual void loadDevices()     = 0;
-    virtual void shutdown(bool hw) = 0;
-    virtual void reboot(bool hw)   = 0;
-    virtual void sleep()           = 0;
-    virtual void hibernate()       = 0;
+    virtual bool setup() = 0;
 
-    bool           isInitialized() { return m_isInitialized; }
-    MemoryService& getMemory();
-    BootConfig&    getBootConfig();
-    DeviceTree&    getDeviceTree();
-    Scheduler&     getScheduler();
-
-    const CompiledArchitecture arch;
+    bool              isInitialized() { return m_isInitialized; }
+    MemoryManagement& getMemory();
+    BootConfig&       getBootConfig();
+    DeviceTree&       getDeviceTree();
+    Scheduler&        getScheduler();
+    void              addTimer(Timer& timer);
 
 protected:
-    bool          m_isInitialized;
-    MemoryService m_memory;
+    bool                 m_isInitialized;
+    CompiledArchitecture m_arch;
+    BootConfig&          m_bootConfig;
 
+    TimeManagement      m_clockAndTime;
+    MemoryManagement    m_memory;
     DeviceConnectivity& m_devices;
-    BootConfig&         m_bootConfig;
     Scheduler&          m_scheduler;
 };
 

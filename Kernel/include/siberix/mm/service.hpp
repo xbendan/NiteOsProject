@@ -1,9 +1,9 @@
 #include <siberix/mm/page.hpp>
 
-class MemoryService {
+class MemoryManagement {
 public:
-    MemoryService();
-    ~MemoryService();
+    MemoryManagement();
+    ~MemoryManagement();
     /// @brief
     /// @param amount
     /// @return

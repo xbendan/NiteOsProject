@@ -4,7 +4,7 @@
 static SegAlloc _segmentAlloc;
 static BuddyAlloc _buddyAlloc;
 
-MemoryService::MemoryService() {
+MemoryManagement::MemoryManagement() {
     this->pageAlloc = &(_segmentAlloc = Memory::SegAlloc());
     u64 maxSize = runtime()->getBootConfig().memory.maxSize;
     u64 current = 0;
@@ -16,11 +16,11 @@ MemoryService::MemoryService() {
     }
 }
 
-MemoryService::~MemoryService() {}
+MemoryManagement::~MemoryManagement() {}
 
-u64 MemoryService::alloc4KPages(u64 amount) { return alloc4KPages(amount, nullptr); }
+u64 MemoryManagement::alloc4KPages(u64 amount) { return alloc4KPages(amount, nullptr); }
 
-u64 MemoryService::alloc4KPages(u64 amount, Pageframe** _pointer) {
+u64 MemoryManagement::alloc4KPages(u64 amount, Pageframe** _pointer) {
     Pageframe* page = allocPhysMemory4KPages(amount);
 
     if (_pointer != nullptr)
@@ -30,26 +30,26 @@ u64 MemoryService::alloc4KPages(u64 amount, Pageframe** _pointer) {
     if (!(phys && virt))
 }
 
-void MemoryService::free4KPages(u64 address) {}
+void MemoryManagement::free4KPages(u64 address) {}
 
-Pageframe* MemoryService::allocPhysMemory4KPages(u64 amount) { return pageAlloc->allocatePhysMemory4K(amount); }
+Pageframe* MemoryManagement::allocPhysMemory4KPages(u64 amount) { return pageAlloc->allocatePhysMemory4K(amount); }
 
-u64 MemoryService::allocPhysMemory4K(u64 amount) {}
+u64 MemoryManagement::allocPhysMemory4K(u64 amount) {}
 
-void MemoryService::freePhysMemory4KPages(u64 address) {}
+void MemoryManagement::freePhysMemory4KPages(u64 address) {}
 
-void MemoryService::freePhysMemory4KPages(Pageframe& page) {}
+void MemoryManagement::freePhysMemory4KPages(Pageframe& page) {}
 
-u64 MemoryService::allocVirtMemory4KPages(u64 amount) {}
+u64 MemoryManagement::allocVirtMemory4KPages(u64 amount) {}
 
-void MemoryService::freeVirtMemory4KPages(u64 address) {}
+void MemoryManagement::freeVirtMemory4KPages(u64 address) {}
 
-u64 MemoryService::alloc(u64 size) {}
+u64 MemoryManagement::alloc(u64 size) {}
 
-void MemoryService::free(u64 address) {}
+void MemoryManagement::free(u64 address) {}
 
-Pageframe* MemoryService::pfn2page(u64 pfn) {}
+Pageframe* MemoryManagement::pfn2page(u64 pfn) {}
 
-u64 MemoryService::page2pfn(Pageframe& page) {}
+u64 MemoryManagement::page2pfn(Pageframe& page) {}
 
-void MemoryService::calculate() {}
+void MemoryManagement::calculate() {}

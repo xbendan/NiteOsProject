@@ -6,7 +6,7 @@
 namespace Memory
 {
     Logger& logger;
-    BuddyAlloc::BuddyAlloc(MemoryService& service) {
+    BuddyAlloc::BuddyAlloc(MemoryManagement& service) {
         SizedArrayList<PageBlock, 256>& pageBlocks = service.getPageBlocks();
         for (int i = 0; i < 256; i++)
         {
