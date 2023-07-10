@@ -3,7 +3,7 @@
 #include <siberix/drivers/acpi/acpi_device.hpp>
 
 AcpiPmDevice::AcpiPmDevice() 
-    : name("ACPI Power Management")
+    : m_name("ACPI Power Management")
 {
     const char* signature = "RSD PTR ";
 

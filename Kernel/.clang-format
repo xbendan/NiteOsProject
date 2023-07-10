@@ -7,7 +7,7 @@ AlignArrayOfStructures: Left
 AlignConsecutiveAssignments:
   Enabled:         true
   AcrossEmptyLines: false
-  AcrossComments:  false
+  AcrossComments:  true
   AlignCompound:   true
   PadOperators:    true
 AlignConsecutiveBitFields:
@@ -19,7 +19,7 @@ AlignConsecutiveBitFields:
 AlignConsecutiveDeclarations:
   Enabled:         true
   AcrossEmptyLines: false
-  AcrossComments:  false
+  AcrossComments:  true
   AlignCompound:   false
   PadOperators:    false
 AlignConsecutiveMacros:

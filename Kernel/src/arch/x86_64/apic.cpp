@@ -8,7 +8,7 @@ ApicDevice::apicInterfaces;
 ApicDevice::overrides;
 
 ApicDevice::ApicDevice()
-    : name("Advanced Programmable Interrupt Controller")
+    : m_name("Advanced Programmable Interrupt Controller")
 {
     AcpiPmDevice* acpiDevice;
     if (acpiDevice == nullptr)
