@@ -6,5 +6,6 @@ public:
     ~ProcessorDevice();
 
 private:
-    u32 processorId;
+    ProcessorDevice *m_self;
+    u32 m_processorId;
 };

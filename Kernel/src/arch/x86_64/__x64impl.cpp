@@ -3,7 +3,7 @@
 #include <arch/x86_64/types.h>
 #include <siberix/mm/page.hpp>
 
-static X64SystemRuntime x64rt;
+static X64Runtime x64rt;
 extern "C" void _lgdt(u64);
 extern "C" void _lidt(u64);
 
@@ -15,7 +15,7 @@ IdtPtr idtPtr;
 static Memory::SegAlloc _segAlloc;
 static Memory::BuddyAlloc _buddyAlloc;
 
-void X64SystemRuntime::setup() {
+void X64Runtime::setup() {
     /* load global descriptor table */
     gdtPackage = GdtPackage(tss);
     gdtPtr = {.limit = sizeof(GdtPackage) - 1, .base = (u64)&gdtPackage};

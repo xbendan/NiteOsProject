@@ -1,21 +1,26 @@
 #include <common/typedefs.h>
 
 template <typename T>
-class ArrayList
-{
+class ArrayList {
 private:
-    T *array;
+    T* array;
     u64 count;
     u64 objectSize = sizeof(T);
 
 public:
-    Array()
-      : count(0) { }
+    ArrayList()
+        : ArrayList(8) {}
+
+    ArrayList(u64 size)
+        : count(0) {
+        array = new T[size];
+    }
+
+    ~ArrayList() { delete[] array; }
 };
 
 template <typename T, int size>
-class SizedArrayList
-{
+class SizedArrayList {
 private:
     T array[size];
     u64 count = 0;
@@ -23,11 +28,9 @@ private:
 
 public:
     SizedArrayList()
-      : count(0) { }
+        : count(0) {}
 
-    T& operator[](int index) {
-        return array[index < size ? index : 0];
-    }
+    T& operator[](int index) { return array[index < size ? index : 0]; }
 
     bool contains(T& obj) {
         for (int i = 0; i < count; i++) {
@@ -38,17 +41,11 @@ public:
         return false;
     }
 
-    bool isEmpty() {
-        return !count;
-    }
+    bool isEmpty() { return !count; }
 
-    u64 length() {
-        return count;
-    }
+    u64 length() { return count; }
 
-    u64 capacity() {
-        return size;
-    }
+    u64 capacity() { return size; }
 
     void add(T obj) {
         if (count > size) {
@@ -57,13 +54,9 @@ public:
         array[count++] = obj;
     }
 
-    void remove(T obj) {
+    void remove(T obj) {}
 
-    }
-
-    void remove(u64 index) {
-
-    }
+    void remove(u64 index) {}
 
     int indexOf(T& obj) {
         for (int i = 0; i < count; i++) {

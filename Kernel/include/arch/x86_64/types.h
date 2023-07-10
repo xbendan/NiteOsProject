@@ -1,5 +1,7 @@
 #include <common/typedefs.h>
 
+#include <siberix/proc/process.hpp>
+
 #define CPUID_ECX_SSE3 (1 << 0)
 #define CPUID_ECX_PCLMUL (1 << 1)
 #define CPUID_ECX_DTES64 (1 << 2)
@@ -75,10 +77,10 @@ struct GdtPtr {
 struct GdtEntry {
     u16 limitLow;
     u16 baseLow;
-    u8 baseMedium;
-    u8 access;
-    u8 granularity;
-    u8 baseHigh;
+    u8  baseMedium;
+    u8  access;
+    u8  granularity;
+    u8  baseHigh;
 } __attribute__((packed));
 
 struct GdtExtraEntry {
@@ -86,7 +88,8 @@ struct GdtExtraEntry {
     u32 __reserved__;
 } __attribute__((packed));
 
-struct TaskStateSegment {
+class TaskStateSegment {
+public:
     u32 __reserved__0 __attribute__((aligned(0x10)));
     u64 rsp[3];
     u64 __reserved__1;
@@ -95,48 +98,73 @@ struct TaskStateSegment {
     u32 __reserved__3;
     u16 __reserved__4;
     u16 iopbOffset;
+
+    inline void init(GdtPackage *package) {
+        package->tss = GdtTssEntry(*this);
+
+        memset(this, 0, sizeof(TaskStateSegment));
+
+        for (int i = 0; i < 3; i++) {
+            ist[i] = (u64)runtime()->getMemory().alloc4KPages(8);
+            memset((void *)ist[i], 0, PAGE_SIZE_4K);
+            ist[i] += PAGE_SIZE_4K * 8;
+        }
+
+        asm volatile("mov %%rsp, %0" : "=r"(tss->rsp[0]));
+        asm volatile("ltr %%ax" ::"a"(0x28));
+    }
 } __attribute__((packed)) tss_t;
 
 struct GdtTssEntry {
     u16 len;
     u16 baseLow;
-    u8 baseMedium;
-    u8 flags_a;
-    u8 flags_b;
-    u8 baseHigh;
+    u8  baseMedium;
+    u8  flags_a;
+    u8  flags_b;
+    u8  baseHigh;
     u32 baseUpper;
     u32 __reserved__;
 
     GdtTssEntry() {}
     GdtTssEntry(TaskStateSegment const &tss)
-      : len(sizeof(TaskStateSegment)),
-        baseLow(((u64) &tss) & 0xffff),
-        baseMedium(((u64) &tss) >> 16 & 0xff),
-        flags_a(0b10001001),
-        flags_b(0),
-        baseHigh(((u64) &tss) >> 24 & 0xff),
-        baseUpper(((u64) &tss) >> 32 & 0xffffffff),
-        __reserved__() { }
+        : len(sizeof(TaskStateSegment)),
+          baseLow(((u64)&tss) & 0xffff),
+          baseMedium(((u64)&tss) >> 16 & 0xff),
+          flags_a(0b10001001),
+          flags_b(0),
+          baseHigh(((u64)&tss) >> 24 & 0xff),
+          baseUpper(((u64)&tss) >> 32 & 0xffffffff),
+          __reserved__() {}
 } __attribute__((packed));
 
 struct GdtPackage {
-    GdtEntry entries[GDT_ENTRY_COUNT];
+    GdtEntry    entries[GDT_ENTRY_COUNT];
     GdtTssEntry tss;
 
     GdtPackage()
-        : entries({{0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00},
-                   {0xFFFF, 0x0000, 0x00, 0x9A, (1 << 5) | (1 << 7) | 0x0F, 0x00},
-                   {0xFFFF, 0x0000, 0x00, 0x92, (1 << 5) | (1 << 7) | 0x0F, 0x00},
-                   {0xFFFF, 0x0000, 0x00, 0xFA, (1 << 5) | (1 << 7) | 0x0F, 0x00},
-                   {0xFFFF, 0x0000, 0x00, 0xF2, (1 << 5) | (1 << 7) | 0x0F, 0x00}}),
+        : entries({
+              {0x0000,  0x0000, 0x00, 0x00, 0x00,                       0x00},
+              { 0xFFFF, 0x0000, 0x00, 0x9A, (1 << 5) | (1 << 7) | 0x0F, 0x00},
+              { 0xFFFF, 0x0000, 0x00, 0x92, (1 << 5) | (1 << 7) | 0x0F, 0x00},
+              { 0xFFFF, 0x0000, 0x00, 0xFA, (1 << 5) | (1 << 7) | 0x0F, 0x00},
+              { 0xFFFF,
+               0x0000,          0x00,
+               0xF2,                        (1 << 5) | (1 << 7) | 0x0F,
+               0x00                                                         }
+    }),
           tss(){};
     GdtPackage(TaskStateSegment &tss)
-        : entries({{0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00},
-                   {0xFFFF, 0x0000, 0x00, 0x9A, (1 << 5) | (1 << 7) | 0x0F, 0x00},
-                   {0xFFFF, 0x0000, 0x00, 0x92, (1 << 5) | (1 << 7) | 0x0F, 0x00},
-                   {0xFFFF, 0x0000, 0x00, 0xFA, (1 << 5) | (1 << 7) | 0x0F, 0x00},
-                   {0xFFFF, 0x0000, 0x00, 0xF2, (1 << 5) | (1 << 7) | 0x0F, 0x00}}),
-          tss(GdtTssEntry(tss)) {};
+        : entries({
+              {0x0000,  0x0000, 0x00, 0x00, 0x00,                       0x00},
+              { 0xFFFF, 0x0000, 0x00, 0x9A, (1 << 5) | (1 << 7) | 0x0F, 0x00},
+              { 0xFFFF, 0x0000, 0x00, 0x92, (1 << 5) | (1 << 7) | 0x0F, 0x00},
+              { 0xFFFF, 0x0000, 0x00, 0xFA, (1 << 5) | (1 << 7) | 0x0F, 0x00},
+              { 0xFFFF,
+               0x0000,          0x00,
+               0xF2,                        (1 << 5) | (1 << 7) | 0x0F,
+               0x00                                                         }
+    }),
+          tss(GdtTssEntry(tss)){};
 } __attribute__((packed)) __attribute__((aligned(0x10)));
 
 #define IDT_DIVIDE_BY_ZERO 0x00
@@ -176,8 +204,8 @@ struct IdtPtr {
 struct IdtEntry {
     u16 baseLow;
     u16 selector;
-    u8 ist;
-    u8 flags;
+    u8  ist;
+    u8  flags;
     u16 baseMedium;
     u32 baseHigh;
     u32 __reserved__;
@@ -203,16 +231,31 @@ struct RegisterContext {
 struct CpuId {
     char vstr[12];
     char vend = '\0';
-    u32 ecx;
-    u32 edx;
+    u32  ecx;
+    u32  edx;
 };
 
 struct Cpu {
     Cpu *self;
-    u32 apicId;
+    u32  apicId;
 
-    GdtPtr gdtPtr;
-    IdtPtr idtPtr;
+    GdtPackage      *gdt;
+    GdtPtr           gdtPtr;
+    IdtPtr           idtPtr;
     TaskStateSegment tss __attribute__((aligned(0x10)));
 
-}
+    Thread *currentThread;
+    Thread *idleThread;
+};
+
+enum ModelSpecificRegisters {
+    MSR_APIC              = 0x1B,
+    MSR_EFER              = 0xC0000080,
+    MSR_STAR              = 0xC0000081,
+    MSR_LSTAR             = 0xC0000082,
+    MSR_COMPAT_STAR       = 0xC0000083,
+    MSR_SYSCALL_FLAG_MASK = 0xC0000084,
+    MSR_FS_BASE           = 0xC0000100,
+    MSR_GS_BASE           = 0xC0000101,
+    MSR_KERN_GS_BASE      = 0xc0000102,
+};

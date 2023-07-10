@@ -1,3 +1,5 @@
+#include <siberix/proc/types.h>
+
 #include <siberix/fs/vfs.hpp>
 
 enum ProcessFlags { ProcessFlagIdle = 0x01 };
@@ -5,11 +7,7 @@ enum ProcessFlags { ProcessFlagIdle = 0x01 };
 class Process {
 public:
     Process();
-    Process(const char *name,
-            Fs::File *file,
-            u32 processId,
-            Activity *activity,
-            TaskType type);
+    Process(const char *name, Fs::File *file, u32 processId, TaskType type);
     ~Process();
 
     void start();
@@ -35,30 +33,30 @@ public:
     void terminate(int stopCode);
 
 protected:
-    const char *name; /* Name of the process */
+    const char *m_name; /* Name of the process */
     // const char *publisher; /* Name of the publisher */
     // const char *package;   /* Package Name */
-    u32 processId;      /* Process Id, 0~255 are reserved for kernel process */
-    TaskType type;      /* Current process type */
-    File *file;         /* Pointer to the source file, can be NULL */
-    Activity *activity; /* Pointer to the Activity */
+    u32 m_processId; /* Process Id, 0~255 are reserved for kernel process */
+    TaskType m_type; /* Current process type */
+    File *m_file;    /* Pointer to the source file, can be NULL */
+    Activity *m_activity; /* Pointer to the Activity */
 
-    u32 flags;
-    u16 handles; /* Register handles amount */
+    u32 m_flags;
+    u16 m_handles; /* Register handles amount */
 
     struct {
-        Spinlock lock;
-        Spinlock handleLock;
+        Spinlock m_lock;
+        Spinlock m_handleLock;
     };
 
-    Thread *mainThread;
-    LinkedList<Thread> childrenThreadList;
+    Thread *m_mainThread;
+    LinkedList<Thread> m_childrenThreadList;
 
-    u64 entryPoint;
-    u64 heap;
-    u32 nextThreadId;
+    u64 m_entryPoint;
+    u64 m_heap;
+    u32 m_nextThreadId;
 
-    AddressSpace *addressSpace;
+    AddressSpace *m_addressSpace;
 
     friend Thread;
     friend Scheduler;

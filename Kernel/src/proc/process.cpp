@@ -3,12 +3,9 @@
 #include <siberix/core/runtimes.hpp>
 #include <siberix/proc/process.hpp>
 
-Process::Process();
-Process::Process(const char *_name,
-                 File *_file,
-                 u32 _processId,
-                 Activity *_activity,
-                 TaskType _type)
+Process::Process() {}
+
+Process::Process(const char *_name, File *_file, u32 _processId, TaskType _type)
     : name(_name),
       processId(_processId),
 {
@@ -19,7 +16,8 @@ Process::Process(const char *_name,
     }
 
     flags |= (ProcessFlagIdle);
-    ListNode<Thread> *mainThread = runtime()->getScheduler()
+    m_mainThread = new Thread(this);
+    m_childrenThreadList.add(new ListNode<Thread *>(m_mainThread));
 }
 
-~Process();
+~Process() {}
