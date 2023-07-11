@@ -23,12 +23,13 @@ public:
 
     virtual bool setup() = 0;
 
-    bool              isInitialized() { return m_isInitialized; }
-    MemoryManagement& getMemory();
-    BootConfig&       getBootConfig();
-    DeviceTree&       getDeviceTree();
-    Scheduler&        getScheduler();
-    void              addTimer(Timer& timer);
+    bool        isInitialized() { return m_isInitialized; }
+    BootConfig& getBootConfig();
+
+    MemoryManagement&   getMemory() { return m_memory; }
+    DeviceConnectivity& getConnectivityManager() { return m_devices; }
+    Scheduler&          getScheduler() { return m_scheduler; }
+    TimeManagement&     getTimeManagement() { return m_clockAndTime; }
 
 protected:
     bool                 m_isInitialized;

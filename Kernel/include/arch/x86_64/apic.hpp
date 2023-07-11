@@ -1,3 +1,4 @@
+#include <siberix/core/time.hpp>
 #include <siberix/device/device.hpp>
 
 #define LOCAL_APIC_ID 0x20             // APIC ID Register
@@ -74,6 +75,19 @@ private:
     ApicDevice* apic;
     u64         basePhys;
     u64         baseVirtIO;
+};
+
+class ApicTimerDevice : public TimerDevice {
+public:
+    ApicTimerDevice(ApicLocalInterface& interface);
+    ~ApicTimerDevice();
+
+    void sleep(Duration duration) override;
+    void sleep(u32 ms) override;
+
+private:
+    u64 m_busClock;
+    u64 m_ticks;
 };
 
 class ApicDevice : public Device {

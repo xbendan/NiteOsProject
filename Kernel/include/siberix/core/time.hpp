@@ -24,10 +24,24 @@ struct Duration {
     u64      amount;
 };
 
-class Timer {
+class TimerDevice {
 public:
+    TimerDevice(const char *name)
+        : m_name(name) {}
+    ~TimerDevice() {}
+
     virtual void sleep(Duration duration) = 0;
     virtual void sleep(u32 ms)            = 0;
+
+    const char *getName() { return m_name; }
+    bool        isDefault() { return m_isDefault; }
+    void        setDefault(bool isDef) { m_isDefault = isDef; }
+    u8          getId() { return m_id; }
+
+private:
+    const char *m_name;
+    bool        m_isDefault;
+    u8          m_id;
 };
 
 class Clock {
@@ -61,9 +75,16 @@ private:
 };
 
 class TimeManagement {
+public:
+    Clock &getClock();
+    u64    getTimestamp();
+    void   addTimer(TimerDevice &timer, bool setAsDefault = false);
+    void   setDefaultTimer(TimerDevice &timer);
+    LinkedList<TimerDevice &> &getTimers();
+
 private:
-    Clock               m_clock;
-    LinkedList<Timer &> m_timers;
+    Clock                     m_clock;
+    LinkedList<TimerDevice &> m_timers;
 };
 
 extern Month months[12];

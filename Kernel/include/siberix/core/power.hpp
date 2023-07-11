@@ -2,6 +2,15 @@
 
 enum PowerState { PowerStandby, PowerHibernate, PowerSleep };
 
+class SleepCounter {
+public:
+    void reset();
+
+private:
+    bool m_isEnabled;
+    u64  m_counter;
+}
+
 class PowerManagement {
 public:
     void         setPowerState(PowerState state);
