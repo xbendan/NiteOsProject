@@ -31,6 +31,9 @@ public:
     Scheduler&          getScheduler() { return m_scheduler; }
     TimeManagement&     getTimeManagement() { return m_clockAndTime; }
 
+    bool addDevice(Device& device);
+    bool checkDevice(Device& device);
+
 protected:
     bool                 m_isInitialized;
     CompiledArchitecture m_arch;

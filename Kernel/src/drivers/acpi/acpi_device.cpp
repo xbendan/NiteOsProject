@@ -66,6 +66,8 @@ AcpiPmDevice::AcpiPmDevice()
                 "ACPI Timer ran into problem. Giving up installing.");
         }
     }
+
+    m_flags |= DeviceFlags::Initialized;
 };
 
 AcpiPmDevice::~AcpiPmDevice() {}

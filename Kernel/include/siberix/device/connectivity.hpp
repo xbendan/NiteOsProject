@@ -1,9 +1,14 @@
+#include <utils/linked_list.h>
+
 #include <siberix/device/types.hpp>
 
 class ConnectivityProvider {};
 
 class DeviceConnectivity {
 public:
+    DeviceConnectivity();
+    ~DeviceConnectivity();
+
     Device*              getDevice(const char* str);
     Device*              getDevice(u64 deviceId);
     bool                 install(Device& device);

@@ -93,7 +93,7 @@ AcpiTimerDevice::sleep(Duration duration) {
     sleep(ms);
 }
 
-AcpiTimerDevice::sleep(u32 ms) {
+AcpiTimerDevice::sleep(u64 ms) {
     u64 clock   = 3579545 * ms / 1000;
     u64 counter = 0;
     u64 last    = m_tickReader(m_data);
