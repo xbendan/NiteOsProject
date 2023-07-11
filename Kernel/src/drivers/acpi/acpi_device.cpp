@@ -58,8 +58,13 @@ AcpiPmDevice::AcpiPmDevice()
     if (fadt->pmtTimerLength == 4) {
         /* Initialize ACPI Timer */
         TimerDevice* device = new AcpiTimerDevice();
-        runtime()->getTimeManagement().addTimer(*device, true);
-        runtime()->getConnectivityManager().install(*device);
+        if (device->isWorking()) {
+            runtime()->getTimeManagement().addTimer(*device, true);
+            runtime()->getConnectivityManager().install(*device);
+        } else {
+            Logger::getLogger("acpi").error(
+                "ACPI Timer ran into problem. Giving up installing.");
+        }
     }
 };
 

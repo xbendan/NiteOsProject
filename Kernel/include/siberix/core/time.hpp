@@ -24,14 +24,14 @@ struct Duration {
     u64      amount;
 };
 
-class TimerDevice {
+class TimerDevice : public Device {
 public:
     TimerDevice(const char *name)
         : m_name(name) {}
     ~TimerDevice() {}
 
     virtual void sleep(Duration duration) = 0;
-    virtual void sleep(u32 ms)            = 0;
+    virtual void sleep(u64 ms)            = 0;
 
     const char *getName() { return m_name; }
     bool        isDefault() { return m_isDefault; }
