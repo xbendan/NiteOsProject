@@ -1,3 +1,7 @@
+#include <common/logger.h>
+#include <common/string.h>
+
+#include <arch/x86_64/kaddr.hpp>
 #include <arch/x86_64/smbios.hpp>
 
 SmbiosDevice::SmbiosDevice() {
@@ -10,7 +14,27 @@ SmbiosDevice::SmbiosDevice() {
         return !checksum;
     }
 
-    while (address < 0x100000) {}
+    while (address < 0x100000) {
+        if (memcmp((void *)address, signL2, 4) && doChecksum(address)) {
+            m_version    = 2;
+            m_entryPoint = (void *)address;
+            break;
+        }
+
+        if (memcmp((void *)addresss, signL3, 5) && doChecksum(address)) {
+            m_version    = 3;
+            m_entryPoint = (void *)address;
+            break;
+        }
+
+        address += 0x10;
+    }
+
+    if (m_version) {
+        m_flags |= DeviceFlags::Initialized;
+    } else {
+        Logger::getLogger("smbios").error("SMBIOS structure not detected.");
+    }
 }
 
 SmbiosDevice::~SmbiosDevice() {}

@@ -1,4 +1,4 @@
-#include <siberix/device/types.hpp>
+#include <siberix/device/device.hpp>
 
 #define BIOS_CHARS_NOT_SUPPORTED (1 << 3)
 #define BIOS_CHARS_ISA (1 << 4)
@@ -129,7 +129,8 @@ public:
     ~SmbiosDevice();
 
 private:
-    int m_version;
+    int   m_version;
+    void* m_entryPoint;
 
     inline static const char* signL2 = "_SM_";
     inline static const char* signL3 = "_SM3_";

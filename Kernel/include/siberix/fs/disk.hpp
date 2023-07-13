@@ -1,4 +1,5 @@
 #include <siberix/device/device.h>
+
 #include <siberix/fs/vfs.hpp>
 
 class DiskDevice : public Device {
@@ -10,4 +11,4 @@ public:
 
 private:
     u32 blockSize;
-}
+};

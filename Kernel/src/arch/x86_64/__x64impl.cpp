@@ -10,13 +10,11 @@ static X64Runtime x64rt;
 extern "C" void   _lgdt(u64);
 extern "C" void   _lidt(u64);
 
-TaskStateSegment tss = { .rsp = {}, .ist = {}, .iopbOffset = 0 };
-GdtPackage       gdtPackage;
-GdtPtr           gdtPtr;
-IdtPtr           idtPtr;
-
-static Memory::SegAlloc   _segAlloc;
-static Memory::BuddyAlloc _buddyAlloc;
+TaskStateSegment              tss = { .rsp = {}, .ist = {}, .iopbOffset = 0 };
+GdtPackage                    gdtPackage;
+GdtPtr                        gdtPtr;
+IdtPtr                        idtPtr;
+Paging::X64KernelAddressSpace addressSpace;
 
 void X64Runtime::setup() {
     /* load global descriptor table */
@@ -30,8 +28,8 @@ void X64Runtime::setup() {
                .base  = (u64)&idtEntryList };
     _lidt((u64)&idtPtr);
 
-    Paging::init();
-    this->loadMemory();
+    m_kernelSpace  = (addressSpace = Paging::X64KernelAddressSpace());
+    this->m_memory = MemoryManagement();
 
     this->m_devices = DeviceConnectivity();
     m_devices.install(*(new AcpiPmDevice()));

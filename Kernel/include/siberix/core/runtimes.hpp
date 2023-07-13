@@ -39,6 +39,7 @@ protected:
     CompiledArchitecture m_arch;
     BootConfig&          m_bootConfig;
 
+    AddressSpace*       m_kernelSpace;
     TimeManagement      m_clockAndTime;
     MemoryManagement    m_memory;
     DeviceConnectivity& m_devices;

@@ -1,5 +1,6 @@
+#include <arch/x86_64/paging.hpp>
 #include <siberix/core/runtimes.hpp>
-#include <siberix/mm/page.hpp>
+#include <siberix/mm/addrspace.hpp>
 
 class X64Runtime : public SystemRuntime {
 public:
