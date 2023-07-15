@@ -13,7 +13,7 @@ u32 ACPI_TIMER_READ_IO(u32 data) { return inDWord32(data); }
 
 AcpiTimerDevice::AcpiTimerDevice() {
     Device* device =
-        runtime()->getConnectivityManager().getDevice("ACPI Power Management");
+        runtime()->getConnectivity().findDevice("ACPI Power Management");
     if (device == nullptr) {
         Logger::getLogger("acpi").error(
             "ACPI Power Management device not detected or not installed.");

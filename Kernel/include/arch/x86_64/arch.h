@@ -43,3 +43,12 @@ static inline Cpu* getCpuLocal() {
     asm volatile("swapgs; movq %%gs:0, %0; swapgs;" : "=r"(cpu));
     return cpu;
 }
+
+static inline bool checkInterrupts() {
+    volatile unsigned long flags;
+    asm volatile(
+        "pushfq;"
+        "pop %0;"
+        : "=rm"(flags)::"memory", "cc");
+    return (flags & 0x200) != 0;
+}

@@ -1,4 +1,5 @@
 #include <siberix/device/device.h>
+#include <utils/linked_list.h>
 
 #include <siberix/fs/vfs.hpp>
 
@@ -10,5 +11,5 @@ public:
     virtual u64 write(u64 sector, u64 size, u8* buffer);
 
 private:
-    u32 blockSize;
+    u32 m_blockSize;
 };

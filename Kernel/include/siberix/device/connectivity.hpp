@@ -1,6 +1,6 @@
 #include <utils/linked_list.h>
 
-#include <siberix/device/types.hpp>
+#include <siberix/device/device.hpp>
 
 class ConnectivityProvider {};
 
@@ -9,13 +9,14 @@ public:
     DeviceConnectivity();
     ~DeviceConnectivity();
 
-    Device*              getDevice(const char* str);
     Device*              getDevice(u64 deviceId);
+    Device*              findDevice(const char* str);
     bool                 install(Device& device);
     bool                 uninstall(Device& device);
     bool                 uninstall(u64 deviceId);
     LinkedList<Device&>& enumerateDevices(DeviceType type);
     u32                  count();
+    bool                 isAutoConnect();
     void                 setAutoConnect(bool autoConnect);
 
 private:
@@ -28,4 +29,8 @@ private:
     /// @brief auto connect and load new but unneccssary devices (bluetooth,
     /// external hard drive, etc.) when they are available if set to true
     bool                              m_isAutoConnect;
+
+protected:
+    friend Device;
+    static inline DeviceConnectivity* deviceConnectivity;
 };

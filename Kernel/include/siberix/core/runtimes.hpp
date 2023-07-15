@@ -27,7 +27,7 @@ public:
     BootConfig& getBootConfig();
 
     MemoryManagement&   getMemory() { return m_memory; }
-    DeviceConnectivity& getConnectivityManager() { return m_devices; }
+    DeviceConnectivity& getConnectivity() { return m_devices; }
     Scheduler&          getScheduler() { return m_scheduler; }
     TimeManagement&     getTimeManagement() { return m_clockAndTime; }
 

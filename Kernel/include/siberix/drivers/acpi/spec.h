@@ -122,7 +122,7 @@ struct Hpet : public AcpiTable {
 
 struct McfgAddress {
     u64 base;
-    u16 segmentGroupNum;
+    u16 sgn;
     u8  busStart;
     u8  busEnd;
     u32 __reserved__;
