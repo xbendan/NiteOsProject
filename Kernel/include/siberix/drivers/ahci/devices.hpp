@@ -22,15 +22,15 @@ public:
 
 class AHCIControllerDevice {
 private:
-    LinkedList<SATADiskDevice&> m_diskList;
-    u64                         m_addrBase;
-    u64                         m_addrVirt;
-    HbaMemoryRegisters*         m_hbaMemRegs;
-    u64                         m_clbPhys;
-    u64                         m_fbPhys;
-    u64                         m_ctbaPhys;
+    LinkedList<SATADiskDevice&>* m_diskList;
+    HbaMemoryRegisters*          m_hbaMemRegs;
+    u64                          m_addrBase;
+    u64                          m_addrVirt;
+    u64                          m_clbPhys;
+    u64                          m_fbPhys;
+    u64                          m_ctbaPhys;
 
 public:
     AHCIControllerDevice();
     ~AHCIControllerDevice();
-}
+};

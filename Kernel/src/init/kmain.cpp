@@ -1,7 +1,9 @@
-#include <siberix/core/runtimes.hpp>
+#include <common/logger.h>
 #include <siberix/init/boot.h>
 
-static const char[] splash = [
+#include <siberix/core/runtimes.hpp>
+
+static const char*[] splash = [
     " _____  _  _                  _       ",
     "/  ___|(_)| |                (_)      ",
     "\\ `--.  _ | |__    ___  _ __  _ __  __",
@@ -10,4 +12,14 @@ static const char[] splash = [
     "\\____/ |_||_.__/  \\___||_|   |_|/_/\\_\\"
 ];
 
-void main(BootConfig& bootConfig) { runtime()->setup(); }
+void drawSplash() {
+    Logger& log = Logger::getAnonymousLogger();
+    for (int i = 0; i < 6; i++) {
+        log.info(splash[i]);
+    }
+}
+
+void kmain(BootConfig& bootConfig) {
+    runtime()->setup();
+    drawSplash();
+}

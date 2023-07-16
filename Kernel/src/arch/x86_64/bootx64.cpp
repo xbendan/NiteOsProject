@@ -60,5 +60,5 @@ extern "C" void   KernelEntrySt2(stivale2_struct* pointer) {
         tag = reinterpret_cast<stivale2_tag*>(tag->next);
     }
 
-    main(bootConfig);
+    kmain(bootConfig);
 }

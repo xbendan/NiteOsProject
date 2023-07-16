@@ -3,6 +3,7 @@
 #include <common/string.h>
 
 #include <arch/x86_64/apic.hpp>
+#include <arch/x86_64/paging.hpp>
 #include <arch/x86_64/smpdefines.inc>
 #include <siberix/drivers/acpi/acpi_device.hpp>
 #include <siberix/proc/sched.hpp>
@@ -100,4 +101,41 @@ Scheduler::Scheduler()
         });
 
     Logger::getLogger("hw").success("SMP initialized.");
+}
+
+Scheduler::switchTask(Thread* newThread) {
+    Cpu* cpu = getCpuLocal();
+
+    asm volatile("fxrstor64 (%0)" ::"r"((uintptr_t)newThread->fxState)
+                 : "memory");
+    writeMSR(0xc0000100 /* Fs Base */, newThread->fsBase);
+    Process* process = newThread->m_parent;
+
+    cpu->currentThread = newThread;
+    cpu->tss.rsp[0]    = reinterpret_cast<u64>(newThread->m_kernelStack);
+
+    asm volatile(
+        R"(mov %0, %%rsp;
+            mov %1, %%rax;
+            pop %%r15;
+            pop %%r14;
+            pop %%r13;
+            pop %%r12;
+            pop %%r11;
+            pop %%r10;
+            pop %%r9;
+            pop %%r8;
+            pop %%rbp;
+            pop %%rdi;
+            pop %%rsi;
+            pop %%rdx;
+            pop %%rcx;
+            pop %%rbx;
+            
+            mov %%rax, %%cr3
+            pop %%rax
+            addq $8, %%rsp
+            iretq)" ::"r"(&newThread->m_registers),
+        "r"(reinterpret_cast<Paging::X64AddressSpace>(process->m_addressSpace)
+                ->pml4Phys));
 }

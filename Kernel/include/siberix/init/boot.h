@@ -28,4 +28,4 @@ struct BootConfig {
 
 BootConfig& getBootConfig();
 
-void main(BootConfig& bootConfig);
+void kmain(BootConfig& bootConfig);

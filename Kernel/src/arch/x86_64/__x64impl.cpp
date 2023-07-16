@@ -3,7 +3,10 @@
 
 #include <arch/x86_64/apic.hpp>
 #include <arch/x86_64/paging.hpp>
+#include <arch/x86_64/serial.hpp>
+#include <arch/x86_64/smbios.hpp>
 #include <siberix/drivers/acpi/acpi_device.hpp>
+#include <siberix/drivers/pci/devices.hpp>
 #include <siberix/mm/page.hpp>
 
 static X64Runtime x64rt;
@@ -32,6 +35,9 @@ void X64Runtime::setup() {
     this->m_memory = MemoryManagement();
 
     this->m_devices = DeviceConnectivity();
-    m_devices.install(*(new AcpiPmDevice()));
-    m_devices.install(*(new ApicDevice()));
+    new SerialPortDevice()->install();    /* Serial Port */
+    new SmbiosDevice()->install();        /* System Management BIOS */
+    new AcpiPmDevice()->install();        /* ACPI Power Management */
+    new ApicDevice()->install();          /* APIC Controller */
+    new PciControllerDevice()->install(); /* PIC Controller */
 }
