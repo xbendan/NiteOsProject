@@ -10,9 +10,9 @@ public:
     void drawText(
         u32 x, u32 y, const char* text, u16 fsize, Color color) override;
 
-    bool                isTextOnly() { return true; }
-    RenderBufferOptions getBufferOptions() {
-        return RenderBufferOptions::DirectRender;
+    bool             isTextOnly() { return true; }
+    BufferingOptions getBufferOptions() {
+        return BufferingOptions::DirectRender;
     }
 
     void newline();

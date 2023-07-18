@@ -7,5 +7,7 @@ public:
 
 private:
     ProcessorDevice *m_self;
-    u32 m_processorId;
+    u32              m_processorId;
 };
+
+class VisualOutputDevice : public Device {};

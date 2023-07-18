@@ -35,7 +35,7 @@ public:
     static inline u8 getVgaColorIndex(Color& color, u8 fallback) {
         u8 n = 0;
         while (n++ < 16) {
-            if (VGA_COLORS[n] == color) {
+            if (VgaColors[n] == color) {
                 return n;
             }
         }
@@ -44,7 +44,7 @@ public:
 
     u8 r, g, b, a;
 
-    static inline Color VGA_COLORS[] = [
+    static inline Color VgaColors[] = [
         [0]  = Color(0, 0, 0),
         [1]  = Color(0, 0, 170),
         [2]  = Color(0, 170, 0),

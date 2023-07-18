@@ -6,12 +6,22 @@ public:
     virtual void drawEllipse(Point point, u32 width, u32 height, Color)    = 0;
     virtual void drawText(Point point, const char* text, Color color)      = 0;
 
-    virtual bool        isTextOnly();
-    RenderBufferOptions getBufferOptions();
-
-    template <typename T>
-    T getBuffer();
+    virtual bool     isTextOnly();
+    BufferingOptions getBufferOptions();
 
 protected:
-    void* m_unifiedBuffer;
+};
+
+class PixelVideoOutput : public VideoOutput {
+public:
+    virtual void  setPointAt(Point point, Color color) = 0;
+    virtual Color getPointAt(Point point)              = 0;
+    virtual void  update();
+    virtual u32*  getBuffering();
+    virtual u32*  getWritableBuffering();
+
+private:
+    u32* m_primaryBuffering;
+    u32* m_doubleBuffering;
+    u8   m_bytesPerPixel;
 };
