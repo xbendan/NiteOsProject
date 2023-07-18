@@ -39,7 +39,7 @@ void Logger::error(const char* fmt, ...) {
     va_start(args, fmt);
     log(LOG_ERROR, fmt, args);
     va_end(args);
-    
+
     log(LOG_ERROR, "System is shutting to avoid further damage.");
     printStackTrace();
 }

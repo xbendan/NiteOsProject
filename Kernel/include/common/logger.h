@@ -68,8 +68,9 @@ public:
     static SizedArrayList<LoggerReceiver&, 256>& getReceivers();
 
 private:
-    const char*                                 name;
-    SizedArrayList<String, 256>                 messages;
+    const char*                 name;
+    SizedArrayList<String, 256> messages;
+
     static SizedArrayList<LoggerReceiver&, 256> receivers;
     static Logger                               anonymousLogger;
     static Logger                               defaultLogger;

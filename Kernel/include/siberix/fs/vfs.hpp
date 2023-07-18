@@ -9,15 +9,17 @@ class Volume {
     u64         m_spaceUsed;
 };
 
-struct Partition {
-    const char* m_name;
-    u8          m_diskId;
-    u8          m_partitionId;
-    u64         m_capacity;
-    u64         m_spaceUsed;
-};
+class File {
+public:
+    File() = default;
+    File(const char*);
+    ~File();
 
-struct File {
+    virtual u64  read(u64, u64, u8*);
+    virtual u64  write(u64, u64, u8*);
+    virtual void close();
+
+private:
     const char* m_name;
     u8          m_uuid[16];
     bool        m_isDirectory;

@@ -1,14 +1,13 @@
 #include <common/typedefs.h>
 
 #include <siberix/device/device.hpp>
+#include <siberix/display/colors.hpp>
 
 struct Point {
-    u32 x, y;
+    int x, y;
 };
 
-struct Color {
-    u8 r, g, b, a;
-};
+enum RenderBufferOptions { DirectRender, DoubleBuffering, TripleBuffering };
 
 class Screen {
 private:
