@@ -2,7 +2,7 @@
 #include <siberix/core/runtimes.hpp>
 #include <siberix/mm/addrspace.hpp>
 
-class X64Runtime : public SystemRuntime {
+class X64Runtime : public KernelExecutive {
 public:
     X64Runtime();
     ~X64Runtime();

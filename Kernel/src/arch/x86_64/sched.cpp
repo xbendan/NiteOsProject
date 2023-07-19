@@ -20,7 +20,7 @@ volatile uint64_t* smpEntry2          = (uint64_t*)SMP_TRAMPOLINE_ENTRY2;
 volatile bool      doneInit           = false;
 
 void cpuTrampolineStart(u16 cpuId) {
-    X64Runtime* rt  = static_cast<X64Runtime*>(runtime());
+    X64Runtime* rt  = static_cast<X64Runtime*>(exec());
     Cpu*        cpu = rt->getScheduler().cpu(cpuId);
 
     setCpuLocal(cpu);
@@ -46,7 +46,7 @@ void cpuTrampolineStart(u16 cpuId) {
 Scheduler::Scheduler()
     : m_kernelProcess(
           new Process("SiberixKernel", nullptr, 0, TaskTypeSystemProcess)) {
-    X64Runtime* rt = static_cast<X64Runtime*>(runtime());
+    X64Runtime* rt = static_cast<X64Runtime*>(exec());
 
     m_cpus[0] = new Cpu(){ .apicId        = 0,
                            .gdt           = rt->m_gdt,

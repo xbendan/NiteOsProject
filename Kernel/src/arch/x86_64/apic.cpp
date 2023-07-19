@@ -28,7 +28,7 @@ ApicDevice::ApicDevice()
                 MadtLocalApic* apicLocal = static_cast<MadtLocalApic*>(entry);
                 if ((apicLocal->flags & 0x3) && apicLocal->apicId)
                 {
-                    runtime()->getDeviceTree()->registerDevice(new ProcessorDevice(apicLocal->apicId));
+                    exec()->getDeviceTree()->registerDevice(new ProcessorDevice(apicLocal->apicId));
                     apicInterfaces[apicLocal->apicId] = ApicLocalInterface(apicLocal->apicId);
                 }
                 break;

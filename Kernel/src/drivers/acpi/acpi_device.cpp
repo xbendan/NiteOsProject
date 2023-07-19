@@ -59,8 +59,8 @@ AcpiPmDevice::AcpiPmDevice()
         /* Initialize ACPI Timer */
         TimerDevice* device = new AcpiTimerDevice();
         if (device->isWorking()) {
-            runtime()->getTimeManagement().addTimer(*device, true);
-            runtime()->getConnectivity().install(*device);
+            exec()->getTimeManagement().addTimer(*device, true);
+            exec()->getConnectivity().install(*device);
         } else {
             Logger::getLogger("acpi").error(
                 "ACPI Timer ran into problem. Giving up installing.");

@@ -1,6 +1,6 @@
 #include <siberix/display/video_output.hpp>
 
-class FramebufferVideoOutput : public VideoOutput {
+class FramebufferVideoOutput : public PixelVideoOutput {
 public:
     FramebufferVideoOutput();
     ~FramebufferVideoOutput();
@@ -9,7 +9,6 @@ public:
     void drawEllipse(Point point, u32 width, u32 height, Color) override;
     void drawText(Point point, const char* text, Color color) override;
 
-    bool             isTextOnly() override { return false; }
     BufferingOptions getBufferOptions();
 
 private:

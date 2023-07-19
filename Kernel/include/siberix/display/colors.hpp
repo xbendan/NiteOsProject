@@ -32,6 +32,18 @@ public:
                (color.a == a);
     }
 
+    inline u8 asVgaIndex(u8 fallback = 0) {
+        u8 n = 0;
+        while (n++ < 16) {
+            if (VgaColors[n] == 0) {
+                return n;
+            }
+        }
+        return fallback;
+    }
+
+    inline u32 asHexCode(bool withAlpha) {}
+
     static inline u8 getVgaColorIndex(Color& color, u8 fallback) {
         u8 n = 0;
         while (n++ < 16) {

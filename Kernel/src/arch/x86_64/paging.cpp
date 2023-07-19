@@ -113,7 +113,7 @@ X64KernelAddressSpace::allocate4KPages(u64 amount) {
             counter++;
             if (counter >= amount) {
                 u64 physMemory = address =
-                    runtime()->getMemory().allocPhysMemory4K(amount);
+                    exec()->getMemory().allocPhysMemory4K(amount);
                 ((pageDirOffset * PAGE_SIZE_2M) + (offset * PAGE_SIZE_4K)) |
                     0xFFFFFFFFC0000000;
                 u64 totalOffset = 0;

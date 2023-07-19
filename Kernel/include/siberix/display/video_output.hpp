@@ -6,10 +6,12 @@ public:
     virtual void drawEllipse(Point point, u32 width, u32 height, Color)    = 0;
     virtual void drawText(Point point, const char* text, Color color)      = 0;
 
-    virtual bool     isTextOnly();
-    BufferingOptions getBufferOptions();
+    virtual bool             isTextOnly();
+    virtual void             setBufferOptions(BufferingOptions b);
+    virtual BufferingOptions getBufferOptions();
 
 protected:
+    BufferingOptions m_bufferOptions;
 };
 
 class PixelVideoOutput : public VideoOutput {
@@ -17,11 +19,15 @@ public:
     virtual void  setPointAt(Point point, Color color) = 0;
     virtual Color getPointAt(Point point)              = 0;
     virtual void  update();
-    virtual u32*  getBuffering();
-    virtual u32*  getWritableBuffering();
+    virtual u8*   getBuffering();
+    virtual u8*   getWritableBuffering();
+
+    bool isTextOnly() override { return false; }
 
 private:
-    u32* m_primaryBuffering;
-    u32* m_doubleBuffering;
-    u8   m_bytesPerPixel;
+    u8* m_primaryBuffering;
+    u8* m_doubleBuffering;
+    u8  m_bytesPerPixel;
+    u32 m_width;
+    u32 m_height;
 };

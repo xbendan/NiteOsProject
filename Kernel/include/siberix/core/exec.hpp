@@ -14,12 +14,12 @@ enum CompiledArchitecture {
     CA_RISCV     = 3
 };
 
-class SystemRuntime {
+class KernelExecutive {
 public:
-    SystemRuntime(CompiledArchitecture arch)
+    KernelExecutive(CompiledArchitecture arch)
         : m_arch(arch),
           m_isInitialized(false) {}
-    ~SystemRuntime();
+    ~KernelExecutive();
 
     virtual bool setup() = 0;
 
@@ -46,4 +46,4 @@ protected:
     Scheduler&          m_scheduler;
 };
 
-SystemRuntime* runtime();
+KernelExecutive* exec();

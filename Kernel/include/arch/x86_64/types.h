@@ -105,7 +105,7 @@ public:
         memset(this, 0, sizeof(TaskStateSegment));
 
         for (int i = 0; i < 3; i++) {
-            ist[i] = (u64)runtime()->getMemory().alloc4KPages(8);
+            ist[i] = (u64)exec()->getMemory().alloc4KPages(8);
             memset((void *)ist[i], 0, PAGE_SIZE_4K);
             ist[i] += PAGE_SIZE_4K * 8;
         }

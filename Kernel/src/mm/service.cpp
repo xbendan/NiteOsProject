@@ -6,7 +6,7 @@ static BuddyAlloc _buddyAlloc;
 
 MemoryManagement::MemoryManagement() {
     this->pageAlloc = &(_segmentAlloc = Memory::SegAlloc());
-    u64 maxSize = runtime()->getBootConfig().memory.maxSize;
+    u64 maxSize = exec()->getBootConfig().memory.maxSize;
     u64 current = 0;
     while (current < maxSize)
     {

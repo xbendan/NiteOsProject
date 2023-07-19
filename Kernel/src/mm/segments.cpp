@@ -7,8 +7,8 @@
 namespace Memory
 {
     SegAlloc::SegAlloc() {
-        BootConfig& bootConfig = runtime()->getBootConfig();
-        MemoryManagement& memoryService = runtime()->getMemory();
+        BootConfig& bootConfig = exec()->getBootConfig();
+        MemoryManagement& memoryService = exec()->getMemory();
         PageBlock* blocks = &bootConfig.memory.ranges;
 
         for (int i = 0; i < 256; i++)
@@ -44,7 +44,7 @@ namespace Memory
     Pageframe* SegAlloc::allocatePhysMemory4K(u64 amount) {
         u64 address;
         int i = 0;
-        MemoryManagement service = runtime()->getMemory();
+        MemoryManagement service = exec()->getMemory();
         while (!address && i < 256)
         {
             PageBlock& block = service.getPageBlocks()[i];
