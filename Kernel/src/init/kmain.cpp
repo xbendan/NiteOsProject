@@ -20,6 +20,6 @@ void drawSplash() {
 }
 
 void kmain(BootConfig& bootConfig) {
-    exec()->setup();
+    exec()->setupArch();
     drawSplash();
 }

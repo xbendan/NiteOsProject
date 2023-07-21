@@ -1,38 +1,40 @@
 #include <common/string.h>
+
 #include <siberix/mm/service.hpp>
 
-static SegAlloc _segmentAlloc;
+static SegAlloc   _segmentAlloc;
 static BuddyAlloc _buddyAlloc;
 
 MemoryManagement::MemoryManagement() {
     this->pageAlloc = &(_segmentAlloc = Memory::SegAlloc());
-    u64 maxSize = exec()->getBootConfig().memory.maxSize;
-    u64 current = 0;
-    while (current < maxSize)
-    {
-        PageSection& section = getSectionAt(current);
-        section.pages = alloc4KPages(SECTION_PAGE_SIZE / PAGE_SIZE_4K);
-        current += PAGE_SIZE_1G;
+    u64 maxSize     = exec()->getBootConfig().memory.maxSize;
+    u64 current     = 0;
+    while (current < maxSize) {
+        PageSection& section  = getSectionAt(current);
+        section.pages         = alloc4KPages(SECTION_PAGE_SIZE / PAGE_SIZE_4K);
+        current              += PAGE_SIZE_1G;
     }
 }
 
 MemoryManagement::~MemoryManagement() {}
 
-u64 MemoryManagement::alloc4KPages(u64 amount) { return alloc4KPages(amount, nullptr); }
+u64 MemoryManagement::alloc4KPages(u64 amount) {
+    return alloc4KPages(amount, nullptr);
+}
 
 u64 MemoryManagement::alloc4KPages(u64 amount, Pageframe** _pointer) {
     Pageframe* page = allocPhysMemory4KPages(amount);
 
-    if (_pointer != nullptr)
-        *_pointer = page;
+    if (_pointer != nullptr) *_pointer = page;
     u64 phys = page->address;
     u64 virt = allocVirtMemory4KPages(amount);
-    if (!(phys && virt))
+    if (!(phys && virt)) }
+
+void MemoryManagement::free4KPages(u64 address, u64 amount) {}
+
+Pageframe* MemoryManagement::allocPhysMemory4KPages(u64 amount) {
+    return pageAlloc->allocatePhysMemory4K(amount);
 }
-
-void MemoryManagement::free4KPages(u64 address) {}
-
-Pageframe* MemoryManagement::allocPhysMemory4KPages(u64 amount) { return pageAlloc->allocatePhysMemory4K(amount); }
 
 u64 MemoryManagement::allocPhysMemory4K(u64 amount) {}
 

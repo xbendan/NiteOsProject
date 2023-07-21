@@ -1,3 +1,5 @@
+#include <utils/spinlock.h>
+
 #include <siberix/display/video_output.hpp>
 
 class FramebufferVideoOutput : public PixelVideoOutput {
@@ -9,8 +11,15 @@ public:
     void drawEllipse(Point point, u32 width, u32 height, Color) override;
     void drawText(Point point, const char* text, Color color) override;
 
-    BufferingOptions getBufferOptions();
+    void             setBufferOptions(BufferingOptions b) override;
+    BufferingOptions getBufferOptions() override;
+
+    void  setPointAt(Point point, Color color) override;
+    Color getPointAt(Point point) override;
+    void  update() override;
+    u8*   getBuffering() override;
+    u8*   getWritableBuffering() override;
 
 private:
-    u32* m_buffer;
+    spinlock_t m_lock;
 }

@@ -12,19 +12,19 @@ enum TaskPriority {
     PriorityRealTime = 5
 };
 
-enum TaskState {
-    TaskStateRunning = 0,
-    TaskStateIdle    = 1,
-    TaskStateBlocked = 2,
-    TaskStateDeleted = 3
+enum class TaskState {
+    Running = 0,
+    Idle    = 1,
+    Blocked = 2,
+    Deleted = 3
 };
 
-enum TaskType {
-    TaskTypeSystemProcess = 0,
-    TaskTypeSystemDriver  = 1,
-    TaskTypeApplication   = 2,
-    TaskTypeService       = 3,
-    TaskTypeBackground    = 4
+enum class TaskType {
+    System      = 0,
+    Driver      = 1,
+    Application = 2,
+    Service     = 3,
+    Background  = 4
 };
 
 struct Thread {
@@ -51,8 +51,8 @@ struct Thread {
     RegisterContext m_registers;
     RegisterContext m_lastSyscall;
 
-    TaskPriority m_priority;                 /* The priority when scheduling */
-    TaskState    m_state = TaskStateRunning; /* Thread state */
+    TaskPriority m_priority; /* The priority when scheduling */
+    TaskState    m_state = TaskState::Running; /* Thread state */
 
     u32 m_timeSlice = 0;
 

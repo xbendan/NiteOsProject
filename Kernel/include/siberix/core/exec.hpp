@@ -21,7 +21,7 @@ public:
           m_isInitialized(false) {}
     ~KernelExecutive();
 
-    virtual bool setup() = 0;
+    virtual bool setupArch() = 0;
 
     bool        isInitialized() { return m_isInitialized; }
     BootConfig& getBootConfig();

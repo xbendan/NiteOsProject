@@ -25,7 +25,7 @@ public:
     bool isTextOnly() override { return false; }
 
 private:
-    u8* m_primaryBuffering;
+    u8* m_buffer;
     u8* m_doubleBuffering;
     u8  m_bytesPerPixel;
     u32 m_width;

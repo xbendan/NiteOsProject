@@ -7,17 +7,20 @@
 #define BUILD_ARCH "riscv"
 #endif
 
-enum BootloaderName { BL_LIMINE, BL_NBW };
+enum BootloaderName {
+    BL_LIMINE,
+    BL_NBW
+};
 
 struct BootConfig {
-    u64 checksum;
+    u64            checksum;
     BootloaderName blName;
-    struct {
+    struct BootMemory {
         u64 totalSize;
         u64 maxSize;
         PageBlock[64] ranges;
     } memory;
-    struct {
+    struct BootGraphics {
         u16 width;
         u16 height;
         u64 address;

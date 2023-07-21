@@ -22,14 +22,15 @@ public:
     Scheduler();
     ~Scheduler();
 
-    bool              switchTask(Thread* newThread);
+    bool              switchThread(Thread* newThread);
     ListNode<Thread>* createThread();
-    inline Cpu*       cpu(u8 id) { return m_cpus[id]; }
     u32               getNextPID();
     u64               getTimeSlice();
     void              setTimeSlice(u64 ts);
     Process*          getProcessById(u16 pid);
     ThreadQueue&      getThreadQueue();
+
+    inline Cpu* cpu(u8 id) { return m_cpus[id]; }
 
 private:
     u32         nextPID = 1;

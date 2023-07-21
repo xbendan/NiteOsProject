@@ -19,7 +19,7 @@ volatile uint64_t* smpStack           = (uint64_t*)SMP_TRAMPOLINE_STACK;
 volatile uint64_t* smpEntry2          = (uint64_t*)SMP_TRAMPOLINE_ENTRY2;
 volatile bool      doneInit           = false;
 
-void cpuTrampolineStart(u16 cpuId) {
+void trampolineStart(u16 cpuId) {
     X64Runtime* rt  = static_cast<X64Runtime*>(exec());
     Cpu*        cpu = rt->getScheduler().cpu(cpuId);
 
@@ -77,7 +77,7 @@ Scheduler::Scheduler()
 
                 *smpMagicValue      = 0;
                 *smpTrampolineCpuID = processorId;
-                *smpEntry2          = (uint64_t)cpuTrampolineStart;
+                *smpEntry2          = (uint64_t)trampolineStart;
                 *smpStack = (uint64_t)(rt->getMemory().alloc4KPages(4)) + 16384;
                 *smpGdtPointer = rt->m_gdtPtr;
 
@@ -103,7 +103,7 @@ Scheduler::Scheduler()
     Logger::getLogger("hw").success("SMP initialized.");
 }
 
-Scheduler::switchTask(Thread* newThread) {
+Scheduler::switchThread(Thread* newThread) {
     Cpu* cpu = getCpuLocal();
 
     asm volatile("fxrstor64 (%0)" ::"r"((uintptr_t)newThread->fxState)
