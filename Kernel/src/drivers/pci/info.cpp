@@ -1,6 +1,6 @@
 #include <siberix/drivers/pci/spec.h>
 
-#include <arch/x86_64/iopt.hpp>
+#include <arch/x86_64/iopt.h>
 
 PCIInfo::PCIInfo(u8 bus, u8 slot, u8 func)
     : m_bus(bus),

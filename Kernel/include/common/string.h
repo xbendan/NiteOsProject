@@ -24,26 +24,3 @@ char* strrchr(const char* s, int c);
 
 char* strdup(const char* s);
 }
-
-class String {
-private:
-    int   length;
-    char* str;
-
-public:
-    String() {
-        this->length = 0;
-        this->str    = nullptr;
-    }
-    String(const char* _str) {
-        this->length = strlen(str);
-        this->str    = new char[length + 1];
-        strcpy(this->str, _str);
-    }
-    ~String() {
-        if (this->str != nullptr) {
-            delete[] this->str;
-            this->str = nullptr;
-        }
-    }
-};

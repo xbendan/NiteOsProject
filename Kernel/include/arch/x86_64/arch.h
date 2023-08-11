@@ -1,4 +1,4 @@
-#include <arch/x86_64/paging.hpp>
+#include <arch/x86_64/paging.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/mm/addrspace.hpp>
 

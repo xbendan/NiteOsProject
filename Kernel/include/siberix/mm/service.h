@@ -1,4 +1,7 @@
+#include <siberix/mm/malloc.h>
 #include <siberix/mm/page.h>
+
+using namespace Memory;
 
 class MemoryManagement {
 public:
@@ -42,10 +45,12 @@ public:
     Pageframe* pfn2page(u64 pfn) {
         u32 sectionId = pfn >> 18;
         u32 offset    = pfn - (sectionId * 262144);
-        return sections[sectionId].pages[offset];
+        return pageSections[sectionId].pages[offset];
     };
     Pageframe*   addr2page(u64 address) { return pfn2page(address >> 12); }
-    PageSection* addr2sect(u64 address) { return &(sections[address >> 30]); }
+    PageSection* addr2sect(u64 address) {
+        return &(pageSections[address >> 30]);
+    }
 
     MemoryModelType getModelType() { return this->mmType; }
     PageAlloc*      getPageAllocator() { return this->pageAlloc; }
@@ -61,7 +66,9 @@ public:
     SizedArrayList<PageBlock, 256>   getPageBlocks() { return pageBlocks; }
     SizedArrayList<PageSection, 256> getPageSections() { return pageSections; }
     PageBlock&   getBlock(u8 index) { return pageBlocks[index]; }
-    PageSection& getSectionAt(u64 address) { return sections[address >> 30]; }
+    PageSection& getSectionAt(u64 address) {
+        return pageSections[address >> 30];
+    }
 
 private:
     u64 totalPages, availablePages, allocatedPages, cachedPages, swappedPages;

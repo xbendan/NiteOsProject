@@ -1,6 +1,6 @@
 #include <arch/x86_64/types.h>
-#include <arch/x86_64/interrupts.hpp>
-#include <arch/x86_64/apic.hpp>
+#include <arch/x86_64/interrupts.h>
+#include <arch/x86_64/apic.h>
 #include <common/logger.h>
 
 IdtEntry idtEntries[IDT_ENTRY_COUNT];

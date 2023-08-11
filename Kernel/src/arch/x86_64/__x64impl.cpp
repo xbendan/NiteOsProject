@@ -1,10 +1,10 @@
 #include <arch/x86_64/arch.h>
 #include <arch/x86_64/types.h>
 
-#include <arch/x86_64/apic.hpp>
-#include <arch/x86_64/paging.hpp>
-#include <arch/x86_64/serial.hpp>
-#include <arch/x86_64/smbios.hpp>
+#include <arch/x86_64/apic.h>
+#include <arch/x86_64/paging.h>
+#include <arch/x86_64/serial.h>
+#include <arch/x86_64/smbios.h>
 #include <siberix/drivers/acpi/acpi_device.h>
 #include <siberix/drivers/pci/devices.hpp>
 #include <siberix/mm/page.h>

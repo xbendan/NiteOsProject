@@ -1,6 +1,6 @@
 #include <common/logger.h>
 
-#include <arch/x86_64/iopt.hpp>
+#include <arch/x86_64/iopt.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/drivers/acpi/acpi_device.h>
 #include <siberix/drivers/acpi/acpi_timer.hpp>

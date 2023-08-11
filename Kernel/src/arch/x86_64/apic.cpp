@@ -1,4 +1,4 @@
-#include <arch/x86_64/apic.hpp>
+#include <arch/x86_64/apic.h>
 #include <common/logger.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/device/types.hpp>

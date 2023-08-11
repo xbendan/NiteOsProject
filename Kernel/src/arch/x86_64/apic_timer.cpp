@@ -1,4 +1,4 @@
-#include <arch/x86_64/apic.hpp>
+#include <arch/x86_64/apic.h>
 
 ApicTimerDevice::ApicTimerDevice(ApicLocalInterface& interface) {
     uint64_t hertz = 1000;

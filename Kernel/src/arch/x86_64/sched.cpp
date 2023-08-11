@@ -2,8 +2,8 @@
 #include <common/logger.h>
 #include <common/string.h>
 
-#include <arch/x86_64/apic.hpp>
-#include <arch/x86_64/paging.hpp>
+#include <arch/x86_64/apic.h>
+#include <arch/x86_64/paging.h>
 #include <arch/x86_64/smpdefines.inc>
 #include <siberix/drivers/acpi/acpi_device.h>
 #include <siberix/proc/sched.hpp>

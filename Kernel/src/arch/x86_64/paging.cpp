@@ -1,7 +1,7 @@
 #include <common/logger.h>
 
-#include <arch/x86_64/kaddr.hpp>
-#include <arch/x86_64/paging.hpp>
+#include <arch/x86_64/kaddr.h>
+#include <arch/x86_64/paging.h>
 #include <siberix/core/runtimes.h>
 
 #define KERNEL_HEAP_PML4_INDEX 511

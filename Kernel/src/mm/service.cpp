@@ -1,6 +1,6 @@
 #include <common/string.h>
 
-#include <siberix/mm/service.hpp>
+#include <siberix/mm/service.h>
 
 static SegAlloc   _segmentAlloc;
 static BuddyAlloc _buddyAlloc;

@@ -1,9 +1,11 @@
+#pragma once
+
 #include <siberix/init/boot.h>
+#include <siberix/mm/page.h>
 
 #include <siberix/core/time.hpp>
 #include <siberix/device/connectivity.hpp>
-#include <siberix/mm/page.h>
-#include <siberix/mm/service.hpp>
+#include <siberix/mm/service.h>
 #include <siberix/proc/process.hpp>
 #include <siberix/proc/sched.hpp>
 

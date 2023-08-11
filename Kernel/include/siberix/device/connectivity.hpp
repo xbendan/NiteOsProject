@@ -1,6 +1,7 @@
-#include <utils/linked_list.h>
+#pragma once
 
 #include <siberix/device/device.h>
+#include <utils/linked_list.h>
 
 class ConnectivityProvider {};
 

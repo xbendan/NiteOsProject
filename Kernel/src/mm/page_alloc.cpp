@@ -1,8 +1,7 @@
 #include <common/logger.h>
-#include <utils/alignment.h>
-
 #include <siberix/mm/page.h>
-#include <siberix/mm/service.hpp>
+#include <siberix/mm/service.h>
+#include <utils/alignment.h>
 
 namespace Memory {
     Logger& logger;
@@ -30,7 +29,7 @@ namespace Memory {
                     pages[i].address = current + (i * PAGE_SIZE_4K);
                 }
                 pageList[PAGE_MAX_ORDER].add(
-                    reinterpret_cast<ListNode<Pageframe>*> pages);
+                    reinterpret_cast<ListNode<Pageframe>*>(pages));
 
                 current += PAGE_MAX_SIZE;
             }
@@ -45,11 +44,11 @@ namespace Memory {
             return nullptr;
         }
 
-        Pageframe*            page;
-        u8                    _order = order;
-        LinkedList<Pageframe> list;
+        Pageframe*             page;
+        u8                     _order = order;
+        LinkedList<Pageframe>* list;
         while (_order <= PAGE_MAX_ORDER) {
-            if (pageList[_order].m_count()) {
+            if (pageList[_order].count()) {
                 list = &(pageList[_order]);
                 break;
             }
@@ -76,7 +75,7 @@ namespace Memory {
 
     void BuddyAlloc::markPagesUsed(u64 addressStart, u64 addressEnd) {}
 
-    Pageframe* BuddyAlloc::expand(Pageframe& page) {
+    Pageframe* BuddyAlloc::expand(Pageframe* page) {
         if (page.flags & PFLAGS_KMEM) {
             logger.warn(
                 "Unable to expand page because it belongs to kernel "
@@ -85,14 +84,15 @@ namespace Memory {
         }
 
         /* Remove this page from upper order list */
-        pageList[page.order].remove(reinterpret_cast<Pageframe*>(page));
+        pageList[page->order].remove(
+            reinterpret_cast<ListNode<Pageframe>*>(page));
         /* Decrease the order and find the lower tier list */
-        LinkedList<Pageframe>& freelist = pageList[--page.order];
+        LinkedList<Pageframe>& freelist = pageList[--page->order];
 
         Pageframe* newPage = reinterpret_cast<Pageframe*>(
-            ((uint64_t)&page) + ((1 << page.order) * sizeof(Pageframe)));
+            ((u64)&page) + ((1 << page->order) * sizeof(Pageframe)));
 
-        newPage->order  = page.order;
+        newPage->order  = page->order;
         newPage->flags |= PFLAGS_FREE;
 
         /* Insert this page into the lower tier free list */
@@ -101,12 +101,12 @@ namespace Memory {
         return page;
     }
 
-    Pageframe* BuddyAlloc::combine(Pageframe& page) {
-        u32  osize = (1 << (page.order)) * sizeof(Pageframe);
+    Pageframe* BuddyAlloc::combine(Pageframe* page) {
+        u32  osize = (1 << (page->order)) * sizeof(Pageframe);
         bool align = !(page->address % osize);
 
         Pageframe* newPage =
-            reinterpret_cast<Pageframe*>(align ? &page + osize : &page - osize);
+            reinterpret_cast<Pageframe*>(align ? page + osize : page - osize);
         if (newPage->flags & PFLAGS_FREE) {
             Pageframe* result = align ? page : newPage;
             pageList[newPage->order].remove((ListNode<Pageframe>*)newPage);
@@ -114,10 +114,10 @@ namespace Memory {
 
             return result;
         } else {
-            pageList[page.order].add((ListNode<Pageframe>*)page);
+            pageList[page->order].add((ListNode<Pageframe>*)page);
             return nullptr;
         }
     }
 
-    Pageframe* BuddyAlloc::combine(Pageframe& lpage, Pageframe& rpage) {}
+    Pageframe* BuddyAlloc::combine(Pageframe* lpage, Pageframe* rpage) {}
 }  // namespace Memory

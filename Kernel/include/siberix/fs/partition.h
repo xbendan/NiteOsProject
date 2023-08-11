@@ -1,3 +1,5 @@
+#pragma once
+
 class Partition {
 private:
     const char* m_name;

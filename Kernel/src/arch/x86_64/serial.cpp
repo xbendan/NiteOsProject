@@ -1,7 +1,7 @@
 #include <arch/x86_64/arch.h>
 
-#include <arch/x86_64/iopt.hpp>
-#include <arch/x86_64/serial.hpp>
+#include <arch/x86_64/iopt.h>
+#include <arch/x86_64/serial.h>
 
 SerialPortDevice::SerialPortDevice() {
     outByte8(SerialPort::COM1 + SerialPortOffset::InterruptEnable, 0x00);

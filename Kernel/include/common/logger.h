@@ -1,7 +1,14 @@
+#pragma once
+
 #include <common/printf.h>
 #include <common/string.h>
 
-enum LoggerLevel { LOG_INFO, LOG_SUCCESS, LOG_WARN, LOG_ERROR };
+enum LoggerLevel {
+    LOG_INFO,
+    LOG_SUCCESS,
+    LOG_WARN,
+    LOG_ERROR
+};
 
 class LoggerReceiver {
     virtual void receive(char c)          = 0;

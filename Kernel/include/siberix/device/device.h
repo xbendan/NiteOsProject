@@ -49,6 +49,20 @@ enum class DeviceFlags : u64 {
     DriverError        = 0x20
 };
 
+bool operator==(DeviceFlags a, DeviceFlags b) {
+    return static_cast<u64>(a) == static_cast<u64>(b);
+}
+
+u64 operator|(DeviceFlags a, DeviceFlags b) {
+    return static_cast<u64>(a) | static_cast<u64>(b);
+}
+
+u64 operator|(u64 a, DeviceFlags b) { return a | static_cast<u64>(b); }
+
+bool operator&(DeviceFlags a, DeviceFlags b) {
+    return static_cast<u64>(a) & static_cast<u64>(b);
+}
+
 class Device {
 public:
     Device(const char* _name, DeviceBus _bus, DeviceType _type);
@@ -58,7 +72,7 @@ public:
     inline const char*          getName() { return this->m_name; }
     inline u64                  getId() { return this->m_deviceId; }
     inline DeviceType           getType() { return this->m_type; }
-    inline DeviceBus            getBus() { return this->m_deviceBus; }
+    inline DeviceBus            getBus() { return this->m_bus; }
     inline LinkedList<Device&>& getDependencies() {
         return this->m_dependencies;
     }

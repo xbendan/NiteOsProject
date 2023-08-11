@@ -1,11 +1,10 @@
 #pragma once
 
+#include <siberix/mm/malloc.h>
 #include <siberix/mm/types.h>
 #include <utils/array.h>
 #include <utils/linked_list.h>
 #include <utils/spinlock.h>
-
-#include <siberix/mm/malloc.hpp>
 
 #define SECTION_PAGE_SIZE 0x1000000
 #define PAGES_PER_SECTION 262144
@@ -41,9 +40,9 @@ namespace Memory {
         void       freePhysMemory4K(u64 address) override;
         void       freePhysMemory4K(Pageframe* page) override;
         void       markPagesUsed(u64 addressStart, u64 addressEnd);
-        Pageframe* expand(Pageframe& page);
-        Pageframe* combine(Pageframe& page);
-        Pageframe* combine(Pageframe& lpage, Pageframe& rpage);
+        Pageframe* expand(Pageframe* page);
+        Pageframe* combine(Pageframe* page);
+        Pageframe* combine(Pageframe* lpage, Pageframe* rpage);
 
         static inline bool checkAlignment(Pageframe* page) {
             return !((page->address) % ((1 << page->order) * PAGE_SIZE_4K));

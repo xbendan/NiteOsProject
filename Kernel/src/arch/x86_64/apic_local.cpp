@@ -1,4 +1,4 @@
-#include <arch/x86_64/apic.hpp>
+#include <arch/x86_64/apic.h>
 
 ApicLocalInterface::ApicLocalInterface(u8 _apicId, ApicDevice* _apic)
     : apicId(_apicId),

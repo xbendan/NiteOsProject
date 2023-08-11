@@ -1,7 +1,7 @@
 #include <siberix/device/device.h>
-#include <utils/linked_list.h>
-
+#include <siberix/fs/partition.h>
 #include <siberix/fs/vfs.h>
+#include <utils/linked_list.h>
 
 class DiskDevice : public Device {
 public:

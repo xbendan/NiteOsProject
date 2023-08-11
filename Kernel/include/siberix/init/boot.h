@@ -1,3 +1,5 @@
+#pragma once
+
 #include <common/typedefs.h>
 #include <siberix/mm/types.h>
 

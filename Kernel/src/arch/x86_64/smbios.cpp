@@ -1,8 +1,8 @@
 #include <common/logger.h>
 #include <common/string.h>
 
-#include <arch/x86_64/kaddr.hpp>
-#include <arch/x86_64/smbios.hpp>
+#include <arch/x86_64/kaddr.h>
+#include <arch/x86_64/smbios.h>
 
 SmbiosDevice::SmbiosDevice() {
     u64  address    = 0xf0000;

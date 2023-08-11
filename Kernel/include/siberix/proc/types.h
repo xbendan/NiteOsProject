@@ -29,6 +29,8 @@ enum class TaskType {
     Background  = 4
 };
 
+class Process;
+
 struct Thread {
     u32      m_threadId; /* Thread ID, not duplicated in same progress */
     Process* m_parent; /* Parent process, indicates the owner of this thread */

@@ -1,4 +1,6 @@
+#include <common/string.h>
 #include <common/typedefs.h>
+#include <siberix/core/runtimes.h>
 
 #include <siberix/proc/process.hpp>
 
@@ -88,33 +90,6 @@ struct GdtExtraEntry {
     u32 __reserved__;
 } __attribute__((packed));
 
-class TaskStateSegment {
-public:
-    u32 __reserved__0 __attribute__((aligned(0x10)));
-    u64 rsp[3];
-    u64 __reserved__1;
-    u64 ist[7];
-    u32 __reserved__2;
-    u32 __reserved__3;
-    u16 __reserved__4;
-    u16 iopbOffset;
-
-    inline void init(GdtPackage *package) {
-        package->tss = GdtTssEntry(*this);
-
-        memset(this, 0, sizeof(TaskStateSegment));
-
-        for (int i = 0; i < 3; i++) {
-            ist[i] = (u64)exec()->getMemory().alloc4KPages(8);
-            memset((void *)ist[i], 0, PAGE_SIZE_4K);
-            ist[i] += PAGE_SIZE_4K * 8;
-        }
-
-        asm volatile("mov %%rsp, %0" : "=r"(tss->rsp[0]));
-        asm volatile("ltr %%ax" ::"a"(0x28));
-    }
-} __attribute__((packed)) tss_t;
-
 struct GdtTssEntry {
     u16 len;
     u16 baseLow;
@@ -166,6 +141,33 @@ struct GdtPackage {
     }),
           tss(GdtTssEntry(tss)){};
 } __attribute__((packed)) __attribute__((aligned(0x10)));
+
+class TaskStateSegment {
+public:
+    u32 __reserved__0 __attribute__((aligned(0x10)));
+    u64 rsp[3];
+    u64 __reserved__1;
+    u64 ist[7];
+    u32 __reserved__2;
+    u32 __reserved__3;
+    u16 __reserved__4;
+    u16 iopbOffset;
+
+    inline void init(GdtPackage *package) {
+        package->tss = GdtTssEntry(*this);
+
+        memset(this, 0, sizeof(TaskStateSegment));
+
+        for (int i = 0; i < 3; i++) {
+            ist[i] = (u64)exec()->getMemory().alloc4KPages(8);
+            memset((void *)ist[i], 0, PAGE_SIZE_4K);
+            ist[i] += PAGE_SIZE_4K * 8;
+        }
+
+        asm volatile("mov %%rsp, %0" : "=r"(rsp[0]));
+        asm volatile("ltr %%ax" ::"a"(0x28));
+    }
+} __attribute__((packed)) tss_t;
 
 #define IDT_DIVIDE_BY_ZERO 0x00
 #define IDT_SINGLE_STEP 0x01
