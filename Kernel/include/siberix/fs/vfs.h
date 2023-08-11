@@ -1,6 +1,15 @@
-#include <common/typedefs.h>
+#pragma once
 
-enum class VolumeType { Simple, Mirror, Striped, Spanned };
+#include <common/typedefs.h>
+#include <siberix/fs/disk.h>
+#include <siberix/fs/partition.h>
+
+enum class VolumeType {
+    Simple,
+    Mirror,
+    Striped,
+    Spanned
+};
 
 class Volume {
     const char* m_name;
@@ -18,6 +27,12 @@ public:
     virtual u64  read(u64, u64, u8*);
     virtual u64  write(u64, u64, u8*);
     virtual void close();
+
+    inline const char* getName() { return m_name; }
+    inline u8*         getUuid() { return m_uuid; }
+    inline bool        isDirectory() { return m_isDirectory; }
+    inline u64         getSize() { return m_size; }
+    inline u64         getBytesTaken() { return m_bytesTaken; }
 
 private:
     const char* m_name;

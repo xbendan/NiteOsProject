@@ -1,4 +1,4 @@
-#include <siberix/device/device.hpp>
+#include <siberix/device/device.h>
 #include <siberix/drivers/acpi/spec.h>
 
 class AcpiPmDevice : public Device {

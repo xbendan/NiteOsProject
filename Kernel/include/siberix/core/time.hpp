@@ -1,3 +1,5 @@
+#pragma once
+
 #include <common/typedefs.h>
 #include <utils/linked_list.h>
 
@@ -35,15 +37,32 @@ public:
           days(d),
           months(mo),
           years(y) {}
+    Clock(u64 timestamp) {
+        seconds    = timestamp % 60;
+        timestamp /= 60;
+        minutes    = timestamp % 60;
+        timestamp /= 60;
+        hours      = timestamp % 24;
+        timestamp /= 24;
+        days       = timestamp % 30;
+        timestamp /= 30;
+        months     = timestamp % 12;
+        timestamp /= 12;
+        years      = timestamp;
+    }
     ~Clock();
 
-    u32         getSeconds() { return seconds; }
-    u32         getMinutes() { return minutes; }
-    u32         getHours() { return hours; }
-    u32         getDays() { return days; }
-    u32         getMonths() { return months; }
-    u32         getYears() { return years; }
-    u64         getAsTimestamp();
+    u32 getSeconds() { return seconds; }
+    u32 getMinutes() { return minutes; }
+    u32 getHours() { return hours; }
+    u32 getDays() { return days; }
+    u32 getMonths() { return months; }
+    u32 getYears() { return years; }
+    u64 getAsTimestamp() {
+        return (u64)seconds + (u64)minutes * 60 + (u64)hours * 3600 +
+               (u64)days * 86400 + (u64)months * 2592000 +
+               (u64)years * 31104000;
+    }
     const char *getAsString();
 
 private:
@@ -53,19 +72,6 @@ private:
     u32 days;
     u32 months;
     u32 years;
-};
-
-class TimeManagement {
-public:
-    Clock &getClock();
-    u64    getTimestamp();
-    void   addTimer(TimerDevice &timer, bool setAsDefault = false);
-    void   setDefaultTimer(TimerDevice &timer);
-    LinkedList<TimerDevice &> &getTimers();
-
-private:
-    Clock                     m_clock;
-    LinkedList<TimerDevice &> m_timers;
 };
 
 extern Month months[12];

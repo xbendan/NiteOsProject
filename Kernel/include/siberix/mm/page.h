@@ -1,8 +1,11 @@
-#include <siberix/mm/malloc.hpp>
+#pragma once
+
 #include <siberix/mm/types.h>
 #include <utils/array.h>
 #include <utils/linked_list.h>
 #include <utils/spinlock.h>
+
+#include <siberix/mm/malloc.hpp>
 
 #define SECTION_PAGE_SIZE 0x1000000
 #define PAGES_PER_SECTION 262144
@@ -13,17 +16,16 @@
 #define PFLAGS_FREE (1 << 0)
 #define PFLAGS_KMEM (1 << 1)
 
-namespace Memory
-{
+namespace Memory {
     class SegAlloc : public PageAlloc {
     public:
         SegAlloc();
         ~SegAlloc();
 
         Pageframe* allocatePhysMemory4K(u64 amount) override;
-        void freePhysMemory4K(u64 address) override;
-        void freePhysMemory4K(Pageframe* page) override;
-        void addSegment(u64 start, u64 end, PageBlockType type);
+        void       freePhysMemory4K(u64 address) override;
+        void       freePhysMemory4K(Pageframe* page) override;
+        void       addSegment(u64 start, u64 end, PageBlockType type);
         SizedArrayList<PageBlock, 256>* getSegments();
 
     private:
@@ -36,9 +38,9 @@ namespace Memory
         ~BuddyAlloc();
 
         Pageframe* allocatePhysMemory4K(u64 amount) override;
-        void freePhysMemory4K(u64 address) override;
-        void freePhysMemory4K(Pageframe& page) override;
-        void markPagesUsed(u64 addressStart, u64 addressEnd);
+        void       freePhysMemory4K(u64 address) override;
+        void       freePhysMemory4K(Pageframe* page) override;
+        void       markPagesUsed(u64 addressStart, u64 addressEnd);
         Pageframe* expand(Pageframe& page);
         Pageframe* combine(Pageframe& page);
         Pageframe* combine(Pageframe& lpage, Pageframe& rpage);
@@ -48,18 +50,17 @@ namespace Memory
         }
         static inline u64 getPageAlignment(u64 x) {
             x--;
-            x |= x >> 1;
-            x |= x >> 2;
-            x |= x >> 4;
-            x |= x >> 8;
-            x |= x >> 16;
+            x        |= x >> 1;
+            x        |= x >> 2;
+            x        |= x >> 4;
+            x        |= x >> 8;
+            x        |= x >> 16;
             return x += 1;
         }
         static inline u8 getPageOrder(u64 size) {
-            u8 order = PAGE_MAX_ORDER;
+            u8  order = PAGE_MAX_ORDER;
             u64 _size = 1024;
-            while (_size > size)
-            {
+            while (_size > size) {
                 _size /= 2;
                 order--;
             }
@@ -73,7 +74,7 @@ namespace Memory
          * The highest is 10, equals to 4MiB (1024 pages)
          */
         LinkedList<Pageframe> pageList[PAGE_MAX_ORDER + 1];
-        u64 flags;
-        spinlock_t lock;
+        u64                   flags;
+        spinlock_t            lock;
     };
-} // namespace Memory
+}  // namespace Memory

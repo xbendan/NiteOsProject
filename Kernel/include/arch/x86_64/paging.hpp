@@ -1,7 +1,7 @@
 #include <common/typedefs.h>
 
 #include <siberix/mm/addrspace.hpp>
-#include <siberix/mm/page.hpp>
+#include <siberix/mm/page.h>
 
 #define PAGES_PER_TABLE 512
 #define TABLES_PER_DIR 512

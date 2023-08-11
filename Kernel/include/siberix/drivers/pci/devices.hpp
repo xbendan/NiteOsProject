@@ -1,7 +1,7 @@
 #include <siberix/drivers/acpi/spec.h>
 #include <siberix/drivers/pci/spec.h>
 
-#include <siberix/device/device.hpp>
+#include <siberix/device/device.h>
 
 class PciDevice : public Device {
 public:

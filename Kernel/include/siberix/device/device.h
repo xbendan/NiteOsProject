@@ -1,3 +1,5 @@
+#pragma once
+
 #include <common/typedefs.h>
 #include <utils/linked_list.h>
 
@@ -50,10 +52,8 @@ enum class DeviceFlags : u64 {
 class Device {
 public:
     Device(const char* _name, DeviceBus _bus, DeviceType _type);
-    Device(const char* _name)
-        : Device(m_name, DeviceBus::Unknown, DeviceType::Unknown) {}
-    Device(DeviceBus bus, DeviceType type)
-        : Device(&_unknownDeviceName, bus, type) {}
+    Device(const char* _name);
+    Device(DeviceBus bus, DeviceType type);
 
     inline const char*          getName() { return this->m_name; }
     inline u64                  getId() { return this->m_deviceId; }
@@ -82,8 +82,8 @@ protected:
     const char* m_name;
     u64         m_deviceId;
 
-    u64                 m_flags;
+    DeviceFlags         m_flags;
     DeviceType          m_type;
-    DeviceBus           m_deviceBus;
+    DeviceBus           m_bus;
     LinkedList<Device&> m_dependencies;
 };

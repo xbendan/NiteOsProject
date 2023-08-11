@@ -1,7 +1,7 @@
 #include <siberix/init/boot.h>
 #include <siberix/init/stivale2.h>
 
-#include <siberix/mm/page.hpp>
+#include <siberix/mm/page.h>
 
 static BootConfig bootConfig;
 extern "C" void   KernelEntrySt2(stivale2_struct* pointer) {

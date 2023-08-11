@@ -3,7 +3,7 @@
 
 #ifdef ARCH_X86_64
 #define BUILD_ARCH "x86_64"
-#else ARCH_RISCV
+#elif ARCH_RISCV
 #define BUILD_ARCH "riscv"
 #endif
 
@@ -16,9 +16,9 @@ struct BootConfig {
     u64            checksum;
     BootloaderName blName;
     struct BootMemory {
-        u64 totalSize;
-        u64 maxSize;
-        PageBlock[64] ranges;
+        u64       totalSize;
+        u64       maxSize;
+        PageBlock ranges[64];
     } memory;
     struct BootGraphics {
         u16 width;

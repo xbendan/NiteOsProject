@@ -1,6 +1,6 @@
 #include <utils/linked_list.h>
 
-#include <siberix/device/device.hpp>
+#include <siberix/device/device.h>
 
 class ConnectivityProvider {};
 

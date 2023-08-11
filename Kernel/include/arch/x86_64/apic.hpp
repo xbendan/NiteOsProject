@@ -1,5 +1,5 @@
 #include <siberix/core/time.hpp>
-#include <siberix/device/device.hpp>
+#include <siberix/device/device.h>
 
 #define LOCAL_APIC_ID 0x20             // APIC ID Register
 #define LOCAL_APIC_VERSION 0x30        // APIC Version Register

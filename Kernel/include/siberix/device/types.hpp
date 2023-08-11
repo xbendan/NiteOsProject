@@ -1,4 +1,5 @@
-#include <siberix/device/device.hpp>
+#include <siberix/core/time.hpp>
+#include <siberix/device/device.h>
 
 class ProcessorDevice : public Device {
 public:

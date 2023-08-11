@@ -1,7 +1,7 @@
 #include <common/logger.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/init/boot.h>
-#include <siberix/mm/page.hpp>
+#include <siberix/mm/page.h>
 #include <utils/alignment.h>
 
 namespace Memory

@@ -1,4 +1,4 @@
-#include <siberix/mm/page.hpp>
+#include <siberix/mm/page.h>
 
 class MemoryManagement {
 public:

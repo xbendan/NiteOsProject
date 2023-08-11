@@ -1,4 +1,4 @@
-#include <siberix/device/device.hpp>
+#include <siberix/device/device.h>
 
 #define BIOS_CHARS_NOT_SUPPORTED (1 << 3)
 #define BIOS_CHARS_ISA (1 << 4)

@@ -5,9 +5,9 @@
 #include <arch/x86_64/paging.hpp>
 #include <arch/x86_64/serial.hpp>
 #include <arch/x86_64/smbios.hpp>
-#include <siberix/drivers/acpi/acpi_device.hpp>
+#include <siberix/drivers/acpi/acpi_device.h>
 #include <siberix/drivers/pci/devices.hpp>
-#include <siberix/mm/page.hpp>
+#include <siberix/mm/page.h>
 
 static X64Runtime x64rt;
 extern "C" void   _lgdt(u64);

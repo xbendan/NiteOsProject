@@ -1,6 +1,7 @@
-#include <siberix/proc/types.h>
+#pragma once
 
 #include <siberix/fs/vfs.h>
+#include <siberix/proc/types.h>
 
 enum ProcessFlags {
     ProcessFlagIdle = 0x01
@@ -51,8 +52,8 @@ protected:
         Spinlock m_handleLock;
     };
 
-    Thread            *m_mainThread;
-    LinkedList<Thread> m_childrenThreadList;
+    Thread              *m_mainThread;
+    LinkedList<Thread *> m_childrenThreadList;
 
     u64 m_entryPoint;
     u64 m_heap;

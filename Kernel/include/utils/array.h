@@ -1,9 +1,11 @@
+#pragma once
+
 #include <common/typedefs.h>
 
 template <typename T>
 class ArrayList {
 private:
-    T* array;
+    T*  array;
     u64 count;
     u64 objectSize = sizeof(T);
 
@@ -22,8 +24,8 @@ public:
 template <typename T, int size>
 class SizedArrayList {
 private:
-    T array[size];
-    u64 count = 0;
+    T   array[size];
+    u64 count      = 0;
     u64 objectSize = sizeof(T);
 
 public:

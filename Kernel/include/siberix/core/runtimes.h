@@ -2,7 +2,7 @@
 
 #include <siberix/core/time.hpp>
 #include <siberix/device/connectivity.hpp>
-#include <siberix/mm/page.hpp>
+#include <siberix/mm/page.h>
 #include <siberix/mm/service.hpp>
 #include <siberix/proc/process.hpp>
 #include <siberix/proc/sched.hpp>
@@ -29,10 +29,14 @@ public:
     MemoryManagement&   getMemory() { return m_memory; }
     DeviceConnectivity& getConnectivity() { return m_devices; }
     Scheduler&          getScheduler() { return m_scheduler; }
-    TimeManagement&     getTimeManagement() { return m_clockAndTime; }
 
     bool addDevice(Device& device);
     bool checkDevice(Device& device);
+
+    u64          getTimestamp();
+    Clock&       getClock();
+    void         addTimer(TimerDevice& timer, bool setAsDefault = false);
+    TimerDevice& getDefaultTimer();
 
 protected:
     bool                 m_isInitialized;
@@ -40,10 +44,12 @@ protected:
     BootConfig&          m_bootConfig;
 
     AddressSpace*       m_kernelSpace;
-    TimeManagement      m_clockAndTime;
     MemoryManagement    m_memory;
     DeviceConnectivity& m_devices;
     Scheduler&          m_scheduler;
+
+    Clock                    m_clock;
+    LinkedList<TimerDevice&> m_timers;
 };
 
 KernelExecutive* exec();

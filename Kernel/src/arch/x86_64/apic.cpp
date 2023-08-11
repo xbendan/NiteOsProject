@@ -2,7 +2,7 @@
 #include <common/logger.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/device/types.hpp>
-#include <siberix/drivers/acpi/acpi_device.hpp>
+#include <siberix/drivers/acpi/acpi_device.h>
 
 ApicDevice::apicInterfaces;
 ApicDevice::overrides;

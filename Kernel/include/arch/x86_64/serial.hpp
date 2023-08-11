@@ -1,7 +1,7 @@
 #include <common/logger.h>
 #include <utils/spinlock.h>
 
-#include <siberix/device/device.hpp>
+#include <siberix/device/device.h>
 
 enum class SerialPort {
     COM1 = 0x3f8,

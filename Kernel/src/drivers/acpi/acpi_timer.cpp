@@ -2,7 +2,7 @@
 
 #include <arch/x86_64/iopt.hpp>
 #include <siberix/core/runtimes.h>
-#include <siberix/drivers/acpi/acpi_device.hpp>
+#include <siberix/drivers/acpi/acpi_device.h>
 #include <siberix/drivers/acpi/acpi_timer.hpp>
 
 u32 ACPI_TIMER_READ_XMMIO(u32 data) {}

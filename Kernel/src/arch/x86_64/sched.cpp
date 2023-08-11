@@ -5,7 +5,7 @@
 #include <arch/x86_64/apic.hpp>
 #include <arch/x86_64/paging.hpp>
 #include <arch/x86_64/smpdefines.inc>
-#include <siberix/drivers/acpi/acpi_device.hpp>
+#include <siberix/drivers/acpi/acpi_device.h>
 #include <siberix/proc/sched.hpp>
 
 extern void* smpTrampolineStart;

@@ -20,18 +20,18 @@ template <typename T>
 class LinkedList {
 public:
     LinkedList() {
-        m_front     = nullptr;
-        m_back      = nullptr;
-        m_count     = 0;
-        lock.m_Lock = 0;
+        m_front       = nullptr;
+        m_back        = nullptr;
+        m_count       = 0;
+        m_lock.m_Lock = 0;
     }
 
-    ~LinkedList() { lock.release(); }
+    ~LinkedList() { m_lock.release(); }
 
     LinkedList &operator=(const LinkedList &list) {}
 
     void clear() {
-        lock.acquire();
+        m_lock.acquire();
 
         ListNode<T> *node = m_front;
         while (node && node->back) {
@@ -40,15 +40,15 @@ public:
             node->obj.~T();
             node = n;
         }
-        m_front = nullptrptr;
-        m_back  = nullptrptr;
+        m_front = nullptr;
+        m_back  = nullptr;
         m_count = 0;
 
-        lock.release();
+        m_lock.release();
     }
 
     void add(ListHead *head) {
-        lock.acquire();
+        m_lock.acquire();
         if (!m_count)
             m_front = m_back = reinterpret_cast<ListNode<T> *>(head);
         else {
@@ -56,13 +56,13 @@ public:
             head->prev        = &m_back->head;
         }
         m_count++;
-        lock.release();
+        m_lock.release();
     }
 
     void add(ListNode<T> *obj) {
-        if (obj == nullptrptr) return;
+        if (obj == nullptr) return;
 
-        lock.acquire();
+        m_lock.acquire();
 
         if (m_count > 0) {
             obj->prev    = m_back;
@@ -73,7 +73,7 @@ public:
         }
         m_count++;
 
-        lock.release();
+        m_lock.release();
     }
 
     ListNode<T> *add(T obj) {
@@ -93,11 +93,11 @@ public:
             ListNode<T> *_prev = obj->prev;
             ListNode<T> *_next = obj->next;
 
-            if (!Objects::Isnullptr(_prev)) _prev->next = _next;
-            if (!Objects::Isnullptr(_next)) _next->prev = _prev;
+            if (_prev != nullptr) _prev->next = _next;
+            if (_next != nullptr) _next->prev = _prev;
 
-            if (Objects::Equals(obj, m_front)) m_front = _next;
-            if (Objects::Equals(obj, m_back)) m_back = _prev;
+            if (obj == m_front) m_front = _next;
+            if (obj == m_back) m_back = _prev;
 
             m_count--;
         }
@@ -106,7 +106,7 @@ public:
     void remove(u32 index) { remove(get(index)); }
 
     bool contains(ListNode<T> *obj) {
-        while (obj->prev != nullptrptr) {
+        while (obj->prev != nullptr) {
             obj = obj->prev;
             if (obj == m_front) return true;
         }
@@ -121,7 +121,7 @@ public:
             }
 
             item = item->next;
-        } while (!Objects::Isnullptr(item));
+        } while (item != nullptr);
         return false;
     }
 
@@ -131,7 +131,7 @@ public:
         do {
             consumer(obj->obj);
             obj = obj->next;
-        } while (obj != nullptrptr);
+        } while (obj != nullptr);
     }
 
     u32 count() { return m_count; }
@@ -164,7 +164,7 @@ public:
         return obj;
     }
 
-    T &operator[](int index) { return *Get(index); }
+    T &operator[](int index) { return *get(index); }
 
     // inline T& operator*() const { return Get(pos); }
     // inline T* operator->() const { return Get(pos); }
