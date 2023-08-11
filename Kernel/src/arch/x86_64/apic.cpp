@@ -1,6 +1,6 @@
 #include <arch/x86_64/apic.hpp>
 #include <common/logger.h>
-#include <siberix/core/runtimes.hpp>
+#include <siberix/core/runtimes.h>
 #include <siberix/device/types.hpp>
 #include <siberix/drivers/acpi/acpi_device.hpp>
 

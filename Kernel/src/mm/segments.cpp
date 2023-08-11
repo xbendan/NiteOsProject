@@ -1,5 +1,5 @@
 #include <common/logger.h>
-#include <siberix/core/runtimes.hpp>
+#include <siberix/core/runtimes.h>
 #include <siberix/init/boot.h>
 #include <siberix/mm/page.hpp>
 #include <utils/alignment.h>

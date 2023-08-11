@@ -6,7 +6,6 @@ public:
     virtual void drawEllipse(Point point, u32 width, u32 height, Color)    = 0;
     virtual void drawText(Point point, const char* text, Color color)      = 0;
 
-    virtual bool             isTextOnly();
     virtual void             setBufferOptions(BufferingOptions b);
     virtual BufferingOptions getBufferOptions();
 
@@ -22,9 +21,7 @@ public:
     virtual u8*   getBuffering();
     virtual u8*   getWritableBuffering();
 
-    bool isTextOnly() override { return false; }
-
-private:
+protected:
     u8* m_buffer;
     u8* m_doubleBuffering;
     u8  m_bytesPerPixel;

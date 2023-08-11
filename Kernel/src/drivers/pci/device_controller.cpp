@@ -1,6 +1,6 @@
 #include <common/logger.h>
 
-#include <siberix/core/runtimes.hpp>
+#include <siberix/core/runtimes.h>
 #include <siberix/device/connectivity.hpp>
 #include <siberix/drivers/acpi/acpi_device.hpp>
 #include <siberix/drivers/pci/devices.hpp>

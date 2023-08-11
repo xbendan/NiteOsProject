@@ -1,7 +1,7 @@
 #include <common/typedefs.h>
 #include <utils/linked_list.h>
 
-extern const char[16] _unknownDeviceName = "<Unknown Device>";
+const char* _unknownDeviceName = "<Unknown Device>";
 
 enum class DeviceType {
     Biometric,
@@ -82,7 +82,7 @@ protected:
     const char* m_name;
     u64         m_deviceId;
 
-    DeviceFlags         m_flags;
+    u64                 m_flags;
     DeviceType          m_type;
     DeviceBus           m_deviceBus;
     LinkedList<Device&> m_dependencies;

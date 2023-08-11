@@ -1,4 +1,4 @@
-#include <siberix/core/runtimes.hpp>
+#include <siberix/core/runtimes.h>
 #include <siberix/mm/slab.hpp>
 #include <utils/alignment.h>
 

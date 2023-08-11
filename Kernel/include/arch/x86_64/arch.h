@@ -1,5 +1,5 @@
 #include <arch/x86_64/paging.hpp>
-#include <siberix/core/runtimes.hpp>
+#include <siberix/core/runtimes.h>
 #include <siberix/mm/addrspace.hpp>
 
 class X64Runtime : public KernelExecutive {

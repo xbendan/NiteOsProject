@@ -1,12 +1,13 @@
-#include <siberix/fs/vfs.hpp>
+#include <siberix/fs/vfs.h>
 #include <siberix/proc/types.h>
 
-namespace Process
-{
+#include <siberix/proc/process.hpp>
+
+namespace proc {
     class ProcessFactory {
-        virtual Process* createProcess(const char* name, Activity activity);
-        virtual Process* createElfProcess(Fs::File* file);
+        virtual Process* createProcess(const char* name);
+        virtual Process* createElfProcess(File* file);
         virtual Process* createIdleProcess();
-        virtual Process* createProcessEx(const char* name, )
+        virtual Process* createProcessEx(const char* name);
     };
-} // namespace Process
+}  // namespace proc

@@ -23,7 +23,7 @@ private:
     LinkedList<ConnectivityProvider&> m_providers;
     /// @brief list of connected devices, those unrecognizable devices will be
     /// categoried into 'unknown devices'
-    LinkedList<Device&>               m_deviceList[DeviceTypeUnknown + 1];
+    LinkedList<Device&>               m_deviceList[DeviceType::Unknown + 1];
     /// @brief the amount of connected devices
     u32                               m_connectedDeviceCount;
     /// @brief auto connect and load new but unneccssary devices (bluetooth,

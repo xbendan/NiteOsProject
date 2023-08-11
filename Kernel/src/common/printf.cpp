@@ -1,42 +1,45 @@
 #include <common/printf.h>
+#include <common/typedefs.h>
 
-void puts(const char *msg) {
-    const char *p = msg;
+void puts(const char* msg) {
+    const char* p = msg;
     while (*p) {
         Video::WriteChar(*p);
         p++;
     }
 }
 
-void printf(const char *fmt, ...) {
+void printf(const char* fmt, ...) {
     va_list args;
     va_start(args, fmt);
     vprintf(fmt, args);
     va_end(args);
 }
 
-void vprintf(const char *fmt, va_list args) {
-    int d = 0;
-    uint64_t u = 0;
+void vprintf(const char* fmt, va_list args) {
+    int   d = 0;
+    u64   u = 0;
     char* s = nullptr;
-    char c = ' ';
-    char buf[64];
+    char  c = ' ';
+    char  buf[64];
 
     while (*fmt) {
         char ch = *fmt;
         if (ch == '%') {
-            switch(*++fmt) {
-                case 'b': case 'B':
+            switch (*++fmt) {
+                case 'b':
+                case 'B':
                     d = va_arg(args, int);
                     puts(itoa(d, buf, 2));
                     break;
 
-                case 'x': case 'X':
+                case 'x':
+                case 'X':
                     u = va_arg(args, uint64_t);
                     puts(utoa(u, buf, 16));
                     break;
 
-                case 'i': 
+                case 'i':
                     d = va_arg(args, int);
                     puts(itoa(d, buf, 10));
                     break;
@@ -45,7 +48,7 @@ void vprintf(const char *fmt, va_list args) {
                     u = va_arg(args, uint64_t);
                     puts(utoa(u, buf, 10));
                     break;
-                    
+
                 case '%':
                     Video::WriteChar('%');
                     break;
@@ -57,7 +60,7 @@ void vprintf(const char *fmt, va_list args) {
 
                 case 's':
                     s = va_arg(args, char*);
-                    puts(s?s:"(NULL)");
+                    puts(s ? s : "(NULL)");
                     break;
 
                 default:
@@ -70,54 +73,54 @@ void vprintf(const char *fmt, va_list args) {
     }
 }
 
-char* itoa(int d, char* buf, int base)
-{
+char* itoa(int d, char* buf, int base) {
     if (base < 2 || base > 36) {
         *buf = '\0';
         return buf;
     }
 
-    const char map[] = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz";
-    char* p = buf, *dp = buf;
+    const char map[] =
+        "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxy"
+        "z";
+    char *p = buf, *dp = buf;
     if (d < 0 && base == 10) {
         *buf++ = '-';
-        dp = buf;
+        dp     = buf;
     }
 
     do {
-        *buf++ = map[35 + d % base];
-        d /= base;
+        *buf++  = map[35 + d % base];
+        d      /= base;
     } while (d);
     *buf-- = '\0';
-    
+
     while (dp < buf) {
         char c = *dp;
-        *dp++ = *buf;
+        *dp++  = *buf;
         *buf-- = c;
     }
 
-     return p;
+    return p;
 }
 
-char* utoa(uint64_t u, char* buf, int base)
-{
+char* utoa(uint64_t u, char* buf, int base) {
     if (base < 2 || base > 36) {
         *buf = '\0';
         return buf;
     }
 
     const char map[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-    char* p = buf, *dp = buf;
+    char *     p = buf, *dp = buf;
 
     do {
-        *buf++ = map[u % base];
-        u /= base;
+        *buf++  = map[u % base];
+        u      /= base;
     } while (u);
     *buf-- = '\0';
 
     while (dp < buf) {
         char c = *dp;
-        *dp++ = *buf;
+        *dp++  = *buf;
         *buf-- = c;
     }
 

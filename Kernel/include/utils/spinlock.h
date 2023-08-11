@@ -1,3 +1,5 @@
+#pragma once
+
 #define acquireLock(lock)                                                    \
     ({                                                                       \
         while (__atomic_exchange_n(lock, 1, __ATOMIC_ACQUIRE)) asm("pause"); \

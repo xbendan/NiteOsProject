@@ -1,7 +1,7 @@
 #include <common/string.h>
+#include <siberix/core/exec.h>
 #include <utils/alignment.h>
 
-#include <siberix/core/exec.hpp>
 #include <siberix/display/types/framebuffer.hpp>
 
 FramebufferVideoOutput::FramebufferVideoOutput()
@@ -97,23 +97,23 @@ void FramebufferVideoOutput::setPointAt(Point point, Color color) {
     p[2] = color.b;
 }
 
-Color FramebufferVideoOutput::getPointAt(Point point, Color color) {}
+Color FramebufferVideoOutput::getPointAt(Point point) {}
 
 void FramebufferVideoOutput::update() {
     if (m_bufferOptions != BufferingOptions::DoubleBuffering) {
         return;
     }
-    acquireLockIntDisable(m_lock);
-    memcpy(m_buffer, m_doubleBuffer, m_width * m_height * m_bytesPerPixel);
-    releaseLock(m_lock);
+    acquireLockIntDisable(&m_lock);
+    memcpy(m_buffer, m_doubleBuffering, m_width * m_height * m_bytesPerPixel);
+    releaseLock(&m_lock);
 }
 
-u32* FramebufferVideoOutput::getBuffering() { return m_primaryBuffering; }
+u8* FramebufferVideoOutput::getBuffering() { return m_buffer; }
 
-u32* FramebufferVideoOutput::getWritableBuffering() {
+u8* FramebufferVideoOutput::getWritableBuffering() {
     switch (m_bufferOptions) {
         case BufferingOptions::DirectRender: {
-            return m_primaryBuffering;
+            return m_buffer;
         }
         case BufferingOptions::DoubleBuffering:
         case BufferingOptions::TripleBuffering: {

@@ -19,6 +19,6 @@ protected:
     u64   m_allocatedPages;
     u64   m_mappedPages;
     u64   m_swappedPages;
-    u64 **m_bitmaps[DIRS_PER_PDPT];
+    u64 **m_bitmaps[512];
     u64   _zeroPage;
 };

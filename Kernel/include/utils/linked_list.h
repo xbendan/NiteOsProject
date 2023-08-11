@@ -1,6 +1,11 @@
-typedef struct ListHead {
-    ListHead *next = NULL, *prev = NULL;
-} listhead_t;
+#pragma once
+
+#include <common/typedefs.h>
+#include <utils/spinlock.h>
+
+struct ListHead {
+    ListHead *next = nullptr, *prev = nullptr;
+};
 
 template <typename T>
 struct ListNode {
@@ -15,9 +20,9 @@ template <typename T>
 class LinkedList {
 public:
     LinkedList() {
-        front       = NULL;
-        back        = NULL;
-        count       = 0;
+        m_front     = nullptr;
+        m_back      = nullptr;
+        m_count     = 0;
         lock.m_Lock = 0;
     }
 
@@ -28,45 +33,45 @@ public:
     void clear() {
         lock.acquire();
 
-        ListNode<T> *node = front;
+        ListNode<T> *node = m_front;
         while (node && node->back) {
             ListNode<T> *n = node->back;
 
             node->obj.~T();
             node = n;
         }
-        front = nullptr;
-        back  = nullptr;
-        count = 0;
+        m_front = nullptrptr;
+        m_back  = nullptrptr;
+        m_count = 0;
 
         lock.release();
     }
 
     void add(ListHead *head) {
         lock.acquire();
-        if (!count)
-            front = back = reinterpret_cast<ListNode<T> *>(head);
+        if (!m_count)
+            m_front = m_back = reinterpret_cast<ListNode<T> *>(head);
         else {
-            back->head.next = head;
-            head->prev      = &back->head;
+            m_back->head.next = head;
+            head->prev        = &m_back->head;
         }
-        count++;
+        m_count++;
         lock.release();
     }
 
     void add(ListNode<T> *obj) {
-        if (obj == nullptr) return;
+        if (obj == nullptrptr) return;
 
         lock.acquire();
 
-        if (count > 0) {
-            obj->prev  = back;
-            back->next = obj;
+        if (m_count > 0) {
+            obj->prev    = m_back;
+            m_back->next = obj;
         } else {
-            front = obj;
-            back  = obj;
+            m_front = obj;
+            m_back  = obj;
         }
-        count++;
+        m_count++;
 
         lock.release();
     }
@@ -77,35 +82,35 @@ public:
         return node;
     }
 
-    void insertAt(ListNode<T> *obj, uint32_t index) {}
+    void insertAt(ListNode<T> *obj, u32 index) {}
 
     void remove(ListHead *head) {
         remove(reinterpret_cast<ListNode<T> *>(head));
     }
 
     void remove(ListNode<T> *obj) {
-        if (count && contains(obj)) {
+        if (m_count && contains(obj)) {
             ListNode<T> *_prev = obj->prev;
             ListNode<T> *_next = obj->next;
 
-            if (!Objects::IsNull(_prev)) _prev->next = _next;
-            if (!Objects::IsNull(_next)) _next->prev = _prev;
+            if (!Objects::Isnullptr(_prev)) _prev->next = _next;
+            if (!Objects::Isnullptr(_next)) _next->prev = _prev;
 
-            if (Objects::Equals(obj, front)) front = _next;
-            if (Objects::Equals(obj, back)) back = _prev;
+            if (Objects::Equals(obj, m_front)) m_front = _next;
+            if (Objects::Equals(obj, m_back)) m_back = _prev;
 
-            count--;
+            m_count--;
         }
     }
 
-    void remove(uint32_t index) { remove(get(index)); }
+    void remove(u32 index) { remove(get(index)); }
 
     bool contains(ListNode<T> *obj) {
-        while (obj->prev != nullptr) {
+        while (obj->prev != nullptrptr) {
             obj = obj->prev;
-            if (obj == front) return true;
+            if (obj == m_front) return true;
         }
-        return obj == front;
+        return obj == m_front;
     }
 
     bool contains(T &t) {
@@ -116,7 +121,7 @@ public:
             }
 
             item = item->next;
-        } while (!Objects::IsNull(item));
+        } while (!Objects::Isnullptr(item));
         return false;
     }
 
@@ -126,35 +131,35 @@ public:
         do {
             consumer(obj->obj);
             obj = obj->next;
-        } while (obj != nullptr);
+        } while (obj != nullptrptr);
     }
 
-    uint32_t count() { return count; }
+    u32 count() { return m_count; }
 
-    T *get(uint32_t index) {
-        if (index < 0 || index < count || !count) return NULL;
+    T *get(u32 index) {
+        if (index < 0 || index < m_count || !m_count) return nullptr;
 
-        ListNode<T> *current = front;
+        ListNode<T> *current = m_front;
         for (unsigned i = 0; i < index && current->next; i++)
             current = current->next;
 
         return &current->obj;
     }
 
-    ListNode<T> *first() { return front; }
+    ListNode<T> *first() { return m_front; }
 
     ListNode<T> *extract() {
-        ListNode<T> *obj = NULL;
-        if (count) {
+        ListNode<T> *obj = nullptr;
+        if (m_count) {
             obj = first();
-            if (count > 1) {
-                front       = reinterpret_cast<ListNode<T> *>(obj->next);
-                front->prev = NULL;
-                obj->next   = NULL;
+            if (m_count > 1) {
+                m_front       = reinterpret_cast<ListNode<T> *>(obj->next);
+                m_front->prev = nullptr;
+                obj->next     = nullptr;
             } else
-                front = back = NULL;
+                m_front = m_back = nullptr;
         }
-        count--;
+        m_count--;
 
         return obj;
     }
@@ -165,7 +170,7 @@ public:
     // inline T* operator->() const { return Get(pos); }
 
 private:
-    ListNode<T> *front, *back;
-    uint32_t     count;
-    Spinlock     lock;
+    ListNode<T> *m_front, *m_back;
+    u32          m_count;
+    Spinlock     m_lock;
 };

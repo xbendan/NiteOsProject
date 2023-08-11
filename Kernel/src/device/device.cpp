@@ -1,4 +1,4 @@
-#include <siberix/core/runtimes.hpp>
+#include <siberix/core/runtimes.h>
 #include <siberix/device/connectivity.hpp>
 #include <siberix/device/device.hpp>
 

@@ -1,6 +1,10 @@
 #include <siberix/core/time.hpp>
 
-enum PowerState { PowerStandby, PowerHibernate, PowerSleep };
+enum class PowerState {
+    Standby,
+    Hibernate,
+    Sleep
+};
 
 class SleepCounter {
 public:
@@ -9,7 +13,7 @@ public:
 private:
     bool m_isEnabled;
     u64  m_counter;
-}
+};
 
 class PowerManagement {
 public:

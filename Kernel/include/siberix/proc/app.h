@@ -1,6 +1,6 @@
-#include <siberix/fs/vfs.hpp>
+#include <siberix/fs/vfs.h>
 
-class Process;
+#include <siberix/proc/process.hpp>
 
 struct AppManiest {
     const char *name;

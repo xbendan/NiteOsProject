@@ -1,20 +1,22 @@
 #include <siberix/proc/types.h>
 
-#include <siberix/fs/vfs.hpp>
+#include <siberix/fs/vfs.h>
 
-enum ProcessFlags { ProcessFlagIdle = 0x01 };
+enum ProcessFlags {
+    ProcessFlagIdle = 0x01
+};
 
 class Process {
 public:
     Process();
-    Process(const char *name, Fs::File *file, u32 processId, TaskType type);
+    Process(const char *name, File *file, u32 processId, TaskType type);
     ~Process();
 
     void start();
     void suspend();
     void stop();
 
-    bool isIdle() { return (flags & 0x01); }
+    bool isIdle() { return (m_flags & 0x01); }
 
     /**
      * @brief Send a message to terminate a process
@@ -36,9 +38,9 @@ protected:
     const char *m_name; /* Name of the process */
     // const char *publisher; /* Name of the publisher */
     // const char *package;   /* Package Name */
-    u32 m_processId; /* Process Id, 0~255 are reserved for kernel process */
-    TaskType m_type; /* Current process type */
-    File *m_file;    /* Pointer to the source file, can be NULL */
+    u32 m_processId;  /* Process Id, 0~255 are reserved for kernel process */
+    TaskType  m_type; /* Current process type */
+    File     *m_file; /* Pointer to the source file, can be NULL */
     Activity *m_activity; /* Pointer to the Activity */
 
     u32 m_flags;
@@ -49,7 +51,7 @@ protected:
         Spinlock m_handleLock;
     };
 
-    Thread *m_mainThread;
+    Thread            *m_mainThread;
     LinkedList<Thread> m_childrenThreadList;
 
     u64 m_entryPoint;

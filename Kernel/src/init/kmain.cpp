@@ -1,7 +1,7 @@
 #include <common/logger.h>
 #include <siberix/init/boot.h>
 
-#include <siberix/core/runtimes.hpp>
+#include <siberix/core/runtimes.h>
 
 static const char*[] splash = [
     " _____  _  _                  _       ",

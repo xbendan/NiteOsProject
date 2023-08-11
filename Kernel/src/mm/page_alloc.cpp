@@ -50,7 +50,7 @@ namespace Memory
         LinkedList<Pageframe> list;
         while (_order <= PAGE_MAX_ORDER)
         {
-            if (pageList[_order].count())
+            if (pageList[_order].m_count())
             {
                 list = &(pageList[_order]);
                 break;

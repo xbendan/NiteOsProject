@@ -1,6 +1,6 @@
 #include <common/logger.h>
 
-#include <siberix/core/runtimes.hpp>
+#include <siberix/core/runtimes.h>
 #include <siberix/proc/process.hpp>
 
 Process::Process() {}

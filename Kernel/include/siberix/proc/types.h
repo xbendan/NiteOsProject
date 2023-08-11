@@ -1,15 +1,17 @@
+#pragma once
+
 #include <common/typedefs.h>
 #include <utils/linked_list.h>
 
 #include <siberix/mm/addrspace.hpp>
 
-enum TaskPriority {
-    PriorityLowest   = 0,
-    PriorityLow      = 1,
-    PriorityNormal   = 2,
-    PriorityHigh     = 3,
-    PriorityHighest  = 4,
-    PriorityRealTime = 5
+enum class TaskPriority : u8 {
+    Lowest   = 0,
+    Low      = 1,
+    Normal   = 2,
+    High     = 3,
+    Highest  = 4,
+    RealTime = 5
 };
 
 enum class TaskState {
@@ -57,8 +59,8 @@ struct Thread {
     u32 m_timeSlice = 0;
 
     Thread(Process* process)
-        : m_threadId(process->nextThreadId++),
+        : m_threadId(process->m_nextThreadId++),
           m_parent(process),
-          m_priority(PriorityNormal),
-          m_state(TaskStateRunning) {}
+          m_priority(TaskPriority::Normal),
+          m_state(TaskState::Running) {}
 };

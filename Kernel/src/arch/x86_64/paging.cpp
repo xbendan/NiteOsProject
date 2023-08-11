@@ -2,7 +2,7 @@
 
 #include <arch/x86_64/kaddr.hpp>
 #include <arch/x86_64/paging.hpp>
-#include <siberix/core/runtimes.hpp>
+#include <siberix/core/runtimes.h>
 
 #define KERNEL_HEAP_PML4_INDEX 511
 #define KERNEL_HEAP_PDPT_INDEX 511

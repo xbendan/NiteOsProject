@@ -11,3 +11,23 @@ private:
 };
 
 class VisualOutputDevice : public Device {};
+
+class TimerDevice : public Device {
+public:
+    TimerDevice(const char *name)
+        : m_name(name) {}
+    ~TimerDevice() {}
+
+    virtual void sleep(Duration duration) = 0;
+    virtual void sleep(u64 ms)            = 0;
+
+    const char *getName() { return m_name; }
+    bool        isDefault() { return m_isDefault; }
+    void        setDefault(bool isDef) { m_isDefault = isDef; }
+    u8          getId() { return m_id; }
+
+private:
+    const char *m_name;
+    bool        m_isDefault;
+    u8          m_id;
+};

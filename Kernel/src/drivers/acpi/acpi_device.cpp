@@ -1,7 +1,7 @@
 #include <common/logger.h>
 #include <common/string.h>
 
-#include <siberix/core/runtimes.hpp>
+#include <siberix/core/runtimes.h>
 #include <siberix/drivers/acpi/acpi_device.hpp>
 #include <siberix/drivers/acpi/acpi_timer.hpp>
 
