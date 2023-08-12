@@ -1,8 +1,7 @@
 #include <common/string.h>
 #include <common/typedefs.h>
 #include <siberix/core/runtimes.h>
-
-#include <siberix/proc/process.hpp>
+#include <siberix/proc/process.h>
 
 #define CPUID_ECX_SSE3 (1 << 0)
 #define CPUID_ECX_PCLMUL (1 << 1)
@@ -153,20 +152,7 @@ public:
     u16 __reserved__4;
     u16 iopbOffset;
 
-    inline void init(GdtPackage *package) {
-        package->tss = GdtTssEntry(*this);
-
-        memset(this, 0, sizeof(TaskStateSegment));
-
-        for (int i = 0; i < 3; i++) {
-            ist[i] = (u64)exec()->getMemory().alloc4KPages(8);
-            memset((void *)ist[i], 0, PAGE_SIZE_4K);
-            ist[i] += PAGE_SIZE_4K * 8;
-        }
-
-        asm volatile("mov %%rsp, %0" : "=r"(rsp[0]));
-        asm volatile("ltr %%ax" ::"a"(0x28));
-    }
+    void init(GdtPackage *package);
 } __attribute__((packed)) tss_t;
 
 #define IDT_DIVIDE_BY_ZERO 0x00
@@ -214,7 +200,7 @@ struct IdtEntry {
 
     IdtEntry() {}
 
-    IdtEntry(u8 num, u64, base, u16 sel, u8 flags, u8 ist)
+    IdtEntry(u8 num, u64 base, u16 sel, u8 flags, u8 ist)
         : baseLow((u16)(base & 0xffff)),
           selector(sel),
           ist(ist),

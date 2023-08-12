@@ -1,13 +1,12 @@
 #pragma once
 
+#include <siberix/core/time.h>
+#include <siberix/device/connectivity.h>
 #include <siberix/init/boot.h>
 #include <siberix/mm/page.h>
-
-#include <siberix/core/time.hpp>
-#include <siberix/device/connectivity.hpp>
 #include <siberix/mm/service.h>
-#include <siberix/proc/process.hpp>
-#include <siberix/proc/sched.hpp>
+#include <siberix/proc/process.h>
+#include <siberix/proc/sched.h>
 
 enum CompiledArchitecture {
     CA_UNDEFINED = 0,
@@ -18,9 +17,10 @@ enum CompiledArchitecture {
 
 class KernelExecutive {
 public:
-    KernelExecutive(CompiledArchitecture arch)
-        : m_arch(arch),
-          m_isInitialized(false) {}
+    KernelExecutive(CompiledArchitecture arch, BootConfig& bootConfig)
+        : m_isInitialized(false),
+          m_arch(arch),
+          m_bootConfig(bootConfig) {}
     ~KernelExecutive();
 
     virtual bool setupArch() = 0;

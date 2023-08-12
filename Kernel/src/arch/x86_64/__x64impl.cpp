@@ -1,17 +1,17 @@
-#include <arch/x86_64/arch.h>
-#include <arch/x86_64/types.h>
-
 #include <arch/x86_64/apic.h>
+#include <arch/x86_64/arch.h>
 #include <arch/x86_64/paging.h>
 #include <arch/x86_64/serial.h>
 #include <arch/x86_64/smbios.h>
+#include <arch/x86_64/types.h>
 #include <siberix/drivers/acpi/acpi_device.h>
-#include <siberix/drivers/pci/devices.hpp>
 #include <siberix/mm/page.h>
 
-static X64Runtime x64rt;
-extern "C" void   _lgdt(u64);
-extern "C" void   _lidt(u64);
+#include <siberix/drivers/pci/devices.hpp>
+
+static X64Executive x64rt;
+extern "C" void     _lgdt(u64);
+extern "C" void     _lidt(u64);
 
 TaskStateSegment              tss = { .rsp = {}, .ist = {}, .iopbOffset = 0 };
 GdtPackage                    gdtPackage;
@@ -19,7 +19,7 @@ GdtPtr                        gdtPtr;
 IdtPtr                        idtPtr;
 Paging::X64KernelAddressSpace addressSpace;
 
-void X64Runtime::setup() {
+void X64Executive::setupArch() {
     /* load global descriptor table */
     gdtPackage = GdtPackage(tss);
     gdtPtr     = { .limit = sizeof(GdtPackage) - 1, .base = (u64)&gdtPackage };
@@ -35,9 +35,24 @@ void X64Runtime::setup() {
     this->m_memory = MemoryManagement();
 
     this->m_devices = DeviceConnectivity();
-    new SerialPortDevice()->install();    /* Serial Port */
-    new SmbiosDevice()->install();        /* System Management BIOS */
-    new AcpiPmDevice()->install();        /* ACPI Power Management */
-    new ApicDevice()->install();          /* APIC Controller */
-    new PciControllerDevice()->install(); /* PIC Controller */
+    new SerialPortDevice()->initialize();    /* Serial Port */
+    new SmbiosDevice()->initialize();        /* System Management BIOS */
+    new AcpiPmDevice()->initialize();        /* ACPI Power Management */
+    new ApicDevice()->initialize();          /* APIC Controller */
+    new PciControllerDevice()->initialize(); /* PIC Controller */
+}
+
+void TaskStateSegment::init(GdtPackage *package) {
+    package->tss = GdtTssEntry(*this);
+
+    memset(this, 0, sizeof(TaskStateSegment));
+
+    for (int i = 0; i < 3; i++) {
+        ist[i] = (u64)exec()->getMemory().alloc4KPages(8);
+        memset((void *)ist[i], 0, PAGE_SIZE_4K);
+        ist[i] += PAGE_SIZE_4K * 8;
+    }
+
+    asm volatile("mov %%rsp, %0" : "=r"(rsp[0]));
+    asm volatile("ltr %%ax" ::"a"(0x28));
 }

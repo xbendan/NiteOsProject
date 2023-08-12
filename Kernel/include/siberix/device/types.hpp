@@ -1,4 +1,4 @@
-#include <siberix/core/time.hpp>
+#include <siberix/core/time.h>
 #include <siberix/device/device.h>
 
 class ProcessorDevice : public Device {
@@ -16,7 +16,7 @@ class VisualOutputDevice : public Device {};
 class TimerDevice : public Device {
 public:
     TimerDevice(const char *name)
-        : m_name(name) {}
+        : Device(name, DeviceBus::Software, DeviceType::SystemDevices) {}
     ~TimerDevice() {}
 
     virtual void sleep(Duration duration) = 0;
@@ -28,7 +28,6 @@ public:
     u8          getId() { return m_id; }
 
 private:
-    const char *m_name;
-    bool        m_isDefault;
-    u8          m_id;
+    bool m_isDefault;
+    u8   m_id;
 };

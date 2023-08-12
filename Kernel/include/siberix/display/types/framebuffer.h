@@ -1,6 +1,5 @@
+#include <siberix/display/video.h>
 #include <utils/spinlock.h>
-
-#include <siberix/display/video_output.hpp>
 
 class FramebufferVideoOutput : public PixelVideoOutput {
 public:
@@ -22,4 +21,4 @@ public:
 
 private:
     spinlock_t m_lock;
-}
+};

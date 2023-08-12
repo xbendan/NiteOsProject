@@ -1,4 +1,4 @@
-#include <siberix/core/time.hpp>
+#include <siberix/core/time.h>
 #include <siberix/device/device.h>
 
 #define LOCAL_APIC_ID 0x20             // APIC ID Register
@@ -83,7 +83,7 @@ public:
     ~ApicTimerDevice();
 
     void sleep(Duration duration) override;
-    void sleep(u32 ms) override;
+    void sleep(u64 ms) override;
 
 private:
     u64 m_busClock;
@@ -104,9 +104,12 @@ public:
     static inline ApicLocalInterface& getLocalApicId(u8 apicId) {
         return apicInterfaces[apicId];
     }
-    static inline ApicLocalInterface& getLocal()
+    static inline ApicLocalInterface& getLocal() {
+        // return apicInterfaces[0];
+    }
 
-        private : u64 basePhys;
+private:
+    u64           basePhys;
     u64           baseVirtIO;
     volatile u32* ioRegSelect;
     volatile u32* ioWindow;

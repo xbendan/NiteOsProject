@@ -1,12 +1,11 @@
 #include <common/logger.h>
 #include <common/string.h>
-
 #include <siberix/core/runtimes.h>
 #include <siberix/drivers/acpi/acpi_device.h>
-#include <siberix/drivers/acpi/acpi_timer.hpp>
+#include <siberix/drivers/acpi/acpi_timer.h>
 
 AcpiPmDevice::AcpiPmDevice()
-    : m_name("ACPI Power Management") {
+    : Device("ACPI Power Management") {
     const char* signature = "RSD PTR ";
 
     u64 address = 0x0;
@@ -50,16 +49,16 @@ AcpiPmDevice::AcpiPmDevice()
             break;
     }
 
-    madt = findTable<Madt*>("APIC");
-    fadt = findTable<AcpiFadt*>("FACP");
-    hpet = findTable<Hpet*>("HPET");
-    mcfg = findTable<PciMcfg*>("MCFG");
+    madt = findTable<Madt>("APIC");
+    fadt = findTable<AcpiFadt>("FACP");
+    hpet = findTable<Hpet>("HPET");
+    mcfg = findTable<PciMcfg>("MCFG");
 
     if (fadt->pmtTimerLength == 4) {
         /* Initialize ACPI Timer */
         TimerDevice* device = new AcpiTimerDevice();
         if (device->isWorking()) {
-            exec()->getTimeManagement().addTimer(*device, true);
+            exec()->addTimer(*device, true);
             exec()->getConnectivity().install(*device);
         } else {
             Logger::getLogger("acpi").error(
@@ -73,7 +72,7 @@ AcpiPmDevice::AcpiPmDevice()
 AcpiPmDevice::~AcpiPmDevice() {}
 
 template <typename T>
-AcpiPmDevice::findTable(const char* str, int index) {
+T* AcpiPmDevice::findTable(const char* str, int index) {
     if (!memcmp("DSDT", str, 4)) return reinterpret_cast<T>(fade->dsdt);
 
     if (!rsdp) {
@@ -88,7 +87,7 @@ AcpiPmDevice::findTable(const char* str, int index) {
         u64 entry = rsdp->revision ? xsdt->pointers[i] : rsdt->pointers[i];
         AcpiTable* table = reinterpret_cast<AcpiTable*>(getIoMapping(entry));
         if (memcmp(table->signature, str, 4) == 0 && (_index++ == index)) {
-            return static_cast<T>(table);
+            return static_cast<T*>(table);
         }
     }
 }

@@ -1,11 +1,7 @@
 #include <common/string.h>
+#include <siberix/display/types/vga.h>
 
-#include <siberix/display/types/vga.hpp>
-
-VgaTextOutput::VgaTextOutput() {
-    m_buffer        = reinterpret_cast<u16*>(0xb8000);
-    m_unifiedBuffer = (void*)m_buffer;
-}
+VgaTextOutput::VgaTextOutput() { m_buffer = reinterpret_cast<u16*>(0xb8000); }
 
 VgaTextOutput::~VgaTextOutput() {}
 
@@ -29,10 +25,7 @@ void VgaTextOutput::drawEllipse(Point point,
                                 u32   height,
                                 Color color) {}
 
-void VgaTextOutput::drawText(Point       point,
-                             const char* text,
-                             u16         fsize,
-                             Color       color) {
+void VgaTextOutput::drawText(Point point, const char* text, Color color) {
     if (point.x < 0 || point.y < 0) {
         point.x = m_x;
         point.y = m_y;

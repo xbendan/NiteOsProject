@@ -1,6 +1,6 @@
 #include <siberix/fs/vfs.h>
 
-#include <siberix/proc/process.hpp>
+#include <siberix/proc/process.h>
 
 struct AppManiest {
     const char *name;

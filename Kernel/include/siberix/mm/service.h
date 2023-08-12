@@ -45,7 +45,8 @@ public:
     Pageframe* pfn2page(u64 pfn) {
         u32 sectionId = pfn >> 18;
         u32 offset    = pfn - (sectionId * 262144);
-        return pageSections[sectionId].pages[offset];
+        return reinterpret_cast<Pageframe*>(
+            pageSections[sectionId].pages[offset]);
     };
     Pageframe*   addr2page(u64 address) { return pfn2page(address >> 12); }
     PageSection* addr2sect(u64 address) {

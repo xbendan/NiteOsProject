@@ -6,7 +6,7 @@
 #include <arch/x86_64/paging.h>
 #include <arch/x86_64/smpdefines.inc>
 #include <siberix/drivers/acpi/acpi_device.h>
-#include <siberix/proc/sched.hpp>
+#include <siberix/proc/sched.h>
 
 extern void* smpTrampolineStart;
 extern void* smpTrampolineEnd;
@@ -20,7 +20,7 @@ volatile uint64_t* smpEntry2          = (uint64_t*)SMP_TRAMPOLINE_ENTRY2;
 volatile bool      doneInit           = false;
 
 void trampolineStart(u16 cpuId) {
-    X64Runtime* rt  = static_cast<X64Runtime*>(exec());
+    X64Executive* rt  = static_cast<X64Executive*>(exec());
     Cpu*        cpu = rt->getScheduler().cpu(cpuId);
 
     setCpuLocal(cpu);
@@ -46,7 +46,7 @@ void trampolineStart(u16 cpuId) {
 Scheduler::Scheduler()
     : m_kernelProcess(
           new Process("SiberixKernel", nullptr, 0, TaskTypeSystemProcess)) {
-    X64Runtime* rt = static_cast<X64Runtime*>(exec());
+    X64Executive* rt = static_cast<X64Executive*>(exec());
 
     m_cpus[0] = new Cpu(){ .apicId        = 0,
                            .gdt           = rt->m_gdt,

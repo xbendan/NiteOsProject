@@ -1,5 +1,8 @@
-#include <siberix/display/video.hpp>
+#include <siberix/display/video.h>
 
-VideoCompositionDevice::VideoCompositionDevice() {}
+VideoCompositionDevice::VideoCompositionDevice()
+    : Device(
+          "Video Compositor", DeviceBus::Software, DeviceType::DisplayAdapter) {
+}
 
 VideoCompositionDevice::~VideoCompositionDevice() {}

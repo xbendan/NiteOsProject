@@ -2,6 +2,8 @@
 
 #include <common/printf.h>
 #include <common/string.h>
+#include <utils/array.h>
+#include <utils/linked_list.h>
 
 enum LoggerLevel {
     LOG_INFO,
@@ -75,8 +77,8 @@ public:
     static SizedArrayList<LoggerReceiver&, 256>& getReceivers();
 
 private:
-    const char*                 name;
-    SizedArrayList<String, 256> messages;
+    const char* name;
+    // SizedArrayList<String, 256> messages;
 
     static SizedArrayList<LoggerReceiver&, 256> receivers;
     static Logger                               anonymousLogger;

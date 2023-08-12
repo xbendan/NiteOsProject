@@ -2,7 +2,7 @@
 #include <siberix/core/runtimes.h>
 #include <utils/alignment.h>
 
-#include <siberix/display/types/framebuffer.hpp>
+#include <siberix/display/types/framebuffer.h>
 
 FramebufferVideoOutput::FramebufferVideoOutput()
     : m_bytesPerPixel(4) {

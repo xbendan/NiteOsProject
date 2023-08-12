@@ -1,6 +1,6 @@
 #include <siberix/drivers/acpi/spec.h>
 
-#include <siberix/core/time.hpp>
+#include <siberix/device/types.hpp>
 
 typedef u32 (*tickreader_t)(u32);
 
@@ -8,6 +8,9 @@ class AcpiTimerDevice : public TimerDevice {
 public:
     AcpiTimerDevice();
     ~AcpiTimerDevice();
+
+    void enable() override;
+    void disable() override;
 
     void sleep(Duration duration) override;
     void sleep(u64 ms) override;

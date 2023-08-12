@@ -1,11 +1,17 @@
-void* operator new(size_t size) { return (void*)exec()->memory().alloc(size); }
+#include <siberix/core/runtimes.h>
 
-void* operator new[](size_t size) { return (void*)exec()->memory().alloc(size); }
+void* operator new(unsigned long size) {
+    return (void*)exec()->getMemory().alloc(size);
+}
 
-void operator delete(void* p) { exec()->memory().free((u64)p); }
+void* operator new[](unsigned long size) {
+    return (void*)exec()->getMemory().alloc(size);
+}
 
-void operator delete(void* p, size_t) { ::operator delete(p); }
+void operator delete(void* p) { exec()->getMemory().free((u64)p); }
 
-void operator delete[](void* p) { exec()->memory().free((u64)p); }
+void operator delete(void* p, unsigned long) { ::operator delete(p); }
 
-void operator delete[](void* p, size_t) { ::operator delete[](p); }
+void operator delete[](void* p) { exec()->getMemory().free((u64)p); }
+
+void operator delete[](void* p, unsigned long) { ::operator delete[](p); }

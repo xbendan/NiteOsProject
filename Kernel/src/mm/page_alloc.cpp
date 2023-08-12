@@ -9,7 +9,7 @@ namespace Memory {
         SizedArrayList<PageBlock, 256>& pageBlocks = service.getPageBlocks();
         for (int i = 0; i < 256; i++) {
             PageBlock& block     = pageBlocks[i];
-            u64        addrStart = alignUp(block.start, PAGE_MAX_SIZE;);
+            u64        addrStart = alignUp(block.start, PAGE_MAX_SIZE);
             u64        addrEnd   = alignDown(block.end, PAGE_MAX_SIZE);
 
             u64 current = addrStart;

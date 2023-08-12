@@ -5,7 +5,7 @@
 
 const char* _unknownDeviceName = "<Unknown Device>";
 
-enum class DeviceType {
+enum class DeviceType : u8 {
     Biometric,
     Bluetooth,
     DiskDrive,
@@ -63,11 +63,14 @@ bool operator&(DeviceFlags a, DeviceFlags b) {
     return static_cast<u64>(a) & static_cast<u64>(b);
 }
 
+bool operator&(DeviceFlags a, u64 b) { return static_cast<u64>(a) & b; }
+
 class Device {
 public:
     Device(const char* _name, DeviceBus _bus, DeviceType _type);
     Device(const char* _name);
     Device(DeviceBus bus, DeviceType type);
+    ~Device();
 
     inline const char*          getName() { return this->m_name; }
     inline u64                  getId() { return this->m_deviceId; }
@@ -87,7 +90,7 @@ public:
                             DeviceFlags::DriverIncompatible));
     }
 
-    void install();
+    void initialize();
 
     virtual void enable()  = 0;
     virtual void disable() = 0;
@@ -97,7 +100,7 @@ protected:
     u64         m_deviceId;
 
     DeviceFlags         m_flags;
-    DeviceType          m_type;
     DeviceBus           m_bus;
+    DeviceType          m_type;
     LinkedList<Device&> m_dependencies;
 };

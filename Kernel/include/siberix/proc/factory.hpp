@@ -1,7 +1,7 @@
 #include <siberix/fs/vfs.h>
 #include <siberix/proc/types.h>
 
-#include <siberix/proc/process.hpp>
+#include <siberix/proc/process.h>
 
 namespace proc {
     class ProcessFactory {
@@ -9,5 +9,6 @@ namespace proc {
         virtual Process* createElfProcess(File* file);
         virtual Process* createIdleProcess();
         virtual Process* createProcessEx(const char* name);
+        virtual Thread*  createThread(Process* process);
     };
 }  // namespace proc

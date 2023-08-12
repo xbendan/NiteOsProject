@@ -1,14 +1,13 @@
-#include <siberix/display/video_output.hpp>
+#include <siberix/display/video.h>
 
 class VgaTextOutput : public VideoOutput {
 public:
     VgaTextOutput();
     ~VgaTextOutput();
 
-    void drawRect(u32 x, u32 y, u32 width, u32 height, Color color) override;
-    void drawEllipse(u32 x, u32 y, u32 width, u32 height, Color) override;
-    void drawText(
-        u32 x, u32 y, const char* text, u16 fsize, Color color) override;
+    void drawRect(Point point, u32 width, u32 height, Color color) override;
+    void drawEllipse(Point point, u32 width, u32 height, Color) override;
+    void drawText(Point point, const char* text, Color color) override;
 
     bool             isTextOnly() { return true; }
     BufferingOptions getBufferOptions() {

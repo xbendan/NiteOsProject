@@ -39,22 +39,6 @@ struct Thread {
 
     bool m_isIdleThread;
 
-    struct {
-        u32 esp0;
-        u32 ss0;
-    };
-
-    u64   fsBase;
-    void* fxState;
-
-    void* m_userStack;
-    void* m_userStackBase;
-    void* m_kernelStack;
-    void* m_kernelStackBase;
-
-    RegisterContext m_registers;
-    RegisterContext m_lastSyscall;
-
     TaskPriority m_priority; /* The priority when scheduling */
     TaskState    m_state = TaskState::Running; /* Thread state */
 

@@ -3,7 +3,7 @@
 #include <utils/array.h>
 
 #include <siberix/device/types.hpp>
-#include <siberix/proc/process.hpp>
+#include <siberix/proc/process.h>
 
 class ThreadQueue {
 public:

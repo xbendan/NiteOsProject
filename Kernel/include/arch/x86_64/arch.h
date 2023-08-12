@@ -1,30 +1,31 @@
 #include <arch/x86_64/paging.h>
 #include <siberix/core/runtimes.h>
+
 #include <siberix/mm/addrspace.hpp>
 
-class X64Runtime : public KernelExecutive {
+class X64Executive : public KernelExecutive {
 public:
-    X64Runtime();
-    ~X64Runtime();
+    X64Executive();
+    ~X64Executive();
 
-    void setup() override;
-    void loadMemory() override;
-    void loadDevices() override;
+    bool setupArch() override;
+    void loadMemory();
+    void loadDevices();
 
     GdtPackage m_gdt;
     GdtPtr     m_gdtPtr;
     IdtPtr     m_idtPtr;
 };
 
-static inline uintptr_t readMSR(uintptr_t msr) {
-    uint32_t low, high;
+static inline u64 readMSR(u64 msr) {
+    u32 low, high;
     asm volatile("rdmsr" : "=a"(low), "=d"(high) : "c"(msr));
-    return ((uintptr_t)high << 32) | low;
+    return ((u64)high << 32) | low;
 }
 
-static inline void writeMSR(uint32_t msr, uint64_t value) {
-    uint32_t low  = value & 0xFFFFFFFF;
-    uint32_t high = value >> 32;
+static inline void writeMSR(u32 msr, u64 value) {
+    u32 low  = value & 0xFFFFFFFF;
+    u32 high = value >> 32;
     asm volatile("wrmsr" : : "c"(msr), "a"(low), "d"(high));
 }
 
@@ -39,7 +40,7 @@ static inline void setCpuLocal(Cpu* cpu) {
 }
 
 static inline Cpu* getCpuLocal() {
-    Cpu* Cpu;
+    Cpu* cpu;
     asm volatile("swapgs; movq %%gs:0, %0; swapgs;" : "=r"(cpu));
     return cpu;
 }
