@@ -1,3 +1,5 @@
+#pragma once
+
 #include <siberix/core/time.h>
 #include <siberix/device/device.h>
 

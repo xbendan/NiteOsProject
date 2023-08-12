@@ -49,21 +49,19 @@ enum class DeviceFlags : u64 {
     DriverError        = 0x20
 };
 
-bool operator==(DeviceFlags a, DeviceFlags b) {
-    return static_cast<u64>(a) == static_cast<u64>(b);
-}
+bool operator==(DeviceFlags a, DeviceFlags b) { return static_cast<u64>(a) == static_cast<u64>(b); }
 
-u64 operator|(DeviceFlags a, DeviceFlags b) {
-    return static_cast<u64>(a) | static_cast<u64>(b);
-}
+u64 operator|(DeviceFlags a, DeviceFlags b) { return static_cast<u64>(a) | static_cast<u64>(b); }
 
 u64 operator|(u64 a, DeviceFlags b) { return a | static_cast<u64>(b); }
 
-bool operator&(DeviceFlags a, DeviceFlags b) {
-    return static_cast<u64>(a) & static_cast<u64>(b);
-}
+bool operator&(DeviceFlags a, DeviceFlags b) { return static_cast<u64>(a) & static_cast<u64>(b); }
 
 bool operator&(DeviceFlags a, u64 b) { return static_cast<u64>(a) & b; }
+
+bool operator&(u64 a, DeviceFlags b) { return a & static_cast<u64>(b); }
+
+u64 operator|=(u64 a, DeviceFlags b) { return a | static_cast<u64>(b); }
 
 class Device {
 public:
@@ -76,15 +74,11 @@ public:
     inline u64                  getId() { return this->m_deviceId; }
     inline DeviceType           getType() { return this->m_type; }
     inline DeviceBus            getBus() { return this->m_bus; }
-    inline LinkedList<Device&>& getDependencies() {
-        return this->m_dependencies;
-    }
-    inline bool isDependentWith(Device& device) {
-        return m_dependencies.contains(device);
-    }
-    bool isInitialized() { return (m_flags & DeviceFlags::Initialized); }
-    bool isInstalled() { return (m_flags & DeviceFlags::Installed); }
-    bool isWorking() {
+    inline LinkedList<Device&>& getDependencies() { return this->m_dependencies; }
+    inline bool isDependentWith(Device& device) { return m_dependencies.contains(device); }
+    bool        isInitialized() { return (m_flags & DeviceFlags::Initialized); }
+    bool        isInstalled() { return (m_flags & DeviceFlags::Installed); }
+    bool        isWorking() {
         return (m_flags & DeviceFlags::Initialized) &&
                !(m_flags & (DeviceFlags::Exception | DeviceFlags::DriverError |
                             DeviceFlags::DriverIncompatible));
@@ -99,7 +93,7 @@ protected:
     const char* m_name;
     u64         m_deviceId;
 
-    DeviceFlags         m_flags;
+    u64                 m_flags;
     DeviceBus           m_bus;
     DeviceType          m_type;
     LinkedList<Device&> m_dependencies;

@@ -4,60 +4,57 @@
 #include <siberix/mm/page.h>
 #include <utils/alignment.h>
 
-namespace Memory
-{
+namespace Memory {
     SegAlloc::SegAlloc() {
-        BootConfig& bootConfig = exec()->getBootConfig();
+        BootConfig&       bootConfig    = exec()->getBootConfig();
         MemoryManagement& memoryService = exec()->getMemory();
-        PageBlock* blocks = &bootConfig.memory.ranges;
+        PageBlock*        blocks        = &bootConfig.memory.ranges[0];
 
-        for (int i = 0; i < 256; i++)
-        {
+        for (int i = 0; i < 256; i++) {
             PageBlock& block = blocks[i];
-            alignUpRef(block.start, PAGE_SIZE_4K);
-            alignDownRef(block.end, PAGE_SIZE_4K);
-            if (block.type != BlkTypeAvailable || (block.end - block.start < PAGE_SIZE_4K))
-            { continue; }
+            alignUpRef(block.start, static_cast<u64>(PAGE_SIZE_4K));
+            alignDownRef(block.end, static_cast<u64>(PAGE_SIZE_4K));
+            if (block.type != BlkTypeAvailable || (block.end - block.start < PAGE_SIZE_4K)) {
+                continue;
+            }
 
             getSegments()->add(block);
         }
 
         u64 current = 0;
-        while (current < bootConfig.memory.maxSize)
-        {
-            u64 phys = this->allocatePhysMemory4K(SECTION_PAGE_SIZE / PAGE_SIZE_4K);
+        while (current < bootConfig.memory.maxSize) {
+            u64 phys = this->allocatePhysMemory4K(SECTION_PAGE_SIZE / PAGE_SIZE_4K)->address;
             u64 virt = memoryService.allocVirtMemory4KPages(SECTION_PAGE_SIZE / PAGE_SIZE_4K);
-            if (!(phys && virt))
-            {
-                Logger::getAnonymousLogger().error("Cannot allocate memory in startup environment.");
+            if (!(phys && virt)) {
+                Logger::getAnonymousLogger().error(
+                    "Cannot allocate memory in startup environment.");
                 return;
             }
 
-            Pageframe* pages = reinterpret_cast<Pageframe*>(virt);
-            memoryService.getSectionAt(current).pages = pages;
-            current += PAGE_SIZE_1G;
+            Pageframe* pages                           = reinterpret_cast<Pageframe*>(virt);
+            memoryService.getSectionAt(current).pages  = reinterpret_cast<u64*>(pages->address);
+            current                                   += PAGE_SIZE_1G;
         }
     }
 
     SegAlloc::~SegAlloc() {}
 
     Pageframe* SegAlloc::allocatePhysMemory4K(u64 amount) {
-        u64 address;
-        int i = 0;
+        u64              address;
+        int              i       = 0;
         MemoryManagement service = exec()->getMemory();
-        while (!address && i < 256)
-        {
+        while (!address && i < 256) {
             PageBlock& block = service.getPageBlocks()[i];
-            if (block.end - block.start > (amount * PAGE_SIZE_4K))
-            {
-                address = block.start;
+            if (block.end - block.start > (amount * PAGE_SIZE_4K)) {
+                address      = block.start;
                 block.start += (amount * PAGE_SIZE_4K);
                 break;
             }
         }
         Pageframe* page = service.addr2page(address);
-        if (!page->address)
-        { page->address = address; }
+        if (!page->address) {
+            page->address = address;
+        }
         return page;
     }
 
@@ -68,4 +65,4 @@ namespace Memory
     void SegAlloc::addSegment(u64 start, u64 end, PageBlockType type) {
         this->segments.add(PageBlock(start, end, type));
     }
-} // namespace Memory
+}  // namespace Memory

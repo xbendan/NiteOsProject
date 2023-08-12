@@ -19,15 +19,6 @@ enum class VgaTextColor {
     White
 };
 
-static Color VgaColors[16] = { Color(0, 0, 0),      Color(0, 0, 170),
-                               Color(0, 170, 0),    Color(0, 170, 170),
-                               Color(170, 0, 0),    Color(170, 0, 170),
-                               Color(170, 85, 0),   Color(170, 170, 170),
-                               Color(85, 85, 85),   Color(85, 85, 255),
-                               Color(85, 255, 85),  Color(85, 255, 255),
-                               Color(255, 85, 85),  Color(255, 85, 255),
-                               Color(255, 255, 85), Color(255, 255, 255) };
-
 class Color {
 public:
     Color(u32 rgba);
@@ -37,14 +28,13 @@ public:
     ~Color() = default;
 
     bool operator==(Color& color) {
-        return (color.r == r) && (color.g == g) && (color.b == b) &&
-               (color.a == a);
+        return (color.r == r) && (color.g == g) && (color.b == b) && (color.a == a);
     }
 
     inline u8 asVgaIndex(u8 fallback = 0) {
         u8 n = 0;
         while (n++ < 16) {
-            if (VgaColors[n] == 0) {
+            if (VgaColors[n] == *this) {
                 return n;
             }
         }
@@ -65,3 +55,14 @@ public:
 
     u8 r, g, b, a;
 };
+
+bool operator==(Color& a, Color& b) {
+    return (a.r == b.r) && (a.g == b.g) && (a.b == b.b) && (a.a == b.a);
+}
+
+static Color VgaColors[16] = { Color(0, 0, 0),      Color(0, 0, 170),     Color(0, 170, 0),
+                               Color(0, 170, 170),  Color(170, 0, 0),     Color(170, 0, 170),
+                               Color(170, 85, 0),   Color(170, 170, 170), Color(85, 85, 85),
+                               Color(85, 85, 255),  Color(85, 255, 85),   Color(85, 255, 255),
+                               Color(255, 85, 85),  Color(255, 85, 255),  Color(255, 255, 85),
+                               Color(255, 255, 255) };

@@ -10,8 +10,7 @@ AcpiPmDevice::AcpiPmDevice()
 
     u64 address = 0x0;
     while (!rsdp && (address <= 0xfffff)) {
-        if (!memcmp((void*)address, signature, 8))
-            rsdp = reinterpret_cast<AcpiRsdp*>(address);
+        if (!memcmp((void*)address, signature, 8)) rsdp = reinterpret_cast<AcpiRsdp*>(address);
         address += 0x10;
     }
 
@@ -20,8 +19,7 @@ AcpiPmDevice::AcpiPmDevice()
      * We cannot initialize ACPI without it.
      */
     if (!rsdp) {
-        Logger::getLogger("acpi").error(
-            "ACPI root system description pointer not found!");
+        Logger::getLogger("acpi").error("ACPI root system description pointer not found!");
         return;
     }
 
@@ -37,15 +35,13 @@ AcpiPmDevice::AcpiPmDevice()
      */
     switch (rsdp->revision) {
         case 0:
-            rsdt = reinterpret_cast<AcpiRsdt*>(
-                getIOMapping(rsdp->rsdtAddress)) break;
+            rsdt = reinterpret_cast<AcpiRsdt*>(getIOMapping(rsdp->rsdtAddress)) break;
         case 2:
             rsdt = reinterpret_cast<AcpiRsdt*>(getIOMapping(rsdp->rsdtAddress));
             xsdt = reinterpret_cast<AcpiXsdt*>(getIOMapping(xsdp->xsdtAddress));
             break;
         default:
-            Logger::getLogger("acpi").error("Invalid ACPI revision number %u",
-                                            rsdp->revision);
+            Logger::getLogger("acpi").error("Invalid ACPI revision number %u", rsdp->revision);
             break;
     }
 
@@ -61,8 +57,7 @@ AcpiPmDevice::AcpiPmDevice()
             exec()->addTimer(*device, true);
             exec()->getConnectivity().install(*device);
         } else {
-            Logger::getLogger("acpi").error(
-                "ACPI Timer ran into problem. Giving up installing.");
+            Logger::getLogger("acpi").error("ACPI Timer ran into problem. Giving up installing.");
         }
     }
 
@@ -79,12 +74,11 @@ T* AcpiPmDevice::findTable(const char* str, int index) {
         return nullptr;
     }
 
-    u64 entries = rsdp->revision
-                      ? (xsdt->length - sizeof(AcpiTable)) / sizeof(u64)
-                      : (rsdt->length - sizeof(AcpiTable)) / sizeof(u32);
+    u64 entries = rsdp->revision ? (xsdt->length - sizeof(AcpiTable)) / sizeof(u64)
+                                 : (rsdt->length - sizeof(AcpiTable)) / sizeof(u32);
     int _index  = 0;
     for (int i = 0; i < entries; i++) {
-        u64 entry = rsdp->revision ? xsdt->pointers[i] : rsdt->pointers[i];
+        u64        entry = rsdp->revision ? xsdt->pointers[i] : rsdt->pointers[i];
         AcpiTable* table = reinterpret_cast<AcpiTable*>(getIoMapping(entry));
         if (memcmp(table->signature, str, 4) == 0 && (_index++ == index)) {
             return static_cast<T*>(table);

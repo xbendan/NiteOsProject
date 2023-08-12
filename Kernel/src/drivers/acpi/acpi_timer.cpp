@@ -1,9 +1,8 @@
-#include <common/logger.h>
-
 #include <arch/x86_64/iopt.h>
+#include <common/logger.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/drivers/acpi/acpi_device.h>
-#include <siberix/drivers/acpi/acpi_timer.hpp>
+#include <siberix/drivers/acpi/acpi_timer.h>
 
 u32 ACPI_TIMER_READ_XMMIO(u32 data) {}
 
@@ -12,8 +11,7 @@ u32 ACPI_TIMER_READ_XIO(u32 data) {}
 u32 ACPI_TIMER_READ_IO(u32 data) { return inDWord32(data); }
 
 AcpiTimerDevice::AcpiTimerDevice() {
-    Device* device =
-        exec()->getConnectivity().findDevice("ACPI Power Management");
+    Device* device = exec()->getConnectivity().findDevice("ACPI Power Management");
     if (device == nullptr) {
         Logger::getLogger("acpi").error(
             "ACPI Power Management device not detected or not installed.");
@@ -21,8 +19,7 @@ AcpiTimerDevice::AcpiTimerDevice() {
     }
     AcpiFadt* fadt = static_cast<AcpiPmDevice*>(device)->fadt;
     if (fadt == nullptr) {
-        Logger::getLogger("acpi").error(
-            "Fixed ACPI Description Table not found.");
+        Logger::getLogger("acpi").error("Fixed ACPI Description Table not found.");
         return;
     }
 
@@ -101,8 +98,7 @@ AcpiTimerDevice::sleep(u64 ms) {
     while (counter < clock) {
         current = m_tickReader(m_data);
         if (current < last) {
-            counter +=
-                (m_is32bitMode > 0x100000000ul : 0x1000000) + current - last;
+            counter += (m_is32bitMode > 0x100000000ul : 0x1000000) + current - last;
         } else {
             counter += current - last;
         }

@@ -63,10 +63,9 @@
 #define PCI_CAP_MSI_CONTROL_64 (1 << 7)              // 64-bit address capable
 #define PCI_CAP_MSI_CONTROL_VECTOR_MASKING (1 << 8)  // Enable Vector Masking
 #define PCI_CAP_MSI_CONTROL_MME_MASK (0x7U << 4)
-#define PCI_CAP_MSI_CONTROL_SET_MME(x) \
-    ((x & 0x7) << 4)                                 // Multiple message enable
-#define PCI_CAP_MSI_CONTROL_MMC(x) ((x >> 1) & 0x7)  // Multiple Message Capable
-#define PCI_CAP_MSI_CONTROL_ENABLE (1 << 0)          // MSI Enable
+#define PCI_CAP_MSI_CONTROL_SET_MME(x) ((x & 0x7) << 4)  // Multiple message enable
+#define PCI_CAP_MSI_CONTROL_MMC(x) ((x >> 1) & 0x7)      // Multiple Message Capable
+#define PCI_CAP_MSI_CONTROL_ENABLE (1 << 0)              // MSI Enable
 
 #define PCI_PACKAGE_ADDRESS(bus, slot, func, offset) \
     ((bus << 16 | slot << 11 | func << 8 | offset & 0xFC | 0x80000000))
@@ -125,9 +124,15 @@ struct MSICompability {
     };
 } __attribute__((packed));
 
-enum class PCIVendors { AMD = 0x1022, Intel = 0x8086 };
+enum class PCIVendors {
+    AMD   = 0x1022,
+    Intel = 0x8086
+};
 
-enum class PCIConfigAccessMode { Legacy, Enhanced };
+enum class PCIConfigAccessMode {
+    Legacy,
+    Enhanced
+};
 
 class PCIInfo {
 public:
@@ -139,6 +144,8 @@ public:
           m_subClass(subClass) {}
     PCIInfo(u8 bus, u8 slot, u8 func);
     ~PCIInfo();
+
+    void initIO(PCIConfigRegisters reg);
 
     inline u8 bus() { return m_bus; }
     inline u8 slot() { return m_slot; }

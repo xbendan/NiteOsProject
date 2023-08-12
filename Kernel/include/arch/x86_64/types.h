@@ -100,7 +100,7 @@ struct GdtTssEntry {
     u32 __reserved__;
 
     GdtTssEntry() {}
-    GdtTssEntry(TaskStateSegment const &tss)
+    GdtTssEntry(TaskStateSegment &tss)
         : len(sizeof(TaskStateSegment)),
           baseLow(((u64)&tss) & 0xffff),
           baseMedium(((u64)&tss) >> 16 & 0xff),
@@ -116,28 +116,22 @@ struct GdtPackage {
     GdtTssEntry tss;
 
     GdtPackage()
-        : entries({
-              {0x0000,  0x0000, 0x00, 0x00, 0x00,                       0x00},
-              { 0xFFFF, 0x0000, 0x00, 0x9A, (1 << 5) | (1 << 7) | 0x0F, 0x00},
-              { 0xFFFF, 0x0000, 0x00, 0x92, (1 << 5) | (1 << 7) | 0x0F, 0x00},
-              { 0xFFFF, 0x0000, 0x00, 0xFA, (1 << 5) | (1 << 7) | 0x0F, 0x00},
-              { 0xFFFF,
-               0x0000,          0x00,
-               0xF2,                        (1 << 5) | (1 << 7) | 0x0F,
-               0x00                                                         }
-    }),
+        : entries{
+              GdtEntry{0x0000,  0x0000, 0x00, 0x00, 0x00,                       0x00},
+              GdtEntry{ 0xFFFF, 0x0000, 0x00, 0x9A, (1 << 5) | (1 << 7) | 0x0F, 0x00},
+              GdtEntry{ 0xFFFF, 0x0000, 0x00, 0x92, (1 << 5) | (1 << 7) | 0x0F, 0x00},
+              GdtEntry{ 0xFFFF, 0x0000, 0x00, 0xFA, (1 << 5) | (1 << 7) | 0x0F, 0x00},
+              GdtEntry{ 0xFFFF, 0x0000, 0x00, 0xF2, (1 << 5) | (1 << 7) | 0x0F, 0x00}
+    },
           tss(){};
     GdtPackage(TaskStateSegment &tss)
-        : entries({
-              {0x0000,  0x0000, 0x00, 0x00, 0x00,                       0x00},
-              { 0xFFFF, 0x0000, 0x00, 0x9A, (1 << 5) | (1 << 7) | 0x0F, 0x00},
-              { 0xFFFF, 0x0000, 0x00, 0x92, (1 << 5) | (1 << 7) | 0x0F, 0x00},
-              { 0xFFFF, 0x0000, 0x00, 0xFA, (1 << 5) | (1 << 7) | 0x0F, 0x00},
-              { 0xFFFF,
-               0x0000,          0x00,
-               0xF2,                        (1 << 5) | (1 << 7) | 0x0F,
-               0x00                                                         }
-    }),
+        : entries{
+              GdtEntry{0x0000,  0x0000, 0x00, 0x00, 0x00,                       0x00},
+              GdtEntry{ 0xFFFF, 0x0000, 0x00, 0x9A, (1 << 5) | (1 << 7) | 0x0F, 0x00},
+              GdtEntry{ 0xFFFF, 0x0000, 0x00, 0x92, (1 << 5) | (1 << 7) | 0x0F, 0x00},
+              GdtEntry{ 0xFFFF, 0x0000, 0x00, 0xFA, (1 << 5) | (1 << 7) | 0x0F, 0x00},
+              GdtEntry{ 0xFFFF, 0x0000, 0x00, 0xF2, (1 << 5) | (1 << 7) | 0x0F, 0x00}
+    },
           tss(GdtTssEntry(tss)){};
 } __attribute__((packed)) __attribute__((aligned(0x10)));
 

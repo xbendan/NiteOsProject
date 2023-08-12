@@ -1,4 +1,4 @@
-#include <siberix/core/time.hpp>
+#include <siberix/core/time.h>
 
 Month months[] = {
     {"January",    "Jan", 1,  31},

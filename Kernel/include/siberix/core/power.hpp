@@ -1,4 +1,4 @@
-#include <siberix/core/time.hpp>
+#include <siberix/core/time.h>
 
 enum class PowerState {
     Standby,
