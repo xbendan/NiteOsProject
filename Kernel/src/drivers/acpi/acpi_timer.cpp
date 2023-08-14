@@ -11,7 +11,7 @@ u32 ACPI_TIMER_READ_XIO(u32 data) {}
 u32 ACPI_TIMER_READ_IO(u32 data) { return inDWord32(data); }
 
 AcpiTimerDevice::AcpiTimerDevice() {
-    Device* device = exec()->getConnectivity().findDevice("ACPI Power Management");
+    Device* device = exec()->getConnectivity()->findDevice("ACPI Power Management");
     if (device == nullptr) {
         Logger::getLogger("acpi").error(
             "ACPI Power Management device not detected or not installed.");
@@ -49,7 +49,7 @@ AcpiTimerDevice::AcpiTimerDevice() {
 
 AcpiTimerDevice::~AcpiTimerDevice() {}
 
-AcpiTimerDevice::sleep(Duration duration) {
+void AcpiTimerDevice::sleep(Duration duration) {
     u64 ms = duration.amount;
     switch (duration.span) {
         case TimeSpan::Millisecond:
@@ -90,7 +90,7 @@ AcpiTimerDevice::sleep(Duration duration) {
     sleep(ms);
 }
 
-AcpiTimerDevice::sleep(u64 ms) {
+void AcpiTimerDevice::sleep(u64 ms) {
     u64 clock   = 3579545 * ms / 1000;
     u64 counter = 0;
     u64 last    = m_tickReader(m_data);
@@ -98,7 +98,7 @@ AcpiTimerDevice::sleep(u64 ms) {
     while (counter < clock) {
         current = m_tickReader(m_data);
         if (current < last) {
-            counter += (m_is32bitMode > 0x100000000ul : 0x1000000) + current - last;
+            counter += (m_is32bitMode ? 0x100000000ul : 0x1000000) + current - last;
         } else {
             counter += current - last;
         }

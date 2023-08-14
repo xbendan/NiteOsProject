@@ -1,6 +1,8 @@
+#pragma once
+
 #include <common/typedefs.h>
 
-enum class VgaTextColor {
+enum class VgaTextColor : u8 {
     Black,
     Blue,
     Green,
@@ -31,38 +33,29 @@ public:
         return (color.r == r) && (color.g == g) && (color.b == b) && (color.a == a);
     }
 
-    inline u8 asVgaIndex(u8 fallback = 0) {
+    inline u8 asVgaIndex(VgaTextColor fallback = VgaTextColor::Black) {
         u8 n = 0;
         while (n++ < 16) {
             if (VgaColors[n] == *this) {
                 return n;
             }
         }
-        return fallback;
+        return static_cast<u8>(fallback);
     }
 
     inline u32 asHexCode(bool withAlpha) {}
 
-    static inline u8 getVgaColorIndex(Color& color, u8 fallback) {
+    static inline u8 getVgaColorIndex(Color& color, VgaTextColor fallback) {
         u8 n = 0;
         while (n++ < 16) {
             if (VgaColors[n] == color) {
                 return n;
             }
         }
-        return fallback;
+        return static_cast<u8>(fallback);
     }
+
+    static Color VgaColors[16];
 
     u8 r, g, b, a;
 };
-
-bool operator==(Color& a, Color& b) {
-    return (a.r == b.r) && (a.g == b.g) && (a.b == b.b) && (a.a == b.a);
-}
-
-static Color VgaColors[16] = { Color(0, 0, 0),      Color(0, 0, 170),     Color(0, 170, 0),
-                               Color(0, 170, 170),  Color(170, 0, 0),     Color(170, 0, 170),
-                               Color(170, 85, 0),   Color(170, 170, 170), Color(85, 85, 85),
-                               Color(85, 85, 255),  Color(85, 255, 85),   Color(85, 255, 255),
-                               Color(255, 85, 85),  Color(255, 85, 255),  Color(255, 255, 85),
-                               Color(255, 255, 255) };

@@ -29,8 +29,8 @@ public:
     BootConfig& getBootConfig();
 
     MemoryManagement&   getMemory() { return m_memory; }
-    DeviceConnectivity& getConnectivity() { return m_devices; }
-    Scheduler&          getScheduler() { return m_scheduler; }
+    DeviceConnectivity* getConnectivity() { return m_devices; }
+    Scheduler*          getScheduler() { return m_scheduler; }
 
     bool addDevice(Device& device);
     bool checkDevice(Device& device);
@@ -47,8 +47,8 @@ protected:
 
     AddressSpace*       m_kernelSpace;
     MemoryManagement    m_memory;
-    DeviceConnectivity& m_devices;
-    Scheduler&          m_scheduler;
+    DeviceConnectivity* m_devices;
+    Scheduler*          m_scheduler;
 
     Clock                    m_clock;
     LinkedList<TimerDevice&> m_timers;

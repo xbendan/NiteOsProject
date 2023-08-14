@@ -1,7 +1,6 @@
 #include <common/logger.h>
-#include <utils/spinlock.h>
-
 #include <siberix/device/device.h>
+#include <utils/spinlock.h>
 
 enum class SerialPort {
     COM1 = 0x3f8,
@@ -40,4 +39,7 @@ class SerialPortDevice : public Device {
 public:
     SerialPortDevice();
     ~SerialPortDevice();
+
+    void enable() override;
+    void disable() override;
 };

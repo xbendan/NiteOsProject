@@ -1,11 +1,9 @@
 #include <common/string.h>
 #include <siberix/core/runtimes.h>
+#include <siberix/display/types/framebuffer.h>
 #include <utils/alignment.h>
 
-#include <siberix/display/types/framebuffer.h>
-
-FramebufferVideoOutput::FramebufferVideoOutput()
-    : m_bytesPerPixel(4) {
+FramebufferVideoOutput::FramebufferVideoOutput() {
     BootConfig& boot = exec()->getBootConfig();
 
     if (!boot.graphic.address) {
@@ -22,10 +20,7 @@ FramebufferVideoOutput::FramebufferVideoOutput()
 
 FramebufferVideoOutput::~FramebufferVideoOutput() {}
 
-void FramebufferVideoOutput::drawRect(Point point,
-                                      u32   width,
-                                      u32   height,
-                                      Color color) {
+void FramebufferVideoOutput::drawRect(Point point, u32 width, u32 height, Color color) {
     u8* p;
     u8* buffer = getWritableBuffering();
     int _x, _y;
@@ -48,14 +43,9 @@ void FramebufferVideoOutput::drawRect(Point point,
     }
 }
 
-void FramebufferVideoOutput::drawEllipse(Point point,
-                                         u32   width,
-                                         u32   height,
-                                         Color) {}
+void FramebufferVideoOutput::drawEllipse(Point point, u32 width, u32 height, Color) {}
 
-void FramebufferVideoOutput::drawText(Point       point,
-                                      const char* text,
-                                      Color       color) {}
+void FramebufferVideoOutput::drawText(Point point, const char* text, Color color) {}
 
 void FramebufferVideoOutput::setBufferOptions(BufferingOptions b) {
     if (b == m_bufferOptions) {
@@ -65,25 +55,23 @@ void FramebufferVideoOutput::setBufferOptions(BufferingOptions b) {
         case BufferingOptions::DirectRender: {
             if (m_doubleBuffering != nullptr) {
                 u64 size = m_width * m_height * m_bytesPerPixel;
-                exec()->getMemory().free4KPages(m_buffer,
-                                                alignUp(size, PAGE_SIZE_4K));
+                exec()->getMemory().free4KPages((u64)m_buffer,
+                                                alignUp(size, static_cast<u64>(PAGE_SIZE_4K)));
             }
             break;
         }
         case BufferingOptions::DoubleBuffering: {
             if (!m_doubleBuffering) {
                 u64 size          = m_width * m_height * m_bytesPerPixel;
-                m_doubleBuffering = exec()->getMemory().alloc4KPages(
-                    alignUp(size, PAGE_SIZE_4K));
+                m_doubleBuffering = reinterpret_cast<u8*>(exec()->getMemory().alloc4KPages(
+                    alignUp(size, static_cast<u64>(PAGE_SIZE_4K))));
             }
         }
     }
     m_bufferOptions = b;
 }
 
-BufferingOptions FramebufferVideoOutput::getBufferOptions() {
-    return m_bufferOptions;
-}
+BufferingOptions FramebufferVideoOutput::getBufferOptions() { return m_bufferOptions; }
 
 void FramebufferVideoOutput::setPointAt(Point point, Color color) {
     if (point.x > m_width || point.y > m_height) {

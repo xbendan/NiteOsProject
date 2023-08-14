@@ -1,23 +1,23 @@
 #include <common/logger.h>
-
 #include <siberix/core/runtimes.h>
 #include <siberix/device/connectivity.h>
 #include <siberix/drivers/acpi/acpi_device.h>
+
 #include <siberix/drivers/pci/devices.hpp>
 
-PciControllerDevice::PciControllerDevice() {
-    m_deviceList          = LinkedList<PCIInfo>();
+PciControllerDevice::PciControllerDevice()
+    : Device("PCI Controller", DeviceBus::PCI, DeviceType::Firmware) {
+    m_deviceList          = LinkedList<PCIInfo&>();
     m_enhancedAddressList = LinkedList<McfgAddress*>();
 
-    AcpiPmDevice* acpiDevice =
-        exec()->getConnectivity().findDevice("ACPI Power Management");
+    AcpiPmDevice* acpiDevice = reinterpret_cast<AcpiPmDevice*>(
+        exec()->getConnectivity().findDevice("ACPI Power Management"));
     if (acpiDevice == nullptr) {
-        Logger::getLogger("pci").error(
-            "No ACPI Device found. Abort to load PCI controller.");
+        Logger::getLogger("pci").error("No ACPI Device found. Abort to load PCI controller.");
         m_flags |= (DeviceFlags::Exception);
         return;
     } else {
-        m_mcfgTable = acpiDevice->findTable("MCFG");
+        m_mcfgTable = acpiDevice->findTable<PciMcfg>("MCFG");
         if (m_mcfgTable == nullptr) {
             Logger::getLogger("pci").error(
                 "No PCI MCFG table found. Abort to load PCI controller.");
@@ -26,9 +26,7 @@ PciControllerDevice::PciControllerDevice() {
     }
 
     m_accessMode = PCIConfigAccessMode::Enhanced;
-    for (unsigned i = 0;
-         i < (m_mcfgTable->length - sizeof(PciMcfg)) / sizeof(McfgAddress);
-         i++) {
+    for (unsigned i = 0; i < (m_mcfgTable->length - sizeof(PciMcfg)) / sizeof(McfgAddress); i++) {
         McfgAddress* base = &m_mcfgTable->baseAddresses[i];
         if (base->sgn) {
         }
@@ -66,13 +64,12 @@ PciDevice& PciControllerDevice::connectDevice(u8 bus, u8 slot, u8 func) {
 
 PciDevice* PciControllerDevice::findDevice(u16 deviceID, u16 vendorID) {}
 
-PciDevice* PciControllerDevice::findGenericDevice(u16 classCode, u16 subclass) {
-}
+PciDevice* PciControllerDevice::findGenericDevice(u16 classCode, u16 subclass) {}
 
 void PciControllerDevice::enumerateDevice(u16 deviceID,
                                           u16 vendorID,
-                                          void (*consumer)(PciDevice& device)) {
-}
+                                          void (*consumer)(PciDevice& device)) {}
 
-void PciControllerDevice::enumerateGenericDevice(
-    u8 classCode, u8 subclass, void (*consumer)(PciDevice& device)) {}
+void PciControllerDevice::enumerateGenericDevice(u8 classCode,
+                                                 u8 subclass,
+                                                 void (*consumer)(PciDevice& device)) {}

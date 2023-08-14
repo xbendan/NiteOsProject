@@ -32,21 +32,18 @@ enum class TaskType {
 class Process;
 
 struct Thread {
-    u32      m_threadId; /* Thread ID, not duplicated in same progress */
-    Process* m_parent; /* Parent process, indicates the owner of this thread */
-    Spinlock m_lock;   /* Thread lock */
+    u32      m_threadId;  /* Thread ID, not duplicated in same progress */
+    Process* m_parent;    /* Parent process, indicates the owner of this thread */
+    Spinlock m_lock;      /* Thread lock */
     Spinlock m_stateLock; /* Thread state lock */
 
     bool m_isIdleThread;
 
-    TaskPriority m_priority; /* The priority when scheduling */
+    TaskPriority m_priority;                   /* The priority when scheduling */
     TaskState    m_state = TaskState::Running; /* Thread state */
 
     u32 m_timeSlice = 0;
 
-    Thread(Process* process)
-        : m_threadId(process->m_nextThreadId++),
-          m_parent(process),
-          m_priority(TaskPriority::Normal),
-          m_state(TaskState::Running) {}
+    Thread(Process* process);
+    ~Thread();
 };

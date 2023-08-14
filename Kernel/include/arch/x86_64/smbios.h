@@ -128,6 +128,9 @@ public:
     SmbiosDevice();
     ~SmbiosDevice();
 
+    void enable() override;
+    void disable() override;
+
 private:
     int   m_version;
     void* m_entryPoint;

@@ -11,7 +11,7 @@ PCIInfo::PCIInfo(u8 bus, u8 slot, u8 func)
 PCIInfo::~PCIInfo() {}
 
 void PCIInfo::initIO(PCIConfigRegisters reg) {
-    outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
+    outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(m_bus, m_slot, m_func, reg));
 }
 
 u8 PCIInfo::readByte(PCIConfigRegisters reg) {

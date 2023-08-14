@@ -89,6 +89,22 @@ struct GdtExtraEntry {
     u32 __reserved__;
 } __attribute__((packed));
 
+struct GdtPackage;
+
+class TaskStateSegment {
+public:
+    u32 __reserved__0 __attribute__((aligned(0x10)));
+    u64 rsp[3];
+    u64 __reserved__1;
+    u64 ist[7];
+    u32 __reserved__2;
+    u32 __reserved__3;
+    u16 __reserved__4;
+    u16 iopbOffset;
+
+    void init(GdtPackage *package);
+} __attribute__((packed)) tss_t;
+
 struct GdtTssEntry {
     u16 len;
     u16 baseLow;
@@ -124,7 +140,7 @@ struct GdtPackage {
               GdtEntry{ 0xFFFF, 0x0000, 0x00, 0xF2, (1 << 5) | (1 << 7) | 0x0F, 0x00}
     },
           tss(){};
-    GdtPackage(TaskStateSegment &tss)
+    GdtPackage(TaskStateSegment& tss)
         : entries{
               GdtEntry{0x0000,  0x0000, 0x00, 0x00, 0x00,                       0x00},
               GdtEntry{ 0xFFFF, 0x0000, 0x00, 0x9A, (1 << 5) | (1 << 7) | 0x0F, 0x00},
@@ -134,20 +150,6 @@ struct GdtPackage {
     },
           tss(GdtTssEntry(tss)){};
 } __attribute__((packed)) __attribute__((aligned(0x10)));
-
-class TaskStateSegment {
-public:
-    u32 __reserved__0 __attribute__((aligned(0x10)));
-    u64 rsp[3];
-    u64 __reserved__1;
-    u64 ist[7];
-    u32 __reserved__2;
-    u32 __reserved__3;
-    u16 __reserved__4;
-    u16 iopbOffset;
-
-    void init(GdtPackage *package);
-} __attribute__((packed)) tss_t;
 
 #define IDT_DIVIDE_BY_ZERO 0x00
 #define IDT_SINGLE_STEP 0x01

@@ -1,12 +1,13 @@
 #include <common/logger.h>
+#include <siberix/core/runtimes.h>
 #include <siberix/mm/page.h>
 #include <siberix/mm/service.h>
 #include <utils/alignment.h>
 
 namespace Memory {
     Logger& logger;
-    BuddyAlloc::BuddyAlloc(MemoryManagement& service) {
-        SizedArrayList<PageBlock, 256>& pageBlocks = service.getPageBlocks();
+    BuddyAlloc::BuddyAlloc() {
+        SizedArrayList<PageBlock, 256>& pageBlocks = exec()->getMemory().getPageBlocks();
         for (int i = 0; i < 256; i++) {
             PageBlock& block     = pageBlocks[i];
             u64        addrStart = alignUp(block.start, PAGE_MAX_SIZE);
@@ -14,10 +15,9 @@ namespace Memory {
 
             u64 current = addrStart;
             while (current < addrEnd - PAGE_MAX_SIZE) {
-                Pageframe* pages = service.addr2page(current);
+                Pageframe* pages = exec()->getMemory().addr2page(current);
                 if (!pages) {
-                    Logger::getAnonymousLogger().error(
-                        "Section pages is not allocated!");
+                    Logger::getAnonymousLogger().error("Section pages is not allocated!");
                     return;
                 }
 
@@ -28,8 +28,7 @@ namespace Memory {
                     pages[i].first   = pages;
                     pages[i].address = current + (i * PAGE_SIZE_4K);
                 }
-                pageList[PAGE_MAX_ORDER].add(
-                    reinterpret_cast<ListNode<Pageframe>*>(pages));
+                pageList[PAGE_MAX_ORDER].add(reinterpret_cast<ListNode<Pageframe>*>(pages));
 
                 current += PAGE_MAX_SIZE;
             }
@@ -63,8 +62,7 @@ namespace Memory {
             page->flags &= ~PFLAGS_FREE;
             return page;
         } else {
-            logger.error(
-                "Cannot find any page with specific size. Out of Memory!");
+            logger.error("Cannot find any page with specific size. Out of Memory!");
             return nullptr;
         }
     }
@@ -76,7 +74,7 @@ namespace Memory {
     void BuddyAlloc::markPagesUsed(u64 addressStart, u64 addressEnd) {}
 
     Pageframe* BuddyAlloc::expand(Pageframe* page) {
-        if (page.flags & PFLAGS_KMEM) {
+        if (page->flags & PFLAGS_KMEM) {
             logger.warn(
                 "Unable to expand page because it belongs to kernel "
                 "allocator.");
@@ -84,13 +82,12 @@ namespace Memory {
         }
 
         /* Remove this page from upper order list */
-        pageList[page->order].remove(
-            reinterpret_cast<ListNode<Pageframe>*>(page));
+        pageList[page->order].remove(reinterpret_cast<ListNode<Pageframe>*>(page));
         /* Decrease the order and find the lower tier list */
         LinkedList<Pageframe>& freelist = pageList[--page->order];
 
-        Pageframe* newPage = reinterpret_cast<Pageframe*>(
-            ((u64)&page) + ((1 << page->order) * sizeof(Pageframe)));
+        Pageframe* newPage =
+            reinterpret_cast<Pageframe*>(((u64)&page) + ((1 << page->order) * sizeof(Pageframe)));
 
         newPage->order  = page->order;
         newPage->flags |= PFLAGS_FREE;
@@ -105,8 +102,7 @@ namespace Memory {
         u32  osize = (1 << (page->order)) * sizeof(Pageframe);
         bool align = !(page->address % osize);
 
-        Pageframe* newPage =
-            reinterpret_cast<Pageframe*>(align ? page + osize : page - osize);
+        Pageframe* newPage = reinterpret_cast<Pageframe*>(align ? page + osize : page - osize);
         if (newPage->flags & PFLAGS_FREE) {
             Pageframe* result = align ? page : newPage;
             pageList[newPage->order].remove((ListNode<Pageframe>*)newPage);

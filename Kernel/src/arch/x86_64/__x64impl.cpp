@@ -19,7 +19,7 @@ GdtPtr                        gdtPtr;
 IdtPtr                        idtPtr;
 Paging::X64KernelAddressSpace addressSpace;
 
-void X64Executive::setupArch() {
+bool X64Executive::setupArch() {
     /* load global descriptor table */
     gdtPackage = GdtPackage(tss);
     gdtPtr     = { .limit = sizeof(GdtPackage) - 1, .base = (u64)&gdtPackage };
@@ -27,19 +27,18 @@ void X64Executive::setupArch() {
     /* load interrupt descriptor table */
     for (int i = 0; i < IDT_ENTRY_COUNT; i++)
         idtEntries[i] = IdtEntry(i, isrTables[i], 0x08, IDT_FLAGS_INTGATE, 0);
-    idtPtr = { .limit = sizeof(IdtEntry) * IDT_ENTRY_COUNT,
-               .base  = (u64)&idtEntryList };
+    idtPtr = { .limit = sizeof(IdtEntry) * IDT_ENTRY_COUNT, .base = (u64)&idtEntryList };
     _lidt((u64)&idtPtr);
 
-    m_kernelSpace  = (addressSpace = Paging::X64KernelAddressSpace());
+    m_kernelSpace  = &(addressSpace = Paging::X64KernelAddressSpace());
     this->m_memory = MemoryManagement();
 
-    this->m_devices = DeviceConnectivity();
-    new SerialPortDevice()->initialize();    /* Serial Port */
-    new SmbiosDevice()->initialize();        /* System Management BIOS */
-    new AcpiPmDevice()->initialize();        /* ACPI Power Management */
-    new ApicDevice()->initialize();          /* APIC Controller */
-    new PciControllerDevice()->initialize(); /* PIC Controller */
+    this->m_devices = new DeviceConnectivity();
+    (new SerialPortDevice())->initialize();    /* Serial Port */
+    (new SmbiosDevice())->initialize();        /* System Management BIOS */
+    (new AcpiPmDevice())->initialize();        /* ACPI Power Management */
+    (new ApicDevice())->initialize();          /* APIC Controller */
+    (new PciControllerDevice())->initialize(); /* PIC Controller */
 }
 
 void TaskStateSegment::init(GdtPackage *package) {

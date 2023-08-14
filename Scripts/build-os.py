@@ -14,7 +14,6 @@ folders = [
 
 proj_name = 'siberix'
 proj_langs = ['c', 'cpp', 'asm']
-f_arch = 'src/arch/${TARGET}'
 source_general = []
 source_arch = []
 build_options = [
@@ -56,10 +55,13 @@ if __name__ == '__main__':
 
     os.system('tree src')
     scan_files(folders, source_general)
-    scan_files([f_arch], source_arch)
+    scan_files([f'src/arch/{target}'], source_arch)
 
     print(f"Building {proj_name} for {target}...")
     print("Source files:")
+
+    for file in source_arch:
+        print(f"- {file}")
     for file in source_general:
         print(f"- {file}")
 
@@ -70,5 +72,8 @@ if __name__ == '__main__':
     # Compile general source files
     for file in source_general:
         print(f"Compiling {file}...")
+        # create directory for object file
+        if not os.path.exists(f"build/{os.path.dirname(file)}"):
+            os.makedirs(f"build/{os.path.dirname(file)}")
         os.system(f"{cxx} -c {file} -Iinclude -o build/{file}.o {' '.join(build_options)}")
     
