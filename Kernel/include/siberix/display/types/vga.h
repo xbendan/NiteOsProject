@@ -9,10 +9,7 @@ public:
     void drawEllipse(Point point, u32 width, u32 height, Color) override;
     void drawText(Point point, const char* text, Color color) override;
 
-    bool             isTextOnly() { return true; }
-    BufferingOptions getBufferOptions() {
-        return BufferingOptions::DirectRender;
-    }
+    inline bool getBufferOptions() override { return false; }
 
     void newline();
 

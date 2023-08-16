@@ -51,8 +51,4 @@ u64 MemoryManagement::alloc(u64 size) {}
 
 void MemoryManagement::free(u64 address) {}
 
-Pageframe* MemoryManagement::pfn2page(u64 pfn) {}
-
-u64 MemoryManagement::page2pfn(Pageframe& page) {}
-
 void MemoryManagement::calculate() {}

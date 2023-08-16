@@ -1,6 +1,5 @@
+#include <siberix/device/types.h>
 #include <siberix/drivers/acpi/spec.h>
-
-#include <siberix/device/types.hpp>
 
 typedef u32 (*tickreader_t)(u32);
 

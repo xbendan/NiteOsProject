@@ -2,15 +2,30 @@
 #include <siberix/drivers/acpi/spec.h>
 #include <siberix/drivers/pci/spec.h>
 
-class PciDevice : public Device {
+class PCIDevice : public Device {
 public:
-    PciDevice(u8 bus, u8 slot, u8 func);
-    PciDevice(u8 bus, u8 slot, u8 func, u8 classCode, u8 subClass);
-    PciDevice(PCIInfo& info);
-    ~PciDevice();
+    PCIDevice(u8 bus, u8 slot, u8 func);
+    PCIDevice(u8 bus, u8 slot, u8 func, u8 classCode, u8 subClass);
+    PCIDevice(PCIInfo& info);
+    ~PCIDevice();
 
     void enable() override;
     void disable() override;
+
+    inline u8 bus() { return m_info.bus(); }
+    inline u8 slot() { return m_info.slot(); }
+    inline u8 func() { return m_info.func(); }
+
+    inline u16 getDeviceID() { return m_info.getDeviceID(); }
+    inline u16 getVendorID() { return m_info.getVendorID(); }
+
+    inline u8  readByte(PCIConfigRegisters reg) { return m_info.readByte(reg); }
+    inline u16 readWord(PCIConfigRegisters reg) { return m_info.readWord(reg); }
+    inline u32 readDWord(PCIConfigRegisters reg) { return m_info.readDWord(reg); }
+
+    inline void writeByte(PCIConfigRegisters reg, u8 data) { m_info.writeByte(reg, data); }
+    inline void writeWord(PCIConfigRegisters reg, u16 data) { m_info.writeWord(reg, data); }
+    inline void writeDWord(PCIConfigRegisters reg, u32 data) { m_info.writeDWord(reg, data); }
 
 private:
     PCIInfo        m_info;
@@ -19,10 +34,10 @@ private:
     bool           m_isMsiCapable;
 };
 
-class PciControllerDevice : public Device {
+class PCIControllerDevice : public Device {
 public:
-    PciControllerDevice();
-    ~PciControllerDevice();
+    PCIControllerDevice();
+    ~PCIControllerDevice();
 
     void enable() override;
     void disable() override;
@@ -35,11 +50,11 @@ public:
     void configWriteDWord(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u32 data);
 
     bool       checkDevice(u8 bus, u8 device, u8 func);
-    PciDevice& connectDevice(u8 bus, u8 device, u8 func);
-    PciDevice* findDevice(u16 deviceID, u16 vendorID);
-    PciDevice* findGenericDevice(u16 classCode, u16 subclass);
-    void       enumerateDevice(u16 deviceID, u16 vendorID, void (*consumer)(PciDevice& device));
-    void enumerateGenericDevice(u8 classCode, u8 subclass, void (*consumer)(PciDevice& device));
+    PCIDevice& connectDevice(u8 bus, u8 device, u8 func);
+    PCIDevice* findDevice(u16 deviceID, u16 vendorID);
+    PCIDevice* findGenericDevice(u16 classCode, u16 subclass);
+    void       enumerateDevice(u16 deviceID, u16 vendorID, void (*consumer)(PCIDevice& device));
+    void enumerateGenericDevice(u8 classCode, u8 subclass, void (*consumer)(PCIDevice& device));
 
     u16 getVendorID(u8 bus, u8 slot, u8 func) {
         return configReadWord(bus, slot, func, PCIVendorID);
@@ -78,7 +93,7 @@ public:
     }
 
 private:
-    LinkedList<PciDevice&>   m_deviceList;
+    LinkedList<PCIDevice&>   m_deviceList;
     LinkedList<McfgAddress*> m_enhancedAddressList;
     PciMcfg*                 m_mcfgTable;
     PCIConfigAccessMode      m_accessMode;

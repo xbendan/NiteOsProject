@@ -1,9 +1,8 @@
 #include <arch/x86_64/types.h>
 #include <common/typedefs.h>
-#include <utils/array.h>
-
-#include <siberix/device/types.hpp>
+#include <siberix/device/types.h>
 #include <siberix/proc/process.h>
+#include <utils/array.h>
 
 class ThreadQueue {
 public:

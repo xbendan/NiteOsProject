@@ -43,7 +43,13 @@ public:
         return static_cast<u8>(fallback);
     }
 
-    inline u32 asHexCode(bool withAlpha) {}
+    inline u32 asHexCode(bool withAlpha) {
+        u32 code = (r << 16) | (g << 8) | b;
+        if (withAlpha) {
+            code |= a << 24;
+        }
+        return code;
+    }
 
     static inline u8 getVgaColorIndex(Color& color, VgaTextColor fallback) {
         u8 n = 0;

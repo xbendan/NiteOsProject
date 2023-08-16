@@ -84,6 +84,8 @@ public:
                             DeviceFlags::DriverIncompatible));
     }
 
+    bool operator==(Device& device) { return this->m_deviceId == device.m_deviceId; }
+
     void initialize();
 
     virtual void enable()  = 0;

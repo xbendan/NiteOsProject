@@ -10,7 +10,8 @@ u32 ACPI_TIMER_READ_XIO(u32 data) {}
 
 u32 ACPI_TIMER_READ_IO(u32 data) { return inDWord32(data); }
 
-AcpiTimerDevice::AcpiTimerDevice() {
+AcpiTimerDevice::AcpiTimerDevice()
+    : TimerDevice("ACPI Timer") {
     Device* device = exec()->getConnectivity()->findDevice("ACPI Power Management");
     if (device == nullptr) {
         Logger::getLogger("acpi").error(
@@ -79,11 +80,11 @@ void AcpiTimerDevice::sleep(Duration duration) {
             break;
         }
         case TimeSpan::Month: {
-            ms *= (1000 * 60 * 60 * 24 * 31);
+            ms *= (u64)(1000 * 60 * 60 * 24 * 31);
             break;
         }
         case TimeSpan::Year: {
-            ms *= (1000 * 60 * 60 * 24 * 365);
+            ms *= (u64)(1000 * 60 * 60 * 24 * 365);
             break;
         }
     }

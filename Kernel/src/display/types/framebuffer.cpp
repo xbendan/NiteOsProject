@@ -15,7 +15,7 @@ FramebufferVideoOutput::FramebufferVideoOutput() {
     m_width         = boot.graphic.width;
     m_height        = boot.graphic.height;
 
-    setBufferOptions(BufferingOptions::DirectRender);
+    setBufferOptions(false);
 }
 
 FramebufferVideoOutput::~FramebufferVideoOutput() {}
@@ -47,31 +47,22 @@ void FramebufferVideoOutput::drawEllipse(Point point, u32 width, u32 height, Col
 
 void FramebufferVideoOutput::drawText(Point point, const char* text, Color color) {}
 
-void FramebufferVideoOutput::setBufferOptions(BufferingOptions b) {
-    if (b == m_bufferOptions) {
+void FramebufferVideoOutput::setBufferOptions(bool isDoubleBuffering) {
+    if (m_isDoubleBuffering == isDoubleBuffering) {
         return;
     }
-    switch (b) {
-        case BufferingOptions::DirectRender: {
-            if (m_doubleBuffering != nullptr) {
-                u64 size = m_width * m_height * m_bytesPerPixel;
-                exec()->getMemory().free4KPages((u64)m_buffer,
-                                                alignUp(size, static_cast<u64>(PAGE_SIZE_4K)));
-            }
-            break;
-        }
-        case BufferingOptions::DoubleBuffering: {
-            if (!m_doubleBuffering) {
-                u64 size          = m_width * m_height * m_bytesPerPixel;
-                m_doubleBuffering = reinterpret_cast<u8*>(exec()->getMemory().alloc4KPages(
-                    alignUp(size, static_cast<u64>(PAGE_SIZE_4K))));
-            }
-        }
+    u64 size = m_width * m_height * m_bytesPerPixel;
+    if (isDoubleBuffering) {
+        exec()->getMemory().free4KPages((u64)m_buffer,
+                                        alignUp(size, static_cast<u64>(PAGE_SIZE_4K)));
+    } else {
+        m_doubleBuffering = reinterpret_cast<u8*>(
+            exec()->getMemory().alloc4KPages(alignUp(size, static_cast<u64>(PAGE_SIZE_4K))));
     }
-    m_bufferOptions = b;
+    m_isDoubleBuffering = isDoubleBuffering;
 }
 
-BufferingOptions FramebufferVideoOutput::getBufferOptions() { return m_bufferOptions; }
+bool FramebufferVideoOutput::getBufferOptions() { return m_isDoubleBuffering; }
 
 void FramebufferVideoOutput::setPointAt(Point point, Color color) {
     if (point.x > m_width || point.y > m_height) {
@@ -85,10 +76,18 @@ void FramebufferVideoOutput::setPointAt(Point point, Color color) {
     p[2] = color.b;
 }
 
-Color FramebufferVideoOutput::getPointAt(Point point) {}
+Color FramebufferVideoOutput::getPointAt(Point point) {
+    if (point.x > m_width || point.y > m_height) {
+        return Color(0, 0, 0);
+    }
+    u64 bytesOffset = m_bytesPerPixel * (point.x + (point.y * m_width));
+    u8* p           = &(getBuffering()[bytesOffset]);
+
+    return Color(p[0], p[1], p[2]);
+}
 
 void FramebufferVideoOutput::update() {
-    if (m_bufferOptions != BufferingOptions::DoubleBuffering) {
+    if (!m_isDoubleBuffering) {
         return;
     }
     acquireLockIntDisable(&m_lock);
@@ -99,13 +98,5 @@ void FramebufferVideoOutput::update() {
 u8* FramebufferVideoOutput::getBuffering() { return m_buffer; }
 
 u8* FramebufferVideoOutput::getWritableBuffering() {
-    switch (m_bufferOptions) {
-        case BufferingOptions::DirectRender: {
-            return m_buffer;
-        }
-        case BufferingOptions::DoubleBuffering:
-        case BufferingOptions::TripleBuffering: {
-            return m_doubleBuffering;
-        }
-    }
+    return m_isDoubleBuffering ? m_doubleBuffering : m_buffer;
 }

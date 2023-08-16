@@ -7,7 +7,7 @@
 #include <siberix/drivers/acpi/acpi_device.h>
 #include <siberix/mm/page.h>
 
-#include <siberix/drivers/pci/devices.hpp>
+#include <siberix/drivers/pci/devices.h>
 
 static X64Executive x64rt;
 extern "C" void     _lgdt(u64);
@@ -38,7 +38,7 @@ bool X64Executive::setupArch() {
     (new SmbiosDevice())->initialize();        /* System Management BIOS */
     (new AcpiPmDevice())->initialize();        /* ACPI Power Management */
     (new ApicDevice())->initialize();          /* APIC Controller */
-    (new PciControllerDevice())->initialize(); /* PIC Controller */
+    (new PCIControllerDevice())->initialize(); /* PIC Controller */
 }
 
 void TaskStateSegment::init(GdtPackage *package) {

@@ -1,16 +1,9 @@
 #include <common/typedefs.h>
+#include <siberix/device/types.h>
 #include <siberix/display/colors.h>
-
-#include <siberix/device/types.hpp>
 
 struct Point {
     int x, y;
-};
-
-enum class BufferingOptions {
-    DirectRender,
-    DoubleBuffering,
-    TripleBuffering
 };
 
 enum class VideoProjectionOptions {
@@ -32,11 +25,11 @@ public:
     virtual void drawEllipse(Point point, u32 width, u32 height, Color)    = 0;
     virtual void drawText(Point point, const char* text, Color color)      = 0;
 
-    virtual void             setBufferOptions(BufferingOptions b);
-    virtual BufferingOptions getBufferOptions();
+    virtual void setBufferOptions(bool isDoubleBuffering);
+    virtual bool getBufferOptions();
 
 protected:
-    BufferingOptions m_bufferOptions;
+    bool m_isDoubleBuffering;
 };
 
 class PixelVideoOutput : public VideoOutput {

@@ -2,22 +2,21 @@
 
 #define SLAB_MAX_BLOCK_ORDER 16
 
-namespace Memory
-{
+namespace Memory {
     struct SlabCpuCache {
         /*
          * Pointer to the next object, this is a double pointer
          * because the area this pointer point to is also a pointer
          * to the next object.
          */
-        void** freelist;
-        Pageframe* page;
+        void**                freelist;
+        Pageframe*            page;
         LinkedList<Pageframe> partial;
     };
 
     struct SlabNode {
-        Spinlock lock;
-        u64 nr_partial;
+        Spinlock              lock;
+        u64                   nr_partial;
         LinkedList<Pageframe> partial;
     };
 
@@ -34,15 +33,15 @@ namespace Memory
         const char* name;
 
         /* Indicate the cache for individual CPU core */
-        SlabCpuCache cpus[MAX_CPU_AMOUNT];
-        u64 flags;
-        u32 size;
-        u32 objectSize;
-        u32 objectAlignment;
-        u32 offset;
-        SlabNode* nodes[4];
-        u64 min_partial;
-        u32 reserved;
+        SlabCpuCache cpus[256];
+        u64          flags;
+        u32          size;
+        u32          objectSize;
+        u32          objectAlignment;
+        u32          offset;
+        SlabNode*    nodes[4];
+        u64          min_partial;
+        u32          reserved;
     };
 
     class SlabAlloc : public MemoryAlloc {
@@ -72,11 +71,11 @@ namespace Memory
          * @param cache
          * @return uintptr_t
          */
-        u64 alloc(u64 size) override;
+        u64  alloc(u64 size) override;
         void free(u64 address) override;
 
         SlabCache* getCache(u32 size);
 
         SlabCache* caches[SLAB_MAX_BLOCK_ORDER];
-    }
-} // namespace Memory
+    };
+}  // namespace Memory

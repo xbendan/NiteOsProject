@@ -68,7 +68,7 @@ AcpiPmDevice::~AcpiPmDevice() {}
 
 template <typename T>
 T* AcpiPmDevice::findTable(const char* str, int index) {
-    if (!memcmp("DSDT", str, 4)) return reinterpret_cast<T>(fade->dsdt);
+    if (!memcmp("DSDT", str, 4)) return reinterpret_cast<T*>(fadt->dsdt);
 
     if (!rsdp) {
         return nullptr;

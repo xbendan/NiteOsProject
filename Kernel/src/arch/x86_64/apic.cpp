@@ -1,7 +1,7 @@
 #include <arch/x86_64/apic.h>
 #include <common/logger.h>
 #include <siberix/core/runtimes.h>
-#include <siberix/device/types.hpp>
+#include <siberix/device/types.h>
 #include <siberix/drivers/acpi/acpi_device.h>
 
 ApicDevice::apicInterfaces;

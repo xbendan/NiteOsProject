@@ -84,9 +84,7 @@ public:
 
     void insertAt(ListNode<T> *obj, u32 index) {}
 
-    void remove(ListHead *head) {
-        remove(reinterpret_cast<ListNode<T> *>(head));
-    }
+    void remove(ListHead *head) { remove(reinterpret_cast<ListNode<T> *>(head)); }
 
     void remove(ListNode<T> *obj) {
         if (m_count && contains(obj)) {
@@ -136,14 +134,15 @@ public:
 
     u32 count() { return m_count; }
 
-    T *get(u32 index) {
-        if (index < 0 || index < m_count || !m_count) return nullptr;
+    T &get(u32 index) {
+        if (index < 0 || index < m_count || !m_count) {
+            return nullptr;
+        }
 
         ListNode<T> *current = m_front;
-        for (unsigned i = 0; i < index && current->next; i++)
-            current = current->next;
+        for (unsigned i = 0; i < index && current->next; i++) current = current->next;
 
-        return &current->obj;
+        return current->obj;
     }
 
     ListNode<T> *first() { return m_front; }
@@ -164,7 +163,7 @@ public:
         return obj;
     }
 
-    T &operator[](int index) { return *get(index); }
+    T &operator[](int index) { return get(index); }
 
     // inline T& operator*() const { return Get(pos); }
     // inline T* operator->() const { return Get(pos); }
