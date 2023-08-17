@@ -37,7 +37,7 @@ namespace Memory {
         u64           address = 0;
 
         if (!page || page->slabInuse >= page->slabObjects)
-            page = cpu->page = cache->request4KPage(cache);
+            page = cpu->page = cache->request4KPage(&address);
 
         /*
          * The value of 'page->freelist' indicates where the next object is,
