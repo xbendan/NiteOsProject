@@ -28,7 +28,12 @@ public:
 
     ~LinkedList() { m_lock.release(); }
 
-    LinkedList &operator=(const LinkedList &list) {}
+    LinkedList &operator=(const LinkedList &list) {
+        m_front = list.m_front;
+        m_back  = list.m_back;
+        m_count = list.m_count;
+        return *this;
+    }
 
     void clear() {
         m_lock.acquire();
@@ -135,14 +140,12 @@ public:
     u32 count() { return m_count; }
 
     T &get(u32 index) {
-        if (index < 0 || index < m_count || !m_count) {
-            return nullptr;
+        ListNode<T> *obj = first();
+        if (index >= m_count) return obj->obj;
+        for (u32 i = 0; i < index; i++) {
+            obj = obj->next;
         }
-
-        ListNode<T> *current = m_front;
-        for (unsigned i = 0; i < index && current->next; i++) current = current->next;
-
-        return current->obj;
+        return obj->obj;
     }
 
     ListNode<T> *first() { return m_front; }
@@ -164,9 +167,6 @@ public:
     }
 
     T &operator[](int index) { return get(index); }
-
-    // inline T& operator*() const { return Get(pos); }
-    // inline T* operator->() const { return Get(pos); }
 
 private:
     ListNode<T> *m_front, *m_back;

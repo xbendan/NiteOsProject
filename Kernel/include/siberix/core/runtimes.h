@@ -3,8 +3,8 @@
 #include <siberix/core/time.h>
 #include <siberix/device/connectivity.h>
 #include <siberix/init/boot.h>
+#include <siberix/mm/manage.h>
 #include <siberix/mm/page.h>
-#include <siberix/mm/service.h>
 #include <siberix/proc/process.h>
 #include <siberix/proc/sched.h>
 
@@ -28,7 +28,7 @@ public:
     bool        isInitialized() { return m_isInitialized; }
     BootConfig& getBootConfig();
 
-    MemoryManagement&   getMemory() { return m_memory; }
+    MemoryService&      getMemory() { return m_memory; }
     DeviceConnectivity* getConnectivity() { return m_devices; }
     Scheduler*          getScheduler() { return m_scheduler; }
 
@@ -45,11 +45,9 @@ protected:
     CompiledArchitecture m_arch;
     BootConfig&          m_bootConfig;
 
-    AddressSpace*       m_kernelSpace;
-    MemoryManagement    m_memory;
-    DeviceConnectivity* m_devices;
-    Scheduler*          m_scheduler;
-
+    MemoryService            m_memory;
+    DeviceConnectivity*      m_devices;
+    Scheduler*               m_scheduler;
     Clock                    m_clock;
     LinkedList<TimerDevice&> m_timers;
 };

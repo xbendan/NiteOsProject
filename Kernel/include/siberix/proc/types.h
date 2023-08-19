@@ -3,7 +3,7 @@
 #include <common/typedefs.h>
 #include <utils/linked_list.h>
 
-#include <siberix/mm/addrspace.hpp>
+#include <siberix/mm/addrspace.h>
 
 enum class TaskPriority : u8 {
     Lowest   = 0,

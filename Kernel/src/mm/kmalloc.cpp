@@ -47,7 +47,7 @@ namespace Memory {
          * Finally, check whether the page has ran out of space ('inuse' equals to 'objects')
          * If yes, request new physical page from page frame allocator.
          */
-        address        = (u64)page->freelist;
+        address        = (u64)(page->freelist);
         page->freelist = (void**)*(page->freelist);
 
         /* Check whether the objects in this page is running out */

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <arch/x86_64/types.h>
 #include <common/typedefs.h>
 #include <siberix/device/types.h>
@@ -38,3 +40,6 @@ private:
     Cpu*        m_cpus[256];
     ThreadQueue m_queue;
 };
+
+Process* thisProcess();
+Thread*  thisThread();

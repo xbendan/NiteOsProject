@@ -1,3 +1,5 @@
+#pragma once
+
 #include <common/string.h>
 #include <common/typedefs.h>
 #include <siberix/core/runtimes.h>

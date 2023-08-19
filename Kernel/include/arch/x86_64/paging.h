@@ -1,6 +1,5 @@
 #include <common/typedefs.h>
-
-#include <siberix/mm/addrspace.hpp>
+#include <siberix/mm/addrspace.h>
 #include <siberix/mm/page.h>
 
 #define PAGES_PER_TABLE 512
@@ -33,13 +32,16 @@ namespace Paging {
         DirectAddress = 0x80
     };
 
+    u64 operator|(PageFlags a, PageFlags b) { return static_cast<u64>(a) | static_cast<u64>(b); }
+
+    u64 operator|(u64 a, PageFlags b) { return a | static_cast<u64>(b); }
+
     class X64AddressSpace : public AddressSpace {
     public:
         pml4_t   pml4 __attribute__((aligned(PAGE_SIZE_4K)));
         pdpt_t   pdpts __attribute__((aligned(PAGE_SIZE_4K)));
         pde_t   *pageDirs[DIRS_PER_PDPT] __attribute__((aligned(PAGE_SIZE_4K)));
-        page_t **pageTables[DIRS_PER_PDPT]
-            __attribute__((aligned(PAGE_SIZE_4K)));
+        page_t **pageTables[DIRS_PER_PDPT] __attribute__((aligned(PAGE_SIZE_4K)));
         /*
          * Each PDPT contains 1024 * 1024 / 4 = 262144 pages
          * 1 byte = 8 bits, 262144 pages needs 32768 bytes to manage
@@ -50,15 +52,15 @@ namespace Paging {
          * - A 4K page contains 512 pointers to bits. PDIR 2MB for each
          * - 512 bits total, 32 bytes
          */
-        u64     pml4Phys;
-        pdpt_t *kernelPdpts;
+        u64      pml4Phys;
+        pdpt_t  *kernelPdpts;
 
         X64AddressSpace();
         ~X64AddressSpace();
 
         u64  allocate4KPages(u64 amount) override;
         void free4KPages(u64 address, u64 amount) override;
-        void mapVirtMemory4K(u64 phys, u64 virt, u64 amount) override;
+        void map(u64 phys, u64 virt, u64 amount) override;
         bool isPagePresent(u64 address) override;
         u64  convertVirtToPhys(u64 address) override;
     } __attribute__((packed));
@@ -70,7 +72,7 @@ namespace Paging {
 
         u64  allocate4KPages(u64 amount) override;
         void free4KPages(u64 address, u64 amount) override;
-        void mapVirtMemory4K(u64 phys, u64 virt, u64 amount) override;
+        void map(u64 phys, u64 virt, u64 amount) override;
         bool isPagePresent(u64 address) override;
         u64  convertVirtToPhys(u64 address) override;
 
@@ -78,10 +80,8 @@ namespace Paging {
         pagedir_t   kPageDirs __attribute__((aligned(PAGE_SIZE_4K)));
         pagedir_t   kHeapDirs __attribute__((aligned(PAGE_SIZE_4K)));
         pagedir_t   kIoDirs[4] __attribute__((aligned(PAGE_SIZE_4K)));
-        pagetable_t kHeapTables[TABLES_PER_DIR]
-            __attribute__((aligned(PAGE_SIZE_4K)));
-        static inline pagetable_t
-            *kPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
+        pagetable_t kHeapTables[TABLES_PER_DIR] __attribute__((aligned(PAGE_SIZE_4K)));
+        static inline pagetable_t *kPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
     };
 
     inline void setPageFlags(u64 *page, u64 flags) { *page |= flags; }

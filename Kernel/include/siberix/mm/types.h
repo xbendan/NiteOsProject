@@ -15,6 +15,11 @@ struct PageBlock {
     u64           start, end;
     PageBlockType type;
 
+    PageBlock()
+        : start(0),
+          end(0),
+          type(BlkTypeReserved) {}
+
     PageBlock(u64 _start, u64 _end, PageBlockType _type)
         : start(_start),
           end(_end),
@@ -47,9 +52,4 @@ struct Pageframe {
 struct PageSection {
     u16  nid;
     u64* pages;
-};
-
-enum MemoryModelType {
-    MmTypeFlat,
-    MmTypeSparse
 };

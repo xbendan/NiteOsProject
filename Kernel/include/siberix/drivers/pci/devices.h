@@ -19,6 +19,9 @@ public:
     inline u16 getDeviceID() { return m_info.getDeviceID(); }
     inline u16 getVendorID() { return m_info.getVendorID(); }
 
+    inline u16 getClassCode() { return readWord(PCIClassCode); }
+    inline u16 getSubclass() { return readWord(PCISubclass); }
+
     inline u8  readByte(PCIConfigRegisters reg) { return m_info.readByte(reg); }
     inline u16 readWord(PCIConfigRegisters reg) { return m_info.readWord(reg); }
     inline u32 readDWord(PCIConfigRegisters reg) { return m_info.readDWord(reg); }

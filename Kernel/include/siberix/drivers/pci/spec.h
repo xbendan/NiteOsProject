@@ -68,7 +68,7 @@
 #define PCI_CAP_MSI_CONTROL_ENABLE (1 << 0)              // MSI Enable
 
 #define PCI_PACKAGE_ADDRESS(bus, slot, func, offset) \
-    ((bus << 16 | slot << 11 | func << 8 | offset & 0xFC | 0x80000000))
+    (((bus << 16) | (slot << 11) | (func << 8) | (offset & 0xFC) | 0x80000000))
 
 enum PCIConfigRegisters {
     PCIDeviceID                = 0x2,

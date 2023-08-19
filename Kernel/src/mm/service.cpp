@@ -1,26 +1,27 @@
 #include <common/string.h>
 #include <siberix/core/runtimes.h>
-#include <siberix/mm/service.h>
+#include <siberix/mm/manage.h>
+#include <siberix/proc/sched.h>
 
 static SegAlloc   _segmentAlloc;
 static BuddyAlloc _buddyAlloc;
 
-MemoryManagement::MemoryManagement() {
-    this->pageAlloc = &(_segmentAlloc = Memory::SegAlloc());
+MemoryService::MemoryService() {
+    this->pageAlloc = &(_segmentAlloc = SegAlloc());
     u64 maxSize     = exec()->getBootConfig().memory.maxSize;
     u64 current     = 0;
     while (current < maxSize) {
-        PageSection& section  = getSectionAt(current);
+        PageSection& section  = getPageSect(current);
         section.pages         = (u64*)alloc4KPages(SECTION_PAGE_SIZE / PAGE_SIZE_4K);
         current              += PAGE_SIZE_1G;
     }
 }
 
-MemoryManagement::~MemoryManagement() {}
+MemoryService::~MemoryService() {}
 
-u64 MemoryManagement::alloc4KPages(u64 amount) { return alloc4KPages(amount, nullptr); }
+u64 MemoryService::alloc4KPages(u64 amount) { return alloc4KPages(amount, nullptr); }
 
-u64 MemoryManagement::alloc4KPages(u64 amount, Pageframe** _pointer) {
+u64 MemoryService::alloc4KPages(u64 amount, Pageframe** _pointer) {
     Pageframe* page = allocPhysMemory4KPages(amount);
 
     if (_pointer != nullptr) *_pointer = page;
@@ -29,26 +30,32 @@ u64 MemoryManagement::alloc4KPages(u64 amount, Pageframe** _pointer) {
     if (!(phys && virt)) {
         return 0;
     }
+    thisProcess()->getAddressSpace()->map(virt, phys, amount);
+    return virt;
 }
 
-void MemoryManagement::free4KPages(u64 address, u64 amount) {}
+void MemoryService::free4KPages(u64 address, u64 amount) {}
 
-Pageframe* MemoryManagement::allocPhysMemory4KPages(u64 amount) {
+Pageframe* MemoryService::allocPhysMemory4KPages(u64 amount) {
     return pageAlloc->allocatePhysMemory4K(amount);
 }
 
-u64 MemoryManagement::allocPhysMemory4K(u64 amount) {}
+u64 MemoryService::allocPhysMemory4K(u64 amount) { return allocPhysMemory4KPages(amount)->address; }
 
-void MemoryManagement::freePhysMemory4KPages(u64 address) {}
+void MemoryService::freePhysMemory4KPages(u64 address) {
+    pageAlloc->freePhysMemory4K(addr2page(address));
+}
 
-void MemoryManagement::freePhysMemory4KPages(Pageframe& page) {}
+void MemoryService::freePhysMemory4KPages(Pageframe* page) { pageAlloc->freePhysMemory4K(page); }
 
-u64 MemoryManagement::allocVirtMemory4KPages(u64 amount) {}
+u64 MemoryService::allocVirtMemory4KPages(u64 amount) {
+    return thisProcess()->getAddressSpace()->allocate4KPages(amount);
+}
 
-void MemoryManagement::freeVirtMemory4KPages(u64 address) {}
+void MemoryService::freeVirtMemory4KPages(u64 address) {}
 
-u64 MemoryManagement::alloc(u64 size) {}
+u64 MemoryService::alloc(u64 size) { return memoryAlloc->alloc(size); }
 
-void MemoryManagement::free(u64 address) {}
+void MemoryService::free(u64 address) { memoryAlloc->free(address); }
 
-void MemoryManagement::calculate() {}
+void MemoryService::calculate() {}

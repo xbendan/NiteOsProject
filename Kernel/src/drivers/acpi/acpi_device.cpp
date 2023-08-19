@@ -1,3 +1,4 @@
+#include <arch/x86_64/kaddr.h>
 #include <common/logger.h>
 #include <common/string.h>
 #include <siberix/core/runtimes.h>
@@ -35,10 +36,11 @@ AcpiPmDevice::AcpiPmDevice()
      */
     switch (rsdp->revision) {
         case 0:
-            rsdt = reinterpret_cast<AcpiRsdt*>(getIOMapping(rsdp->rsdtAddress)) break;
+            rsdt = reinterpret_cast<AcpiRsdt*>(IOVB(rsdp->rsdtAddress));
+            break;
         case 2:
-            rsdt = reinterpret_cast<AcpiRsdt*>(getIOMapping(rsdp->rsdtAddress));
-            xsdt = reinterpret_cast<AcpiXsdt*>(getIOMapping(xsdp->xsdtAddress));
+            rsdt = reinterpret_cast<AcpiRsdt*>(IOVB(rsdp->rsdtAddress));
+            xsdt = reinterpret_cast<AcpiXsdt*>(IOVB(xsdp->xsdtAddress));
             break;
         default:
             Logger::getLogger("acpi").error("Invalid ACPI revision number %u", rsdp->revision);
@@ -79,9 +81,10 @@ T* AcpiPmDevice::findTable(const char* str, int index) {
     int _index  = 0;
     for (int i = 0; i < entries; i++) {
         u64        entry = rsdp->revision ? xsdt->pointers[i] : rsdt->pointers[i];
-        AcpiTable* table = reinterpret_cast<AcpiTable*>(getIoMapping(entry));
+        AcpiTable* table = reinterpret_cast<AcpiTable*>(IOVB(entry));
         if (memcmp(table->signature, str, 4) == 0 && (_index++ == index)) {
-            return static_cast<T*>(table);
+            return reinterpret_cast<T*>(table);
         }
     }
+    return nullptr;
 }

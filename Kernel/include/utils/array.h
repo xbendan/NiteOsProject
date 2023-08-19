@@ -31,6 +31,7 @@ private:
 public:
     SizedArrayList()
         : count(0) {}
+    ~SizedArrayList() {}
 
     T& operator[](int index) { return array[index < size ? index : 0]; }
 

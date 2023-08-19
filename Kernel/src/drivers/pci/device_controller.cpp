@@ -71,12 +71,37 @@ PCIDevice* PCIControllerDevice::findDevice(u16 deviceID, u16 vendorID) {
     return nullptr;
 }
 
-PCIDevice* PCIControllerDevice::findGenericDevice(u16 classCode, u16 subclass) {}
+PCIDevice* PCIControllerDevice::findGenericDevice(u16 classCode, u16 subclass) {
+    for (u32 i = 0; i < m_deviceList.count(); i++) {
+        PCIDevice& device = m_deviceList[i];
+        if (device.getClassCode() == classCode && device.getSubclass() == subclass) {
+            return &device;
+        }
+    }
+    return nullptr;
+}
 
 void PCIControllerDevice::enumerateDevice(u16 deviceID,
                                           u16 vendorID,
-                                          void (*consumer)(PCIDevice& device)) {}
+                                          void (*consumer)(PCIDevice& device)) {
+    ListNode<PCIDevice&>* node = m_deviceList.first();
+    while (node != nullptr) {
+        PCIDevice& device = node->obj;
+        if (device.getDeviceID() == deviceID && device.getVendorID() == vendorID) {
+            consumer(device);
+        }
+        node = node->next;
+    }
+}
 
 void PCIControllerDevice::enumerateGenericDevice(u8 classCode,
                                                  u8 subclass,
-                                                 void (*consumer)(PCIDevice& device)) {}
+                                                 void (*consumer)(PCIDevice& device)) {
+    ListNode<PCIDevice&>* node = m_deviceList.first();
+    while (node != nullptr) {
+        PCIDevice& device = node->obj;
+        if (device.getClassCode() == classCode && device.getSubclass() == subclass) {
+            consumer(device);
+        }
+    }
+}

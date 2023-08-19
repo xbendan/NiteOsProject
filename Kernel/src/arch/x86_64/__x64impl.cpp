@@ -1,13 +1,13 @@
 #include <arch/x86_64/apic.h>
 #include <arch/x86_64/arch.h>
+#include <arch/x86_64/interrupts.h>
 #include <arch/x86_64/paging.h>
 #include <arch/x86_64/serial.h>
 #include <arch/x86_64/smbios.h>
 #include <arch/x86_64/types.h>
 #include <siberix/drivers/acpi/acpi_device.h>
-#include <siberix/mm/page.h>
-
 #include <siberix/drivers/pci/devices.h>
+#include <siberix/mm/page.h>
 
 static X64Executive x64rt;
 extern "C" void     _lgdt(u64);
@@ -18,6 +18,8 @@ GdtPackage                    gdtPackage;
 GdtPtr                        gdtPtr;
 IdtPtr                        idtPtr;
 Paging::X64KernelAddressSpace addressSpace;
+SegAlloc                      segAlloc;
+BuddyAlloc                    buddyAlloc;
 
 bool X64Executive::setupArch() {
     /* load global descriptor table */
@@ -26,12 +28,14 @@ bool X64Executive::setupArch() {
     _lgdt((u64)&gdtPtr);
     /* load interrupt descriptor table */
     for (int i = 0; i < IDT_ENTRY_COUNT; i++)
-        idtEntries[i] = IdtEntry(i, isrTables[i], 0x08, IDT_FLAGS_INTGATE, 0);
+        // idtEntryList[i](i, isrTables[i], 0x08, IDT_FLAGS_INTGATE, 0);
+        idtEntryList[i] = { i, isrTables[i], 0x08, IDT_FLAGS_INTGATE, 0 };
     idtPtr = { .limit = sizeof(IdtEntry) * IDT_ENTRY_COUNT, .base = (u64)&idtEntryList };
     _lidt((u64)&idtPtr);
 
-    m_kernelSpace  = &(addressSpace = Paging::X64KernelAddressSpace());
-    this->m_memory = MemoryManagement();
+    // Initialize memory management
+    // m_kernelSpace   = &(addressSpace = Paging::X64KernelAddressSpace());
+    this->m_memory = MemoryService();
 
     this->m_devices = new DeviceConnectivity();
     (new SerialPortDevice())->initialize();    /* Serial Port */

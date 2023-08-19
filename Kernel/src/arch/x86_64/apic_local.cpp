@@ -1,10 +1,11 @@
 #include <arch/x86_64/apic.h>
+#include <arch/x86_64/kaddr.h>
 
 ApicLocalInterface::ApicLocalInterface(u8 _apicId, ApicDevice* _apic)
     : apicId(_apicId),
       apic(_apic) {
     basePhys   = apic->lReadBase();
-    baseVirtIO = getIoMapping(basePhys);
+    baseVirtIO = IOVB(basePhys);
 }
 
 ApicLocalInterface::~ApicLocalInterface() {}
@@ -15,9 +16,7 @@ void ApicLocalInterface::write(u32 reg, u32 data) {
 
 void ApicLocalInterface::setup() { write(LOCAL_APIC_SIVR, 0x1ff); }
 
-u32 ApicLocalInterface::read(u32 reg) {
-    return *((volatile u32*)(ApicDevice::baseVirtIO + reg));
-}
+u32 ApicLocalInterface::read(u32 reg) { return *((volatile u32*)(ApicDevice::baseVirtIO + reg)); }
 
 void ApicLocalInterface::sendInterrupt(u32 vector) {
     write(LOCAL_APIC_ICR_HIGH, ((u32)apicId) << 24);

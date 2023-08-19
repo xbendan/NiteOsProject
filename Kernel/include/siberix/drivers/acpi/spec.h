@@ -27,7 +27,7 @@ struct AcpiTable {
     u32  oemRevision;
     u32  creatorId;
     u32  creatorRevision;
-} __attribute__((packed));
+} __attribute__((packed)) __attribute__((aligned(8)));
 
 struct AcpiRsdt : public AcpiTable {
     u32 pointers[];

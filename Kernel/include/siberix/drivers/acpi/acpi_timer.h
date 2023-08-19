@@ -15,9 +15,9 @@ public:
     void sleep(u64 ms) override;
 
 private:
-    u8            m_timerLength;
-    AcpiAddress*  m_xpmtAddress;
-    bool          m_is32bitMode;
-    u32           m_data;
-    tickreader_t* m_tickReader;
+    u8           m_timerLength;
+    AcpiAddress* m_xpmtAddress;
+    bool         m_is32bitMode;
+    u32          m_data;
+    tickreader_t m_reader;
 };
