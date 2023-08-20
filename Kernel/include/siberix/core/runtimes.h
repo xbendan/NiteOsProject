@@ -15,13 +15,13 @@ enum class Architecture {
     RISC_V
 };
 
-class KernelExecutive {
+class SiberixKernel {
 public:
-    KernelExecutive(Architecture arch, BootConfig& bootConfig)
+    SiberixKernel(Architecture arch, BootConfig& bootConfig)
         : m_isInitialized(false),
           m_arch(arch),
           m_bootConfig(bootConfig) {}
-    ~KernelExecutive();
+    ~SiberixKernel();
 
     virtual bool setupArch() = 0;
 
@@ -54,3 +54,5 @@ protected:
     LinkedList<TimerDevice&> m_timers;
     TimerDevice*             m_defaultTimer;
 };
+
+SiberixKernel* siberix();

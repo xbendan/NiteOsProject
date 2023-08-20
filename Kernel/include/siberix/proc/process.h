@@ -73,9 +73,12 @@ protected:
 
 class ProcessFactory {
 public:
+    ProcessFactory();
+    ~ProcessFactory();
+
     Process *createProcess(const char *name);
     Process *createElfProcess(File *file);
     Process *createIdleProcess();
-    Process *createProcessEx(const char *name);
+    Process *createProcessEx(const char *name, File *file, TaskType type);
     Thread  *createThread(Process *process);
 };

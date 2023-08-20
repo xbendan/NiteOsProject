@@ -8,7 +8,7 @@ static BuddyAlloc _buddyAlloc;
 
 MemoryService::MemoryService() {
     this->pageAlloc = &(_segmentAlloc = SegAlloc());
-    u64 maxSize     = exec()->getBootConfig().memory.maxSize;
+    u64 maxSize     = siberix()->getBootConfig().memory.maxSize;
     u64 current     = 0;
     while (current < maxSize) {
         PageSection& section  = getPageSect(current);

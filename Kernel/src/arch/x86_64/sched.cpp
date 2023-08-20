@@ -20,8 +20,8 @@ volatile u64* smpEntry2          = (u64*)SMP_TRAMPOLINE_ENTRY2;
 volatile bool doneInit           = false;
 
 void trampolineStart(u16 cpuId) {
-    X64Executive* rt  = static_cast<X64Executive*>(exec());
-    Cpu*          cpu = exec()->getScheduler().cpu(cpuId);
+    SbrxkrnlX64Impl* rt  = static_cast<SbrxkrnlX64Impl*>(siberix());
+    Cpu*          cpu = siberix()->getScheduler().cpu(cpuId);
 
     setCpuLocal(cpu);
 
@@ -34,7 +34,7 @@ void trampolineStart(u16 cpuId) {
     asm volatile("lidt %0" ::"m"(cpu->idtPtr));
 
     cpu->tss.init(cpu->gdt);
-    ApicDevice::getLocalApicId(cpuId).setup();
+    ApicDevice::getInterface(cpuId).setup();
 
     asm("sti");
     doneInit = true;
@@ -44,7 +44,7 @@ void trampolineStart(u16 cpuId) {
 
 Scheduler::Scheduler()
     : m_kernelProcess(new Process("SiberixKernel", nullptr, 0, TaskType::System)) {
-    X64Executive* e = static_cast<X64Executive*>(exec());
+    SbrxkrnlX64Impl* e = static_cast<SbrxkrnlX64Impl*>(siberix());
 
     m_cpus[0] = new Cpu{ .apicId        = 0,
                          .gdt           = &(e->m_gdt),
@@ -55,7 +55,7 @@ Scheduler::Scheduler()
     setCpuLocal(m_cpus[0]);
     m_cpus[0]->tss.init(m_cpus[0]->gdt);
 
-    exec()
+    siberix()
         ->getConnectivity()
         ->enumerateDevice(DeviceType::Processor)
         .forEach([&](u8 processorId) -> void {
@@ -65,7 +65,7 @@ Scheduler::Scheduler()
                 }
                 Logger::getLogger("hw").info("CPU [%u] is being initialized", processorId);
 
-                ApicLocalInterface& interface = ApicDevice::getLocalApicId(processorId);
+                ApicLocalInterface& interface = ApicDevice::getInterface(processorId);
                 m_cpus[processorId]           = new Cpu();
                 *m_cpus[processorId]          = { .self          = m_cpus[processorId],
                                                   .apicId        = processorId,

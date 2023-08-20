@@ -33,5 +33,6 @@ private:
 
 protected:
     friend Device;
-    static inline DeviceConnectivity* deviceConnectivity;
 };
+
+DeviceConnectivity* getConnectivity();

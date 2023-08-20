@@ -1,3 +1,4 @@
+#include <common/string.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/mm/slab.h>
 #include <utils/alignment.h>
@@ -26,7 +27,7 @@ namespace Memory {
 
     u64 SlabAlloc::alloc(u64 size) {
         if (size > PAGE_SIZE_4K)
-            return exec()->getMemory().alloc4KPages(alignUp(size, PAGE_SIZE_4K));
+            return siberix()->getMemory().alloc4KPages(alignUp(size, PAGE_SIZE_4K));
         /*
          * Find the cache with suitable size
          * request size >= cache size
@@ -74,7 +75,7 @@ namespace Memory {
 
     Pageframe* SlabCache::request4KPage(u64* addrVirt) {
         Pageframe* page;
-        u64        addr = exec()->getMemory().alloc4KPages(1, &page);
+        u64        addr = siberix()->getMemory().alloc4KPages(1, &page);
 
         if (addrVirt != nullptr) {
             *addrVirt = addr;

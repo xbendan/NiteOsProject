@@ -9,7 +9,7 @@
 #include <siberix/drivers/pci/devices.h>
 #include <siberix/mm/page.h>
 
-static X64Executive x64rt;
+static SbrxkrnlX64Impl x64rt;
 extern "C" void     _lgdt(u64);
 extern "C" void     _lidt(u64);
 
@@ -21,7 +21,7 @@ Paging::X64KernelAddressSpace addressSpace;
 SegAlloc                      segAlloc;
 BuddyAlloc                    buddyAlloc;
 
-bool X64Executive::setupArch() {
+bool SbrxkrnlX64Impl::setupArch() {
     /* load global descriptor table */
     gdtPackage = GdtPackage(tss);
     gdtPtr     = { .limit = sizeof(GdtPackage) - 1, .base = (u64)&gdtPackage };
@@ -50,7 +50,7 @@ void TaskStateSegment::init(GdtPackage *package) {
     memset(this, 0, sizeof(TaskStateSegment));
 
     for (int i = 0; i < 3; i++) {
-        ist[i] = (u64)exec()->getMemory().alloc4KPages(8);
+        ist[i] = (u64)siberix()->getMemory().alloc4KPages(8);
         memset((void *)ist[i], 0, PAGE_SIZE_4K);
         ist[i] += PAGE_SIZE_4K * 8;
     }

@@ -1,10 +1,12 @@
 #include <common/string.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/display/types/framebuffer.h>
+#include <siberix/init/boot.h>
+#include <siberix/mm/memory.h>
 #include <utils/alignment.h>
 
 FramebufferVideoOutput::FramebufferVideoOutput() {
-    BootConfig& boot = exec()->getBootConfig();
+    BootConfig& boot = getBootConfig();
 
     if (!boot.graphic.address) {
         return;
@@ -53,11 +55,10 @@ void FramebufferVideoOutput::setBufferOptions(bool isDoubleBuffering) {
     }
     u64 size = m_width * m_height * m_bytesPerPixel;
     if (isDoubleBuffering) {
-        exec()->getMemory().free4KPages((u64)m_buffer,
-                                        alignUp(size, static_cast<u64>(PAGE_SIZE_4K)));
+        getMemory()->free4KPages((u64)m_buffer, alignUp(size, static_cast<u64>(PAGE_SIZE_4K)));
     } else {
         m_doubleBuffering = reinterpret_cast<u8*>(
-            exec()->getMemory().alloc4KPages(alignUp(size, static_cast<u64>(PAGE_SIZE_4K))));
+            getMemory()->alloc4KPages(alignUp(size, static_cast<u64>(PAGE_SIZE_4K))));
     }
     m_isDoubleBuffering = isDoubleBuffering;
 }

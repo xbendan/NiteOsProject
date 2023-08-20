@@ -70,13 +70,13 @@ int%1:
     iretq
 %endmacro
 
-%macro fIntIRQ 2
+%macro fIntIRQ 1
 global int%1
 int%1:
     cli
     push 0
     pushaq
-    mov rdi, %2
+    mov rdi, %1
     mov rsi, rsp
     xor rdx, rdx
     xor rbp, rbp
@@ -135,15 +135,15 @@ fIntErr 30
 fIntNoErr 31
 fIntNoErr 32
 
-%assign irqn 0
+%assign irqn 32
 %rep 16
-    fIntIRQ %irqn, (%irqn + 32)
+    fIntIRQ irqn
     %assign irqn irqn+1
 %endrep
 
 %assign ipin 48
 %rep (256 - 48)
-    fIntIPI %ipin
+    fIntIPI ipin
     %assign ipin (ipin + 1)
 %endrep
 

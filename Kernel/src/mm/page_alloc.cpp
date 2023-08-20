@@ -5,7 +5,7 @@
 #include <utils/alignment.h>
 
 BuddyAlloc::BuddyAlloc() {
-    MemoryService& memory = exec()->getMemory();
+    MemoryService& memory = siberix()->getMemory();
     for (int i = 0; i < 256; i++) {
         PageBlock& block     = memory.getPageBlock(i);
         u64        addrStart = alignUp(block.start, PAGE_MAX_SIZE);
@@ -60,7 +60,7 @@ Pageframe* BuddyAlloc::allocatePhysMemory4K(u64 amount) {
         page->flags &= ~PFLAGS_FREE;
         return page;
     } else {
-        logger.error("Cannot find any page with specific size. Out of Memory!");
+        Logger::getLogger("mem").error("Cannot find any page with specific size. Out of Memory!");
         return nullptr;
     }
 }
@@ -73,7 +73,7 @@ void BuddyAlloc::markPagesUsed(u64 addressStart, u64 addressEnd) {}
 
 Pageframe* BuddyAlloc::expand(Pageframe* page) {
     if (page->flags & PFLAGS_KMEM) {
-        logger.warn(
+        Logger::getLogger("mem").warn(
             "Unable to expand page because it belongs to kernel "
             "allocator.");
         return nullptr;

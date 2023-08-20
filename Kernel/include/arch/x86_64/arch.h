@@ -1,12 +1,12 @@
 #include <arch/x86_64/paging.h>
+#include <arch/x86_64/types.h>
 #include <siberix/core/runtimes.h>
-
 #include <siberix/mm/addrspace.h>
 
-class X64Executive : public KernelExecutive {
+class SbrxkrnlX64Impl : public SiberixKernel {
 public:
-    X64Executive();
-    ~X64Executive();
+    SbrxkrnlX64Impl();
+    ~SbrxkrnlX64Impl();
 
     bool setupArch() override;
     void loadMemory();

@@ -5,8 +5,8 @@
 #include <siberix/device/types.h>
 #include <siberix/drivers/acpi/acpi_device.h>
 
-ApicLocalInterface            ApicDevice::apicInterfaces[256];
-SizedArrayList<MadtIso*, 256> ApicDevice::overrides;
+ApicLocalInterface            ApicDevice::m_interfaces[256];
+SizedArrayList<MadtIso*, 256> ApicDevice::m_overrides;
 
 ApicTimerDevice::ApicTimerDevice(ApicLocalInterface& interface)
     : TimerDevice("APIC Timer"),
@@ -35,9 +35,9 @@ ApicDevice::ApicDevice()
             case 0x00: /* Processor Local APIC */ {
                 MadtLocalApic* apicLocal = static_cast<MadtLocalApic*>(entry);
                 if ((apicLocal->flags & 0x3) && apicLocal->apicId) {
-                    exec()->getConnectivity()->registerDevice(
+                    siberix()->getConnectivity()->registerDevice(
                         new ProcessorDevice(apicLocal->apicId));
-                    apicInterfaces[apicLocal->apicId] = ApicLocalInterface(apicLocal->apicId, this);
+                    m_interfaces[apicLocal->apicId] = ApicLocalInterface(apicLocal->apicId, this);
                 }
                 break;
             }
@@ -47,7 +47,7 @@ ApicDevice::ApicDevice()
                 break;
             }
             case 0x02: /* Interrupt Source Override */ {
-                overrides.add(static_cast<MadtIso*>(entry));
+                m_overrides.add(static_cast<MadtIso*>(entry));
                 break;
             }
             case 0x03: /* Non-maskable Interrupt */ {
@@ -83,8 +83,8 @@ ApicDevice::ApicDevice()
     ioRegSelect = (u32*)(baseVirtIO + IO_APIC_REGSEL);
     ioWindow    = (u32*)(baseVirtIO + IO_APIC_WIN);
 
-    for (int i = 0; i < overrides.length(); i++) {
-        MadtIso* iso = overrides[i];
+    for (int i = 0; i < m_overrides.length(); i++) {
+        MadtIso* iso = m_overrides[i];
         ioWrite64(IO_APIC_RED_TABLE_ENT(iso->gSi), iso->irqSource + 0x20);
     }
 }

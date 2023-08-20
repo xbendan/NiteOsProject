@@ -1,3 +1,4 @@
+#include <arch/x86_64/arch.h>
 #include <siberix/core/time.h>
 #include <siberix/device/device.h>
 #include <siberix/device/types.h>
@@ -62,6 +63,7 @@ class ApicDevice;
 
 class ApicLocalInterface {
 public:
+    ApicLocalInterface();
     ApicLocalInterface(u8 _apicId, ApicDevice* _apic);
     ~ApicLocalInterface();
 
@@ -106,10 +108,8 @@ public:
     u64                               ioRead64(u32 reg);
     void                              lWriteBase(u64 val);
     u64                               lReadBase();
-    static inline ApicLocalInterface& getLocalApicId(u8 apicId) { return apicInterfaces[apicId]; }
-    static inline ApicLocalInterface& getLocal() {
-        // return apicInterfaces[0];
-    }
+    static inline ApicLocalInterface& getInterface(u8 apicId) { return m_interfaces[apicId]; }
+    static inline ApicLocalInterface& getInterface() { return m_interfaces[getCpuLocal()->apicId]; }
 
 private:
     u64           basePhys;
@@ -117,6 +117,6 @@ private:
     volatile u32* ioRegSelect;
     volatile u32* ioWindow;
 
-    static ApicLocalInterface            apicInterfaces[256];
-    static SizedArrayList<MadtIso*, 256> overrides;
+    static ApicLocalInterface            m_interfaces[256];
+    static SizedArrayList<MadtIso*, 256> m_overrides;
 };

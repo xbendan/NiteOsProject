@@ -17,6 +17,6 @@ void drawSplash() {
 }
 
 void kmain(BootConfig& bootConfig) {
-    exec()->setupArch();
+    siberix()->setupArch();
     drawSplash();
 }

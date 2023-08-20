@@ -16,4 +16,4 @@ Month months[] = {
     { "December",  "Dec", 12, 31}
 };
 
-void KernelExecutive::sleep(u64 ms) { m_defaultTimer->sleep(ms); }
+void SiberixKernel::sleep(u64 ms) { m_defaultTimer->sleep(ms); }

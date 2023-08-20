@@ -7,3 +7,5 @@ long sysFileClose(RegisterContext* regs);
 long sysFileCreate(RegisterContext* regs);
 long sysFileDelete(RegisterContext* regs);
 long sysFileRename(RegisterContext* regs);
+
+extern "C" void* fSystemCall(void* rsp) { return rsp; }

@@ -5,8 +5,8 @@
 #include <utils/alignment.h>
 
 SegAlloc::SegAlloc() {
-    BootConfig&    bootConfig    = exec()->getBootConfig();
-    MemoryService& memoryService = exec()->getMemory();
+    BootConfig&    bootConfig    = siberix()->getBootConfig();
+    MemoryService& memoryService = siberix()->getMemory();
     PageBlock*     blocks        = &bootConfig.memory.ranges[0];
 
     for (int i = 0; i < 256; i++) {
@@ -30,7 +30,7 @@ SegAlloc::SegAlloc() {
         }
 
         Pageframe* pages                                = reinterpret_cast<Pageframe*>(virt);
-        exec()->getMemory().getPageSect(current).pages  = reinterpret_cast<u64*>(pages->address);
+        siberix()->getMemory().getPageSect(current).pages  = reinterpret_cast<u64*>(pages->address);
         current                                        += PAGE_SIZE_1G;
     }
 }
@@ -41,7 +41,7 @@ Pageframe* SegAlloc::allocatePhysMemory4K(u64 amount) {
     u64 address = 0;
     int i       = 0;
     while (!address && i < 256) {
-        PageBlock& block = exec()->getMemory().getPageBlock(i);
+        PageBlock& block = siberix()->getMemory().getPageBlock(i);
         if (block.end - block.start > (amount * PAGE_SIZE_4K)) {
             address      = block.start;
             block.start += (amount * PAGE_SIZE_4K);

@@ -9,8 +9,8 @@ PCIControllerDevice::PCIControllerDevice()
     m_deviceList          = LinkedList<PCIDevice&>();
     m_enhancedAddressList = LinkedList<McfgAddress*>();
 
-    AcpiPmDevice* acpiDevice = reinterpret_cast<AcpiPmDevice*>(
-        exec()->getConnectivity()->findDevice("ACPI Power Management"));
+    AcpiPmDevice* acpiDevice =
+        reinterpret_cast<AcpiPmDevice*>(getConnectivity()->findDevice("ACPI Power Management"));
     if (acpiDevice == nullptr) {
         Logger::getLogger("pci").error("No ACPI Device found. Abort to load PCI controller.");
         m_flags |= (DeviceExceptionOccurred);
