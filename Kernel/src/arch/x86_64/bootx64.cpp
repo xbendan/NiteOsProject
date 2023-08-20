@@ -1,21 +1,21 @@
 #include <siberix/init/boot.h>
 #include <siberix/init/stivale2.h>
-
 #include <siberix/mm/page.h>
 
 static BootConfig bootConfig;
-extern "C" void   KernelEntrySt2(stivale2_struct* pointer) {
+
+extern "C" void KernelEntrySt2(stivale2_struct* pointer) {
     if (pointer == nullptr) {
         return;
     }
 
-    stivale2_tag* tag = pointer->tags;
+    stivale2_tag* tag = reinterpret_cast<stivale2_tag*>(pointer->tags);
     while (tag) {
         switch (tag->identifier) {
             case STIVALE2_STRUCT_TAG_MEMMAP_ID: {
                 int                         segmentId = 0;
                 stivale2_struct_tag_memmap* mmap =
-                    static_cast<stivale2_struct_tag_memmap*>(tag);
+                    reinterpret_cast<stivale2_struct_tag_memmap*>(tag);
                 auto getEntryType = [](u32 entry) -> PageBlockType {
                     switch (entry) {
                         case STIVALE2_MMAP_USABLE:
@@ -37,9 +37,9 @@ extern "C" void   KernelEntrySt2(stivale2_struct* pointer) {
                     }
                 };
                 for (u64 index = 0; index < mmap->entries; index++) {
-                    stivale2_mmap_entry* entry = &mmap->entries[index];
+                    stivale2_mmap_entry* entry = &mmap->memmap[index];
                     u64                  start = entry->base;
-                    u64                  end   = entry->base + entry->end;
+                    u64                  end   = entry->base + entry->length;
                     if (end > bootConfig.memory.maxSize) {
                         bootConfig.memory.maxSize = end;
                     }
@@ -49,12 +49,12 @@ extern "C" void   KernelEntrySt2(stivale2_struct* pointer) {
             }
             case STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID: {
                 stivale2_struct_tag_framebuffer* fb =
-                    static_cast<stivale2_struct_tag_framebuffer*>(tag);
+                    reinterpret_cast<stivale2_struct_tag_framebuffer*>(tag);
                 bootConfig.graphic = { .width   = fb->framebuffer_width,
-                                         .height  = fb->framebuffer_height,
-                                         .address = fb->framebuffer_addr,
-                                         .pitch   = fb->framebuffer_pitch,
-                                         .bpp     = fb_framebuffer_bpp };
+                                       .height  = fb->framebuffer_height,
+                                       .address = fb->framebuffer_addr,
+                                       .pitch   = fb->framebuffer_pitch,
+                                       .bpp     = fb->framebuffer_bpp };
             }
         }
         tag = reinterpret_cast<stivale2_tag*>(tag->next);

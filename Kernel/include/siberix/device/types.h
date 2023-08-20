@@ -8,6 +8,9 @@ public:
     ProcessorDevice(u32 _processorId);
     ~ProcessorDevice();
 
+    void enable() override;
+    void disable() override;
+
 private:
     u32 m_processorId;
 };

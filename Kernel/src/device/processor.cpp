@@ -5,3 +5,7 @@ ProcessorDevice::ProcessorDevice(u32 _processorId)
       m_processorId(_processorId) {}
 
 ProcessorDevice::~ProcessorDevice() {}
+
+void ProcessorDevice::enable() {}
+
+void ProcessorDevice::disable() {}

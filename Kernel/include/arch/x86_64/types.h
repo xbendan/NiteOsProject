@@ -227,7 +227,11 @@ struct CpuId {
     u32  edx;
 };
 
-struct X64Thread : public Thread {
+class X64Thread : public Thread {
+public:
+    X64Thread(Process *process, u32 threadId);
+    ~X64Thread();
+
     u32 esp0;
     u32 ss0;
 

@@ -16,7 +16,7 @@ ApicDevice::ApicDevice()
         return;
     }
 
-    u64 offset = acpiDevice->madt->entries;
+    u64 offset = (u64) & (acpiDevice->madt->entries[0]);
     u64 end    = reinterpret_cast<u64>(acpiDevice->madt) + acpiDevice->madt->length;
     while (offset < end) {
         MadtEntry* entry = reinterpret_cast<MadtEntry*>(offset);
@@ -24,8 +24,9 @@ ApicDevice::ApicDevice()
             case 0x00: /* Processor Local APIC */ {
                 MadtLocalApic* apicLocal = static_cast<MadtLocalApic*>(entry);
                 if ((apicLocal->flags & 0x3) && apicLocal->apicId) {
-                    exec()->getDeviceTree()->registerDevice(new ProcessorDevice(apicLocal->apicId));
-                    apicInterfaces[apicLocal->apicId] = ApicLocalInterface(apicLocal->apicId);
+                    exec()->getConnectivity()->registerDevice(
+                        new ProcessorDevice(apicLocal->apicId));
+                    apicInterfaces[apicLocal->apicId] = ApicLocalInterface(apicLocal->apicId, this);
                 }
                 break;
             }
@@ -35,7 +36,7 @@ ApicDevice::ApicDevice()
                 break;
             }
             case 0x02: /* Interrupt Source Override */ {
-                overrides.add(static_cast<MadtIso*>(entry) iso);
+                overrides.add(static_cast<MadtIso*>(entry));
                 break;
             }
             case 0x03: /* Non-maskable Interrupt */ {
@@ -106,7 +107,7 @@ void ApicDevice::lWriteBase(u64 val) {
     asm("wrmsr" ::"a"(low), "d"(high), "c"(0x1b));
 }
 
-void ApicDevice::lReadBase() {
+u64 ApicDevice::lReadBase() {
     u64 low, high;
     asm("rdmsr" : "=a"(low), "=d"(high) : "c"(0x1b));
     return ((high & 0x0f) << 32) | (low & 0xffffffff);

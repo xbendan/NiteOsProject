@@ -70,7 +70,7 @@ Scheduler::Scheduler()
                 *m_cpus[processorId]          = { .self          = m_cpus[processorId],
                                                   .apicId        = processorId,
                                                   .currentThread = nullptr,
-                                                  .idleThread    = new Thread() };
+                                                  .idleThread    = new X64Thread() };
 
                 *smpMagicValue      = 0;
                 *smpTrampolineCpuID = processorId;
@@ -106,7 +106,7 @@ bool Scheduler::switchThread(Thread* t) {
     Process* process = thread->m_parent;
 
     cpu->currentThread = thread;
-    cpu->tss.rsp[0]    = reinterpret_cast<u64>(thread->m_kernelStack);
+    cpu->tss.rsp[0]    = reinterpret_cast<u64>(thread->kernelStack);
 
     asm volatile(
         R"(mov %0, %%rsp;
@@ -129,6 +129,6 @@ bool Scheduler::switchThread(Thread* t) {
             mov %%rax, %%cr3
             pop %%rax
             addq $8, %%rsp
-            iretq)" ::"r"(&newThread->m_registers),
-        "r"(reinterpret_cast<Paging::X64AddressSpace>(process->m_addressSpace)->pml4Phys));
+            iretq)" ::"r"(&thread->registers),
+        "r"(reinterpret_cast<Paging::X64AddressSpace*>(process->getAddressSpace())->pml4Phys));
 }

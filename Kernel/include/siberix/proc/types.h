@@ -1,9 +1,8 @@
 #pragma once
 
 #include <common/typedefs.h>
-#include <utils/linked_list.h>
-
 #include <siberix/mm/addrspace.h>
+#include <utils/linked_list.h>
 
 enum class TaskPriority : u8 {
     Lowest   = 0,
@@ -31,7 +30,8 @@ enum class TaskType {
 
 class Process;
 
-struct Thread {
+class Thread {
+public:
     u32      m_threadId;  /* Thread ID, not duplicated in same progress */
     Process* m_parent;    /* Parent process, indicates the owner of this thread */
     Spinlock m_lock;      /* Thread lock */
@@ -44,6 +44,6 @@ struct Thread {
 
     u32 m_timeSlice = 0;
 
-    Thread(Process* process);
+    Thread(Process* process, u32 threadId);
     ~Thread();
 };

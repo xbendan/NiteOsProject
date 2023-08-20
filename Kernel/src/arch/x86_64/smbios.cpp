@@ -11,7 +11,7 @@ SmbiosDevice::SmbiosDevice() {
             checksum += *((u8 *)(addr + i));
         }
         return !checksum;
-    }
+    };
 
     while (address < 0x100000) {
         if (memcmp((void *)address, signL2, 4) && doChecksum(address)) {

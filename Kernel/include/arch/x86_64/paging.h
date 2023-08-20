@@ -1,3 +1,5 @@
+#pragma once
+
 #include <common/typedefs.h>
 #include <siberix/mm/addrspace.h>
 #include <siberix/mm/page.h>
@@ -13,17 +15,17 @@
 #define PAGE_FRAME 0xFFFFFFFFF000ULL
 
 namespace Paging {
-    typedef uint64_t pml4e_t;
-    typedef uint64_t pdpte_t;
-    typedef uint64_t pde_t;
-    typedef uint64_t page_t;
+    typedef u64 pml4e_t;
+    typedef u64 pdpte_t;
+    typedef u64 pde_t;
+    typedef u64 page_t;
 
     using pml4_t      = pml4e_t[PDPTS_PER_PML4]; /* 512GiB -> 256TiB */
     using pdpt_t      = pdpte_t[DIRS_PER_PDPT];  /* 1GiB -> 512GiB */
     using pagedir_t   = pde_t[TABLES_PER_DIR];   /* 2MiB -> 1GiB */
     using pagetable_t = page_t[PAGES_PER_TABLE]; /* 4KiB -> 2MiB */
 
-    enum class PageFlags {
+    enum PageFlags {
         Present       = 0x01,
         Writable      = 0x02,
         User          = 0x04,
@@ -31,10 +33,6 @@ namespace Paging {
         CacheDisabled = 0x10,
         DirectAddress = 0x80
     };
-
-    u64 operator|(PageFlags a, PageFlags b) { return static_cast<u64>(a) | static_cast<u64>(b); }
-
-    u64 operator|(u64 a, PageFlags b) { return a | static_cast<u64>(b); }
 
     class X64AddressSpace : public AddressSpace {
     public:

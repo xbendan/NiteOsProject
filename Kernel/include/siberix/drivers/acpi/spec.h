@@ -69,7 +69,7 @@ struct MadtEntry {
 struct Madt /* Multiple APIC Description Table */ : public AcpiTable {
     u32       address;
     u32       flags;
-    MadtEntry entries;
+    MadtEntry entries[];
 } __attribute__((packed));
 
 struct MadtLocalApic : public MadtEntry {

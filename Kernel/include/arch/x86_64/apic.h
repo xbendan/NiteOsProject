@@ -1,7 +1,7 @@
 #include <siberix/core/time.h>
 #include <siberix/device/device.h>
 #include <siberix/drivers/acpi/spec.h>
-#include <utils/linked_list.h>
+#include <utils/array.h>
 
 #define LOCAL_APIC_ID 0x20                    // APIC ID Register
 #define LOCAL_APIC_VERSION 0x30               // APIC Version Register
