@@ -36,6 +36,7 @@ public:
 private:
     u32         nextPID = 1;
     u64         m_timeSlice;
+    Process*    m_kernelProcess;
     Process*    m_processList[65536];
     Cpu*        m_cpus[256];
     ThreadQueue m_queue;

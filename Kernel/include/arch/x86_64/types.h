@@ -194,11 +194,17 @@ struct IdtEntry {
     u8  flags;
     u16 baseMedium;
     u32 baseHigh;
-    u32 __reserved__;
+    u32 __reserved__ = 0;
 
-    IdtEntry() {}
+    constexpr IdtEntry()
+        : baseLow(0),
+          selector(0),
+          ist(0),
+          flags(0),
+          baseMedium(0),
+          baseHigh(0) {}
 
-    IdtEntry(u8 num, u64 base, u16 sel, u8 flags, u8 ist)
+    constexpr IdtEntry(u8 num, u64 base, u16 sel, u8 flags, u8 ist)
         : baseLow((u16)(base & 0xffff)),
           selector(sel),
           ist(ist),
@@ -219,6 +225,22 @@ struct CpuId {
     char vend = '\0';
     u32  ecx;
     u32  edx;
+};
+
+struct X64Thread : public Thread {
+    u32 esp0;
+    u32 ss0;
+
+    void *userStack;
+    void *userStackBase;
+    void *kernelStack;
+    void *kernelStackBase;
+
+    u64   fsBase;
+    void *fxState;
+
+    RegisterContext registers;
+    RegisterContext lastSyscall;
 };
 
 struct Cpu {

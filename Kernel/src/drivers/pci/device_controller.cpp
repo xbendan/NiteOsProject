@@ -13,7 +13,7 @@ PCIControllerDevice::PCIControllerDevice()
         exec()->getConnectivity()->findDevice("ACPI Power Management"));
     if (acpiDevice == nullptr) {
         Logger::getLogger("pci").error("No ACPI Device found. Abort to load PCI controller.");
-        m_flags |= (DeviceFlags::Exception);
+        m_flags |= (DeviceExceptionOccurred);
         return;
     } else {
         m_mcfgTable = acpiDevice->findTable<PciMcfg>("MCFG");

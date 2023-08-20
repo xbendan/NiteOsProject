@@ -28,8 +28,7 @@ bool X64Executive::setupArch() {
     _lgdt((u64)&gdtPtr);
     /* load interrupt descriptor table */
     for (int i = 0; i < IDT_ENTRY_COUNT; i++)
-        // idtEntryList[i](i, isrTables[i], 0x08, IDT_FLAGS_INTGATE, 0);
-        idtEntryList[i] = { i, isrTables[i], 0x08, IDT_FLAGS_INTGATE, 0 };
+        idtEntryList[i] = IdtEntry(i, intTables[i], 0x08, IDT_FLAGS_INTGATE, 0);
     idtPtr = { .limit = sizeof(IdtEntry) * IDT_ENTRY_COUNT, .base = (u64)&idtEntryList };
     _lidt((u64)&idtPtr);
 

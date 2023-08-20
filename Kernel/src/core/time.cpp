@@ -1,3 +1,4 @@
+#include <siberix/core/runtimes.h>
 #include <siberix/core/time.h>
 
 Month months[] = {
@@ -14,3 +15,5 @@ Month months[] = {
     { "November",  "Nov", 11, 30},
     { "December",  "Dec", 12, 31}
 };
+
+void KernelExecutive::sleep(u64 ms) { m_defaultTimer->sleep(ms); }

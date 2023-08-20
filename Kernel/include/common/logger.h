@@ -19,6 +19,10 @@ class LoggerReceiver {
 
 class Logger {
 public:
+    Logger(const char* name);
+    Logger();
+    ~Logger();
+
     /// @brief
     /// @param level
     /// @param fmt
@@ -54,13 +58,14 @@ public:
     /// @brief
     /// @return
     const char* getName();
+
     /// @brief
     /// @return
     // Array<String>& getCachedMessages();
     /// @brief
     /// @return
-    LinkedList<LoggerReceiver&>& getLoggerReceivers();
-
+    static LinkedList<LoggerReceiver&>&          getLoggerReceivers();
+    static LinkedList<Logger&>&                  getLoggers();
     /**
      * @brief Get a logger with specific name.
      *
@@ -80,7 +85,7 @@ private:
     const char* name;
     // SizedArrayList<String, 256> messages;
 
-    static SizedArrayList<LoggerReceiver&, 256> receivers;
-    static Logger                               anonymousLogger;
-    static Logger                               defaultLogger;
+    static LinkedList<LoggerReceiver&> receivers;
+    static LinkedList<Logger&>         loggers;
+    static Logger                      anonymousLogger;
 };

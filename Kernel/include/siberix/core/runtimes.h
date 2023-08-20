@@ -35,7 +35,9 @@ public:
     bool addDevice(Device& device);
     bool checkDevice(Device& device);
 
-    u64          getTimestamp();
+    u64  getTimestamp();
+    void sleep(u64 ms);
+
     Clock&       getClock();
     void         addTimer(TimerDevice& timer, bool setAsDefault = false);
     TimerDevice& getDefaultTimer();
@@ -50,6 +52,7 @@ protected:
     Scheduler*               m_scheduler;
     Clock                    m_clock;
     LinkedList<TimerDevice&> m_timers;
+    TimerDevice*             m_defaultTimer;
 };
 
 KernelExecutive* exec();

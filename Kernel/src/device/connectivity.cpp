@@ -19,3 +19,7 @@ bool DeviceConnectivity::install(Device& device) {
 }
 
 bool DeviceConnectivity::uninstall(Device& device) { return false; }
+
+LinkedList<Device&>& DeviceConnectivity::enumerateDevice(DeviceType type) {
+    return m_deviceList[static_cast<u8>(type)];
+}

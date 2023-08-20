@@ -1,5 +1,7 @@
 #include <siberix/core/time.h>
 #include <siberix/device/device.h>
+#include <siberix/drivers/acpi/spec.h>
+#include <utils/linked_list.h>
 
 #define LOCAL_APIC_ID 0x20                    // APIC ID Register
 #define LOCAL_APIC_VERSION 0x30               // APIC Version Register
@@ -54,6 +56,8 @@
 #define IO_APIC_RED_TABLE_ENT(x) (0x10 + 2 * x)
 
 #define IO_RED_TBL_VECTOR(x) (x & 0xFF)
+
+class ApicDevice;
 
 class ApicLocalInterface {
 public:

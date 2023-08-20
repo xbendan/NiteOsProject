@@ -1,8 +1,7 @@
 #include <common/logger.h>
 #include <common/printf.h>
 
-static Logger::anonymousLogger;
-static Logger::defaultLogger;
+Logger Logger::anonymousLogger("system");
 
 void Logger::log(LoggerLevel level, const char* fmt, va_list args) {}
 
@@ -43,3 +42,19 @@ void Logger::error(const char* fmt, ...) {
     log(LOG_ERROR, "System is shutting to avoid further damage.");
     printStackTrace();
 }
+
+Logger& getLogger(const char* name) {
+    ListNode<Logger&>* node = Logger::getLoggers().first();
+    while (node != nullptr) {
+        if (strcmp(node->obj.getName(), name) == 0) {
+            return node->obj;
+        }
+        node = node->next;
+    }
+
+    Logger* logger = new Logger(name);
+    Logger::getLoggers().add(*logger);
+    return *logger;
+}
+
+Logger& Logger::getAnonymousLogger() { return anonymousLogger; }

@@ -6,13 +6,13 @@
 
 using namespace APIC::Local;
 
-void LocalAPICTimer::TimerEvent(InterruptData *data, RegisterContext *regs)
+void ApicTimerDevice::TimerEvent(InterruptData *data, RegisterContext *regs)
 {
     System::Out("Tick!");
     g_Timers[TimerAPIC]->Tick();
 }
 
-uint32_t LocalAPICTimer::EstimateBusSpeed()
+uint32_t ApicTimerDevice::EstimateBusSpeed()
 {
     WriteData(LOCAL_APIC_LVT_TIMER, 0x10000);
     WriteData(LOCAL_APIC_TIMER_DIVIDE, 0x3);
@@ -28,7 +28,7 @@ uint32_t LocalAPICTimer::EstimateBusSpeed()
     return frequency;
 }
 
-LocalAPICTimer::LocalAPICTimer()
+ApicTimerDevice::ApicTimerDevice()
 {
     uint64_t hertz = 1000;
     uint32_t irq = 0x20;
@@ -42,20 +42,20 @@ LocalAPICTimer::LocalAPICTimer()
     RegisterIRQ(irq, TimerEvent);
 }
 
-LocalAPICTimer::~LocalAPICTimer()
+ApicTimerDevice::~ApicTimerDevice()
 {
     WriteData(LOCAL_APIC_LVT_TIMER, 0x00020000 | 0x10000);
 }
 
-void LocalAPICTimer::Tick() { m_Ticks++; }
+void ApicTimerDevice::Tick() { m_Ticks++; }
 
-uint64_t LocalAPICTimer::CurrentTime(TimeSpan span)
+uint64_t ApicTimerDevice::CurrentTime(TimeSpan span)
 {
     // return ReadData(LOCAL_APIC_TIMER_CURRENT_COUNT) * 1000 / span;
     return m_Ticks * 1000 / span;
 }
 
-void LocalAPICTimer::Sleep(long milliseconds)
+void ApicTimerDevice::Sleep(long milliseconds)
 {
 
 }

@@ -70,7 +70,7 @@ if __name__ == '__main__':
         os.mkdir('build')
 
     # Compile general source files
-    for file in source_general:
+    for file in (source_general + source_arch):
         print(f"Compiling {file}...")
         # create directory for object file
         if not os.path.exists(f"build/{os.path.dirname(file)}"):

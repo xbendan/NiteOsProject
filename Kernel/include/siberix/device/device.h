@@ -36,32 +36,18 @@ enum class DeviceBus {
     PCI      = 1,
     USB      = 2,
     PS2      = 3,
+    ISA      = 4,
 
-    Unknown = 4
+    Unknown = 5
 };
 
-enum class DeviceFlags : u64 {
-    Initialized        = 0x01,
-    Installed          = 0x02,
-    Exception          = 0x04,
-    DriverInstalled    = 0x08,
-    DriverIncompatible = 0x10,
-    DriverError        = 0x20
+enum DeviceFlags : u64 {
+    DeviceInitialized        = 0x01,
+    DeviceInstalled          = 0x02,
+    DeviceExceptionOccurred  = 0x04,
+    DeviceDriverError        = 0x08,
+    DeviceDriverIncompatible = 0x10
 };
-
-bool operator==(DeviceFlags a, DeviceFlags b) { return static_cast<u64>(a) == static_cast<u64>(b); }
-
-u64 operator|(DeviceFlags a, DeviceFlags b) { return static_cast<u64>(a) | static_cast<u64>(b); }
-
-u64 operator|(u64 a, DeviceFlags b) { return a | static_cast<u64>(b); }
-
-bool operator&(DeviceFlags a, DeviceFlags b) { return static_cast<u64>(a) & static_cast<u64>(b); }
-
-bool operator&(DeviceFlags a, u64 b) { return static_cast<u64>(a) & b; }
-
-bool operator&(u64 a, DeviceFlags b) { return a & static_cast<u64>(b); }
-
-u64 operator|=(u64 a, DeviceFlags b) { return a | static_cast<u64>(b); }
 
 class Device {
 public:
@@ -76,12 +62,12 @@ public:
     inline DeviceBus            getBus() { return this->m_bus; }
     inline LinkedList<Device&>& getDependencies() { return this->m_dependencies; }
     inline bool isDependentWith(Device& device) { return m_dependencies.contains(device); }
-    bool        isInitialized() { return (m_flags & DeviceFlags::Initialized); }
-    bool        isInstalled() { return (m_flags & DeviceFlags::Installed); }
+    bool        isInitialized() { return (m_flags & DeviceInitialized); }
+    bool        isInstalled() { return (m_flags & DeviceInstalled); }
     bool        isWorking() {
-        return (m_flags & DeviceFlags::Initialized) &&
-               !(m_flags & (DeviceFlags::Exception | DeviceFlags::DriverError |
-                            DeviceFlags::DriverIncompatible));
+        return (m_flags & DeviceInitialized) &&
+               !(m_flags &
+                 (DeviceExceptionOccurred | DeviceDriverError | DeviceDriverIncompatible));
     }
 
     bool operator==(Device& device) { return this->m_deviceId == device.m_deviceId; }

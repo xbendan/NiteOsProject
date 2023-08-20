@@ -63,7 +63,7 @@ AcpiPmDevice::AcpiPmDevice()
         }
     }
 
-    m_flags |= DeviceFlags::Initialized;
+    m_flags |= DeviceInitialized;
 };
 
 AcpiPmDevice::~AcpiPmDevice() {}

@@ -70,7 +70,7 @@ namespace APIC
         Local::Initialize();
         IO::Initialize();
 
-        g_Timers[TimerAPIC] = new LocalAPICTimer();
+        g_Timers[TimerAPIC] = new ApicTimerDevice();
 
         while (true)
         {

@@ -1,8 +1,7 @@
-#include <common/logger.h>
-#include <common/string.h>
-
 #include <arch/x86_64/kaddr.h>
 #include <arch/x86_64/smbios.h>
+#include <common/logger.h>
+#include <common/string.h>
 
 SmbiosDevice::SmbiosDevice() {
     u64  address    = 0xf0000;
@@ -31,7 +30,7 @@ SmbiosDevice::SmbiosDevice() {
     }
 
     if (m_version) {
-        m_flags |= DeviceFlags::Initialized;
+        m_flags |= DeviceInitialized;
     } else {
         Logger::getLogger("smbios").error("SMBIOS structure not detected.");
     }

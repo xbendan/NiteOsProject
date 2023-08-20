@@ -46,7 +46,7 @@ AcpiTimerDevice::AcpiTimerDevice()
         }
     }
 
-    m_flags |= DeviceFlags::Initialized;
+    m_flags |= DeviceInitialized;
 }
 
 AcpiTimerDevice::~AcpiTimerDevice() {}

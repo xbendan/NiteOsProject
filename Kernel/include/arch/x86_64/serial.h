@@ -2,7 +2,7 @@
 #include <siberix/device/device.h>
 #include <utils/spinlock.h>
 
-enum class SerialPort {
+enum SerialPort {
     COM1 = 0x3f8,
     COM2 = 0x2f8,
     COM3 = 0x3e8,
@@ -13,7 +13,7 @@ enum class SerialPort {
     COM8 = 0x4e8
 };
 
-enum class SerialPortOffset {
+enum SerialPortOffset {
     InterruptEnable = 1,
     FIFO            = 2,
     LineControl     = 3,

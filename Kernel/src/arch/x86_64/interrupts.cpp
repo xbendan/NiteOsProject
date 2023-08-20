@@ -39,19 +39,19 @@ InterruptData interrupts[256] = {
 };
 
 void UnhandledException(RegisterContext* context) {
-    Logger::getLogger("system").error("Unhandled Interrupt [%u]", context->intno);
+    Logger::getAnonymousLogger().error("Unhandled Interrupt [%u]", context->intno);
     while (true)
         ;
 }
 
-extern "C" void dispatchInt(void* rsp) {
+extern "C" void* fDispatchInterrupts(void* rsp) {
     RegisterContext* context = reinterpret_cast<RegisterContext*>(rsp);
     InterruptData*   data    = &(interrupts[context->intno]);
 
     if (data->handler != nullptr) {
         data->handler(context);
     } else if (!(context->ss & 0x3)) {
-        Logger::getLogger("system").printStackTrace();
+        Logger::getAnonymousLogger().printStackTrace();
         asm("hlt");
     }
 
@@ -61,3 +61,5 @@ extern "C" void dispatchInt(void* rsp) {
 
     return rsp;
 }
+
+extern "C" void* fSystemCall() {}

@@ -1,35 +1,34 @@
+#include <arch/x86_64/apic.h>
 #include <arch/x86_64/arch.h>
+#include <arch/x86_64/paging.h>
 #include <common/logger.h>
 #include <common/string.h>
-
-#include <arch/x86_64/apic.h>
-#include <arch/x86_64/paging.h>
-#include <arch/x86_64/smpdefines.inc>
 #include <siberix/drivers/acpi/acpi_device.h>
 #include <siberix/proc/sched.h>
+
+#include <arch/x86_64/smpdefines.inc>
 
 extern void* smpTrampolineStart;
 extern void* smpTrampolineEnd;
 
-volatile uint16_t* smpMagicValue = (uint16_t*)SMP_TRAMPOLINE_DATA_START_FLAG;
-volatile uint16_t* smpTrampolineCpuID = (uint16_t*)SMP_TRAMPOLINE_CPU_ID;
-GdtPtr*            smpGdtPtr          = (GDTPointer*)SMP_TRAMPOLINE_GDT_PTR;
-volatile uint64_t* smpRegisterCR3     = (uint64_t*)SMP_TRAMPOLINE_CR3;
-volatile uint64_t* smpStack           = (uint64_t*)SMP_TRAMPOLINE_STACK;
-volatile uint64_t* smpEntry2          = (uint64_t*)SMP_TRAMPOLINE_ENTRY2;
-volatile bool      doneInit           = false;
+volatile u16* smpMagicValue      = (u16*)SMP_TRAMPOLINE_DATA_START_FLAG;
+volatile u16* smpTrampolineCpuID = (u16*)SMP_TRAMPOLINE_CPU_ID;
+GdtPtr*       smpGdtPtr          = (GdtPtr*)SMP_TRAMPOLINE_GDT_PTR;
+volatile u64* smpRegisterCR3     = (u64*)SMP_TRAMPOLINE_CR3;
+volatile u64* smpStack           = (u64*)SMP_TRAMPOLINE_STACK;
+volatile u64* smpEntry2          = (u64*)SMP_TRAMPOLINE_ENTRY2;
+volatile bool doneInit           = false;
 
 void trampolineStart(u16 cpuId) {
     X64Executive* rt  = static_cast<X64Executive*>(exec());
-    Cpu*        cpu = rt->getScheduler().cpu(cpuId);
+    Cpu*          cpu = exec()->getScheduler().cpu(cpuId);
 
     setCpuLocal(cpu);
 
     cpu->gdt = reinterpret_cast<GdtPackage*>(rt->getMemory().alloc4KPages(1));
     memcpy(cpu->gdt, (void*)rt->m_gdtPtr.base, rt->m_gdtPtr.limit + 1);
     cpu->gdtPtr = { .limit = rt->m_gdtPtr.limit, .base = (u64)cpu->gdt };
-    cpu->idtPtr = { .limit = rt->m_idtPtr.limit,
-                    .base  = (u64)rt->m_idtPtr.base };
+    cpu->idtPtr = { .limit = rt->m_idtPtr.limit, .base = (u64)rt->m_idtPtr.base };
 
     asm volatile("lgdt (%%rax)" ::"a"(&cpu->gdtPtr));
     asm volatile("lidt %0" ::"m"(cpu->idtPtr));
@@ -44,8 +43,7 @@ void trampolineStart(u16 cpuId) {
 }
 
 Scheduler::Scheduler()
-    : m_kernelProcess(
-          new Process("SiberixKernel", nullptr, 0, TaskTypeSystemProcess)) {
+    : m_kernelProcess(new Process("SiberixKernel", nullptr, 0, TaskType::System)) {
     X64Executive* rt = static_cast<X64Executive*>(exec());
 
     m_cpus[0] = new Cpu(){ .apicId        = 0,
@@ -57,40 +55,36 @@ Scheduler::Scheduler()
     setCpuLocal(m_cpus[0]);
     m_cpus[0]->tss.init(m_cpus[0]->gdt);
 
-    rt->getDeviceTree()
-        .enumerateDevice(DeviceTypeProcessor)
+    exec()
+        ->getConnectivity()
+        ->enumerateDevice(DeviceType::Processor)
         .forEach([&](u8 processorId) -> void {
             if (processorId) {
                 if (m_cpus[processorId] != nullptr) {
                     return;
                 }
-                Logger::getLogger("hw").info("CPU [%u] is being initialized",
-                                             processorId);
+                Logger::getLogger("hw").info("CPU [%u] is being initialized", processorId);
 
-                ApicLocalInterface& interface =
-                    ApicDevice::getLocalApicId(processorId);
-                m_cpus[processorId]  = new Cpu();
-                *m_cpus[processorId] = { .self          = m_cpus[processorId],
-                                         .apicId        = processorId,
-                                         .currentThread = nullptr,
-                                         .idleThread    = new Thread() };
+                ApicLocalInterface& interface = ApicDevice::getLocalApicId(processorId);
+                m_cpus[processorId]           = new Cpu();
+                *m_cpus[processorId]          = { .self          = m_cpus[processorId],
+                                                  .apicId        = processorId,
+                                                  .currentThread = nullptr,
+                                                  .idleThread    = new Thread() };
 
                 *smpMagicValue      = 0;
                 *smpTrampolineCpuID = processorId;
-                *smpEntry2          = (uint64_t)trampolineStart;
-                *smpStack = (uint64_t)(rt->getMemory().alloc4KPages(4)) + 16384;
-                *smpGdtPointer = rt->m_gdtPtr;
+                *smpEntry2          = (u64)trampolineStart;
+                *smpStack           = (u64)(rt->getMemory().alloc4KPages(4)) + 16384;
+                *smpGdtPtr          = rt->m_gdtPtr;
 
                 asm volatile("mov %%cr3, %%rax" : "=a"(*smpRegisterCR3));
 
-                interface.sendInterrupt(
-                    processorId, ICR_DSH_DEST, ICR_MESSAGE_TYPE_INIT, 0);
+                interface.sendInterrupt(ICR_DSH_DEST, ICR_MESSAGE_TYPE_INIT, 0);
                 // Sleep 50 ms
                 while (*smpMagicValue != 0xb33f) {
-                    interface.sendInterrupt(processorId,
-                                            ICR_DSH_DEST,
-                                            ICR_MESSAGE_TYPE_STARTUP,
-                                            (SMP_TRAMPOLINE_ENTRY >> 12));
+                    interface.sendInterrupt(
+                        ICR_DSH_DEST, ICR_MESSAGE_TYPE_STARTUP, (SMP_TRAMPOLINE_ENTRY >> 12));
                     // Sleep 200 ms
                 }
 
@@ -103,16 +97,16 @@ Scheduler::Scheduler()
     Logger::getLogger("hw").success("SMP initialized.");
 }
 
-Scheduler::switchThread(Thread* newThread) {
-    Cpu* cpu = getCpuLocal();
+bool Scheduler::switchThread(Thread* t) {
+    Cpu*       cpu    = getCpuLocal();
+    X64Thread* thread = static_cast<X64Thread*>(t);
 
-    asm volatile("fxrstor64 (%0)" ::"r"((uintptr_t)newThread->fxState)
-                 : "memory");
-    writeMSR(0xc0000100 /* Fs Base */, newThread->fsBase);
-    Process* process = newThread->m_parent;
+    asm volatile("fxrstor64 (%0)" ::"r"((u64)thread->fxState) : "memory");
+    writeMSR(0xc0000100 /* Fs Base */, thread->fsBase);
+    Process* process = thread->m_parent;
 
-    cpu->currentThread = newThread;
-    cpu->tss.rsp[0]    = reinterpret_cast<u64>(newThread->m_kernelStack);
+    cpu->currentThread = thread;
+    cpu->tss.rsp[0]    = reinterpret_cast<u64>(thread->m_kernelStack);
 
     asm volatile(
         R"(mov %0, %%rsp;
@@ -136,6 +130,5 @@ Scheduler::switchThread(Thread* newThread) {
             pop %%rax
             addq $8, %%rsp
             iretq)" ::"r"(&newThread->m_registers),
-        "r"(reinterpret_cast<Paging::X64AddressSpace>(process->m_addressSpace)
-                ->pml4Phys));
+        "r"(reinterpret_cast<Paging::X64AddressSpace>(process->m_addressSpace)->pml4Phys));
 }
