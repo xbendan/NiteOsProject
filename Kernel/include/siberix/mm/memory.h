@@ -1,7 +1,7 @@
 #pragma once
 
-#include <siberix/mm/malloc.h>
 #include <siberix/mm/page.h>
+#include <siberix/mm/types.h>
 
 class MemoryService {
 public:
@@ -75,3 +75,5 @@ private:
     SizedArrayList<PageBlock, 256>   pageBlocks;
     SizedArrayList<PageSection, 256> pageSections;
 };
+
+MemoryService getMemory();

@@ -3,21 +3,21 @@
 #include <siberix/core/time.h>
 #include <siberix/device/connectivity.h>
 #include <siberix/init/boot.h>
-#include <siberix/mm/manage.h>
+#include <siberix/mm/memory.h>
 #include <siberix/mm/page.h>
 #include <siberix/proc/process.h>
 #include <siberix/proc/sched.h>
 
-enum CompiledArchitecture {
-    CA_UNDEFINED = 0,
-    CA_X86_64    = 1,
-    CA_ARMV7     = 2,
-    CA_RISCV     = 3
+enum class Architecture {
+    Undefined,
+    X86_64,
+    ARMv7,
+    RISC_V
 };
 
 class KernelExecutive {
 public:
-    KernelExecutive(CompiledArchitecture arch, BootConfig& bootConfig)
+    KernelExecutive(Architecture arch, BootConfig& bootConfig)
         : m_isInitialized(false),
           m_arch(arch),
           m_bootConfig(bootConfig) {}
@@ -43,9 +43,9 @@ public:
     TimerDevice& getDefaultTimer();
 
 protected:
-    bool                 m_isInitialized;
-    CompiledArchitecture m_arch;
-    BootConfig&          m_bootConfig;
+    bool         m_isInitialized;
+    Architecture m_arch;
+    BootConfig&  m_bootConfig;
 
     MemoryService            m_memory;
     DeviceConnectivity*      m_devices;
@@ -54,5 +54,3 @@ protected:
     LinkedList<TimerDevice&> m_timers;
     TimerDevice*             m_defaultTimer;
 };
-
-KernelExecutive* exec();

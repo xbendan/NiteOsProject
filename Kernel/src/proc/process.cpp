@@ -1,6 +1,7 @@
 #include <common/logger.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/proc/process.h>
+#include <siberix/proc/sched.h>
 
 Process::Process() {}
 
@@ -13,7 +14,7 @@ Process::Process(const char *_name, File *_file, u32 _processId, TaskType _type)
     }
 
     m_flags      |= (ProcessFlagIdle);
-    m_mainThread  = new Thread(this);
+    m_mainThread  = getProcessFactory()->createThread(this);
     m_childrenThreadList.add(new ListNode<Thread *>(m_mainThread));
 }
 

@@ -44,14 +44,14 @@ void trampolineStart(u16 cpuId) {
 
 Scheduler::Scheduler()
     : m_kernelProcess(new Process("SiberixKernel", nullptr, 0, TaskType::System)) {
-    X64Executive* rt = static_cast<X64Executive*>(exec());
+    X64Executive* e = static_cast<X64Executive*>(exec());
 
-    m_cpus[0] = new Cpu(){ .apicId        = 0,
-                           .gdt           = rt->m_gdt,
-                           .gdtPtr        = rt->m_gdtPtr,
-                           .idtPtr        = rt->m_idtPtr,
-                           .currentThread = nullptr,
-                           .idleThread    = new Thread() };
+    m_cpus[0] = new Cpu{ .apicId        = 0,
+                         .gdt           = &(e->m_gdt),
+                         .gdtPtr        = e->m_gdtPtr,
+                         .idtPtr        = e->m_idtPtr,
+                         .currentThread = nullptr,
+                         .idleThread    = new Thread() };
     setCpuLocal(m_cpus[0]);
     m_cpus[0]->tss.init(m_cpus[0]->gdt);
 
@@ -75,8 +75,8 @@ Scheduler::Scheduler()
                 *smpMagicValue      = 0;
                 *smpTrampolineCpuID = processorId;
                 *smpEntry2          = (u64)trampolineStart;
-                *smpStack           = (u64)(rt->getMemory().alloc4KPages(4)) + 16384;
-                *smpGdtPtr          = rt->m_gdtPtr;
+                *smpStack           = (u64)(e->getMemory().alloc4KPages(4)) + 16384;
+                *smpGdtPtr          = e->m_gdtPtr;
 
                 asm volatile("mov %%cr3, %%rax" : "=a"(*smpRegisterCR3));
 

@@ -8,6 +8,17 @@
 ApicLocalInterface            ApicDevice::apicInterfaces[256];
 SizedArrayList<MadtIso*, 256> ApicDevice::overrides;
 
+ApicTimerDevice::ApicTimerDevice(ApicLocalInterface& interface)
+    : TimerDevice("APIC Timer"),
+      m_busClock(0),
+      m_ticks(0) {}
+
+ApicTimerDevice::~ApicTimerDevice() {}
+
+void ApicTimerDevice::sleep(Duration duration) {}
+
+void ApicTimerDevice::sleep(u64 ms) {}
+
 ApicDevice::ApicDevice()
     : Device("Advanced Programmable Interrupt Controller") {
     AcpiPmDevice* acpiDevice;

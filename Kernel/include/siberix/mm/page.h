@@ -1,6 +1,5 @@
 #pragma once
 
-#include <siberix/mm/malloc.h>
 #include <siberix/mm/types.h>
 #include <utils/array.h>
 #include <utils/linked_list.h>

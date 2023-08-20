@@ -7,6 +7,8 @@ enum ProcessFlags {
     ProcessFlagIdle = 0x01
 };
 
+class ProcessFactory;
+
 class Process {
 public:
     Process();
@@ -48,7 +50,7 @@ protected:
     File       *m_file;      /* Pointer to the source file, can be NULL */
     // Activity *m_activity; /* Pointer to the Activity */
 
-    u32 m_flags;
+    u64 m_flags;
     u16 m_handles; /* Register handles amount */
 
     struct {
@@ -66,4 +68,14 @@ protected:
     AddressSpace *m_addressSpace;
 
     friend Thread;
+    friend ProcessFactory;
+};
+
+class ProcessFactory {
+public:
+    Process *createProcess(const char *name);
+    Process *createElfProcess(File *file);
+    Process *createIdleProcess();
+    Process *createProcessEx(const char *name);
+    Thread  *createThread(Process *process);
 };

@@ -1,6 +1,6 @@
 #include <common/string.h>
 #include <siberix/core/runtimes.h>
-#include <siberix/mm/manage.h>
+#include <siberix/mm/memory.h>
 #include <siberix/proc/sched.h>
 
 static SegAlloc   _segmentAlloc;

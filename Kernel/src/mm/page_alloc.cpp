@@ -1,6 +1,6 @@
 #include <common/logger.h>
 #include <siberix/core/runtimes.h>
-#include <siberix/mm/manage.h>
+#include <siberix/mm/memory.h>
 #include <siberix/mm/page.h>
 #include <utils/alignment.h>
 

@@ -58,6 +58,3 @@ void TaskStateSegment::init(GdtPackage *package) {
     asm volatile("mov %%rsp, %0" : "=r"(rsp[0]));
     asm volatile("ltr %%ax" ::"a"(0x28));
 }
-
-X64Thread::X64Thread(Process *process, u32 threadId)
-    : Thread(process, threadId) {}

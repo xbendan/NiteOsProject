@@ -71,9 +71,13 @@ if __name__ == '__main__':
 
     # Compile general source files
     for file in (source_general + source_arch):
-        print(f"Compiling {file}...")
-        # create directory for object file
-        if not os.path.exists(f"build/{os.path.dirname(file)}"):
-            os.makedirs(f"build/{os.path.dirname(file)}")
-        os.system(f"{cxx} -c {file} -Iinclude -o build/{file}.o {' '.join(build_options)}")
-    
+        filepath = file.replace('src/', 'compiled/').replace('.c', '.o').replace('.cpp', '.o').replace('.asm', '.o')
+        if not os.path.exists(f"build/{os.path.dirname(filepath)}"):
+            os.makedirs(f"build/{os.path.dirname(filepath)}")
+
+        print(f"Compiling [%-40s] ---> [%-40s]" % (file, filepath))
+        if (file.endswith('.cpp')):
+            os.system(f"{cxx} -c {file} -Iinclude -o build/{filepath} {' '.join(build_options)}")
+        elif (file.endswith('.asm')):
+            os.system(f"{nasm} -f elf64 {file} -o build/{filepath}")
+        

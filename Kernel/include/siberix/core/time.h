@@ -59,9 +59,8 @@ public:
     u32 getMonths() { return months; }
     u32 getYears() { return years; }
     u64 getAsTimestamp() {
-        return (u64)seconds + (u64)minutes * 60 + (u64)hours * 3600 +
-               (u64)days * 86400 + (u64)months * 2592000 +
-               (u64)years * 31104000;
+        return (u64)seconds + (u64)minutes * 60 + (u64)hours * 3600 + (u64)days * 86400 +
+               (u64)months * 2592000 + (u64)years * 31104000;
     }
     const char *getAsString();
 

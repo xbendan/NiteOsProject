@@ -1,5 +1,6 @@
 #include <siberix/core/time.h>
 #include <siberix/device/device.h>
+#include <siberix/device/types.h>
 #include <siberix/drivers/acpi/spec.h>
 #include <utils/array.h>
 
