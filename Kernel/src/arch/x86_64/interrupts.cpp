@@ -56,7 +56,7 @@ extern "C" void* fDispatchInterrupts(void* rsp) {
     }
 
     if (context->intno >= 0x20) {
-        ApicDevice::getInterface().eoi();
+        _apic->getInterface().eoi();
     }
 
     return rsp;

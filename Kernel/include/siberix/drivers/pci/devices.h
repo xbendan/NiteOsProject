@@ -37,10 +37,10 @@ private:
     bool           m_isMsiCapable;
 };
 
-class PCIControllerDevice : public Device {
+class PciControllerDevice : public Device {
 public:
-    PCIControllerDevice();
-    ~PCIControllerDevice();
+    PciControllerDevice();
+    ~PciControllerDevice();
 
     void enable() override;
     void disable() override;

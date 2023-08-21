@@ -31,6 +31,4 @@ struct BootConfig {
     } graphic;
 };
 
-BootConfig& getBootConfig();
-
 void kmain(BootConfig& bootConfig);

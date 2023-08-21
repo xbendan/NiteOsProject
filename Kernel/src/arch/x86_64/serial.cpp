@@ -22,6 +22,10 @@ SerialPortDevice::SerialPortDevice()
 
 SerialPortDevice::~SerialPortDevice() {}
 
+void SerialPortDevice::enable() {}
+
+void SerialPortDevice::disable() {}
+
 SerialPortLoggerReceiver::SerialPortLoggerReceiver() {}
 
 SerialPortLoggerReceiver::~SerialPortLoggerReceiver() {}

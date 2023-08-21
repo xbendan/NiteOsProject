@@ -1,4 +1,4 @@
-extern KernelEntrySt2
+extern kload_stivale2
 extern stack_top
 
 MULTIBOOT_MAGIC       equ 0xE85250D6

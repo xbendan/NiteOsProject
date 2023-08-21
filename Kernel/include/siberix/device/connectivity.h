@@ -15,6 +15,8 @@ public:
     bool                 install(Device& device);
     bool                 uninstall(Device& device);
     bool                 uninstall(u64 deviceId);
+    void                 registerDevice(Device* device);
+    void                 unregisterDevice(Device* device);
     LinkedList<Device&>& enumerateDevice(DeviceType type);
     u32                  count();
     bool                 isAutoConnect();
@@ -34,5 +36,3 @@ private:
 protected:
     friend Device;
 };
-
-DeviceConnectivity* getConnectivity();

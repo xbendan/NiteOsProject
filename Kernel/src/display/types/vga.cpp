@@ -20,10 +20,7 @@ void VgaTextOutput::drawRect(Point point, u32 width, u32 height, Color color) {
     }
 }
 
-void VgaTextOutput::drawEllipse(Point point,
-                                u32   width,
-                                u32   height,
-                                Color color) {}
+void VgaTextOutput::drawEllipse(Point point, u32 width, u32 height, Color color) {}
 
 void VgaTextOutput::drawText(Point point, const char* text, Color color) {
     if (point.x < 0 || point.y < 0) {
@@ -45,6 +42,23 @@ void VgaTextOutput::drawText(Point point, const char* text, Color color) {
 
         *p = (bg << 12) | (fg << 8) | c;
     }
+}
+
+void VgaTextOutput::drawTextCode(Point point, char code, Color color) {
+    if (point.x < 0 || point.y < 0) {
+        point.x = m_x;
+        point.y = m_y;
+    }
+    if (++point.x >= 80) {
+        newline();
+        point.x = 0;
+        point.y = m_y;
+    }
+    u16* p  = &(m_buffer[(point.y * 80) + point.x]);
+    u8   fg = Color::getVgaColorIndex(color, VgaTextColor::White);
+    u8   bg = (*p) >> 12;
+
+    *p = (bg << 12) | (fg << 8) | code;
 }
 
 void VgaTextOutput::newline() {

@@ -23,10 +23,23 @@ enum class VgaTextColor : u8 {
 
 class Color {
 public:
-    Color(u32 rgba);
-    Color(u8 r, u8 g, u8 b, u8 a);
-    Color(u8 r, u8 g, u8 b);
-    Color(u8 vga);
+    Color(u32 rgba) {
+        r = (rgba >> 24) & 0xff;
+        g = (rgba >> 16) & 0xff;
+        b = (rgba >> 8) & 0xff;
+        a = rgba & 0xff;
+    }
+    Color(u8 _r, u8 _g, u8 _b, u8 _a)
+        : r(_r),
+          g(_g),
+          b(_b),
+          a(_a) {}
+    Color(u8 _r, u8 _g, u8 _b)
+        : r(_r),
+          g(_g),
+          b(_b),
+          a(0xff) {}
+    Color(VgaTextColor vga) { *this = VgaColors[static_cast<u8>(vga)]; }
     ~Color() = default;
 
     bool operator==(Color& color) {

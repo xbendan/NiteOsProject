@@ -31,6 +31,7 @@ public:
     MemoryService&      getMemory() { return m_memory; }
     DeviceConnectivity* getConnectivity() { return m_devices; }
     Scheduler*          getScheduler() { return m_scheduler; }
+    ProcessFactory*     getProcessFactory() { return m_processFactory; }
 
     bool addDevice(Device& device);
     bool checkDevice(Device& device);
@@ -50,6 +51,7 @@ protected:
     MemoryService            m_memory;
     DeviceConnectivity*      m_devices;
     Scheduler*               m_scheduler;
+    ProcessFactory*          m_processFactory;
     Clock                    m_clock;
     LinkedList<TimerDevice&> m_timers;
     TimerDevice*             m_defaultTimer;

@@ -6,7 +6,7 @@
 #include <utils/alignment.h>
 
 FramebufferVideoOutput::FramebufferVideoOutput() {
-    BootConfig& boot = getBootConfig();
+    BootConfig& boot = siberix()->getBootConfig();
 
     if (!boot.graphic.address) {
         return;
@@ -49,16 +49,19 @@ void FramebufferVideoOutput::drawEllipse(Point point, u32 width, u32 height, Col
 
 void FramebufferVideoOutput::drawText(Point point, const char* text, Color color) {}
 
+void FramebufferVideoOutput::drawTextCode(Point point, char code, Color color) {}
+
 void FramebufferVideoOutput::setBufferOptions(bool isDoubleBuffering) {
     if (m_isDoubleBuffering == isDoubleBuffering) {
         return;
     }
     u64 size = m_width * m_height * m_bytesPerPixel;
     if (isDoubleBuffering) {
-        getMemory()->free4KPages((u64)m_buffer, alignUp(size, static_cast<u64>(PAGE_SIZE_4K)));
+        siberix()->getMemory().free4KPages((u64)m_buffer,
+                                           alignUp(size, static_cast<u64>(PAGE_SIZE_4K)));
     } else {
         m_doubleBuffering = reinterpret_cast<u8*>(
-            getMemory()->alloc4KPages(alignUp(size, static_cast<u64>(PAGE_SIZE_4K))));
+            siberix()->getMemory().alloc4KPages(alignUp(size, static_cast<u64>(PAGE_SIZE_4K))));
     }
     m_isDoubleBuffering = isDoubleBuffering;
 }

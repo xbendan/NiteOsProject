@@ -19,9 +19,10 @@ class LoggerReceiver {
 
 class Logger {
 public:
-    Logger(const char* name);
-    Logger();
-    ~Logger();
+    Logger(const char* _name)
+        : name(_name) {}
+    Logger() {}
+    ~Logger() {}
 
     /// @brief
     /// @param level

@@ -229,6 +229,7 @@ struct CpuId {
 
 class X64Thread : public Thread {
 public:
+    X64Thread();
     X64Thread(Process *process, u32 threadId);
     ~X64Thread();
 

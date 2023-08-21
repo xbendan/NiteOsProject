@@ -11,8 +11,9 @@ public:
     void enable() override;
     void disable() override;
 
-    void sleep(Duration duration) override;
-    void sleep(u64 ms) override;
+    void     sleep(Duration duration) override;
+    void     sleep(u64 ms) override;
+    Duration time() override;
 
 private:
     u8           m_timerLength;

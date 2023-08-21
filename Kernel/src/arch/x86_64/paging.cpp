@@ -20,11 +20,13 @@ u64 X64AddressSpace::allocate4KPages(u64 amount) {
         return 0;
     }
 
-    X64KernelAddressSpace kspace;
-    u64                   offset        = 0;
-    u64                   pageDirOffset = 0;
-    u64                   counter       = 0;
-    u64                   address;
+    // X64KernelAddressSpace kspace;
+    // u64                   offset        = 0;
+    // u64                   pageDirOffset = 0;
+    // u64                   counter       = 0;
+    // u64                   address;
+
+    return 0x0;
 }
 
 void X64AddressSpace::free4KPages(u64 address, u64 amount) {
@@ -107,9 +109,9 @@ u64 X64KernelAddressSpace::allocate4KPages(u64 amount) {
 
             counter++;
             if (counter >= amount) {
-                u64 physMemory = address = siberix()->getMemory().allocPhysMemory4K(amount);
-                ((pageDirOffset * PAGE_SIZE_2M) + (offset * PAGE_SIZE_4K)) | 0xFFFFFFFFC0000000;
-                u64 totalOffset = 0;
+                u64 physMemory = siberix()->getMemory().allocPhysMemory4K(amount);
+                address =
+                    ((pageDirOffset * PAGE_SIZE_2M) + (offset * PAGE_SIZE_4K)) | 0xFFFFFFFFC0000000;
                 while (counter--) {
                     if (offset >= PAGES_PER_TABLE) {
                         pageDirOffset++;
@@ -129,6 +131,9 @@ u64 X64KernelAddressSpace::allocate4KPages(u64 amount) {
             }
         }
     }
+
+    Logger::getLogger("vmm").warn("Failed to allocate %u pages", amount);
+    return 0x0;
 }
 
 void X64KernelAddressSpace::free4KPages(u64 address, u64 amount) {}
@@ -161,7 +166,7 @@ u64 X64KernelAddressSpace::convertVirtToPhys(u64 address) {
     } else {
         pagetable_t* pageTable = kPageTablePointers[pdptIndex][pdirIndex];
         return (pageTable && ((*pageTable)[pageIndex] & PageFlags::Present))
-                   ? ((*pageTable)[pageIndex] & PAGE_FRAME + (address % PAGE_SIZE_4K))
+                   ? (((*pageTable)[pageIndex] & PAGE_FRAME) + (address % PAGE_SIZE_4K))
                    : 0;
     }
 }

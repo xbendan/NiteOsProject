@@ -1,12 +1,12 @@
 #include <common/printf.h>
 #include <common/typedefs.h>
+#include <siberix/display/video.h>
+
+VideoOutput* videoOutput;
 
 void puts(const char* msg) {
-    const char* p = msg;
-    while (*p) {
-        Video::WriteChar(*p);
-        p++;
-    }
+    videoOutput->drawText(
+        Point{ -1, -1 }, msg, Color::VgaColors[static_cast<u8>(VgaTextColor::Black)]);
 }
 
 void printf(const char* fmt, ...) {
@@ -35,7 +35,7 @@ void vprintf(const char* fmt, va_list args) {
 
                 case 'x':
                 case 'X':
-                    u = va_arg(args, uint64_t);
+                    u = va_arg(args, u64);
                     puts(utoa(u, buf, 16));
                     break;
 
@@ -45,17 +45,21 @@ void vprintf(const char* fmt, va_list args) {
                     break;
 
                 case 'u':
-                    u = va_arg(args, uint64_t);
+                    u = va_arg(args, u64);
                     puts(utoa(u, buf, 10));
                     break;
 
                 case '%':
-                    Video::WriteChar('%');
+                    videoOutput->drawTextCode(
+                        Point{ -1, -1 },
+                        '%',
+                        Color::VgaColors[static_cast<u8>(VgaTextColor::Black)]);
                     break;
 
                 case 'c':
                     c = va_arg(args, char);
-                    Video::WriteChar(c);
+                    videoOutput->drawTextCode(
+                        Point{ -1, -1 }, c, Color::VgaColors[static_cast<u8>(VgaTextColor::Black)]);
                     break;
 
                 case 's':
@@ -67,7 +71,7 @@ void vprintf(const char* fmt, va_list args) {
                     break;
             }
         } else {
-            Video::WriteChar(ch);
+            videoOutput->drawTextCode(Point{ -1, -1 }, ch, Color(VgaTextColor::Black));
         }
         fmt++;
     }
@@ -103,7 +107,7 @@ char* itoa(int d, char* buf, int base) {
     return p;
 }
 
-char* utoa(uint64_t u, char* buf, int base) {
+char* utoa(u64 u, char* buf, int base) {
     if (base < 2 || base > 36) {
         *buf = '\0';
         return buf;

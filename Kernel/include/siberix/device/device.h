@@ -3,7 +3,7 @@
 #include <common/typedefs.h>
 #include <utils/linked_list.h>
 
-const char* _unknownDeviceName = "<Unknown Device>";
+extern const char* _unknownDeviceName;
 
 enum class DeviceType : u8 {
     Biometric,

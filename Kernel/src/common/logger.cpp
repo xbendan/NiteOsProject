@@ -43,7 +43,13 @@ void Logger::error(const char* fmt, ...) {
     printStackTrace();
 }
 
-Logger& getLogger(const char* name) {
+void Logger::printStackTrace() {}
+
+void Logger::printStackTrace(const char* fmt, ...) {}
+
+const char* Logger::getName() { return name; }
+
+Logger& Logger::getLogger(const char* name) {
     ListNode<Logger&>* node = Logger::getLoggers().first();
     while (node != nullptr) {
         if (strcmp(node->obj.getName(), name) == 0) {

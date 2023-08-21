@@ -22,13 +22,14 @@ public:
     Scheduler();
     ~Scheduler();
 
-    bool         switchThread(Thread* newThread);
+    void         switchThread(Thread* newThread);
     u32          nextPID();
     u64          getTimeSlice();
     void         setTimeSlice(u64 ts);
     bool         addProcess(Process* process);
     bool         addProcess(Process* process, u8 priority);
     Process*     getProcessById(u16 pid);
+    Process*     getKernelProcess();
     ThreadQueue& getThreadQueue();
 
 private:
@@ -39,7 +40,5 @@ private:
     ThreadQueue m_queue;
 };
 
-ProcessFactory* getProcessFactory();
-Scheduler*      getScheduler();
-Process*        thisProcess();
-Thread*         thisThread();
+Process* thisProcess();
+Thread*  thisThread();

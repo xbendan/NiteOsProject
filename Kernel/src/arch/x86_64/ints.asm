@@ -50,7 +50,7 @@ int%1:
     mov rdi, %1
     mov rsi, rsp
     xor rbp, rbp
-    call dispatchInterrupts
+    call fDispatchInterrupts
     popaq
     add rsp, 8
     iretq
@@ -64,7 +64,7 @@ int%1:
     mov rdi, %1
     mov rsi, rsp
     xor rbp, rbp
-    call dispatchInterrupts
+    call fDispatchInterrupts
     popaq
     add rsp, 8
     iretq
@@ -80,7 +80,7 @@ int%1:
     mov rsi, rsp
     xor rdx, rdx
     xor rbp, rbp
-    call dispatchInterrupts
+    call fDispatchInterrupts
     popaq
     add rsp, 8
     iretq
@@ -95,7 +95,7 @@ int%1:
     mov rdi, %1
     mov rsi, rsp
     xor rbp, rbp
-    call dispatchInterrupts
+    call fDispatchInterrupts
     popaq
     add rsp, 8
     iretq
@@ -133,7 +133,6 @@ fIntNoErr 28
 fIntNoErr 29
 fIntErr 30
 fIntNoErr 31
-fIntNoErr 32
 
 %assign irqn 32
 %rep 16
@@ -162,6 +161,6 @@ section .rodata
 intTables:
 %assign i 48
 %rep (256 - 48)
-    dq (int% + i)
+    dq (int%+i)
     %assign i (i + 1)
 %endrep

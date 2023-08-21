@@ -1,10 +1,11 @@
+#include <siberix/core/runtimes.h>
 #include <siberix/init/boot.h>
 #include <siberix/init/stivale2.h>
 #include <siberix/mm/page.h>
 
 static BootConfig bootConfig;
 
-extern "C" void KernelEntrySt2(stivale2_struct* pointer) {
+extern "C" void kload_stivale2(stivale2_struct* pointer) {
     if (pointer == nullptr) {
         return;
     }
@@ -62,3 +63,5 @@ extern "C" void KernelEntrySt2(stivale2_struct* pointer) {
 
     kmain(bootConfig);
 }
+
+BootConfig& SiberixKernel::getBootConfig() { return bootConfig; }

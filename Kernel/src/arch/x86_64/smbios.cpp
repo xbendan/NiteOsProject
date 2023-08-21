@@ -38,3 +38,7 @@ SmbiosDevice::SmbiosDevice()
 }
 
 SmbiosDevice::~SmbiosDevice() {}
+
+void SmbiosDevice::enable() {}
+
+void SmbiosDevice::disable() {}

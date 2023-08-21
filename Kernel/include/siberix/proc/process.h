@@ -37,11 +37,13 @@ public:
      */
     void terminate(int stopCode);
 
-    const char   *getName() { return m_name; }
-    u32           getProcessId() { return m_processId; }
-    TaskType      getType() { return m_type; }
-    File         *getFile() { return m_file; }
-    AddressSpace *getAddressSpace() { return m_addressSpace; }
+    const char           *getName() { return m_name; }
+    u32                   getProcessId() { return m_processId; }
+    TaskType              getType() { return m_type; }
+    File                 *getFile() { return m_file; }
+    Thread               *getMainThread() { return m_mainThread; }
+    LinkedList<Thread *> &getChildrenThreadList() { return m_childrenThreadList; }
+    AddressSpace         *getAddressSpace() { return m_addressSpace; }
 
 protected:
     const char *m_name;      /* Name of the process */
@@ -81,4 +83,5 @@ public:
     Process *createIdleProcess();
     Process *createProcessEx(const char *name, File *file, TaskType type);
     Thread  *createThread(Process *process);
+    Thread  *createIdleThread();
 };

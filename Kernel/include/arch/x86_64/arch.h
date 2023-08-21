@@ -1,3 +1,5 @@
+#pragma once
+
 #include <arch/x86_64/paging.h>
 #include <arch/x86_64/types.h>
 #include <siberix/core/runtimes.h>
@@ -15,6 +17,7 @@ public:
     GdtPackage m_gdt;
     GdtPtr     m_gdtPtr;
     IdtPtr     m_idtPtr;
+    Cpu*       m_cpus[256];
 };
 
 static inline u64 readMSR(u64 msr) {

@@ -110,3 +110,5 @@ void AcpiTimerDevice::sleep(u64 ms) {
         asm("nop");
     }
 }
+
+Duration AcpiTimerDevice::time() { return Duration(0); }

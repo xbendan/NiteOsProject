@@ -8,6 +8,7 @@ public:
     void drawRect(Point point, u32 width, u32 height, Color color) override;
     void drawEllipse(Point point, u32 width, u32 height, Color) override;
     void drawText(Point point, const char* text, Color color) override;
+    void drawTextCode(Point point, char code, Color color) override;
 
     inline bool getBufferOptions() override { return false; }
 

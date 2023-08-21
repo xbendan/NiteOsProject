@@ -2,6 +2,8 @@
 #include <siberix/device/connectivity.h>
 #include <siberix/device/device.h>
 
+const char* _unknownDeviceName = "<Unknown Device>";
+
 Device::Device(const char* _name, DeviceBus _bus, DeviceType _type)
     : m_name(_name),
       m_bus(_bus),

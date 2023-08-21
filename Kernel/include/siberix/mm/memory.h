@@ -75,5 +75,3 @@ private:
     SizedArrayList<PageBlock, 256>   pageBlocks;
     SizedArrayList<PageSection, 256> pageSections;
 };
-
-MemoryService* getMemory();

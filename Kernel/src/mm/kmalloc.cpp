@@ -65,9 +65,9 @@ namespace Memory {
         this->flags    = flags;
         this->reserved = (PAGE_SIZE_4K % size);
         for (int i = 0; i < 256; i++) {
-            u64        v     = 0;
-            Pageframe* page  = request4KPage(&v);
-            cpus[i].freelist = (void**)v;
+            u64 virt = 0;
+            request4KPage(&virt);
+            cpus[i].freelist = (void**)virt;
         }
     }
 

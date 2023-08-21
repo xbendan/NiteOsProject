@@ -75,10 +75,10 @@ public:
     void eoi();
 
 private:
-    u8          apicId;
-    ApicDevice* apic;
-    u64         basePhys;
-    u64         baseVirtIO;
+    u8   apicId;
+    u64  basePhys;
+    u64  baseVirtIO;
+    Cpu* cpu;
 };
 
 class ApicTimerDevice : public TimerDevice {
@@ -86,12 +86,14 @@ public:
     ApicTimerDevice(ApicLocalInterface& interface);
     ~ApicTimerDevice();
 
-    void sleep(Duration duration) override;
-    void sleep(u64 ms) override;
+    void     sleep(Duration duration) override;
+    void     sleep(u64 ms) override;
+    Duration time() override;
 
 private:
-    u64 m_busClock;
-    u64 m_ticks;
+    ApicLocalInterface& m_interface;
+    u64                 m_busClock;
+    u64                 m_ticks;
 };
 
 class ApicDevice : public Device {
@@ -102,14 +104,14 @@ public:
     void enable() override;
     void disable() override;
 
-    void                              ioWrite(u32 reg, u32 data);
-    u32                               ioRead(u32 reg);
-    void                              ioWrite64(u32 reg, u64 data);
-    u64                               ioRead64(u32 reg);
-    void                              lWriteBase(u64 val);
-    u64                               lReadBase();
-    static inline ApicLocalInterface& getInterface(u8 apicId) { return m_interfaces[apicId]; }
-    static inline ApicLocalInterface& getInterface() { return m_interfaces[getCpuLocal()->apicId]; }
+    void                       ioWrite(u32 reg, u32 data);
+    u32                        ioRead(u32 reg);
+    void                       ioWrite64(u32 reg, u64 data);
+    u64                        ioRead64(u32 reg);
+    void                       lWriteBase(u64 val);
+    u64                        lReadBase();
+    inline ApicLocalInterface& getInterface(u8 apicId) { return m_interfaces[apicId]; }
+    inline ApicLocalInterface& getInterface() { return m_interfaces[getCpuLocal()->apicId]; }
 
 private:
     u64           basePhys;
@@ -120,3 +122,5 @@ private:
     static ApicLocalInterface            m_interfaces[256];
     static SizedArrayList<MadtIso*, 256> m_overrides;
 };
+
+extern ApicDevice* _apic;

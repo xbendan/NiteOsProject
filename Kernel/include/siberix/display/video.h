@@ -21,9 +21,10 @@ private:
 
 class VideoOutput {
 public:
-    virtual void drawRect(Point point, u32 width, u32 height, Color color) = 0;
-    virtual void drawEllipse(Point point, u32 width, u32 height, Color)    = 0;
-    virtual void drawText(Point point, const char* text, Color color)      = 0;
+    virtual void drawRect(Point, u32, u32, Color)    = 0;
+    virtual void drawEllipse(Point, u32, u32, Color) = 0;
+    virtual void drawText(Point, const char*, Color) = 0;
+    virtual void drawTextCode(Point, char, Color)    = 0;
 
     virtual void setBufferOptions(bool isDoubleBuffering);
     virtual bool getBufferOptions();
@@ -34,6 +35,9 @@ protected:
 
 class PixelVideoOutput : public VideoOutput {
 public:
+    PixelVideoOutput();
+    ~PixelVideoOutput();
+
     virtual void  setPointAt(Point point, Color color) = 0;
     virtual Color getPointAt(Point point)              = 0;
     virtual void  update();

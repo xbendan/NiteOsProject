@@ -1,6 +1,8 @@
 import os
 
 folders = [
+    'src/common',
+    'src/utils',
     'src/core',
     'src/device',
     'src/display',
@@ -14,8 +16,6 @@ folders = [
 
 proj_name = 'siberix'
 proj_langs = ['c', 'cpp', 'asm']
-source_general = []
-source_arch = []
 build_options = [
     '-DARCH_X86_64',
     '-Wall -Wno-write-strings -Wno-unused-parameter -Wno-sign-compare',
@@ -53,6 +53,10 @@ if __name__ == '__main__':
     ld = f'{target}-elf-ld'
     nasm = 'nasm'
 
+    source_general = []
+    source_arch = []
+    object_files = []
+
     os.system('tree src')
     scan_files(folders, source_general)
     scan_files([f'src/arch/{target}'], source_arch)
@@ -71,13 +75,19 @@ if __name__ == '__main__':
 
     # Compile general source files
     for file in (source_general + source_arch):
-        filepath = file.replace('src/', 'compiled/').replace('.c', '.o').replace('.cpp', '.o').replace('.asm', '.o')
+        filepath = file.replace('src/', 'compiled/').replace('.cpp', '.o').replace('.asm', '.o')
         if not os.path.exists(f"build/{os.path.dirname(filepath)}"):
             os.makedirs(f"build/{os.path.dirname(filepath)}")
 
         print(f"Compiling [%-40s] ---> [%-40s]" % (file, filepath))
         if (file.endswith('.cpp')):
             os.system(f"{cxx} -c {file} -Iinclude -o build/{filepath} {' '.join(build_options)}")
+            object_files.append(f"build/{filepath}")
         elif (file.endswith('.asm')):
             os.system(f"{nasm} -f elf64 {file} -o build/{filepath}")
+            object_files.append(f"build/{filepath}")
+
         
+    # Link object files
+    print("Linking...")
+    os.system(f"{cxx} -T target/LinkerScript-{target}.ld -o build/{proj_name}.bin {' '.join(object_files)} {' '.join(link_options)}")

@@ -8,20 +8,10 @@
 ApicLocalInterface            ApicDevice::m_interfaces[256];
 SizedArrayList<MadtIso*, 256> ApicDevice::m_overrides;
 
-ApicTimerDevice::ApicTimerDevice(ApicLocalInterface& interface)
-    : TimerDevice("APIC Timer"),
-      m_busClock(0),
-      m_ticks(0) {}
-
-ApicTimerDevice::~ApicTimerDevice() {}
-
-void ApicTimerDevice::sleep(Duration duration) {}
-
-void ApicTimerDevice::sleep(u64 ms) {}
-
 ApicDevice::ApicDevice()
     : Device("Advanced Programmable Interrupt Controller") {
-    AcpiPmDevice* acpiDevice;
+    AcpiPmDevice* acpiDevice = static_cast<AcpiPmDevice*>(
+        siberix()->getConnectivity()->findDevice("ACPI Power Management"));
     if (acpiDevice == nullptr) {
         Logger::getLogger("apic").error("ACPI device not detected! Stop loading APIC.");
         return;
@@ -52,6 +42,7 @@ ApicDevice::ApicDevice()
             }
             case 0x03: /* Non-maskable Interrupt */ {
                 MadtNmi* nmi = static_cast<MadtNmi*>(entry);
+                Logger::getLogger("apic").info("Non-maskable Interrupt detected: %u", nmi->lInt);
                 break;
             }
             case 0x04: /* Local APIC Non-maskable Interrupt */ {

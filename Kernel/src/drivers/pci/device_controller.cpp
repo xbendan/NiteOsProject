@@ -4,13 +4,13 @@
 #include <siberix/drivers/acpi/acpi_device.h>
 #include <siberix/drivers/pci/devices.h>
 
-PCIControllerDevice::PCIControllerDevice()
+PciControllerDevice::PciControllerDevice()
     : Device("PCI Controller", DeviceBus::PCI, DeviceType::Firmware) {
     m_deviceList          = LinkedList<PCIDevice&>();
     m_enhancedAddressList = LinkedList<McfgAddress*>();
 
-    AcpiPmDevice* acpiDevice =
-        reinterpret_cast<AcpiPmDevice*>(getConnectivity()->findDevice("ACPI Power Management"));
+    AcpiPmDevice* acpiDevice = reinterpret_cast<AcpiPmDevice*>(
+        siberix()->getConnectivity()->findDevice("ACPI Power Management"));
     if (acpiDevice == nullptr) {
         Logger::getLogger("pci").error("No ACPI Device found. Abort to load PCI controller.");
         m_flags |= (DeviceExceptionOccurred);
@@ -49,19 +49,34 @@ PCIControllerDevice::PCIControllerDevice()
     }
 }
 
-PCIControllerDevice::~PCIControllerDevice() {}
+PciControllerDevice::~PciControllerDevice() {}
 
-bool PCIControllerDevice::checkDevice(u8 bus, u8 device, u8 func) {
+u8 PciControllerDevice::configReadByte(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg) {}
+
+u16 PciControllerDevice::configReadWord(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg) {}
+
+u32 PciControllerDevice::configReadDWord(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg) {}
+
+void PciControllerDevice::configWriteByte(
+    u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u8 data) {}
+
+void PciControllerDevice::configWriteWord(
+    u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u16 data) {}
+
+void PciControllerDevice::configWriteDWord(
+    u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u32 data) {}
+
+bool PciControllerDevice::checkDevice(u8 bus, u8 device, u8 func) {
     return !(getVendorID(bus, device, func) == 0xffff);
 }
 
-PCIDevice& PCIControllerDevice::connectDevice(u8 bus, u8 slot, u8 func) {
+PCIDevice& PciControllerDevice::connectDevice(u8 bus, u8 slot, u8 func) {
     PCIDevice* device = new PCIDevice(bus, slot, func);
     m_deviceList.add(*device);
     return *device;
 }
 
-PCIDevice* PCIControllerDevice::findDevice(u16 deviceID, u16 vendorID) {
+PCIDevice* PciControllerDevice::findDevice(u16 deviceID, u16 vendorID) {
     for (u32 i = 0; i < m_deviceList.count(); i++) {
         PCIDevice& device = m_deviceList[i];
         if (device.getDeviceID() == deviceID && device.getVendorID() == vendorID) {
@@ -71,7 +86,7 @@ PCIDevice* PCIControllerDevice::findDevice(u16 deviceID, u16 vendorID) {
     return nullptr;
 }
 
-PCIDevice* PCIControllerDevice::findGenericDevice(u16 classCode, u16 subclass) {
+PCIDevice* PciControllerDevice::findGenericDevice(u16 classCode, u16 subclass) {
     for (u32 i = 0; i < m_deviceList.count(); i++) {
         PCIDevice& device = m_deviceList[i];
         if (device.getClassCode() == classCode && device.getSubclass() == subclass) {
@@ -81,7 +96,7 @@ PCIDevice* PCIControllerDevice::findGenericDevice(u16 classCode, u16 subclass) {
     return nullptr;
 }
 
-void PCIControllerDevice::enumerateDevice(u16 deviceID,
+void PciControllerDevice::enumerateDevice(u16 deviceID,
                                           u16 vendorID,
                                           void (*consumer)(PCIDevice& device)) {
     ListNode<PCIDevice&>* node = m_deviceList.first();
@@ -94,7 +109,7 @@ void PCIControllerDevice::enumerateDevice(u16 deviceID,
     }
 }
 
-void PCIControllerDevice::enumerateGenericDevice(u8 classCode,
+void PciControllerDevice::enumerateGenericDevice(u8 classCode,
                                                  u8 subclass,
                                                  void (*consumer)(PCIDevice& device)) {
     ListNode<PCIDevice&>* node = m_deviceList.first();

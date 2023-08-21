@@ -11,6 +11,8 @@ public:
     void enable() override;
     void disable() override;
 
+    u32 getProcessorId() { return m_processorId; }
+
 private:
     u32 m_processorId;
 };
@@ -23,8 +25,9 @@ public:
         : Device(name, DeviceBus::Software, DeviceType::SystemDevices) {}
     ~TimerDevice() {}
 
-    virtual void sleep(Duration duration) = 0;
-    virtual void sleep(u64 ms)            = 0;
+    virtual void     sleep(Duration duration) = 0;
+    virtual void     sleep(u64 ms)            = 0;
+    virtual Duration time()                   = 0;
 
     const char *getName() { return m_name; }
     bool        isDefault() { return m_isDefault; }

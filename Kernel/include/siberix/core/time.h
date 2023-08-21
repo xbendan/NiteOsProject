@@ -25,6 +25,46 @@ struct Month {
 struct Duration {
     TimeSpan span;
     u64      amount;
+
+    constexpr Duration(TimeSpan s, u64 a)
+        : span(s),
+          amount(a) {}
+    constexpr Duration(u64 ms)
+        : span(TimeSpan::Millisecond),
+          amount(ms) {}
+
+    constexpr u64 as(TimeSpan _span) {
+        switch (span) {
+            case TimeSpan::Nanosecond: {
+                return amount / 1000000;
+            }
+            case TimeSpan::Microsecond: {
+                return amount / 1000;
+            }
+            case TimeSpan::Millisecond: {
+                return amount;
+            }
+            case TimeSpan::Second: {
+                return amount * 1000;
+            }
+            case TimeSpan::Minute: {
+                return amount * 1000 * 60;
+            }
+            case TimeSpan::Hour: {
+                return amount * 1000 * 60 * 60;
+            }
+            case TimeSpan::Day: {
+                return amount * 1000 * 60 * 60 * 24;
+            }
+            case TimeSpan::Month: {
+                return amount * 1000 * 60 * 60 * 24 * 31;
+            }
+            case TimeSpan::Year: {
+                return amount * 1000 * 60 * 60 * 24 * 365;
+            }
+        }
+        return 0;
+    }
 };
 
 class Clock {
