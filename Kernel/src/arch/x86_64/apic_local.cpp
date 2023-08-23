@@ -1,6 +1,8 @@
 #include <arch/x86_64/apic.h>
 #include <arch/x86_64/kaddr.h>
 
+ApicLocalInterface::ApicLocalInterface() {}
+
 ApicLocalInterface::ApicLocalInterface(u8 _apicId, ApicDevice* _apic)
     : apicId(_apicId) {
     basePhys   = _apic->lReadBase();

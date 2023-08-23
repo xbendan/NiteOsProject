@@ -11,6 +11,8 @@
 Scheduler::Scheduler()
     : m_kernelProcess(new Process("SiberixKernel", nullptr, 0, TaskType::System)) {}
 
+Scheduler::~Scheduler() {}
+
 void Scheduler::switchThread(Thread* t) {
     Cpu*       cpu    = getCpuLocal();
     X64Thread* thread = static_cast<X64Thread*>(t);
@@ -46,3 +48,19 @@ void Scheduler::switchThread(Thread* t) {
             iretq)" ::"r"(&thread->registers),
         "r"(reinterpret_cast<Paging::X64AddressSpace*>(process->getAddressSpace())->pml4Phys));
 }
+
+bool Scheduler::addProcess(Process* process) {
+    if (m_processList[process->getProcessId()] != nullptr) {
+        return false;
+    }
+    m_processList[process->getProcessId()] = process;
+    return true;
+}
+
+Process* Scheduler::getKernelProcess() { return m_kernelProcess; }
+
+ThreadQueue& Scheduler::getThreadQueue() { return m_queue; }
+
+Process* thisProcess() { return getCpuLocal()->currentThread->m_parent; }
+
+Thread* thisThread() { return getCpuLocal()->currentThread; }

@@ -1,7 +1,9 @@
 #include <common/logger.h>
 #include <common/printf.h>
 
-Logger Logger::anonymousLogger("system");
+LinkedList<Logger&>         Logger::loggers   = LinkedList<Logger&>();
+LinkedList<LoggerReceiver&> Logger::receivers = LinkedList<LoggerReceiver&>();
+Logger                      Logger::anonymousLogger("system");
 
 void Logger::log(LoggerLevel level, const char* fmt, va_list args) {}
 
@@ -48,6 +50,10 @@ void Logger::printStackTrace() {}
 void Logger::printStackTrace(const char* fmt, ...) {}
 
 const char* Logger::getName() { return name; }
+
+LinkedList<Logger&>& Logger::getLoggers() { return loggers; }
+
+LinkedList<LoggerReceiver&>& Logger::getLoggerReceivers() { return receivers; }
 
 Logger& Logger::getLogger(const char* name) {
     ListNode<Logger&>* node = Logger::getLoggers().first();

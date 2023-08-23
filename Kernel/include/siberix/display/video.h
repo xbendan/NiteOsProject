@@ -21,6 +21,9 @@ private:
 
 class VideoOutput {
 public:
+    VideoOutput();
+    ~VideoOutput();
+
     virtual void drawRect(Point, u32, u32, Color)    = 0;
     virtual void drawEllipse(Point, u32, u32, Color) = 0;
     virtual void drawText(Point, const char*, Color) = 0;
@@ -35,8 +38,8 @@ protected:
 
 class PixelVideoOutput : public VideoOutput {
 public:
-    PixelVideoOutput();
-    ~PixelVideoOutput();
+    PixelVideoOutput() {}
+    ~PixelVideoOutput() {}
 
     virtual void  setPointAt(Point point, Color color) = 0;
     virtual Color getPointAt(Point point)              = 0;

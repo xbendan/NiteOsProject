@@ -30,11 +30,8 @@ public:
     virtual Duration time()                   = 0;
 
     const char *getName() { return m_name; }
-    bool        isDefault() { return m_isDefault; }
-    void        setDefault(bool isDef) { m_isDefault = isDef; }
     u8          getId() { return m_id; }
 
 private:
-    bool m_isDefault;
-    u8   m_id;
+    u8 m_id;
 };

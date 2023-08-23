@@ -1,3 +1,4 @@
+#include <arch/x86_64/arch.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/init/boot.h>
 #include <siberix/init/stivale2.h>
@@ -63,5 +64,10 @@ extern "C" void kload_stivale2(stivale2_struct* pointer) {
 
     kmain(bootConfig);
 }
+
+SbrxkrnlX64Impl::SbrxkrnlX64Impl()
+    : SiberixKernel(Architecture::X86_64, bootConfig) {}
+
+SbrxkrnlX64Impl::~SbrxkrnlX64Impl() {}
 
 BootConfig& SiberixKernel::getBootConfig() { return bootConfig; }

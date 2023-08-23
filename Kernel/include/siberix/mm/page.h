@@ -23,7 +23,7 @@ public:
     void                            freePhysMemory4K(u64 address) override;
     void                            freePhysMemory4K(Pageframe* page) override;
     void                            addSegment(u64 start, u64 end, PageBlockType type);
-    SizedArrayList<PageBlock, 256>* getSegments();
+    SizedArrayList<PageBlock, 256>& getSegments() { return segments; }
 
 private:
     SizedArrayList<PageBlock, 256> segments;

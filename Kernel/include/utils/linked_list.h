@@ -106,6 +106,18 @@ public:
         }
     }
 
+    void remove(T obj) {
+        ListNode<T> *item = first();
+        do {
+            if (item->obj == obj) {
+                remove(item);
+                return;
+            }
+
+            item = item->next;
+        } while (item != nullptr);
+    }
+
     void remove(u32 index) { remove(get(index)); }
 
     bool contains(ListNode<T> *obj) {

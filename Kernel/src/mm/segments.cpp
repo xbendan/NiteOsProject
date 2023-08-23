@@ -17,7 +17,7 @@ SegAlloc::SegAlloc() {
             continue;
         }
 
-        getSegments()->add(block);
+        getSegments().add(block);
     }
 
     u64 current = 0;
@@ -29,9 +29,9 @@ SegAlloc::SegAlloc() {
             return;
         }
 
-        Pageframe* pages                                = reinterpret_cast<Pageframe*>(virt);
+        Pageframe* pages                                   = reinterpret_cast<Pageframe*>(virt);
         siberix()->getMemory().getPageSect(current).pages  = reinterpret_cast<u64*>(pages->address);
-        current                                        += PAGE_SIZE_1G;
+        current                                           += PAGE_SIZE_1G;
     }
 }
 

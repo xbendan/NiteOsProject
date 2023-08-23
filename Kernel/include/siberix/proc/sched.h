@@ -23,7 +23,6 @@ public:
     ~Scheduler();
 
     void         switchThread(Thread* newThread);
-    u32          nextPID();
     u64          getTimeSlice();
     void         setTimeSlice(u64 ts);
     bool         addProcess(Process* process);
@@ -31,6 +30,8 @@ public:
     Process*     getProcessById(u16 pid);
     Process*     getKernelProcess();
     ThreadQueue& getThreadQueue();
+
+    u32 nextPID() { return m_nextPID++; }
 
 private:
     u32         m_nextPID = 1;

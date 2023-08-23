@@ -11,12 +11,12 @@ public:
     ~DeviceConnectivity();
 
     Device*              getDevice(u64 deviceId);
-    Device*              findDevice(const char* str);
-    bool                 install(Device& device);
-    bool                 uninstall(Device& device);
+    // bool                 install(Device& device);
+    // bool                 uninstall(Device& device);
     bool                 uninstall(u64 deviceId);
     void                 registerDevice(Device* device);
     void                 unregisterDevice(Device* device);
+    Device*              findDevice(const char* str);
     LinkedList<Device&>& enumerateDevice(DeviceType type);
     u32                  count();
     bool                 isAutoConnect();

@@ -33,15 +33,23 @@ public:
     Scheduler*          getScheduler() { return m_scheduler; }
     ProcessFactory*     getProcessFactory() { return m_processFactory; }
 
-    bool addDevice(Device& device);
-    bool checkDevice(Device& device);
-
     u64  getTimestamp();
     void sleep(u64 ms);
 
-    Clock&       getClock();
-    void         addTimer(TimerDevice& timer, bool setAsDefault = false);
-    TimerDevice& getDefaultTimer();
+    Clock& getClock() { return m_clock; }
+
+    void addTimer(TimerDevice& timer, bool setAsDefault = false) {
+        if (!m_timers.contains(timer)) {
+            m_timers.add(timer);
+            if (setAsDefault) {
+                m_defaultTimer = &timer;
+            }
+        }
+    }
+
+    TimerDevice& getDefaultTimer() {
+        return m_defaultTimer == nullptr ? m_timers[0] : *m_defaultTimer;
+    }
 
 protected:
     bool         m_isInitialized;

@@ -1,5 +1,5 @@
-# **ATRI Kernel**  
-ATRI kernel is designed as a modern style system kernel. It's a monolithic kernel which contains process scheduling, memory management, graphics output, file system, network, device management and PnP services. One day in the future, we might migrate some parts of kernel components into user space for stability reasons, and it may eventually becomes a hybrid kernel.
+# **Siberix Kernel**  
+Siberix kernel is designed as a modern style system kernel. It's a monolithic kernel which contains process scheduling, memory management, graphics output, file system, network, device management and PnP services. One day in the future, we might migrate some parts of kernel components into user space for stability reasons, and it may eventually becomes a hybrid kernel.
 # Architecture
 - [x] x86 [64-bit] **(In progress)**
 - [ ] arm [64-bit]
@@ -55,7 +55,9 @@ ATRI kernel is designed as a modern style system kernel. It's a monolithic kerne
 - [ ] Storage (USB Massive Storage)  
 # Changelog
 20230324: Finish kernel memory allocator (allocation only), add support to ACPI, PCI, SMP and AHCI.  
-20230325: Add support to SSE, MMX
-20230326: Add support to PS/2 controller and keyboard, update device.
-20230327: Implement a simple console with no backspace.
-20230403: Finally fixed issues on kernel memory allocation.
+20230325: Add support to SSE, MMX  
+20230326: Add support to PS/2 controller and keyboard, update device.  
+20230327: Implement a simple console with no backspace.  
+20230403: Finally fixed issues on kernel memory allocation.  
+20230624: Rewrite project structures.
+20230820: Done fixing known compiling issues. Preparing for linking

@@ -105,7 +105,7 @@ public:
     u16 iopbOffset;
 
     void init(GdtPackage *package);
-} __attribute__((packed)) tss_t;
+} __attribute__((packed));
 
 struct GdtTssEntry {
     u16 len;

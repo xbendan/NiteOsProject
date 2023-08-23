@@ -62,9 +62,6 @@ public:
 
     /// @brief
     /// @return
-    // Array<String>& getCachedMessages();
-    /// @brief
-    /// @return
     static LinkedList<LoggerReceiver&>&          getLoggerReceivers();
     static LinkedList<Logger&>&                  getLoggers();
     /**

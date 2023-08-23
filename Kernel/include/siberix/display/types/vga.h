@@ -10,6 +10,7 @@ public:
     void drawText(Point point, const char* text, Color color) override;
     void drawTextCode(Point point, char code, Color color) override;
 
+    inline void setBufferOptions(bool isDoubleBuffering) override {}
     inline bool getBufferOptions() override { return false; }
 
     void newline();

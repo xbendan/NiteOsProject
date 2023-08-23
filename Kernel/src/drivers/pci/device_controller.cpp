@@ -1,3 +1,4 @@
+#include <arch/x86_64/iopt.h>
 #include <common/logger.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/device/connectivity.h>
@@ -51,20 +52,42 @@ PciControllerDevice::PciControllerDevice()
 
 PciControllerDevice::~PciControllerDevice() {}
 
-u8 PciControllerDevice::configReadByte(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg) {}
+u8 PciControllerDevice::configReadByte(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg) {
+    outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
+    return (u8)((inDWord32(0xcfc) >> (reg & 2) * 8) & 0xff);
+}
 
-u16 PciControllerDevice::configReadWord(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg) {}
+u16 PciControllerDevice::configReadWord(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg) {
+    outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
+    return (u16)((inDWord32(0xcfc) >> (reg & 2) * 8) & 0xff);
+}
 
-u32 PciControllerDevice::configReadDWord(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg) {}
+u32 PciControllerDevice::configReadDWord(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg) {
+    outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
+    return inDWord32(0xcfc);
+}
 
 void PciControllerDevice::configWriteByte(
-    u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u8 data) {}
+    u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u8 data) {
+    outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
+    outDWord32(0xcfc,
+               (inDWord32(0xcfc) & (~(0xff << ((reg & 3) * 8)))) |
+                   (static_cast<u32>(data) << ((reg & 3) * 8)));
+}
 
 void PciControllerDevice::configWriteWord(
-    u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u16 data) {}
+    u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u16 data) {
+    outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
+    outDWord32(0xcfc,
+               (inDWord32(0xcfc) & (~(0xffff << ((reg & 2) * 8)))) |
+                   (static_cast<u32>(data) << ((reg & 3) * 8)));
+}
 
 void PciControllerDevice::configWriteDWord(
-    u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u32 data) {}
+    u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u32 data) {
+    outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
+    outDWord32(0xcfc, data);
+}
 
 bool PciControllerDevice::checkDevice(u8 bus, u8 device, u8 func) {
     return !(getVendorID(bus, device, func) == 0xffff);

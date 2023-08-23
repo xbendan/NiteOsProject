@@ -32,6 +32,9 @@ class Process;
 
 class Thread {
 public:
+    Thread(Process* process, u32 threadId);
+    ~Thread();
+
     u32      m_threadId;  /* Thread ID, not duplicated in same progress */
     Process* m_parent;    /* Parent process, indicates the owner of this thread */
     Spinlock m_lock;      /* Thread lock */
@@ -43,7 +46,4 @@ public:
     TaskState    m_state = TaskState::Running; /* Thread state */
 
     u32 m_timeSlice = 0;
-
-    Thread(Process* process, u32 threadId);
-    ~Thread();
 };

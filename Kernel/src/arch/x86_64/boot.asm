@@ -69,6 +69,8 @@ stivale2framebufferWctag: ; Ask the bootloader to set framebuffer as writecombin
 global __cxa_atexit
 __cxa_atexit:
   ret
+
+section .bss
 global __dso_handle
 __dso_handle: resq 1
 
