@@ -5,7 +5,8 @@
 #include <siberix/mm/memory.h>
 #include <utils/alignment.h>
 
-FramebufferVideoOutput::FramebufferVideoOutput() {
+FramebufferVideoOutput::FramebufferVideoOutput()
+    : PixelVideoOutput(nullptr) {
     BootConfig& boot = siberix()->getBootConfig();
 
     if (!boot.graphic.address) {

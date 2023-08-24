@@ -52,6 +52,10 @@ void X64AddressSpace::free4KPages(u64 address, u64 amount) {
 
 void X64AddressSpace::map(u64 phys, u64 virt, u64 amount) {}
 
+bool X64AddressSpace::isPagePresent(u64 address) { return false; }
+
+u64 X64AddressSpace::convertVirtToPhys(u64 address) { return 0; }
+
 X64KernelAddressSpace::X64KernelAddressSpace() {
     memset(&pml4, 0, sizeof(pml4_t));
     memset(&pdpts, 0, sizeof(pdpt_t));

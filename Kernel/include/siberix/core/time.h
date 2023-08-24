@@ -69,7 +69,7 @@ struct Duration {
 
 class Clock {
 public:
-    Clock();
+    Clock() = default;
     Clock(u32 s, u32 mi, u32 h, u32 d, u32 mo, u32 y)
         : seconds(s),
           minutes(mi),
@@ -90,7 +90,7 @@ public:
         timestamp /= 12;
         years      = timestamp;
     }
-    ~Clock();
+    ~Clock() = default;
 
     u32 getSeconds() { return seconds; }
     u32 getMinutes() { return minutes; }

@@ -82,6 +82,10 @@ ApicDevice::ApicDevice()
 
 ApicDevice::~ApicDevice() {}
 
+void ApicDevice::enable() {}
+
+void ApicDevice::disable() {}
+
 void ApicDevice::ioWrite(u32 reg, u32 data) {
     *ioRegSelect = reg;
     *ioWindow    = data;

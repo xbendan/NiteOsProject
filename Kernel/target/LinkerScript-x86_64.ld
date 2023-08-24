@@ -1,5 +1,6 @@
 OUTPUT_FORMAT("elf64-x86-64")
-ENTRY(start_mb32)
+OUTPUT_ARCH(i386:x86-64)
+ENTRY(kload_stivale2)
 
 SECTIONS {
 

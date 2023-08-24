@@ -1,10 +1,7 @@
 #include <common/string.h>
 #include <siberix/display/types/vga.h>
 
-VgaTextOutput::VgaTextOutput()
-    : VideoOutput() {
-    m_buffer = reinterpret_cast<u16*>(0xb8000);
-}
+VgaTextOutput::VgaTextOutput() { m_buffer = reinterpret_cast<u16*>(0xb8000); }
 
 VgaTextOutput::~VgaTextOutput() {}
 

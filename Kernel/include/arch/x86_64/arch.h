@@ -11,8 +11,6 @@ public:
     ~SbrxkrnlX64Impl();
 
     bool setupArch() override;
-    void loadMemory();
-    void loadDevices();
 
     GdtPackage m_gdt;
     GdtPtr     m_gdtPtr;

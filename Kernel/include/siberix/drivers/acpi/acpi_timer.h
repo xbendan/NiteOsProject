@@ -8,8 +8,8 @@ public:
     AcpiTimerDevice();
     ~AcpiTimerDevice();
 
-    void enable() override;
-    void disable() override;
+    void enable() override {}
+    void disable() override {}
 
     void     sleep(Duration duration) override;
     void     sleep(u64 ms) override;

@@ -24,7 +24,7 @@ build_options = [
     '-std=gnu++17',
     '-mno-red-zone -mno-mmx -mno-sse -mno-sse2',
     '-mcmodel=kernel',
-    '-O0 -g'
+    '-O0'
 ]
 link_options = [
     '-nostdlib',
@@ -91,3 +91,14 @@ if __name__ == '__main__':
     # Link object files
     print("Linking...")
     os.system(f"{cxx} -T target/LinkerScript-{target}.ld -o build/{proj_name}.bin {' '.join(object_files)} {' '.join(link_options)}")
+
+    # Create ISO
+    print("Creating ISO...")
+    os.system(f"cp build/{proj_name}.bin target/iso_limine/{proj_name}.bin")
+
+    os.system("xorriso -as mkisofs -b limine-cd.bin \
+        -no-emul-boot -boot-load-size 4 -boot-info-table \
+        --efi-boot limine-cd-efi.bin \
+        -efi-boot-part --efi-boot-image --protective-msdos-label \
+        ./target/${TARGET}/iso_limine -o ./dist/${TARGET}/nite_sbrxkrnl.iso")
+    os.system("../../limine/bin/limine-deploy ./dist/${TARGET}/nite_sbrxkrnl.iso")

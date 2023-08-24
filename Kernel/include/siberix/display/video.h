@@ -29,8 +29,8 @@ public:
     virtual void drawText(Point, const char*, Color) = 0;
     virtual void drawTextCode(Point, char, Color)    = 0;
 
-    virtual void setBufferOptions(bool isDoubleBuffering);
-    virtual bool getBufferOptions();
+    virtual void setBufferOptions(bool isDoubleBuffering) = 0;
+    virtual bool getBufferOptions()                       = 0;
 
 protected:
     bool m_isDoubleBuffering;
@@ -38,14 +38,14 @@ protected:
 
 class PixelVideoOutput : public VideoOutput {
 public:
-    PixelVideoOutput() {}
-    ~PixelVideoOutput() {}
+    PixelVideoOutput(u8* buffer);
+    ~PixelVideoOutput();
 
     virtual void  setPointAt(Point point, Color color) = 0;
     virtual Color getPointAt(Point point)              = 0;
-    virtual void  update();
-    virtual u8*   getBuffering();
-    virtual u8*   getWritableBuffering();
+    virtual void  update()                             = 0;
+    virtual u8*   getBuffering()                       = 0;
+    virtual u8*   getWritableBuffering()               = 0;
 
 protected:
     u8* m_buffer;

@@ -21,7 +21,7 @@ public:
         : m_isInitialized(false),
           m_arch(arch),
           m_bootConfig(bootConfig) {}
-    ~SiberixKernel();
+    ~SiberixKernel() {}
 
     virtual bool setupArch() = 0;
 

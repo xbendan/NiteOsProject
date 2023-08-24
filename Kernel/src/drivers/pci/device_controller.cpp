@@ -7,7 +7,7 @@
 
 PciControllerDevice::PciControllerDevice()
     : Device("PCI Controller", DeviceBus::PCI, DeviceType::Firmware) {
-    m_deviceList          = LinkedList<PCIDevice&>();
+    m_deviceList          = LinkedList<PciDevice&>();
     m_enhancedAddressList = LinkedList<McfgAddress*>();
 
     AcpiPmDevice* acpiDevice = reinterpret_cast<AcpiPmDevice*>(
@@ -93,15 +93,15 @@ bool PciControllerDevice::checkDevice(u8 bus, u8 device, u8 func) {
     return !(getVendorID(bus, device, func) == 0xffff);
 }
 
-PCIDevice& PciControllerDevice::connectDevice(u8 bus, u8 slot, u8 func) {
-    PCIDevice* device = new PCIDevice(bus, slot, func);
+PciDevice& PciControllerDevice::connectDevice(u8 bus, u8 slot, u8 func) {
+    PciDevice* device = new PciDevice(bus, slot, func);
     m_deviceList.add(*device);
     return *device;
 }
 
-PCIDevice* PciControllerDevice::findDevice(u16 deviceID, u16 vendorID) {
+PciDevice* PciControllerDevice::findDevice(u16 deviceID, u16 vendorID) {
     for (u32 i = 0; i < m_deviceList.count(); i++) {
-        PCIDevice& device = m_deviceList[i];
+        PciDevice& device = m_deviceList[i];
         if (device.getDeviceID() == deviceID && device.getVendorID() == vendorID) {
             return &device;
         }
@@ -109,9 +109,9 @@ PCIDevice* PciControllerDevice::findDevice(u16 deviceID, u16 vendorID) {
     return nullptr;
 }
 
-PCIDevice* PciControllerDevice::findGenericDevice(u16 classCode, u16 subclass) {
+PciDevice* PciControllerDevice::findGenericDevice(u16 classCode, u16 subclass) {
     for (u32 i = 0; i < m_deviceList.count(); i++) {
-        PCIDevice& device = m_deviceList[i];
+        PciDevice& device = m_deviceList[i];
         if (device.getClassCode() == classCode && device.getSubclass() == subclass) {
             return &device;
         }
@@ -121,10 +121,10 @@ PCIDevice* PciControllerDevice::findGenericDevice(u16 classCode, u16 subclass) {
 
 void PciControllerDevice::enumerateDevice(u16 deviceID,
                                           u16 vendorID,
-                                          void (*consumer)(PCIDevice& device)) {
-    ListNode<PCIDevice&>* node = m_deviceList.first();
+                                          void (*consumer)(PciDevice& device)) {
+    ListNode<PciDevice&>* node = m_deviceList.first();
     while (node != nullptr) {
-        PCIDevice& device = node->obj;
+        PciDevice& device = node->obj;
         if (device.getDeviceID() == deviceID && device.getVendorID() == vendorID) {
             consumer(device);
         }
@@ -134,10 +134,10 @@ void PciControllerDevice::enumerateDevice(u16 deviceID,
 
 void PciControllerDevice::enumerateGenericDevice(u8 classCode,
                                                  u8 subclass,
-                                                 void (*consumer)(PCIDevice& device)) {
-    ListNode<PCIDevice&>* node = m_deviceList.first();
+                                                 void (*consumer)(PciDevice& device)) {
+    ListNode<PciDevice&>* node = m_deviceList.first();
     while (node != nullptr) {
-        PCIDevice& device = node->obj;
+        PciDevice& device = node->obj;
         if (device.getClassCode() == classCode && device.getSubclass() == subclass) {
             consumer(device);
         }
