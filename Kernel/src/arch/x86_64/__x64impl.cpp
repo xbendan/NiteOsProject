@@ -1,6 +1,7 @@
 #include <arch/x86_64/apic.h>
 #include <arch/x86_64/arch.h>
 #include <arch/x86_64/interrupts.h>
+#include <arch/x86_64/iopt.h>
 #include <arch/x86_64/paging.h>
 #include <arch/x86_64/serial.h>
 #include <arch/x86_64/smbios.h>
@@ -11,9 +12,8 @@
 
 #include <arch/x86_64/smpdefines.inc>
 
-static SbrxkrnlX64Impl sbrxkrnl;
-extern "C" void        _lgdt(u64);
-extern "C" void        _lidt(u64);
+extern "C" void _lgdt(u64);
+extern "C" void _lidt(u64);
 
 extern void* smpTrampolineStart;
 extern void* smpTrampolineEnd;
@@ -26,10 +26,10 @@ volatile u64* smpStack           = (u64*)SMP_TRAMPOLINE_STACK;
 volatile u64* smpEntry2          = (u64*)SMP_TRAMPOLINE_ENTRY2;
 volatile bool doneInit           = false;
 
+SbrxkrnlX64Impl               sbrxkrnl;
 TaskStateSegment              tss = { .rsp = {}, .ist = {}, .iopbOffset = 0 };
-Paging::X64KernelAddressSpace addressSpace;
-SegAlloc                      segAlloc;
-BuddyAlloc                    buddyAlloc;
+Paging::X64KernelAddressSpace kernelAddressSpace;
+Process                       kernelProcess;
 ApicDevice*                   _apic;
 
 SiberixKernel* siberix() { return &sbrxkrnl; }
@@ -62,31 +62,34 @@ void trampolineStart(u16 cpuId) {
     for (;;) asm volatile("pause");
 }
 
-bool SbrxkrnlX64Impl::setupArch() {
+bool SiberixKernel::setupArch() {
+    SbrxkrnlX64Impl* k = reinterpret_cast<SbrxkrnlX64Impl*>(this);
     /* load global descriptor table */
-    m_gdt    = GdtPackage(tss);
-    m_gdtPtr = { .limit = sizeof(GdtPackage) - 1, .base = (u64)&m_gdt };
-    _lgdt((u64)&m_gdtPtr);
+    k->m_gdt           = GdtPackage(tss);
+    k->m_gdtPtr        = { .limit = sizeof(GdtPackage) - 1, .base = (u64)&k->m_gdt };
+    _lgdt((u64)&k->m_gdtPtr);
     /* load interrupt descriptor table */
     for (int i = 0; i < IDT_ENTRY_COUNT; i++)
         idtEntryList[i] = IdtEntry(i, intTables[i], 0x08, IDT_FLAGS_INTGATE, 0);
-    m_idtPtr = { .limit = sizeof(IdtEntry) * IDT_ENTRY_COUNT, .base = (u64)&idtEntryList };
-    _lidt((u64)&m_idtPtr);
+    k->m_idtPtr = { .limit = sizeof(IdtEntry) * IDT_ENTRY_COUNT, .base = (u64)&idtEntryList };
+    _lidt((u64)&k->m_idtPtr);
 
     // Initialize memory management
-    // m_kernelSpace   = &(addressSpace = Paging::X64KernelAddressSpace());
-    this->m_memory    = MemoryService();
+    kernelProcess      = Process("SiberixKernel", nullptr, 0, TaskType::System);
+    kernelAddressSpace = Paging::X64KernelAddressSpace();
+    outWord16(0x604, 0x2000);
+    this->m_scheduler = new Scheduler(&kernelProcess);
     this->m_devices   = new DeviceConnectivity();
-    this->m_scheduler = new Scheduler();
+    this->m_memory    = MemoryService();
 
-    m_cpus[0] = new Cpu{ .apicId        = 0,
-                         .gdt           = &m_gdt,
-                         .gdtPtr        = m_gdtPtr,
-                         .idtPtr        = m_idtPtr,
-                         .currentThread = getScheduler()->getKernelProcess()->getMainThread(),
-                         .idleThread    = getProcessFactory()->createIdleThread() };
-    m_cpus[0]->tss.init(&m_gdt);
-    setCpuLocal(m_cpus[0]);
+    k->m_cpus[0] = new Cpu{ .apicId        = 0,
+                            .gdt           = &k->m_gdt,
+                            .gdtPtr        = k->m_gdtPtr,
+                            .idtPtr        = k->m_idtPtr,
+                            .currentThread = getScheduler()->getKernelProcess()->getMainThread(),
+                            .idleThread    = getProcessFactory()->createIdleThread() };
+    k->m_cpus[0]->tss.init(&k->m_gdt);
+    setCpuLocal(k->m_cpus[0]);
 
     (new SerialPortDevice())->initialize();    /* Serial Port */
     (new SmbiosDevice())->initialize();        /* System Management BIOS */
@@ -106,7 +109,7 @@ bool SbrxkrnlX64Impl::setupArch() {
             *smpTrampolineCpuID = processorId;
             *smpEntry2          = (u64)trampolineStart;
             *smpStack           = (u64)(m_memory.alloc4KPages(4)) + 16384;
-            *smpGdtPtr          = m_gdtPtr;
+            *smpGdtPtr          = k->m_gdtPtr;
 
             asm volatile("mov %%cr3, %%rax" : "=a"(*smpRegisterCR3));
 

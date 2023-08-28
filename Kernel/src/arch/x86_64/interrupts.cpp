@@ -1,5 +1,6 @@
 #include <arch/x86_64/apic.h>
 #include <arch/x86_64/interrupts.h>
+#include <arch/x86_64/iopt.h>
 #include <arch/x86_64/types.h>
 #include <common/logger.h>
 
@@ -48,11 +49,15 @@ extern "C" void* fDispatchInterrupts(void* rsp) {
     RegisterContext* context = reinterpret_cast<RegisterContext*>(rsp);
     InterruptData*   data    = &(interrupts[context->intno]);
 
+    while (inByte8(0x64))
+        ;
+    outByte8(0x64, 0xFE);
+    asm("hlt");
+
     if (data->handler != nullptr) {
         data->handler(context);
     } else if (!(context->ss & 0x3)) {
         Logger::getAnonymousLogger().printStackTrace();
-        asm("hlt");
     }
 
     if (context->intno >= 0x20) {

@@ -57,7 +57,6 @@ if __name__ == '__main__':
     source_arch = []
     object_files = []
 
-    os.system('tree src')
     scan_files(folders, source_general)
     scan_files([f'src/arch/{target}'], source_arch)
 
@@ -75,7 +74,7 @@ if __name__ == '__main__':
 
     # Compile general source files
     for file in (source_general + source_arch):
-        filepath = file.replace('src/', 'compiled/').replace('.cpp', '.o').replace('.asm', '.o')
+        filepath = file.replace('src/', 'compile/').replace('.cpp', '.o').replace('.asm', '.o')
         if not os.path.exists(f"build/{os.path.dirname(filepath)}"):
             os.makedirs(f"build/{os.path.dirname(filepath)}")
 
@@ -90,15 +89,19 @@ if __name__ == '__main__':
         
     # Link object files
     print("Linking...")
-    os.system(f"{cxx} -T target/LinkerScript-{target}.ld -o build/{proj_name}.bin {' '.join(object_files)} {' '.join(link_options)}")
+    if not os.path.exists(f"build/{target}"):
+        os.mkdir(f"build/{target}")
+    os.system(f"{cxx} -T target/LinkerScript-{target}.ld -o build/{target}/{proj_name}.elf {' '.join(object_files)} {' '.join(link_options)}")
 
     # Create ISO
     print("Creating ISO...")
-    os.system(f"cp build/{proj_name}.bin target/iso_limine/{proj_name}.bin")
+    os.system(f"cp build/{target}/{proj_name}.elf target/{target}/limine/{proj_name}.elf")
 
-    os.system("xorriso -as mkisofs -b limine-cd.bin \
+    os.system(f"xorriso -as mkisofs -b limine-bios-cd.bin \
         -no-emul-boot -boot-load-size 4 -boot-info-table \
-        --efi-boot limine-cd-efi.bin \
+        --efi-boot limine-uefi-cd.bin \
         -efi-boot-part --efi-boot-image --protective-msdos-label \
-        ./target/${TARGET}/iso_limine -o ./dist/${TARGET}/nite_sbrxkrnl.iso")
-    os.system("../../limine/bin/limine-deploy ./dist/${TARGET}/nite_sbrxkrnl.iso")
+        target/{target}/limine -o dist/{target}/nite_sbrxkrnl.iso")
+    os.system(f"limine bios-install ./dist/{target}/nite_sbrxkrnl.iso")
+    os.system(f"cp ./dist/{target}/nite_sbrxkrnl.iso /mnt/c/Users/MejiroArdan/Codes/Cxxlang/NiteProjectSbrxkrnl.iso")
+    # os.system("../../limine/bin/limine-deploy ./dist/${TARGET}/nite_sbrxkrnl.iso")

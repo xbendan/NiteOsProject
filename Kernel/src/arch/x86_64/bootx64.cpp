@@ -1,15 +1,92 @@
 #include <arch/x86_64/arch.h>
+#include <arch/x86_64/iopt.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/init/boot.h>
 #include <siberix/init/limine.h>
 #include <siberix/init/stivale2.h>
 #include <siberix/mm/page.h>
 
+extern "C" [[noreturn]] void kload_limine();
+
 static BootConfig bootConfig;
+
+static volatile limine_boot_time_request blReqBootTime = {
+    .id       = LIMINE_BOOT_TIME_REQUEST,
+    .revision = 0,
+};
+static volatile limine_bootloader_info_request blReqBootloaderInfo = {
+    .id       = LIMINE_BOOTLOADER_INFO_REQUEST,
+    .revision = 0,
+};
+static volatile limine_memmap_request blReqMemoryMap = {
+    .id       = LIMINE_MEMMAP_REQUEST,
+    .revision = 0,
+};
+static volatile limine_stack_size_request blReqStackSize = {
+    .id         = LIMINE_STACK_SIZE_REQUEST,
+    .revision   = 0,
+    .stack_size = 65536,
+};
+static volatile limine_entry_point_request blReqEntryPoint = {
+    .id       = LIMINE_ENTRY_POINT_REQUEST,
+    .revision = 0,
+    .entry    = kload_limine,
+};
+// static volatile limine_framebuffer_request blReqFramebufferInfo = {
+//     .id       = {0, 0, 0, 0},
+//     .revision = 0,
+// };
+
+extern "C" [[noreturn]] void kload_limine() {
+    bootConfig.blTime = blReqBootTime.response->boot_time;
+    bootConfig.blName = blReqBootloaderInfo.response->name;
+
+    limine_memmap_entry** entries            = blReqMemoryMap.response->entries;
+    int                   index              = 0;
+    auto                  getMemoryEntryType = [](u8 entry) -> PageBlockType {
+        switch (entry) {
+            case LIMINE_MEMMAP_USABLE:
+                return BlkTypeAvailable;
+            case LIMINE_MEMMAP_KERNEL_AND_MODULES:
+                return BlkTypeKernel;
+            case LIMINE_MEMMAP_BAD_MEMORY:
+                return BlkTypeBadram;
+            default:
+                return BlkTypeReserved;
+        }
+    };
+    while (entries[index]) {
+        limine_memmap_entry* entry = entries[index];
+        u64                  start = entry->base;
+        u64                  end   = entry->base + entry->length;
+        if (end > bootConfig.memory.maxSize) {
+            bootConfig.memory.maxSize = end;
+        }
+        bootConfig.memory.totalSize       += entry->length;
+        bootConfig.memory.ranges[index++]  = PageBlock(start, end, getMemoryEntryType(entry->type));
+    }
+
+    // if (blReqFramebufferInfo.response) {
+    //     index                               = 0;
+    //     limine_framebuffer_response* respFb = blReqFramebufferInfo.response;
+    //     while (index < respFb->framebuffer_count) {
+    //         limine_framebuffer* fb    = respFb->framebuffers[index];
+    //         bootConfig.graphic[index] = { .width   = fb->width,
+    //                                       .height  = fb->height,
+    //                                       .address = reinterpret_cast<u64>(fb->address),
+    //                                       .pitch   = fb->pitch,
+    //                                       .bpp     = fb->bpp };
+    //     }
+    // }
+
+    kmain(bootConfig);
+
+    while (true) asm("hlt");
+}
 
 extern "C" [[noreturn]] void kload_stivale2(stivale2_struct* pointer) {
     if (pointer == nullptr) {
-        return;
+        asm("hlt");
     }
 
     stivale2_tag* tag = reinterpret_cast<stivale2_tag*>(pointer->tags);
@@ -53,20 +130,20 @@ extern "C" [[noreturn]] void kload_stivale2(stivale2_struct* pointer) {
             case STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID: {
                 stivale2_struct_tag_framebuffer* fb =
                     reinterpret_cast<stivale2_struct_tag_framebuffer*>(tag);
-                bootConfig.graphic = { .width   = fb->framebuffer_width,
-                                       .height  = fb->framebuffer_height,
-                                       .address = fb->framebuffer_addr,
-                                       .pitch   = fb->framebuffer_pitch,
-                                       .bpp     = fb->framebuffer_bpp };
+                bootConfig.graphic[0] = { .width   = fb->framebuffer_width,
+                                          .height  = fb->framebuffer_height,
+                                          .address = fb->framebuffer_addr,
+                                          .pitch   = fb->framebuffer_pitch,
+                                          .bpp     = fb->framebuffer_bpp };
             }
         }
         tag = reinterpret_cast<stivale2_tag*>(tag->next);
     }
 
     kmain(bootConfig);
-}
 
-extern "C" [[noreturn]] void kload_limine() {}
+    while (true) asm("hlt");
+}
 
 SbrxkrnlX64Impl::SbrxkrnlX64Impl()
     : SiberixKernel(Architecture::X86_64, bootConfig) {}

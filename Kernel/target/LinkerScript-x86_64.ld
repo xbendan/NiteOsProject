@@ -1,6 +1,6 @@
 OUTPUT_FORMAT("elf64-x86-64")
 OUTPUT_ARCH(i386:x86-64)
-ENTRY(kload_stivale2)
+ENTRY(kload_limine)
 
 SECTIONS {
 
@@ -29,6 +29,11 @@ SECTIONS {
     {
         KEEP(*(.stivale2hdr))
     }
+
+    /* .limine_reqs ALIGN(4K) : AT(ADDR(.limine_reqs) - KERNEL_VMA)
+    {
+        KEEP(*(.limine_reqs))
+    } */
 
     .text ALIGN(4K) : AT(ADDR(.text) - KERNEL_VMA)
     {

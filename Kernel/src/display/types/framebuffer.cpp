@@ -9,14 +9,14 @@ FramebufferVideoOutput::FramebufferVideoOutput()
     : PixelVideoOutput(nullptr) {
     BootConfig& boot = siberix()->getBootConfig();
 
-    if (!boot.graphic.address) {
+    if (!boot.graphic[0].address) {
         return;
     }
 
-    m_buffer        = reinterpret_cast<u8*>(boot.graphic.address);
-    m_bytesPerPixel = boot.graphic.bpp;
-    m_width         = boot.graphic.width;
-    m_height        = boot.graphic.height;
+    m_buffer        = reinterpret_cast<u8*>(boot.graphic[0].address);
+    m_bytesPerPixel = boot.graphic[0].bpp;
+    m_width         = boot.graphic[0].width;
+    m_height        = boot.graphic[0].height;
 
     setBufferOptions(false);
 }

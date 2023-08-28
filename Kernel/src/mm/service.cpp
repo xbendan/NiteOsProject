@@ -3,18 +3,27 @@
 #include <siberix/mm/memory.h>
 #include <siberix/proc/sched.h>
 
-static SegAlloc   _segmentAlloc;
+static SegAlloc   _segAlloc;
 static BuddyAlloc _buddyAlloc;
 
 MemoryService::MemoryService() {
-    this->pageAlloc = &(_segmentAlloc = SegAlloc());
-    u64 maxSize     = siberix()->getBootConfig().memory.maxSize;
-    u64 current     = 0;
-    while (current < maxSize) {
-        PageSection& section  = getPageSect(current);
-        section.pages         = (u64*)alloc4KPages(SECTION_PAGE_SIZE / PAGE_SIZE_4K);
-        current              += PAGE_SIZE_1G;
+    this->pageAlloc = &(_segAlloc = SegAlloc());
+    AddressSpace* kernelAddrSpace =
+        siberix()->getScheduler()->getKernelProcess()->getAddressSpace();
+
+    const u64 amount = SECTION_PAGE_SIZE / PAGE_SIZE_4K;
+    for (u64 address  = 0; address < siberix()->getBootConfig().memory.maxSize;
+         address     += PAGE_SIZE_1G) {
+        u64** sectionPages = &(getPageSect(address).pages);
+        if (*sectionPages == nullptr) {
+            u64 virt      = kernelAddrSpace->allocate4KPages(amount);
+            u64 phys      = allocPhysMemory4K(amount);
+            *sectionPages = reinterpret_cast<u64*>(virt);
+            kernelAddrSpace->map(virt, phys, amount);
+        }
     }
+
+    this->pageAlloc = &(_buddyAlloc = BuddyAlloc());
 }
 
 MemoryService::~MemoryService() {}

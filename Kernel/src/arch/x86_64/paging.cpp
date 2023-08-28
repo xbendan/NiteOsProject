@@ -92,6 +92,7 @@ X64KernelAddressSpace::X64KernelAddressSpace() {
     }
     pdpts[0] = pdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)];
     pml4Phys = ((u64)&pml4) - KERNEL_VIRTUAL_BASE;
+    asm("mov %%rax, %%cr3" ::"a"(pml4Phys));
 }
 
 X64KernelAddressSpace::~X64KernelAddressSpace() {}

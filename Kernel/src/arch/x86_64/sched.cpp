@@ -8,8 +8,10 @@
 
 #include <arch/x86_64/smpdefines.inc>
 
-Scheduler::Scheduler()
-    : m_kernelProcess(new Process("SiberixKernel", nullptr, 0, TaskType::System)) {}
+Scheduler::Scheduler() {}
+
+Scheduler::Scheduler(Process* kernelProcess)
+    : m_kernelProcess(kernelProcess) {}
 
 Scheduler::~Scheduler() {}
 

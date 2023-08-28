@@ -15,20 +15,21 @@ enum BootloaderName {
 };
 
 struct BootConfig {
-    u64            checksum;
-    BootloaderName blName;
+    u64   checksum;
+    u64   blTime;
+    char* blName;
     struct BootMemory {
         u64       totalSize;
         u64       maxSize;
         PageBlock ranges[64];
     } memory;
     struct BootGraphics {
-        u16 width;
-        u16 height;
+        u64 width;
+        u64 height;
         u64 address;
-        u16 pitch;
+        u64 pitch;
         u16 bpp;
-    } graphic;
+    } graphic[16];
 };
 
 void kmain(BootConfig& bootConfig);

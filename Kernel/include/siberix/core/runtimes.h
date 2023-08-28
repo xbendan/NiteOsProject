@@ -23,7 +23,7 @@ public:
           m_bootConfig(bootConfig) {}
     ~SiberixKernel() {}
 
-    virtual bool setupArch() = 0;
+    bool setupArch();
 
     bool        isInitialized() { return m_isInitialized; }
     BootConfig& getBootConfig();

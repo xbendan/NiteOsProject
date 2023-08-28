@@ -10,7 +10,7 @@ public:
     SbrxkrnlX64Impl();
     ~SbrxkrnlX64Impl();
 
-    bool setupArch() override;
+    bool setupArch();
 
     GdtPackage m_gdt;
     GdtPtr     m_gdtPtr;

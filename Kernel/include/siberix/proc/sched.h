@@ -20,6 +20,7 @@ private:
 class Scheduler {
 public:
     Scheduler();
+    Scheduler(Process* kernelProcess);
     ~Scheduler();
 
     void         switchThread(Thread* newThread);
