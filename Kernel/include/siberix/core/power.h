@@ -1,6 +1,6 @@
 #include <siberix/core/time.h>
 
-enum class PowerState {
+enum class EnergyState {
     Standby,
     Hibernate,
     Sleep
@@ -15,16 +15,19 @@ private:
     u64  m_counter;
 };
 
-class PowerManagement {
+class EnergyPolicyEngine {
 public:
-    void         setPowerState(PowerState state);
-    PowerState   getPowerState();
-    virtual void shutdown() = 0;
-    virtual void reboot()   = 0;
-    void         setSleepAfter(Duration duration);
+    EnergyPolicyEngine();
+    ~EnergyPolicyEngine();
+
+    void        setPowerState(EnergyState state);
+    EnergyState getPowerState();
+    void        shutdown();
+    void        reboot();
+    void        setSleepAfter(Duration duration);
 
 private:
-    PowerState m_state;
-    Duration   m_sleepAfter;
-    u64        m_sleepCounter;
+    EnergyState m_state;
+    Duration    m_sleepAfter;
+    u64         m_sleepCounter;
 };

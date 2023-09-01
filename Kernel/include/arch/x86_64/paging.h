@@ -73,13 +73,6 @@ namespace Paging {
         void map(u64 phys, u64 virt, u64 amount) override;
         bool isPagePresent(u64 address) override;
         u64  convertVirtToPhys(u64 address) override;
-
-    private:
-        pagedir_t   kPageDirs __attribute__((aligned(PAGE_SIZE_4K)));
-        pagedir_t   kHeapDirs __attribute__((aligned(PAGE_SIZE_4K)));
-        pagedir_t   kIoDirs[4] __attribute__((aligned(PAGE_SIZE_4K)));
-        pagetable_t kHeapTables[TABLES_PER_DIR] __attribute__((aligned(PAGE_SIZE_4K)));
-        static inline pagetable_t *kPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
     };
 
     inline void setPageFlags(u64 *page, u64 flags) { *page |= flags; }

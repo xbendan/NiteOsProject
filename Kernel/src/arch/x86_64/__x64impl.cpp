@@ -6,6 +6,7 @@
 #include <arch/x86_64/serial.h>
 #include <arch/x86_64/smbios.h>
 #include <arch/x86_64/types.h>
+#include <siberix/display/types/vga.h>
 #include <siberix/drivers/acpi/acpi_device.h>
 #include <siberix/drivers/pci/devices.h>
 #include <siberix/mm/page.h>
@@ -31,6 +32,7 @@ TaskStateSegment              tss = { .rsp = {}, .ist = {}, .iopbOffset = 0 };
 Paging::X64KernelAddressSpace kernelAddressSpace;
 Process                       kernelProcess;
 ApicDevice*                   _apic;
+VgaTextOutput                 _vga;
 
 SiberixKernel* siberix() { return &sbrxkrnl; }
 
@@ -74,20 +76,25 @@ bool SiberixKernel::setupArch() {
     k->m_idtPtr = { .limit = sizeof(IdtEntry) * IDT_ENTRY_COUNT, .base = (u64)&idtEntryList };
     _lidt((u64)&k->m_idtPtr);
 
+    _vga = VgaTextOutput();
+
     // Initialize memory management
     kernelProcess      = Process("SiberixKernel", nullptr, 0, TaskType::System);
     kernelAddressSpace = Paging::X64KernelAddressSpace();
-    outWord16(0x604, 0x2000);
-    this->m_scheduler = new Scheduler(&kernelProcess);
+    kernelProcess.setAddressSpace(&kernelAddressSpace);
+    this->m_energy    = EnergyPolicyEngine();
+    this->m_memory    = MemoryController();
     this->m_devices   = new DeviceConnectivity();
-    this->m_memory    = MemoryService();
+    this->m_scheduler = new Scheduler(&kernelProcess);
 
-    k->m_cpus[0] = new Cpu{ .apicId        = 0,
-                            .gdt           = &k->m_gdt,
-                            .gdtPtr        = k->m_gdtPtr,
-                            .idtPtr        = k->m_idtPtr,
-                            .currentThread = getScheduler()->getKernelProcess()->getMainThread(),
-                            .idleThread    = getProcessFactory()->createIdleThread() };
+    k->m_cpus[0] = new Cpu{
+        .apicId        = 0,
+        .gdt           = &k->m_gdt,
+        .gdtPtr        = k->m_gdtPtr,
+        .idtPtr        = k->m_idtPtr,
+        .currentThread = getScheduler()->getKernelProcess()->getMainThread(),
+        .idleThread    = getScheduler()->getProcessFactory()->createIdleThread(),
+    };
     k->m_cpus[0]->tss.init(&k->m_gdt);
     setCpuLocal(k->m_cpus[0]);
 

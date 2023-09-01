@@ -46,13 +46,13 @@ global int%1
 int%1:
     cli
     push 0
+    push %1
     pushaq
-    mov rdi, %1
-    mov rsi, rsp
-    xor rbp, rbp
+    mov rdi, rsp
     call fDispatchInterrupts
+    mov rsp, rax
     popaq
-    add rsp, 8
+    add rsp, 16
     iretq
 %endmacro
 
@@ -60,13 +60,13 @@ int%1:
 global int%1
 int%1:
     cli
+    push %1
     pushaq
-    mov rdi, %1
-    mov rsi, rsp
-    xor rbp, rbp
+    mov rdi, rsp
     call fDispatchInterrupts
+    mov rsp, rax
     popaq
-    add rsp, 8
+    add rsp, 16
     iretq
 %endmacro
 
@@ -75,14 +75,13 @@ global int%1
 int%1:
     cli
     push 0
+    push %1
     pushaq
-    mov rdi, %1
-    mov rsi, rsp
-    xor rdx, rdx
-    xor rbp, rbp
+    mov rdi, rsp
     call fDispatchInterrupts
+    mov rsp, rax
     popaq
-    add rsp, 8
+    add rsp, 16
     iretq
 %endmacro
 
@@ -91,13 +90,13 @@ global int%1
 int%1:
     cli
     push 0
+    push %1
     pushaq
-    mov rdi, %1
-    mov rsi, rsp
-    xor rbp, rbp
+    mov rdi, rsp
     call fDispatchInterrupts
+    mov rsp, rax
     popaq
-    add rsp, 8
+    add rsp, 16
     iretq
 %endmacro
 
@@ -159,8 +158,8 @@ intSyscall:
 
 section .rodata
 intTables:
-%assign i 48
-%rep (256 - 48)
+%assign i 0
+%rep 256
     dq (int%+i)
     %assign i (i + 1)
 %endrep

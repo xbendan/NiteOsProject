@@ -1,7 +1,8 @@
+#include <arch/x86_64/kaddr.h>
 #include <common/string.h>
 #include <siberix/display/types/vga.h>
 
-VgaTextOutput::VgaTextOutput() { m_buffer = reinterpret_cast<u16*>(0xb8000); }
+VgaTextOutput::VgaTextOutput() { m_buffer = reinterpret_cast<u16*>(IOVB(0xb8000)); }
 
 VgaTextOutput::~VgaTextOutput() {}
 
@@ -29,8 +30,8 @@ void VgaTextOutput::drawText(Point point, const char* text, Color color) {
     }
     int len = strlen(text);
     int n   = 0;
-    while (len) {
-        if (++point.x >= 80) {
+    while (len--) {
+        if (point.x + 1 >= 80) {
             newline();
             point.x = 0;
             point.y = m_y;
@@ -41,6 +42,8 @@ void VgaTextOutput::drawText(Point point, const char* text, Color color) {
         u8   bg = (*p) >> 12;
 
         *p = (bg << 12) | (fg << 8) | c;
+
+        point.x++;
     }
 }
 

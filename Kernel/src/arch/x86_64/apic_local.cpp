@@ -10,7 +10,7 @@ ApicLocalInterface::ApicLocalInterface(u8 _apicId, ApicDevice* _apic)
 
     if (_apicId) {
         SbrxkrnlX64Impl* sbrxkrnl = static_cast<SbrxkrnlX64Impl*>(siberix());
-        Process*         process  = sbrxkrnl->getProcessFactory()->createIdleProcess();
+        Process* process = sbrxkrnl->getScheduler()->getProcessFactory()->createIdleProcess();
 
         cpu = new Cpu{ .apicId        = _apicId,
                        .gdt           = &(sbrxkrnl->m_gdt),

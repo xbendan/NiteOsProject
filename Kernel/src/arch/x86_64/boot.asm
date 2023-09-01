@@ -66,44 +66,6 @@ stivale2framebufferWctag: ; Ask the bootloader to set framebuffer as writecombin
     dq 0x4c7bb07731282e00
     dq 0 ; No next tag  
 
-; extern blRespBootTime
-; extern blRespBootloaderInfo
-; extern blRespFramebufferInfo
-; extern blRespMemoryMap
-; extern blRespStackSize
-
-; section .limine_reqs
-; align 8
-; limine_request_boottime:
-;     dq 0xc7b1dd30df4c8b88
-;     dq 0x0a82e883a194f07b
-;     dq 0x502746e184c088aa
-;     dq 0xfbc5ec83e6327893
-;     dq 0
-;     dq blRespBootTime
-; limine_request_blinfo:
-;     dq 0xc7b1dd30df4c8b88
-;     dq 0x0a82e883a194f07b
-;     dq 0xf55038d8e2a1202f
-;     dq 0x279426fcf5f59740
-;     dq 0
-;     dq blRespBootloaderInfo
-; limine_request_memmap:
-;     dq 0xc7b1dd30df4c8b88
-;     dq 0x0a82e883a194f07b
-;     dq 0x67cf3d9d378a806f
-;     dq 0xe304acdfc50c3c62
-;     dq 0
-;     dq blRespMemoryMap
-; limine_request_stacksize:
-;     dq 0xc7b1dd30df4c8b88
-;     dq 0x0a82e883a194f07b
-;     dq 0x224ef0460a8e8926
-;     dq 0xe1cb0fc25f46ea3d
-;     dq 0
-;     dq blRespStackSize
-;     dq 65536
-
 section .data
 global __cxa_atexit
 __cxa_atexit:

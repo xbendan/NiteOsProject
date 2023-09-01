@@ -49,10 +49,9 @@ extern "C" void* fDispatchInterrupts(void* rsp) {
     RegisterContext* context = reinterpret_cast<RegisterContext*>(rsp);
     InterruptData*   data    = &(interrupts[context->intno]);
 
-    while (inByte8(0x64))
-        ;
-    outByte8(0x64, 0xFE);
-    asm("hlt");
+    if (context->intno == 13) {
+        outWord16(0x604, 0x2000);
+    }
 
     if (data->handler != nullptr) {
         data->handler(context);

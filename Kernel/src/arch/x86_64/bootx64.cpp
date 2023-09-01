@@ -1,5 +1,6 @@
 #include <arch/x86_64/arch.h>
 #include <arch/x86_64/iopt.h>
+#include <arch/x86_64/kaddr.h>
 #include <siberix/core/runtimes.h>
 #include <siberix/init/boot.h>
 #include <siberix/init/limine.h>
@@ -31,6 +32,14 @@ static volatile limine_entry_point_request blReqEntryPoint = {
     .id       = LIMINE_ENTRY_POINT_REQUEST,
     .revision = 0,
     .entry    = kload_limine,
+};
+static volatile limine_hhdm_request blReqHigherHalfKernel = {
+    .id       = LIMINE_HHDM_REQUEST,
+    .revision = 0,
+};
+static volatile limine_kernel_address_request blReqKernAddress = {
+    .id       = LIMINE_KERNEL_ADDRESS_REQUEST,
+    .revision = 0,
 };
 // static volatile limine_framebuffer_request blReqFramebufferInfo = {
 //     .id       = {0, 0, 0, 0},

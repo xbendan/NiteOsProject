@@ -1,5 +1,6 @@
 #pragma once
 
+#include <siberix/core/power.h>
 #include <siberix/core/time.h>
 #include <siberix/device/connectivity.h>
 #include <siberix/init/boot.h>
@@ -28,10 +29,9 @@ public:
     bool        isInitialized() { return m_isInitialized; }
     BootConfig& getBootConfig();
 
-    MemoryService&      getMemory() { return m_memory; }
+    MemoryController&   getMemory() { return m_memory; }
     DeviceConnectivity* getConnectivity() { return m_devices; }
     Scheduler*          getScheduler() { return m_scheduler; }
-    ProcessFactory*     getProcessFactory() { return m_processFactory; }
 
     u64  getTimestamp();
     void sleep(u64 ms);
@@ -56,10 +56,10 @@ protected:
     Architecture m_arch;
     BootConfig&  m_bootConfig;
 
-    MemoryService            m_memory;
+    MemoryController         m_memory;
+    EnergyPolicyEngine       m_energy;
     DeviceConnectivity*      m_devices;
     Scheduler*               m_scheduler;
-    ProcessFactory*          m_processFactory;
     Clock                    m_clock;
     LinkedList<TimerDevice&> m_timers;
     TimerDevice*             m_defaultTimer;

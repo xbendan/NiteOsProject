@@ -1,5 +1,6 @@
 #include <arch/x86_64/apic.h>
 #include <arch/x86_64/arch.h>
+#include <arch/x86_64/iopt.h>
 #include <arch/x86_64/paging.h>
 #include <common/logger.h>
 #include <common/string.h>
@@ -11,7 +12,10 @@
 Scheduler::Scheduler() {}
 
 Scheduler::Scheduler(Process* kernelProcess)
-    : m_kernelProcess(kernelProcess) {}
+    : m_nextPID(1),
+      m_timeSlice(50),
+      m_kernelProcess(kernelProcess),
+      m_processFactory(new ProcessFactory()) {}
 
 Scheduler::~Scheduler() {}
 
@@ -60,6 +64,8 @@ bool Scheduler::addProcess(Process* process) {
 }
 
 Process* Scheduler::getKernelProcess() { return m_kernelProcess; }
+
+ProcessFactory* Scheduler::getProcessFactory() { return m_processFactory; }
 
 ThreadQueue& Scheduler::getThreadQueue() { return m_queue; }
 

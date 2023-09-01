@@ -1,36 +1,66 @@
 #include <common/string.h>
 #include <siberix/core/runtimes.h>
+#include <siberix/mm/addrspace.h>
 #include <siberix/mm/memory.h>
+#include <siberix/mm/slab.h>
 #include <siberix/proc/sched.h>
+#include <utils/alignment.h>
 
 static SegAlloc   _segAlloc;
 static BuddyAlloc _buddyAlloc;
+static SlabAlloc  _slabAlloc;
+extern Process    kernelProcess;
 
-MemoryService::MemoryService() {
-    this->pageAlloc = &(_segAlloc = SegAlloc());
-    AddressSpace* kernelAddrSpace =
-        siberix()->getScheduler()->getKernelProcess()->getAddressSpace();
+#include <arch/x86_64/iopt.h>
+#include <siberix/display/types/vga.h>
+
+extern VgaTextOutput _vga;
+
+MemoryController::MemoryController() {
+    PageBlock* pageBlock = &(siberix()->getBootConfig().memory.ranges[0]);
+    for (int i = 0; i < 256; i++) {
+        alignUpRef(pageBlock->start, PAGE_SIZE_4K);
+        alignDownRef(pageBlock->end, PAGE_SIZE_4K);
+        if (pageBlock->end == 0) {
+            break;
+        }
+        if ((pageBlock->end - pageBlock->start) < PAGE_SIZE_4K) {
+            continue;
+        }
+
+        m_pageBlocks.add(*pageBlock);
+    }
+
+    this->m_pageAlloc             = &(_segAlloc = SegAlloc());
+    AddressSpace* kernelAddrSpace = kernelProcess.getAddressSpace();
 
     const u64 amount = SECTION_PAGE_SIZE / PAGE_SIZE_4K;
     for (u64 address  = 0; address < siberix()->getBootConfig().memory.maxSize;
          address     += PAGE_SIZE_1G) {
-        u64** sectionPages = &(getPageSect(address).pages);
-        if (*sectionPages == nullptr) {
-            u64 virt      = kernelAddrSpace->allocate4KPages(amount);
-            u64 phys      = allocPhysMemory4K(amount);
-            *sectionPages = reinterpret_cast<u64*>(virt);
-            kernelAddrSpace->map(virt, phys, amount);
+        PageSection& section = getPageSect(address);
+        if (!section.pages) {
+            u64 virt = kernelAddrSpace->allocate4KPages(amount);
+            // u64 phys      = allocPhysMemory4K(amount);
+            // section.pages = reinterpret_cast<u64*>(virt);
+            // kernelAddrSpace->map(virt, phys, amount);
         }
     }
 
-    this->pageAlloc = &(_buddyAlloc = BuddyAlloc());
+    _vga.drawText({ 0, 0 }, "kspace", Color(VgaTextColor::White));
+
+    for (;;) asm("cli; hlt");
+
+    this->m_pageAlloc   = &(_buddyAlloc = BuddyAlloc());
+    this->m_memoryAlloc = &(_slabAlloc = SlabAlloc());
+
+    outWord16(0x604, 0x2000);
 }
 
-MemoryService::~MemoryService() {}
+MemoryController::~MemoryController() {}
 
-u64 MemoryService::alloc4KPages(u64 amount) { return alloc4KPages(amount, nullptr); }
+u64 MemoryController::alloc4KPages(u64 amount) { return alloc4KPages(amount, nullptr); }
 
-u64 MemoryService::alloc4KPages(u64 amount, Pageframe** _pointer) {
+u64 MemoryController::alloc4KPages(u64 amount, Pageframe** _pointer) {
     Pageframe* page = allocPhysMemory4KPages(amount);
 
     if (_pointer != nullptr) *_pointer = page;
@@ -43,28 +73,32 @@ u64 MemoryService::alloc4KPages(u64 amount, Pageframe** _pointer) {
     return virt;
 }
 
-void MemoryService::free4KPages(u64 address, u64 amount) {}
+void MemoryController::free4KPages(u64 address, u64 amount) {}
 
-Pageframe* MemoryService::allocPhysMemory4KPages(u64 amount) {
-    return pageAlloc->allocatePhysMemory4K(amount);
+Pageframe* MemoryController::allocPhysMemory4KPages(u64 amount) {
+    return m_pageAlloc->allocatePhysMemory4KPages(amount);
 }
 
-u64 MemoryService::allocPhysMemory4K(u64 amount) { return allocPhysMemory4KPages(amount)->address; }
-
-void MemoryService::freePhysMemory4KPages(u64 address) {
-    pageAlloc->freePhysMemory4K(addr2page(address));
+u64 MemoryController::allocPhysMemory4K(u64 amount) {
+    return m_pageAlloc->allocatePhysMemory4K(amount);
 }
 
-void MemoryService::freePhysMemory4KPages(Pageframe* page) { pageAlloc->freePhysMemory4K(page); }
+void MemoryController::freePhysMemory4KPages(u64 address) {
+    m_pageAlloc->freePhysMemory4K(addr2page(address));
+}
 
-u64 MemoryService::allocVirtMemory4KPages(u64 amount) {
+void MemoryController::freePhysMemory4KPages(Pageframe* page) {
+    m_pageAlloc->freePhysMemory4K(page);
+}
+
+u64 MemoryController::allocVirtMemory4KPages(u64 amount) {
     return thisProcess()->getAddressSpace()->allocate4KPages(amount);
 }
 
-void MemoryService::freeVirtMemory4KPages(u64 address) {}
+void MemoryController::freeVirtMemory4KPages(u64 address) {}
 
-u64 MemoryService::alloc(u64 size) { return memoryAlloc->alloc(size); }
+u64 MemoryController::alloc(u64 size) { return m_memoryAlloc->alloc(size); }
 
-void MemoryService::free(u64 address) { memoryAlloc->free(address); }
+void MemoryController::free(u64 address) { m_memoryAlloc->free(address); }
 
-void MemoryService::calculate() {}
+void MemoryController::calculate() {}

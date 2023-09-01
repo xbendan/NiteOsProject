@@ -57,7 +57,7 @@ void vprintf(const char* fmt, va_list args) {
                     break;
 
                 case 'c':
-                    c = va_arg(args, char);
+                    c = va_arg(args, int);
                     videoOutput->drawTextCode(
                         Point{ -1, -1 }, c, Color::VgaColors[static_cast<u8>(VgaTextColor::Black)]);
                     break;

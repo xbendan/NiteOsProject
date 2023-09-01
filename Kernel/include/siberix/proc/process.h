@@ -43,7 +43,8 @@ public:
     File                 *getFile() { return m_file; }
     Thread               *getMainThread() { return m_mainThread; }
     LinkedList<Thread *> &getChildrenThreadList() { return m_childrenThreadList; }
-    AddressSpace         *getAddressSpace() { return m_addressSpace; }
+    void          setAddressSpace(AddressSpace *addressSpace) { m_addressSpace = addressSpace; }
+    AddressSpace *getAddressSpace() { return m_addressSpace; }
 
 protected:
     const char *m_name;      /* Name of the process */

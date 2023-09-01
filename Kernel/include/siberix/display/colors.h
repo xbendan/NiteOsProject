@@ -39,7 +39,13 @@ public:
           g(_g),
           b(_b),
           a(0xff) {}
-    Color(VgaTextColor vga) { *this = VgaColors[static_cast<u8>(vga)]; }
+    Color(VgaTextColor vga) {
+        Color& c = VgaColors[static_cast<u8>(vga)];
+        r        = c.r;
+        g        = c.g;
+        b        = c.b;
+        a        = c.a;
+    }
     ~Color() = default;
 
     bool operator==(Color& color) {
@@ -65,11 +71,12 @@ public:
     }
 
     static inline u8 getVgaColorIndex(Color& color, VgaTextColor fallback) {
-        u8 n = 0;
-        while (n++ < 16) {
+        u8 n = 15;
+        while (n >= 0) {
             if (VgaColors[n] == color) {
                 return n;
             }
+            n--;
         }
         return static_cast<u8>(fallback);
     }

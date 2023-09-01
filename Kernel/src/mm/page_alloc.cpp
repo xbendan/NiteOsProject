@@ -5,15 +5,14 @@
 #include <utils/alignment.h>
 
 BuddyAlloc::BuddyAlloc() {
-    MemoryService& memory = siberix()->getMemory();
     for (int i = 0; i < 256; i++) {
-        PageBlock& block     = memory.getPageBlock(i);
+        PageBlock& block     = siberix()->getMemory().getPageBlock(i);
         u64        addrStart = alignUp(block.start, PAGE_MAX_SIZE);
         u64        addrEnd   = alignDown(block.end, PAGE_MAX_SIZE);
 
-        u64 current = addrStart;
-        while (current < addrEnd - PAGE_MAX_SIZE) {
-            Pageframe* pages = addr2page(current);
+        u64 address = addrStart;
+        while (address < addrEnd - PAGE_MAX_SIZE) {
+            Pageframe* pages = addr2page(address);
             if (!pages) {
                 Logger::getAnonymousLogger().error("Section pages is not allocated!");
                 return;
@@ -24,18 +23,18 @@ BuddyAlloc::BuddyAlloc() {
             for (u64 i = 0; i < PAGES_PER_SET; i++) {
                 pages[i].flags   = 1;
                 pages[i].first   = pages;
-                pages[i].address = current + (i * PAGE_SIZE_4K);
+                pages[i].address = address + (i * PAGE_SIZE_4K);
             }
             pageList[PAGE_MAX_ORDER].add(reinterpret_cast<ListNode<Pageframe>*>(pages));
 
-            current += PAGE_MAX_SIZE;
+            address += PAGE_MAX_SIZE;
         }
     }
 }
 
 BuddyAlloc::~BuddyAlloc() {}
 
-Pageframe* BuddyAlloc::allocatePhysMemory4K(u64 amount) {
+Pageframe* BuddyAlloc::allocatePhysMemory4KPages(u64 amount) {
     u8 order = getPageOrder(getPageAlignment(amount));
     if (order > PAGE_MAX_ORDER) {
         return nullptr;
@@ -63,6 +62,10 @@ Pageframe* BuddyAlloc::allocatePhysMemory4K(u64 amount) {
         Logger::getLogger("mem").error("Cannot find any page with specific size. Out of Memory!");
         return nullptr;
     }
+}
+
+u64 BuddyAlloc::allocatePhysMemory4K(u64 amount) {
+    return allocatePhysMemory4KPages(amount)->address;
 }
 
 void BuddyAlloc::freePhysMemory4K(u64 address) {}

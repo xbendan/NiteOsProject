@@ -19,14 +19,10 @@ public:
     SegAlloc();
     ~SegAlloc();
 
-    Pageframe*                      allocatePhysMemory4K(u64 amount) override;
-    void                            freePhysMemory4K(u64 address) override;
-    void                            freePhysMemory4K(Pageframe* page) override;
-    void                            addSegment(u64 start, u64 end, PageBlockType type);
-    SizedArrayList<PageBlock, 256>& getSegments() { return segments; }
-
-private:
-    SizedArrayList<PageBlock, 256> segments;
+    Pageframe* allocatePhysMemory4KPages(u64 amount) override;
+    u64        allocatePhysMemory4K(u64 amount) override;
+    void       freePhysMemory4K(u64 address) override;
+    void       freePhysMemory4K(Pageframe* page) override;
 };
 
 class BuddyAlloc : public PageAlloc {
@@ -34,7 +30,8 @@ public:
     BuddyAlloc();
     ~BuddyAlloc();
 
-    Pageframe* allocatePhysMemory4K(u64 amount) override;
+    Pageframe* allocatePhysMemory4KPages(u64 amount) override;
+    u64        allocatePhysMemory4K(u64 amount) override;
     void       freePhysMemory4K(u64 address) override;
     void       freePhysMemory4K(Pageframe* page) override;
     void       markPagesUsed(u64 addressStart, u64 addressEnd);

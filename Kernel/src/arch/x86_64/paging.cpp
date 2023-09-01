@@ -1,3 +1,4 @@
+#include <arch/x86_64/iopt.h>
 #include <arch/x86_64/kaddr.h>
 #include <arch/x86_64/paging.h>
 #include <common/logger.h>
@@ -8,7 +9,11 @@
 
 using namespace Paging;
 
-X64KernelAddressSpace kspace;
+static pagedir_t    kPageDirs __attribute__((aligned(PAGE_SIZE_4K)));
+static pagedir_t    kHeapDirs __attribute__((aligned(PAGE_SIZE_4K)));
+static pagedir_t    kIoDirs[4] __attribute__((aligned(PAGE_SIZE_4K)));
+static pagetable_t  kHeapTables[TABLES_PER_DIR] __attribute__((aligned(PAGE_SIZE_4K)));
+static pagetable_t* kPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
 
 X64AddressSpace::X64AddressSpace() {}
 
@@ -57,16 +62,19 @@ bool X64AddressSpace::isPagePresent(u64 address) { return false; }
 u64 X64AddressSpace::convertVirtToPhys(u64 address) { return 0; }
 
 X64KernelAddressSpace::X64KernelAddressSpace() {
+    // Initialize memory space for PML4 and PDPT
     memset(&pml4, 0, sizeof(pml4_t));
     memset(&pdpts, 0, sizeof(pdpt_t));
 
+    // Set kernel PML4 entries
     setPageFrame(&(pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]),
                  ((u64)&pdpts) - KERNEL_VIRTUAL_BASE,
                  (PageFlags::Present | PageFlags::Writable));
     pml4[0] = pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)];
 
+    // Set kernel PDPT entries
     setPageFrame(&(pdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)]),
-                 ((u64)&pageDirs) - KERNEL_VIRTUAL_BASE,
+                 ((u64)&kPageDirs) - KERNEL_VIRTUAL_BASE,
                  (PageFlags::Present | PageFlags::Writable));
     pageDirs[0] = &kPageDirs[0];
     for (int i = 0; i < TABLES_PER_DIR; i++) {
@@ -76,10 +84,19 @@ X64KernelAddressSpace::X64KernelAddressSpace() {
                       PageFlags::DirectAddress));
     }
 
+    // Set kernel heap space
     setPageFrame(&(pdpts[KERNEL_HEAP_PDPT_INDEX]),
                  ((u64)&kHeapDirs) - KERNEL_VIRTUAL_BASE,
                  (PageFlags::Present | PageFlags::Writable));
     for (int i = 0; i < TABLES_PER_DIR; i++) {
+        setPageFrame(&(kHeapDirs[i]),
+                     ((u64)&kHeapTables[i]) - KERNEL_VIRTUAL_BASE,
+                     (PageFlags::Present | PageFlags::Writable));
+        kPageTablePointers[KERNEL_HEAP_PDPT_INDEX][i] = &kHeapTables[i];
+    }
+
+    // Set kernel IO mapping
+    for (int i = 0; i < 4; i++) {
         setPageFrame(&(pdpts[PDPT_GET_INDEX(IO_VIRTUAL_BASE) + i]),
                      ((u64)&kIoDirs[i] - KERNEL_VIRTUAL_BASE),
                      (PageFlags::Present | PageFlags::Writable));
@@ -97,11 +114,18 @@ X64KernelAddressSpace::X64KernelAddressSpace() {
 
 X64KernelAddressSpace::~X64KernelAddressSpace() {}
 
+#include <siberix/display/types/vga.h>
+extern VgaTextOutput _vga;
+
 u64 X64KernelAddressSpace::allocate4KPages(u64 amount) {
     u64 offset        = 0;
     u64 pageDirOffset = 0;
     u64 counter       = 0;
     u64 address;
+
+    _vga.drawText({ 0, 0 }, "Allocating 4K pages", Color(VgaTextColor::White));
+
+    for (;;) asm("cli; hlt");
 
     for (int i = 0; i < TABLES_PER_DIR; i++) {
         for (int j = 0; j < PAGES_PER_TABLE; j++) {
