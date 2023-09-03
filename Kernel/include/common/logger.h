@@ -13,6 +13,7 @@ enum LoggerLevel {
 };
 
 class LoggerReceiver {
+public:
     virtual void receive(char c)          = 0;
     virtual void receive(const char* str) = 0;
 };
@@ -62,28 +63,27 @@ public:
 
     /// @brief
     /// @return
-    static LinkedList<LoggerReceiver&>&          getLoggerReceivers();
-    static LinkedList<Logger&>&                  getLoggers();
+    static SizedArrayList<LoggerReceiver*, 60>& getLoggerReceivers();
+    static SizedArrayList<Logger*, 256>&        getLoggers();
     /**
      * @brief Get a logger with specific name.
      *
      * @param name Logger name
      * @return The pointer to new logger.
      */
-    static Logger&                               getLogger(const char* name);
+    static Logger&                              getLogger(const char* name);
     /**
      * @brief Get an anonymous logger.
      *
      * @return The pointer to new logger.
      */
-    static Logger&                               getAnonymousLogger();
-    static SizedArrayList<LoggerReceiver&, 256>& getReceivers();
+    static Logger&                              getAnonymousLogger();
 
 private:
     const char* name;
     // SizedArrayList<String, 256> messages;
 
-    static LinkedList<LoggerReceiver&> receivers;
-    static LinkedList<Logger&>         loggers;
-    static Logger                      anonymousLogger;
+    static SizedArrayList<LoggerReceiver*, 60> receivers;
+    static SizedArrayList<Logger*, 256>        loggers;
+    static Logger                              anonymousLogger;
 };

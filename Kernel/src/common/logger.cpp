@@ -1,11 +1,82 @@
 #include <common/logger.h>
 #include <common/printf.h>
+#include <siberix/display/types/vga.h>
 
-LinkedList<Logger&>         Logger::loggers   = LinkedList<Logger&>();
-LinkedList<LoggerReceiver&> Logger::receivers = LinkedList<LoggerReceiver&>();
-Logger                      Logger::anonymousLogger("system");
+SizedArrayList<Logger*, 256>        Logger::loggers   = SizedArrayList<Logger*, 256>();
+SizedArrayList<LoggerReceiver*, 60> Logger::receivers = SizedArrayList<LoggerReceiver*, 60>();
+Logger                              Logger::anonymousLogger("system");
 
-void Logger::log(LoggerLevel level, const char* fmt, va_list args) {}
+extern VgaTextOutput _vga;
+
+void log2all(char* text) {
+    // _vga.drawText({ -1, -1 }, text, Color(VgaTextColor::Red));
+    Logger::getLoggerReceivers()[0]->receive(text);
+}
+
+void Logger::log(LoggerLevel level, const char* fmt, va_list args) {
+    int   d = 0;
+    u64   u = 0;
+    char* s = nullptr;
+    char  c = ' ';
+    char  buf[64];
+
+    while (*fmt) {
+        char ch = *fmt;
+        if (ch == '%') {
+            switch (*++fmt) {
+                case 'b':
+                case 'B':
+                    d = va_arg(args, int);
+                    log2all(itoa(d, buf, 2));
+                    break;
+
+                case 'x':
+                case 'X':
+                    u = va_arg(args, u64);
+                    log2all(utoa(u, buf, 16));
+                    break;
+
+                case 'i':
+                    d = va_arg(args, int);
+                    log2all(itoa(d, buf, 10));
+                    break;
+
+                case 'u':
+                    u = va_arg(args, u64);
+                    log2all(utoa(u, buf, 10));
+                    break;
+
+                case '%':
+                    log2all("%");
+                    // videoOutput->drawTextCode(
+                    //     Point{ -1, -1 },
+                    //     '%',
+                    //     Color::VgaColors[static_cast<u8>(VgaTextColor::Black)]);
+                    break;
+
+                case 'c':
+                    log2all(va_arg(args, char*));
+                    // c = va_arg(args, int);
+                    // videoOutput->drawTextCode(
+                    //     Point{ -1, -1 }, c,
+                    //     Color::VgaColors[static_cast<u8>(VgaTextColor::Black)]);
+                    break;
+
+                case 's':
+                    s = va_arg(args, char*);
+                    // log2all(s ? s : "(NULL)");
+                    break;
+
+                default:
+                    break;
+            }
+        } else {
+            log2all(&ch);
+            // videoOutput->drawTextCode(Point{ -1, -1 }, ch, Color(VgaTextColor::Black));
+        }
+        fmt++;
+    }
+}
 
 void Logger::log(LoggerLevel level, const char* fmt, ...) {
     va_list args;
@@ -51,21 +122,19 @@ void Logger::printStackTrace(const char* fmt, ...) {}
 
 const char* Logger::getName() { return name; }
 
-LinkedList<Logger&>& Logger::getLoggers() { return loggers; }
+SizedArrayList<Logger*, 256>& Logger::getLoggers() { return loggers; }
 
-LinkedList<LoggerReceiver&>& Logger::getLoggerReceivers() { return receivers; }
+SizedArrayList<LoggerReceiver*, 60>& Logger::getLoggerReceivers() { return receivers; }
 
 Logger& Logger::getLogger(const char* name) {
-    ListNode<Logger&>* node = Logger::getLoggers().first();
-    while (node != nullptr) {
-        if (strcmp(node->obj.getName(), name) == 0) {
-            return node->obj;
+    for (int i = 0; i < loggers.length(); i++) {
+        if (strcmp(loggers[i]->getName(), name) == 0) {
+            return *loggers[i];
         }
-        node = node->next;
     }
 
     Logger* logger = new Logger(name);
-    Logger::getLoggers().add(*logger);
+    Logger::getLoggers().add(logger);
     return *logger;
 }
 

@@ -33,6 +33,7 @@ Paging::X64KernelAddressSpace kernelAddressSpace;
 Process                       kernelProcess;
 ApicDevice*                   _apic;
 VgaTextOutput                 _vga;
+VgaTextReceiver               _vgaReceiver;
 
 SiberixKernel* siberix() { return &sbrxkrnl; }
 
@@ -76,12 +77,16 @@ bool SiberixKernel::setupArch() {
     k->m_idtPtr = { .limit = sizeof(IdtEntry) * IDT_ENTRY_COUNT, .base = (u64)&idtEntryList };
     _lidt((u64)&k->m_idtPtr);
 
-    _vga = VgaTextOutput();
-
     // Initialize memory management
     kernelProcess      = Process("SiberixKernel", nullptr, 0, TaskType::System);
     kernelAddressSpace = Paging::X64KernelAddressSpace();
     kernelProcess.setAddressSpace(&kernelAddressSpace);
+
+    /* These part are for debug use */
+    _vga         = VgaTextOutput();
+    _vgaReceiver = VgaTextReceiver();
+    Logger::getLoggerReceivers().add(&_vgaReceiver);
+
     this->m_energy    = EnergyPolicyEngine();
     this->m_memory    = MemoryController();
     this->m_devices   = new DeviceConnectivity();

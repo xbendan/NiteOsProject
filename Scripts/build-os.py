@@ -18,6 +18,7 @@ proj_name = 'siberix'
 proj_langs = ['c', 'cpp', 'asm']
 build_options = [
     '-DARCH_X86_64',
+    '-DDEBUG',
     '-Wall -Wno-write-strings -Wno-unused-parameter -Wno-sign-compare',
     '-ffreestanding -finline-functions -fno-exceptions -fno-rtti -fno-pic',
     '-nostdlib',

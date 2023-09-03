@@ -114,18 +114,13 @@ X64KernelAddressSpace::X64KernelAddressSpace() {
 
 X64KernelAddressSpace::~X64KernelAddressSpace() {}
 
-#include <siberix/display/types/vga.h>
-extern VgaTextOutput _vga;
-
 u64 X64KernelAddressSpace::allocate4KPages(u64 amount) {
     u64 offset        = 0;
     u64 pageDirOffset = 0;
     u64 counter       = 0;
     u64 address;
 
-    _vga.drawText({ 0, 0 }, "Allocating 4K pages", Color(VgaTextColor::White));
-
-    for (;;) asm("cli; hlt");
+    Logger::getAnonymousLogger().info("Allocating %u pages", amount);
 
     for (int i = 0; i < TABLES_PER_DIR; i++) {
         for (int j = 0; j < PAGES_PER_TABLE; j++) {

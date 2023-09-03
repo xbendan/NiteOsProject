@@ -45,6 +45,8 @@ void VgaTextOutput::drawText(Point point, const char* text, Color color) {
 
         point.x++;
     }
+    m_x = point.x;
+    m_y = point.y;
 }
 
 void VgaTextOutput::drawTextCode(Point point, char code, Color color) {

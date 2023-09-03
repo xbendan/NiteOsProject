@@ -3,8 +3,37 @@
 #include <arch/x86_64/iopt.h>
 #include <arch/x86_64/types.h>
 #include <common/logger.h>
+#include <siberix/display/types/vga.h>
 
-IdtEntry      idtEntryList[IDT_ENTRY_COUNT];
+IdtEntry idtEntryList[IDT_ENTRY_COUNT];
+
+void UnhandledException(RegisterContext* context) {
+    Logger::getAnonymousLogger().error("Unhandled Interrupt [%u]", context->intno);
+    while (true)
+        ;
+}
+
+extern VgaTextOutput _vga;
+
+void GeneralProtectionFault(RegisterContext* context) {
+    char buf[64];
+    u64  addr;
+    asm volatile("mov %%cr2, %[addr]" : [addr] "=r"(addr));
+    _vga.drawText({ -1, -1 }, "General Protection Fault", Color(VgaTextColor::Red));
+    _vga.drawText({ -1, -1 }, utoa(context->err, buf, 16), Color(VgaTextColor::Red));
+    _vga.drawText({ -1, -1 }, utoa(context->rax, buf, 16), Color(VgaTextColor::Red));
+
+    for (;;) asm("cli; hlt");
+}
+
+void PageFault(RegisterContext* context) {
+    Logger::getAnonymousLogger().info("Page Fault [%u]", context->intno);
+    // Logger::getAnonymousLogger().error("Error Code: %u", context->err);
+    // Logger::getAnonymousLogger().error("RAX: %x", context->rax);
+
+    for (;;) asm("cli; hlt");
+}
+
 InterruptData interrupts[256] = {
     [0]  = {"Division Error",                  IntTypeFault,                 false},
     [1]  = { "Debug",                          (IntTypeFault | IntTypeTrap), false},
@@ -19,8 +48,8 @@ InterruptData interrupts[256] = {
     [10] = { "Invalid Task State Segment",     IntTypeFault,                 true },
     [11] = { "Segment Not Present",            IntTypeFault,                 true },
     [12] = { "Stack-Segment Fault",            IntTypeFault,                 true },
-    [13] = { "General Protection Fault",       IntTypeFault,                 true },
-    [14] = { "Page Fault",                     IntTypeFault,                 true },
+    [13] = { "General Protection Fault",       IntTypeFault,                 true, GeneralProtectionFault, },
+    [14] = { "Page Fault",                     IntTypeFault,                 true, PageFault, },
     [15] = { "Reserved",                       0,                            false},
     [16] = { "x87 Floating-Point Exception",   IntTypeFault,                 false},
     [17] = { "Alignment Check",                IntTypeFault,                 true },
@@ -39,19 +68,8 @@ InterruptData interrupts[256] = {
     [30] = { "Security Exception",             IntTypeFault,                 true }
 };
 
-void UnhandledException(RegisterContext* context) {
-    Logger::getAnonymousLogger().error("Unhandled Interrupt [%u]", context->intno);
-    while (true)
-        ;
-}
-
-extern "C" void* fDispatchInterrupts(void* rsp) {
-    RegisterContext* context = reinterpret_cast<RegisterContext*>(rsp);
-    InterruptData*   data    = &(interrupts[context->intno]);
-
-    if (context->intno == 13) {
-        outWord16(0x604, 0x2000);
-    }
+extern "C" void* fDispatchInterrupts(RegisterContext* context) {
+    InterruptData* data = &(interrupts[context->intno]);
 
     if (data->handler != nullptr) {
         data->handler(context);
@@ -63,5 +81,5 @@ extern "C" void* fDispatchInterrupts(void* rsp) {
         _apic->getInterface().eoi();
     }
 
-    return rsp;
+    return (void*)context;
 }

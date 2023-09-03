@@ -14,8 +14,6 @@ extern Process    kernelProcess;
 #include <arch/x86_64/iopt.h>
 #include <siberix/display/types/vga.h>
 
-extern VgaTextOutput _vga;
-
 MemoryController::MemoryController() {
     PageBlock* pageBlock = &(siberix()->getBootConfig().memory.ranges[0]);
     for (int i = 0; i < 256; i++) {
@@ -34,6 +32,8 @@ MemoryController::MemoryController() {
     this->m_pageAlloc             = &(_segAlloc = SegAlloc());
     AddressSpace* kernelAddrSpace = kernelProcess.getAddressSpace();
 
+    Logger::getAnonymousLogger().info("Allocating kernel address space");
+
     const u64 amount = SECTION_PAGE_SIZE / PAGE_SIZE_4K;
     for (u64 address  = 0; address < siberix()->getBootConfig().memory.maxSize;
          address     += PAGE_SIZE_1G) {
@@ -45,10 +45,6 @@ MemoryController::MemoryController() {
             // kernelAddrSpace->map(virt, phys, amount);
         }
     }
-
-    _vga.drawText({ 0, 0 }, "kspace", Color(VgaTextColor::White));
-
-    for (;;) asm("cli; hlt");
 
     this->m_pageAlloc   = &(_buddyAlloc = BuddyAlloc());
     this->m_memoryAlloc = &(_slabAlloc = SlabAlloc());

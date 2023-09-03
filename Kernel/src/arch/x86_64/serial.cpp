@@ -17,7 +17,7 @@ SerialPortDevice::SerialPortDevice()
     m_flags        |= DeviceInitialized;
     loggerReceiver  = SerialPortLoggerReceiver();
 
-    Logger::getLoggerReceivers().add(loggerReceiver);
+    Logger::getLoggerReceivers().add(&loggerReceiver);
 }
 
 SerialPortDevice::~SerialPortDevice() {}
