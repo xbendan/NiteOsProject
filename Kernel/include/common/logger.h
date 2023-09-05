@@ -14,8 +14,8 @@ enum LoggerLevel {
 
 class LoggerReceiver {
 public:
-    virtual void receive(char c)          = 0;
-    virtual void receive(const char* str) = 0;
+    virtual void receive(char c) {}
+    virtual void receive(const char* str) {}
 };
 
 class Logger {
@@ -61,6 +61,7 @@ public:
     /// @return
     const char* getName();
 
+    static void                                 log2all(char* text);
     /// @brief
     /// @return
     static SizedArrayList<LoggerReceiver*, 60>& getLoggerReceivers();
@@ -79,7 +80,7 @@ public:
      */
     static Logger&                              getAnonymousLogger();
 
-private:
+public:
     const char* name;
     // SizedArrayList<String, 256> messages;
 

@@ -23,18 +23,6 @@ enum SerialPortOffset {
     Scratch         = 7
 };
 
-class SerialPortLoggerReceiver : public LoggerReceiver {
-public:
-    SerialPortLoggerReceiver();
-    ~SerialPortLoggerReceiver();
-
-    void receive(char c) override;
-    void receive(const char* str) override;
-
-private:
-    spinlock_t m_lock;
-};
-
 class SerialPortDevice : public Device {
 public:
     SerialPortDevice();
@@ -42,4 +30,18 @@ public:
 
     void enable() override;
     void disable() override;
+};
+
+class SerialPortLoggerReceiver : public LoggerReceiver {
+public:
+    SerialPortLoggerReceiver() = default;
+    SerialPortLoggerReceiver(SerialPortDevice* device);
+    ~SerialPortLoggerReceiver();
+
+    void receive(char c) override;
+    void receive(const char* str) override;
+
+private:
+    SerialPortDevice* m_device;
+    spinlock_t        m_lock;
 };

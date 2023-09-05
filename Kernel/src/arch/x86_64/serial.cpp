@@ -2,8 +2,6 @@
 #include <arch/x86_64/iopt.h>
 #include <arch/x86_64/serial.h>
 
-static SerialPortLoggerReceiver loggerReceiver;
-
 SerialPortDevice::SerialPortDevice()
     : Device("Serial Port", DeviceBus::ISA, DeviceType::SoftwareDevice) {
     outByte8(COM1 + SerialPortOffset::InterruptEnable, 0x00);
@@ -14,10 +12,7 @@ SerialPortDevice::SerialPortDevice()
     outByte8(COM1 + SerialPortOffset::FIFO, 0xc7);
     outByte8(COM1 + SerialPortOffset::ModemControl, 0x0b);
 
-    m_flags        |= DeviceInitialized;
-    loggerReceiver  = SerialPortLoggerReceiver();
-
-    Logger::getLoggerReceivers().add(&loggerReceiver);
+    m_flags |= DeviceInitialized;
 }
 
 SerialPortDevice::~SerialPortDevice() {}
@@ -26,7 +21,8 @@ void SerialPortDevice::enable() {}
 
 void SerialPortDevice::disable() {}
 
-SerialPortLoggerReceiver::SerialPortLoggerReceiver() {}
+SerialPortLoggerReceiver::SerialPortLoggerReceiver(SerialPortDevice* device)
+    : m_device(device) {}
 
 SerialPortLoggerReceiver::~SerialPortLoggerReceiver() {}
 

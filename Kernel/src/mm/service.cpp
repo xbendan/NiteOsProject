@@ -33,6 +33,7 @@ MemoryController::MemoryController() {
     AddressSpace* kernelAddrSpace = kernelProcess.getAddressSpace();
 
     Logger::getAnonymousLogger().info("Allocating kernel address space");
+    for (;;) asm("cli; hlt");
 
     const u64 amount = SECTION_PAGE_SIZE / PAGE_SIZE_4K;
     for (u64 address  = 0; address < siberix()->getBootConfig().memory.maxSize;

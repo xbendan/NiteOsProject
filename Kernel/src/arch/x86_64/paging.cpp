@@ -67,31 +67,23 @@ X64KernelAddressSpace::X64KernelAddressSpace() {
     memset(&pdpts, 0, sizeof(pdpt_t));
 
     // Set kernel PML4 entries
-    setPageFrame(&(pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]),
-                 ((u64)&pdpts) - KERNEL_VIRTUAL_BASE,
-                 (PageFlags::Present | PageFlags::Writable));
+    setPageFrame(
+        &(pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]), ((u64)&pdpts) - KERNEL_VIRTUAL_BASE, (0x3));
     pml4[0] = pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)];
 
     // Set kernel PDPT entries
     setPageFrame(&(pdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)]),
                  ((u64)&kPageDirs) - KERNEL_VIRTUAL_BASE,
-                 (PageFlags::Present | PageFlags::Writable));
+                 (0x3));
     pageDirs[0] = &kPageDirs[0];
     for (int i = 0; i < TABLES_PER_DIR; i++) {
-        setPageFrame(&(kPageDirs[i]),
-                     (PAGE_SIZE_2M * i),
-                     (PageFlags::Present | PageFlags::Writable | PageFlags::CacheDisabled |
-                      PageFlags::DirectAddress));
+        setPageFrame(&(kPageDirs[i]), (PAGE_SIZE_2M * i), (0x93));
     }
 
     // Set kernel heap space
-    setPageFrame(&(pdpts[KERNEL_HEAP_PDPT_INDEX]),
-                 ((u64)&kHeapDirs) - KERNEL_VIRTUAL_BASE,
-                 (PageFlags::Present | PageFlags::Writable));
+    setPageFrame(&(pdpts[KERNEL_HEAP_PDPT_INDEX]), ((u64)&kHeapDirs) - KERNEL_VIRTUAL_BASE, (0x3));
     for (int i = 0; i < TABLES_PER_DIR; i++) {
-        setPageFrame(&(kHeapDirs[i]),
-                     ((u64)&kHeapTables[i]) - KERNEL_VIRTUAL_BASE,
-                     (PageFlags::Present | PageFlags::Writable));
+        setPageFrame(&(kHeapDirs[i]), ((u64)&kHeapTables[i]) - KERNEL_VIRTUAL_BASE, (0x3));
         kPageTablePointers[KERNEL_HEAP_PDPT_INDEX][i] = &kHeapTables[i];
     }
 
@@ -99,12 +91,9 @@ X64KernelAddressSpace::X64KernelAddressSpace() {
     for (int i = 0; i < 4; i++) {
         setPageFrame(&(pdpts[PDPT_GET_INDEX(IO_VIRTUAL_BASE) + i]),
                      ((u64)&kIoDirs[i] - KERNEL_VIRTUAL_BASE),
-                     (PageFlags::Present | PageFlags::Writable));
+                     (0x3));
         for (int j = 0; j < TABLES_PER_DIR; j++) {
-            setPageFrame(&(kIoDirs[i][j]),
-                         (PAGE_SIZE_1G * i + PAGE_SIZE_2M * j),
-                         (PageFlags::Present | PageFlags::Writable | PageFlags::DirectAddress |
-                          PageFlags::CacheDisabled));
+            setPageFrame(&(kIoDirs[i][j]), (PAGE_SIZE_1G * i + PAGE_SIZE_2M * j), (0x93));
         }
     }
     pdpts[0] = pdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)];

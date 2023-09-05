@@ -1,3 +1,4 @@
+#include <arch/x86_64/serial.h>
 #include <common/logger.h>
 #include <common/printf.h>
 #include <siberix/display/types/vga.h>
@@ -6,11 +7,14 @@ SizedArrayList<Logger*, 256>        Logger::loggers   = SizedArrayList<Logger*, 
 SizedArrayList<LoggerReceiver*, 60> Logger::receivers = SizedArrayList<LoggerReceiver*, 60>();
 Logger                              Logger::anonymousLogger("system");
 
-extern VgaTextOutput _vga;
+extern SerialPortLoggerReceiver _serialPortReceiver;
 
-void log2all(char* text) {
-    // _vga.drawText({ -1, -1 }, text, Color(VgaTextColor::Red));
-    Logger::getLoggerReceivers()[0]->receive(text);
+void Logger::log2all(char* text) {
+    for (int i = 0; i < receivers.length(); i++) {
+        // asm volatile("cli; hlt");
+        // _serialPortReceiver.receive(text);
+        receivers[0]->receive(text);
+    }
 }
 
 void Logger::log(LoggerLevel level, const char* fmt, va_list args) {

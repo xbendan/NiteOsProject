@@ -32,8 +32,8 @@ TaskStateSegment              tss = { .rsp = {}, .ist = {}, .iopbOffset = 0 };
 Paging::X64KernelAddressSpace kernelAddressSpace;
 Process                       kernelProcess;
 ApicDevice*                   _apic;
-VgaTextOutput                 _vga;
-VgaTextReceiver               _vgaReceiver;
+SerialPortDevice              _serialPort;
+SerialPortLoggerReceiver      _serialPortReceiver;
 
 SiberixKernel* siberix() { return &sbrxkrnl; }
 
@@ -78,14 +78,16 @@ bool SiberixKernel::setupArch() {
     _lidt((u64)&k->m_idtPtr);
 
     // Initialize memory management
-    kernelProcess      = Process("SiberixKernel", nullptr, 0, TaskType::System);
-    kernelAddressSpace = Paging::X64KernelAddressSpace();
-    kernelProcess.setAddressSpace(&kernelAddressSpace);
+    kernelProcess = Process("SiberixKernel", nullptr, 0, TaskType::System);
+    kernelProcess.setAddressSpace(&(kernelAddressSpace = Paging::X64KernelAddressSpace()));
 
     /* These part are for debug use */
-    _vga         = VgaTextOutput();
-    _vgaReceiver = VgaTextReceiver();
-    Logger::getLoggerReceivers().add(&_vgaReceiver);
+    _serialPort         = SerialPortDevice();
+    _serialPortReceiver = SerialPortLoggerReceiver(&_serialPort);
+    Logger::getLoggerReceivers().add(&_serialPortReceiver);
+    Logger::getAnonymousLogger().info("Serial Port Initialized");
+
+    for (;;) asm("hlt");
 
     this->m_energy    = EnergyPolicyEngine();
     this->m_memory    = MemoryController();

@@ -2,7 +2,17 @@
 #include <common/string.h>
 #include <siberix/display/types/vga.h>
 
-VgaTextOutput::VgaTextOutput() { m_buffer = reinterpret_cast<u16*>(IOVB(0xb8000)); }
+void VgaTextReceiver::receive(char c) {
+    // m_vga->drawTextCode({ -1, -1 }, c, Color(VgaTextColor::White));
+}
+
+void VgaTextReceiver::receive(const char* str) {
+    // _vga.drawText({ -1, -1 }, str, Color(VgaTextColor::White));
+}
+
+VgaTextOutput::VgaTextOutput()
+    : m_receiver(VgaTextReceiver(this)),
+      m_buffer(reinterpret_cast<u16*>(IOVB(0xb8000))) {}
 
 VgaTextOutput::~VgaTextOutput() {}
 

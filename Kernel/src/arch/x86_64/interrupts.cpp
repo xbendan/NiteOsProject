@@ -13,23 +13,22 @@ void UnhandledException(RegisterContext* context) {
         ;
 }
 
-extern VgaTextOutput _vga;
-
 void GeneralProtectionFault(RegisterContext* context) {
     char buf[64];
     u64  addr;
     asm volatile("mov %%cr2, %[addr]" : [addr] "=r"(addr));
-    _vga.drawText({ -1, -1 }, "General Protection Fault", Color(VgaTextColor::Red));
-    _vga.drawText({ -1, -1 }, utoa(context->err, buf, 16), Color(VgaTextColor::Red));
-    _vga.drawText({ -1, -1 }, utoa(context->rax, buf, 16), Color(VgaTextColor::Red));
+
+    // _vga.drawText({ -1, -1 }, "General Protection Fault", Color(VgaTextColor::Red));
+    // _vga.drawText({ -1, -1 }, utoa(context->err, buf, 16), Color(VgaTextColor::Red));
+    // _vga.drawText({ -1, -1 }, utoa(context->rax, buf, 16), Color(VgaTextColor::Red));
 
     for (;;) asm("cli; hlt");
 }
 
 void PageFault(RegisterContext* context) {
     Logger::getAnonymousLogger().info("Page Fault [%u]", context->intno);
-    // Logger::getAnonymousLogger().error("Error Code: %u", context->err);
-    // Logger::getAnonymousLogger().error("RAX: %x", context->rax);
+    Logger::getAnonymousLogger().info("Error Code: %u", context->err);
+    Logger::getAnonymousLogger().info("RAX: %x", context->rax);
 
     for (;;) asm("cli; hlt");
 }

@@ -1,6 +1,23 @@
 #include <common/logger.h>
 #include <siberix/display/video.h>
 
+class VgaTextOutput;
+
+class VgaTextReceiver : public LoggerReceiver {
+public:
+    VgaTextReceiver() = default;
+    VgaTextReceiver(VgaTextOutput* vga)
+        : m_vga(vga) {}
+    ~VgaTextReceiver() {}
+
+    void receive(char c) override;
+    void receive(const char* str) override;
+    void setOutput(VgaTextOutput* vga);
+
+private:
+    VgaTextOutput* m_vga;
+};
+
 class VgaTextOutput : public VideoOutput {
 public:
     VgaTextOutput();
@@ -14,22 +31,12 @@ public:
     inline void setBufferOptions(bool isDoubleBuffering) override {}
     inline bool getBufferOptions() override { return false; }
 
+    VgaTextReceiver* getReceiver() { return &m_receiver; }
+
     void newline();
 
 private:
-    u16* m_buffer;
-    u32  m_x, m_y;
-};
-
-class VgaTextReceiver : public LoggerReceiver {
-public:
-    void receive(char c) override {
-        m_vga->drawTextCode({ -1, -1 }, c, Color(VgaTextColor::White));
-    }
-    void receive(const char* str) override {
-        m_vga->drawText({ -1, -1 }, str, Color(VgaTextColor::White));
-    }
-
-private:
-    VgaTextOutput* m_vga;
+    VgaTextReceiver m_receiver;
+    u16*            m_buffer;
+    u32             m_x, m_y;
 };
