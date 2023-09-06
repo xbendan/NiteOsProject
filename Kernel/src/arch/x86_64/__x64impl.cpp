@@ -89,7 +89,7 @@ bool SiberixKernel::setupArch() {
 
     for (;;) asm("hlt");
 
-    this->m_energy    = EnergyPolicyEngine();
+    this->m_energy    = PowerEngine();
     this->m_memory    = MemoryController();
     this->m_devices   = new DeviceConnectivity();
     this->m_scheduler = new Scheduler(&kernelProcess);

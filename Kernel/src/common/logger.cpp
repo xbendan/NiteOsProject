@@ -1,84 +1,18 @@
 #include <arch/x86_64/serial.h>
+#include <common/format.h>
 #include <common/logger.h>
-#include <common/printf.h>
 #include <siberix/display/types/vga.h>
 
 SizedArrayList<Logger*, 256>        Logger::loggers   = SizedArrayList<Logger*, 256>();
 SizedArrayList<LoggerReceiver*, 60> Logger::receivers = SizedArrayList<LoggerReceiver*, 60>();
 Logger                              Logger::anonymousLogger("system");
-
-extern SerialPortLoggerReceiver _serialPortReceiver;
-
-void Logger::log2all(char* text) {
-    for (int i = 0; i < receivers.length(); i++) {
-        // asm volatile("cli; hlt");
-        // _serialPortReceiver.receive(text);
-        receivers[0]->receive(text);
-    }
-}
+static char                         buf[256];
 
 void Logger::log(LoggerLevel level, const char* fmt, va_list args) {
-    int   d = 0;
-    u64   u = 0;
-    char* s = nullptr;
-    char  c = ' ';
-    char  buf[64];
-
-    while (*fmt) {
-        char ch = *fmt;
-        if (ch == '%') {
-            switch (*++fmt) {
-                case 'b':
-                case 'B':
-                    d = va_arg(args, int);
-                    log2all(itoa(d, buf, 2));
-                    break;
-
-                case 'x':
-                case 'X':
-                    u = va_arg(args, u64);
-                    log2all(utoa(u, buf, 16));
-                    break;
-
-                case 'i':
-                    d = va_arg(args, int);
-                    log2all(itoa(d, buf, 10));
-                    break;
-
-                case 'u':
-                    u = va_arg(args, u64);
-                    log2all(utoa(u, buf, 10));
-                    break;
-
-                case '%':
-                    log2all("%");
-                    // videoOutput->drawTextCode(
-                    //     Point{ -1, -1 },
-                    //     '%',
-                    //     Color::VgaColors[static_cast<u8>(VgaTextColor::Black)]);
-                    break;
-
-                case 'c':
-                    log2all(va_arg(args, char*));
-                    // c = va_arg(args, int);
-                    // videoOutput->drawTextCode(
-                    //     Point{ -1, -1 }, c,
-                    //     Color::VgaColors[static_cast<u8>(VgaTextColor::Black)]);
-                    break;
-
-                case 's':
-                    s = va_arg(args, char*);
-                    // log2all(s ? s : "(NULL)");
-                    break;
-
-                default:
-                    break;
-            }
-        } else {
-            log2all(&ch);
-            // videoOutput->drawTextCode(Point{ -1, -1 }, ch, Color(VgaTextColor::Black));
-        }
-        fmt++;
+    memset(buf, 0, 256);
+    strfmts(buf, fmt, args);
+    for (int i = 0; i < receivers.length(); i++) {
+        receivers[i]->receive(buf);
     }
 }
 

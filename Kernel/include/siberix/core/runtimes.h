@@ -57,7 +57,7 @@ protected:
     BootConfig&  m_bootConfig;
 
     MemoryController         m_memory;
-    EnergyPolicyEngine       m_energy;
+    PowerEngine       m_energy;
     DeviceConnectivity*      m_devices;
     Scheduler*               m_scheduler;
     Clock                    m_clock;

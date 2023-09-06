@@ -1,6 +1,6 @@
 #include <siberix/core/power.h>
 
-EnergyPolicyEngine::EnergyPolicyEngine()
+PowerEngine::PowerEngine()
     : m_sleepAfter(Duration(TimeSpan::Minute, 5)) {}
 
-EnergyPolicyEngine::~EnergyPolicyEngine() {}
+PowerEngine::~PowerEngine() {}
