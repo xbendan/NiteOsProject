@@ -1,7 +1,5 @@
-#include <arch/x86_64/serial.h>
 #include <common/format.h>
 #include <common/logger.h>
-#include <siberix/display/types/vga.h>
 
 SizedArrayList<Logger*, 256>        Logger::loggers   = SizedArrayList<Logger*, 256>();
 SizedArrayList<LoggerReceiver*, 60> Logger::receivers = SizedArrayList<LoggerReceiver*, 60>();
