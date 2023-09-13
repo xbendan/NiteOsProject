@@ -5,5 +5,3 @@
 
 void printf(const char* fmt, ...);
 void vprintf(const char* fmt, va_list args);
-char* itoa(int d, char* buf, int base);
-char* utoa(unsigned long u, char* buf, int base);

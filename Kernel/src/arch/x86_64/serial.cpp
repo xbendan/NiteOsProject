@@ -3,7 +3,8 @@
 #include <arch/x86_64/serial.h>
 
 SerialPortDevice::SerialPortDevice()
-    : Device("Serial Port", DeviceBus::ISA, DeviceType::SoftwareDevice) {
+  : Device("Serial Port", DeviceBus::ISA, DeviceType::SoftwareDevice)
+{
     outByte8(COM1 + SerialPortOffset::InterruptEnable, 0x00);
     outByte8(COM1 + SerialPortOffset::LineControl, 0x80);
     outByte8(COM1, 0x03);
@@ -17,36 +18,43 @@ SerialPortDevice::SerialPortDevice()
 
 SerialPortDevice::~SerialPortDevice() {}
 
-void SerialPortDevice::enable() {}
-
-void SerialPortDevice::disable() {}
-
-SerialPortLoggerReceiver::SerialPortLoggerReceiver(SerialPortDevice* device)
-    : m_device(device) {}
-
-SerialPortLoggerReceiver::~SerialPortLoggerReceiver() {}
-
-void SerialPortLoggerReceiver::receive(char c) {
-    while (!(inByte8(SerialPort::COM1 + SerialPortOffset::LineStatus) & 0x20))
-        ;
-    outByte8(SerialPort::COM1, c);
+void
+SerialPortDevice::enable()
+{
 }
 
-void SerialPortLoggerReceiver::receive(const char* str) {
+void
+SerialPortDevice::disable()
+{
+}
+
+void
+SerialPortLoggerReceiver::write(char ch)
+{
+    while (!(inByte8(SerialPort::COM1 + SerialPortOffset::LineStatus) & 0x20))
+        ;
+    outByte8(SerialPort::COM1, ch);
+}
+
+void
+SerialPortLoggerReceiver::write(const char* str)
+{
     int len = strlen(str);
     if (checkInterrupts()) {
-        acquireLockIntDisable(&m_lock);
+        m_lock.acquireIntDisable();
         while (len--) {
-            while (!(inByte8(SerialPort::COM1 + SerialPortOffset::LineStatus) & 0x20))
+            while (!(inByte8(SerialPort::COM1 + SerialPortOffset::LineStatus) &
+                     0x20))
                 ;
             outByte8(SerialPort::COM1, *str++);
         }
 
-        releaseLock(&m_lock);
+        m_lock.release();
         asm("sti");
     } else
         while (len--) {
-            while (!(inByte8(SerialPort::COM1 + SerialPortOffset::LineStatus) & 0x20))
+            while (!(inByte8(SerialPort::COM1 + SerialPortOffset::LineStatus) &
+                     0x20))
                 ;
             outByte8(SerialPort::COM1, *str++);
         }

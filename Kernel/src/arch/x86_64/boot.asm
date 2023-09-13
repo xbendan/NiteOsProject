@@ -66,6 +66,27 @@ stivale2framebufferWctag: ; Ask the bootloader to set framebuffer as writecombin
     dq 0x4c7bb07731282e00
     dq 0 ; No next tag  
 
+; section .text
+; _init:
+;     mov rbx, s_ctors
+;     jmp .ctors_end
+; .ctors_call:
+;     call [rbx]
+;     add rbx, 8
+; .ctors_end:
+;     cmp rbx, e_ctors
+;     jb .ctors_call
+
+; _fini:
+;     mov rbx, e_dtors
+;     jmp .dtors_end
+; .dtors_call:
+;     sub rbx, 8
+;     call [rbx]
+; .dtors_end:
+;     cmp rbx, s_dtors
+;     ja .dtors_call
+
 section .data
 global __cxa_atexit
 __cxa_atexit:

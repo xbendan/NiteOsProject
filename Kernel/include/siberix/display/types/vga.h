@@ -10,8 +10,8 @@ public:
         : m_vga(vga) {}
     ~VgaTextReceiver() {}
 
-    void receive(char c) override;
-    void receive(const char* str) override;
+    void write(char ch) override;
+    void write(const char* str) override;
     void setOutput(VgaTextOutput* vga);
 
 private:

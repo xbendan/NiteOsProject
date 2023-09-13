@@ -2,11 +2,11 @@
 #include <common/string.h>
 #include <siberix/display/types/vga.h>
 
-void VgaTextReceiver::receive(char c) {
+void VgaTextReceiver::write(char c) {
     // m_vga->drawTextCode({ -1, -1 }, c, Color(VgaTextColor::White));
 }
 
-void VgaTextReceiver::receive(const char* str) {
+void VgaTextReceiver::write(const char* str) {
     // _vga.drawText({ -1, -1 }, str, Color(VgaTextColor::White));
 }
 

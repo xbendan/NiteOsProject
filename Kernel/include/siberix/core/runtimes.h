@@ -9,19 +9,23 @@
 #include <siberix/proc/process.h>
 #include <siberix/proc/sched.h>
 
-enum class Architecture {
+enum class Architecture
+{
     Undefined,
     X86_64,
     ARMv7,
     RISC_V
 };
 
-class SiberixKernel {
+class SiberixKernel
+{
 public:
     SiberixKernel(Architecture arch, BootConfig& bootConfig)
-        : m_isInitialized(false),
-          m_arch(arch),
-          m_bootConfig(bootConfig) {}
+      : m_isInitialized(false)
+      , m_arch(arch)
+      , m_bootConfig(bootConfig)
+    {
+    }
     ~SiberixKernel() {}
 
     bool setupArch();
@@ -29,16 +33,18 @@ public:
     bool        isInitialized() { return m_isInitialized; }
     BootConfig& getBootConfig();
 
-    MemoryController&   getMemory() { return m_memory; }
-    DeviceConnectivity* getConnectivity() { return m_devices; }
-    Scheduler*          getScheduler() { return m_scheduler; }
+    MemoryServiceProvider& getMemory() { return m_memory; }
+    DeviceConnectivity*    getConnectivity() { return m_devices; }
+    Scheduler*             getScheduler() { return m_scheduler; }
+    Process*               getKernelProcess();
 
     u64  getTimestamp();
     void sleep(u64 ms);
 
     Clock& getClock() { return m_clock; }
 
-    void addTimer(TimerDevice& timer, bool setAsDefault = false) {
+    void addTimer(TimerDevice& timer, bool setAsDefault = false)
+    {
         if (!m_timers.contains(timer)) {
             m_timers.add(timer);
             if (setAsDefault) {
@@ -47,7 +53,8 @@ public:
         }
     }
 
-    TimerDevice& getDefaultTimer() {
+    TimerDevice& getDefaultTimer()
+    {
         return m_defaultTimer == nullptr ? m_timers[0] : *m_defaultTimer;
     }
 
@@ -56,8 +63,8 @@ protected:
     Architecture m_arch;
     BootConfig&  m_bootConfig;
 
-    MemoryController         m_memory;
-    PowerEngine       m_energy;
+    MemoryServiceProvider    m_memory;
+    PowerEngine              m_energy;
     DeviceConnectivity*      m_devices;
     Scheduler*               m_scheduler;
     Clock                    m_clock;
@@ -65,4 +72,5 @@ protected:
     TimerDevice*             m_defaultTimer;
 };
 
-SiberixKernel* siberix();
+SiberixKernel*
+siberix();

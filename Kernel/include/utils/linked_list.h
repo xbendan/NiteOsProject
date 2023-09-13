@@ -23,7 +23,7 @@ public:
         m_front       = nullptr;
         m_back        = nullptr;
         m_count       = 0;
-        m_lock.m_Lock = 0;
+        m_lock.m_lock = 0;
     }
 
     ~LinkedList() { m_lock.release(); }

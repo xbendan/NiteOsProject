@@ -9,21 +9,26 @@
 #define BUILD_ARCH "riscv"
 #endif
 
-enum BootloaderName {
+enum BootloaderName
+{
     BL_LIMINE,
     BL_NBW
 };
 
-struct BootConfig {
+struct BootConfig
+{
     u64   checksum;
     u64   blTime;
     char* blName;
-    struct BootMemory {
+    struct BootMemory
+    {
         u64       totalSize;
         u64       maxSize;
+        u64       usableSize;
         PageBlock ranges[64];
     } memory;
-    struct BootGraphics {
+    struct BootGraphics
+    {
         u64 width;
         u64 height;
         u64 address;
@@ -32,4 +37,5 @@ struct BootConfig {
     } graphic[16];
 };
 
-void kmain(BootConfig& bootConfig);
+void
+kmain(BootConfig& bootConfig);

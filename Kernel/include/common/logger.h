@@ -5,23 +5,28 @@
 #include <utils/array.h>
 #include <utils/linked_list.h>
 
-enum LoggerLevel {
+enum LoggerLevel
+{
     LOG_INFO,
     LOG_SUCCESS,
     LOG_WARN,
     LOG_ERROR
 };
 
-class LoggerReceiver {
+class LoggerReceiver
+{
 public:
-    virtual void receive(char c) {}
-    virtual void receive(const char* str) {}
+    virtual void write(char ch) {}
+    virtual void write(const char* str) {}
 };
 
-class Logger {
+class Logger
+{
 public:
     Logger(const char* _name)
-        : name(_name) {}
+      : name(_name)
+    {
+    }
     Logger() {}
     ~Logger() {}
 

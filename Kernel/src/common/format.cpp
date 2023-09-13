@@ -6,7 +6,7 @@ extern "C" {
 void strfmt(char* dest, const char* fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    strfmt(dest, fmt, args);
+    strfmts(dest, fmt, args);
     va_end(args);
 }
 

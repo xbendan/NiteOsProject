@@ -2,7 +2,8 @@
 #include <siberix/device/device.h>
 #include <utils/spinlock.h>
 
-enum SerialPort {
+enum SerialPort : u16
+{
     COM1 = 0x3f8,
     COM2 = 0x2f8,
     COM3 = 0x3e8,
@@ -13,7 +14,8 @@ enum SerialPort {
     COM8 = 0x4e8
 };
 
-enum SerialPortOffset {
+enum SerialPortOffset : u16
+{
     InterruptEnable = 1,
     FIFO            = 2,
     LineControl     = 3,
@@ -23,25 +25,41 @@ enum SerialPortOffset {
     Scratch         = 7
 };
 
-class SerialPortDevice : public Device {
+inline u16
+operator+(SerialPort port, SerialPortOffset offset)
+{
+    return static_cast<u16>(port) + static_cast<u16>(offset);
+}
+
+class SerialPortDevice : public Device
+{
 public:
     SerialPortDevice();
     ~SerialPortDevice();
 
-    void enable() override;
-    void disable() override;
+    virtual void enable() override;
+    virtual void disable() override;
 };
 
-class SerialPortLoggerReceiver : public LoggerReceiver {
+struct SerialPortLoggerReceiver : public LoggerReceiver
+{
 public:
-    SerialPortLoggerReceiver() = default;
-    SerialPortLoggerReceiver(SerialPortDevice* device);
-    ~SerialPortLoggerReceiver();
+    constexpr SerialPortLoggerReceiver()
+      : m_device(nullptr)
+      , m_lock(Spinlock())
+    {
+    }
+    constexpr SerialPortLoggerReceiver(SerialPortDevice* device)
+      : m_device(device)
+      , m_lock(Spinlock())
+    {
+    }
+    ~SerialPortLoggerReceiver() {}
 
-    void receive(char c) override;
-    void receive(const char* str) override;
+    virtual void write(char ch) override;
+    virtual void write(const char* str) override;
 
 private:
-    SerialPortDevice* m_device;
-    spinlock_t        m_lock;
+    SerialPortDevice* m_device = nullptr;
+    Spinlock          m_lock;
 };

@@ -42,6 +42,14 @@ SECTIONS {
 
     .rodata ALIGN(4K) : AT(ADDR(.rodata) - KERNEL_VMA)
     {
+        /* s_ctors = .;
+        *(SORT(.init_array .ctors))
+        e_ctors = .;
+
+        s_dtors = .;
+        *(SORT(.init_array .dtors))
+        e_dtors - .; */
+        
         KEEP(*(.rodata*))
     }
 

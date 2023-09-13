@@ -7,30 +7,38 @@
 
 IdtEntry idtEntryList[IDT_ENTRY_COUNT];
 
-void UnhandledException(RegisterContext* context) {
-    Logger::getAnonymousLogger().error("Unhandled Interrupt [%u]", context->intno);
+void
+UnhandledException(RegisterContext* context)
+{
+    Logger::getAnonymousLogger().error("Unhandled Interrupt [%u]",
+                                       context->intno);
     while (true)
         ;
 }
 
-void GeneralProtectionFault(RegisterContext* context) {
-    char buf[64];
-    u64  addr;
+void
+GeneralProtectionFault(RegisterContext* context)
+{
+    u64 addr;
     asm volatile("mov %%cr2, %[addr]" : [addr] "=r"(addr));
 
-    // _vga.drawText({ -1, -1 }, "General Protection Fault", Color(VgaTextColor::Red));
-    // _vga.drawText({ -1, -1 }, utoa(context->err, buf, 16), Color(VgaTextColor::Red));
-    // _vga.drawText({ -1, -1 }, utoa(context->rax, buf, 16), Color(VgaTextColor::Red));
+    Logger::getAnonymousLogger().info(
+      "General Protection Fault [%u]\nError Code: %u\nRAX=%x",
+      context->intno,
+      context->err,
+      context->rax);
 
-    for (;;) asm("cli; hlt");
+    for (;;)
+        asm("cli; hlt");
 }
 
-void PageFault(RegisterContext* context) {
-    Logger::getAnonymousLogger().info("Page Fault [%u]", context->intno);
-    Logger::getAnonymousLogger().info("Error Code: %u", context->err);
-    Logger::getAnonymousLogger().info("RAX: %x", context->rax);
+void
+PageFault(RegisterContext* context)
+{
+    Logger::getAnonymousLogger().info("Page Fault [%u]");
 
-    for (;;) asm("cli; hlt");
+    for (;;)
+        asm("cli; hlt");
 }
 
 InterruptData interrupts[256] = {
@@ -67,7 +75,9 @@ InterruptData interrupts[256] = {
     [30] = { "Security Exception",             IntTypeFault,                 true }
 };
 
-extern "C" void* fDispatchInterrupts(RegisterContext* context) {
+extern "C" void*
+fDispatchInterrupts(RegisterContext* context)
+{
     InterruptData* data = &(interrupts[context->intno]);
 
     if (data->handler != nullptr) {

@@ -6,6 +6,7 @@
 #include <arch/x86_64/serial.h>
 #include <arch/x86_64/smbios.h>
 #include <arch/x86_64/types.h>
+#include <common/format.h>
 #include <siberix/display/types/vga.h>
 #include <siberix/drivers/acpi/acpi_device.h>
 #include <siberix/drivers/pci/devices.h>
@@ -27,33 +28,42 @@ volatile u64* smpStack           = (u64*)SMP_TRAMPOLINE_STACK;
 volatile u64* smpEntry2          = (u64*)SMP_TRAMPOLINE_ENTRY2;
 volatile bool doneInit           = false;
 
-SbrxkrnlX64Impl               sbrxkrnl;
-TaskStateSegment              tss = { .rsp = {}, .ist = {}, .iopbOffset = 0 };
-Paging::X64KernelAddressSpace kernelAddressSpace;
-Process                       kernelProcess;
-ApicDevice*                   _apic;
-SerialPortDevice              _serialPort;
-SerialPortLoggerReceiver      _serialPortReceiver;
+SbrxkrnlX64Impl                sbrxkrnl;
+TaskStateSegment               tss = { .rsp = {}, .ist = {}, .iopbOffset = 0 };
+Process                        kernelProcess;
+Paging::X64KernelAddressSpace* kernelAddressSpace;
+ApicDevice*                    _apic;
+SerialPortDevice               _serialPort;
+SerialPortLoggerReceiver       _serialPortReceiver;
 
-SiberixKernel* siberix() { return &sbrxkrnl; }
+SiberixKernel*
+siberix()
+{
+    return &sbrxkrnl;
+}
 
-void trampolineStart(u16 cpuId) {
+void
+trampolineStart(u16 cpuId)
+{
     SbrxkrnlX64Impl* sbrxkrnl = static_cast<SbrxkrnlX64Impl*>(siberix());
     Cpu*             cpu      = getCpuLocal();
 
     setCpuLocal(cpu);
 
-    cpu->gdt = reinterpret_cast<GdtPackage*>(sbrxkrnl->getMemory().alloc4KPages(1));
-    memcpy(cpu->gdt, (void*)sbrxkrnl->m_gdtPtr.base, sbrxkrnl->m_gdtPtr.limit + 1);
+    cpu->gdt =
+      reinterpret_cast<GdtPackage*>(sbrxkrnl->getMemory().alloc4KPages(1));
+    memcpy(
+      cpu->gdt, (void*)sbrxkrnl->m_gdtPtr.base, sbrxkrnl->m_gdtPtr.limit + 1);
     cpu->gdtPtr = { .limit = sbrxkrnl->m_gdtPtr.limit, .base = (u64)cpu->gdt };
-    cpu->idtPtr = { .limit = sbrxkrnl->m_idtPtr.limit, .base = (u64)sbrxkrnl->m_idtPtr.base };
+    cpu->idtPtr = { .limit = sbrxkrnl->m_idtPtr.limit,
+                    .base  = (u64)sbrxkrnl->m_idtPtr.base };
 
     asm volatile("lgdt (%%rax)" ::"a"(&cpu->gdtPtr));
     asm volatile("lidt %0" ::"m"(cpu->idtPtr));
 
     cpu->tss.init(cpu->gdt);
-    ApicDevice* apic =
-        static_cast<ApicDevice*>(sbrxkrnl->getConnectivity()->findDevice("APIC Controller"));
+    ApicDevice* apic = static_cast<ApicDevice*>(
+      sbrxkrnl->getConnectivity()->findDevice("APIC Controller"));
     if (apic != nullptr) {
         apic->getInterface(cpuId).setup();
         Logger::getLogger("apic").success("CPU [%u] loaded", cpuId);
@@ -62,35 +72,38 @@ void trampolineStart(u16 cpuId) {
     asm("sti");
     doneInit = true;
 
-    for (;;) asm volatile("pause");
+    for (;;)
+        asm volatile("pause");
 }
 
-bool SiberixKernel::setupArch() {
+bool
+SiberixKernel::setupArch()
+{
     SbrxkrnlX64Impl* k = reinterpret_cast<SbrxkrnlX64Impl*>(this);
     /* load global descriptor table */
     k->m_gdt           = GdtPackage(tss);
-    k->m_gdtPtr        = { .limit = sizeof(GdtPackage) - 1, .base = (u64)&k->m_gdt };
+    k->m_gdtPtr = { .limit = sizeof(GdtPackage) - 1, .base = (u64)&k->m_gdt };
     _lgdt((u64)&k->m_gdtPtr);
     /* load interrupt descriptor table */
     for (int i = 0; i < IDT_ENTRY_COUNT; i++)
         idtEntryList[i] = IdtEntry(i, intTables[i], 0x08, IDT_FLAGS_INTGATE, 0);
-    k->m_idtPtr = { .limit = sizeof(IdtEntry) * IDT_ENTRY_COUNT, .base = (u64)&idtEntryList };
+    k->m_idtPtr = { .limit = sizeof(IdtEntry) * IDT_ENTRY_COUNT,
+                    .base  = (u64)&idtEntryList };
     _lidt((u64)&k->m_idtPtr);
 
-    // Initialize memory management
     kernelProcess = Process("SiberixKernel", nullptr, 0, TaskType::System);
-    kernelProcess.setAddressSpace(&(kernelAddressSpace = Paging::X64KernelAddressSpace()));
+    // Initialize memory management
+    static Paging::X64KernelAddressSpace _kernelAddressSpace =
+      Paging::X64KernelAddressSpace();
+    kernelProcess.setAddressSpace(kernelAddressSpace = &_kernelAddressSpace);
 
     /* These part are for debug use */
     _serialPort         = SerialPortDevice();
     _serialPortReceiver = SerialPortLoggerReceiver(&_serialPort);
     Logger::getLoggerReceivers().add(&_serialPortReceiver);
-    Logger::getAnonymousLogger().info("Serial Port Initialized");
+    Logger::getAnonymousLogger().info("Initialized serial port logging\n");
 
-    for (;;) asm("hlt");
-
-    this->m_energy    = PowerEngine();
-    this->m_memory    = MemoryController();
+    this->m_memory    = MemoryServiceProvider();
     this->m_devices   = new DeviceConnectivity();
     this->m_scheduler = new Scheduler(&kernelProcess);
 
@@ -100,7 +113,7 @@ bool SiberixKernel::setupArch() {
         .gdtPtr        = k->m_gdtPtr,
         .idtPtr        = k->m_idtPtr,
         .currentThread = getScheduler()->getKernelProcess()->getMainThread(),
-        .idleThread    = getScheduler()->getProcessFactory()->createIdleThread(),
+        .idleThread    = getScheduler()->getProcessFactory()->createIdleThread()
     };
     k->m_cpus[0]->tss.init(&k->m_gdt);
     setCpuLocal(k->m_cpus[0]);
@@ -112,39 +125,53 @@ bool SiberixKernel::setupArch() {
 
     _apic = new ApicDevice(); /* APIC Controller */
     _apic->initialize();
-    getConnectivity()->enumerateDevice(DeviceType::Processor).forEach([&](Device& device) -> void {
-        u32 processorId = static_cast<ProcessorDevice&>(device).getProcessorId();
-        if (processorId) {
-            Logger::getLogger("hw").info("CPU [%u] is being initialized", processorId);
+    getConnectivity()
+      ->enumerateDevice(DeviceType::Processor)
+      .forEach([&](Device& device) -> void {
+          u32 processorId =
+            static_cast<ProcessorDevice&>(device).getProcessorId();
+          if (processorId) {
+              Logger::getLogger("hw").info("CPU [%u] is being initialized",
+                                           processorId);
 
-            ApicLocalInterface& interface = _apic->getInterface(processorId);
+              ApicLocalInterface& interface = _apic->getInterface(processorId);
 
-            *smpMagicValue      = 0;
-            *smpTrampolineCpuID = processorId;
-            *smpEntry2          = (u64)trampolineStart;
-            *smpStack           = (u64)(m_memory.alloc4KPages(4)) + 16384;
-            *smpGdtPtr          = k->m_gdtPtr;
+              *smpMagicValue      = 0;
+              *smpTrampolineCpuID = processorId;
+              *smpEntry2          = (u64)trampolineStart;
+              *smpStack           = (u64)(m_memory.alloc4KPages(4)) + 16384;
+              *smpGdtPtr          = k->m_gdtPtr;
 
-            asm volatile("mov %%cr3, %%rax" : "=a"(*smpRegisterCR3));
+              asm volatile("mov %%cr3, %%rax" : "=a"(*smpRegisterCR3));
 
-            interface.sendInterrupt(ICR_DSH_DEST, ICR_MESSAGE_TYPE_INIT, 0);
-            // Sleep 50 ms
-            while (*smpMagicValue != 0xb33f) {
-                interface.sendInterrupt(
-                    ICR_DSH_DEST, ICR_MESSAGE_TYPE_STARTUP, (SMP_TRAMPOLINE_ENTRY >> 12));
-                // Sleep 200 ms
-            }
+              interface.sendInterrupt(ICR_DSH_DEST, ICR_MESSAGE_TYPE_INIT, 0);
+              // Sleep 50 ms
+              while (*smpMagicValue != 0xb33f) {
+                  interface.sendInterrupt(ICR_DSH_DEST,
+                                          ICR_MESSAGE_TYPE_STARTUP,
+                                          (SMP_TRAMPOLINE_ENTRY >> 12));
+                  // Sleep 200 ms
+              }
 
-            while (!doneInit) asm("pause");
-            Logger::getLogger("hw").info("CPU [%u] loaded", processorId);
-            doneInit = false;
-        }
-    });
+              while (!doneInit)
+                  asm("pause");
+              Logger::getLogger("hw").info("CPU [%u] loaded", processorId);
+              doneInit = false;
+          }
+      });
 
     return true;
 }
 
-void TaskStateSegment::init(GdtPackage* package) {
+Process*
+SiberixKernel::getKernelProcess()
+{
+    return &kernelProcess;
+}
+
+void
+TaskStateSegment::init(GdtPackage* package)
+{
     package->tss = GdtTssEntry(*this);
 
     memset(this, 0, sizeof(TaskStateSegment));

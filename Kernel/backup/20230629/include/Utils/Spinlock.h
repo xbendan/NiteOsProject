@@ -54,7 +54,7 @@ class ScopedSpinlock final
 typedef class Spinlock
 {
 public:
-    volatile int m_Lock;
-    void Acquire() { acquireLock(&m_Lock); }
-    void Release() { releaseLock(&m_Lock); }
+    volatile int m_lock;
+    void Acquire() { acquireLock(&m_lock); }
+    void Release() { releaseLock(&m_lock); }
 } spinlock_t;

@@ -4,42 +4,52 @@
 #include <utils/linked_list.h>
 #include <utils/spinlock.h>
 
-enum PageBlockType {
-    BlkTypeAvailable,
-    BlkTypeKernel,
-    BlkTypeReserved,
-    BlkTypeBadram
+enum PageBlockType
+{
+    Available,
+    KernelOrModule,
+    Reserved,
+    Badram,
+    Reclaimable
 };
 
-struct PageBlock {
+struct PageBlock
+{
     u64           start, end;
     PageBlockType type;
 
     PageBlock()
-        : start(0),
-          end(0),
-          type(BlkTypeReserved) {}
+      : start(0)
+      , end(0)
+      , type(PageBlockType::Reserved)
+    {
+    }
 
     PageBlock(u64 _start, u64 _end, PageBlockType _type)
-        : start(_start),
-          end(_end),
-          type(_type) {}
+      : start(_start)
+      , end(_end)
+      , type(_type)
+    {
+    }
 };
 
 #define PAGE_SIZE_4K 0x1000UL
 #define PAGE_SIZE_2M 0x200000UL
 #define PAGE_SIZE_1G 0x40000000UL
 
-struct Pageframe {
+struct Pageframe
+{
     ListHead lru;
     u8       order;
     u8       flags;
-    struct {
+    struct
+    {
         u32 slabInuse : 16;
         u32 slabObjects : 15;
         u32 slabFrozen : 1;
     } __attribute__((packed));
-    union {
+    union
+    {
         u64        priv;
         void*      slabCache;
         Pageframe* first;
@@ -49,18 +59,21 @@ struct Pageframe {
     u64        address;
 };
 
-struct PageSection {
+struct PageSection
+{
     u16  nid;
     u64* pages;
 };
 
-class MemoryAlloc {
+class MemoryAlloc
+{
 public:
     virtual u64  alloc(u64 size)   = 0;
     virtual void free(u64 address) = 0;
 };
 
-class PageAlloc {
+class PageAlloc
+{
 public:
     virtual Pageframe* allocatePhysMemory4KPages(u64 amount) = 0;
     virtual u64        allocatePhysMemory4K(u64 amount)      = 0;

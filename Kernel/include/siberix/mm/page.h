@@ -6,7 +6,8 @@
 #include <utils/spinlock.h>
 
 #define SECTION_PAGE_SIZE 0x1000000
-#define PAGES_PER_SECTION 262144
+#define SECTION_PAGE_USE 0x1000
+#define PAGES_PER_SECTION 0x40000
 #define PAGES_PER_SET 1024
 #define PAGE_MAX_SIZE (PAGE_SIZE_4K * PAGES_PER_SET)
 #define PAGE_MAX_ORDER 10
@@ -14,7 +15,8 @@
 #define PFLAGS_FREE (1 << 0)
 #define PFLAGS_KMEM (1 << 1)
 
-class SegAlloc : public PageAlloc {
+class SegAlloc : public PageAlloc
+{
 public:
     SegAlloc();
     ~SegAlloc();
@@ -25,7 +27,8 @@ public:
     void       freePhysMemory4K(Pageframe* page) override;
 };
 
-class BuddyAlloc : public PageAlloc {
+class BuddyAlloc : public PageAlloc
+{
 public:
     BuddyAlloc();
     ~BuddyAlloc();
@@ -39,10 +42,12 @@ public:
     Pageframe* combine(Pageframe* page);
     Pageframe* combine(Pageframe* lpage, Pageframe* rpage);
 
-    static inline bool checkAlignment(Pageframe* page) {
+    static inline bool checkAlignment(Pageframe* page)
+    {
         return !((page->address) % ((1 << page->order) * PAGE_SIZE_4K));
     }
-    static inline u64 getPageAlignment(u64 x) {
+    static inline u64 getPageAlignment(u64 x)
+    {
         x--;
         x        |= x >> 1;
         x        |= x >> 2;
@@ -51,7 +56,8 @@ public:
         x        |= x >> 16;
         return x += 1;
     }
-    static inline u8 getPageOrder(u64 size) {
+    static inline u8 getPageOrder(u64 size)
+    {
         u8  order = PAGE_MAX_ORDER;
         u64 _size = 1024;
         while (_size > size) {
@@ -72,7 +78,11 @@ private:
     spinlock_t            lock;
 };
 
-u64          page2pfn(Pageframe* page);
-Pageframe*   pfn2page(u64 pfn);
-Pageframe*   addr2page(u64 address);
-PageSection* addr2sect(u64 address);
+u64
+page2pfn(Pageframe* page);
+Pageframe*
+pfn2page(u64 pfn);
+Pageframe*
+addr2page(u64 address);
+PageSection*
+addr2sect(u64 address);

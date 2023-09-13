@@ -21,8 +21,9 @@ build_options = [
     '-DDEBUG',
     '-Wall -Wno-write-strings -Wno-unused-parameter -Wno-sign-compare',
     '-ffreestanding -finline-functions -fno-exceptions -fno-rtti -fno-pic',
+    '-fno-zero-initialized-in-bss -ftrivial-auto-var-init=pattern',
     '-nostdlib',
-    '-std=gnu++17',
+    '-std=gnu++20',
     '-mno-red-zone -mno-mmx -mno-sse -mno-sse2',
     '-mcmodel=kernel',
     '-O0',
@@ -89,6 +90,8 @@ if __name__ == '__main__':
             os.system(f"{nasm} -f elf64 {file} -o build/{filepath}")
             object_files.append(f"build/{filepath}")
 
+    # object_files.append("build/crtbegin.o", "build/crtend.o")
+
         
     # Link object files
     print("Linking...")
@@ -105,7 +108,7 @@ if __name__ == '__main__':
         --efi-boot limine-cd-efi.bin \
         -efi-boot-part --efi-boot-image --protective-msdos-label \
         target/{target}/limine-st -o dist/{target}/nite_sbrxkrnl.iso")
-    os.system(f"../Thirdparty/limine/bin/limine-deploy dist/{target}/nite_sbrxkrnl.iso")
+    os.system(f"../Thirdparty/limine/limine-deploy dist/{target}/nite_sbrxkrnl.iso")
     # os.system(f"xorriso -as mkisofs -b limine-bios-cd.bin \
     #     -no-emul-boot -boot-load-size 4 -boot-info-table \
     #     --efi-boot limine-uefi-cd.bin \

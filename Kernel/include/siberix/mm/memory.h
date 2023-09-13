@@ -3,10 +3,10 @@
 #include <siberix/mm/page.h>
 #include <siberix/mm/types.h>
 
-class MemoryController {
+class MemoryServiceProvider {
 public:
-    MemoryController();
-    ~MemoryController();
+    MemoryServiceProvider();
+    ~MemoryServiceProvider();
 
     /// @brief
     /// @param amount

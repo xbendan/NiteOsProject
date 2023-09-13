@@ -7,7 +7,8 @@
 #include <siberix/init/stivale2.h>
 #include <siberix/mm/page.h>
 
-extern "C" [[noreturn]] void kload_limine();
+extern "C" [[noreturn]] void
+kload_limine();
 
 static BootConfig bootConfig;
 
@@ -46,7 +47,9 @@ static volatile limine_kernel_address_request blReqKernAddress = {
 //     .revision = 0,
 // };
 
-extern "C" [[noreturn]] void kload_limine() {
+extern "C" [[noreturn]] void
+kload_limine()
+{
     bootConfig.blTime = blReqBootTime.response->boot_time;
     bootConfig.blName = blReqBootloaderInfo.response->name;
 
@@ -71,8 +74,9 @@ extern "C" [[noreturn]] void kload_limine() {
         if (end > bootConfig.memory.maxSize) {
             bootConfig.memory.maxSize = end;
         }
-        bootConfig.memory.totalSize       += entry->length;
-        bootConfig.memory.ranges[index++]  = PageBlock(start, end, getMemoryEntryType(entry->type));
+        bootConfig.memory.totalSize += entry->length;
+        bootConfig.memory.ranges[index++] =
+          PageBlock(start, end, getMemoryEntryType(entry->type));
     }
 
     // if (blReqFramebufferInfo.response) {
@@ -82,7 +86,8 @@ extern "C" [[noreturn]] void kload_limine() {
     //         limine_framebuffer* fb    = respFb->framebuffers[index];
     //         bootConfig.graphic[index] = { .width   = fb->width,
     //                                       .height  = fb->height,
-    //                                       .address = reinterpret_cast<u64>(fb->address),
+    //                                       .address =
+    //                                       reinterpret_cast<u64>(fb->address),
     //                                       .pitch   = fb->pitch,
     //                                       .bpp     = fb->bpp };
     //     }
@@ -90,10 +95,13 @@ extern "C" [[noreturn]] void kload_limine() {
 
     kmain(bootConfig);
 
-    while (true) asm("hlt");
+    while (true)
+        asm("hlt");
 }
 
-extern "C" [[noreturn]] void kload_stivale2(stivale2_struct* pointer) {
+extern "C" [[noreturn]] void
+kload_stivale2(stivale2_struct* pointer)
+{
     if (pointer == nullptr) {
         asm("hlt");
     }
@@ -104,25 +112,25 @@ extern "C" [[noreturn]] void kload_stivale2(stivale2_struct* pointer) {
             case STIVALE2_STRUCT_TAG_MEMMAP_ID: {
                 int                         segmentId = 0;
                 stivale2_struct_tag_memmap* mmap =
-                    reinterpret_cast<stivale2_struct_tag_memmap*>(tag);
+                  reinterpret_cast<stivale2_struct_tag_memmap*>(tag);
                 auto getEntryType = [](u32 entry) -> PageBlockType {
                     switch (entry) {
                         case STIVALE2_MMAP_USABLE:
-                            return BlkTypeAvailable;
+                            return PageBlockType::Available;
                         case STIVALE2_MMAP_RESERVED:
-                            return BlkTypeReserved;
+                            return PageBlockType::Reserved;
                         case STIVALE2_MMAP_KERNEL_AND_MODULES:
-                            return BlkTypeKernel;
+                            return PageBlockType::KernelOrModule;
                         case STIVALE2_MMAP_BAD_MEMORY:
-                            return BlkTypeBadram;
+                            return PageBlockType::Badram;
                         case STIVALE2_MMAP_ACPI_NVS:
-                            return BlkTypeReserved;
+                            return PageBlockType::Reserved;
                         case STIVALE2_MMAP_ACPI_RECLAIMABLE:
-                            return BlkTypeAvailable;
+                            return PageBlockType::Reclaimable;
                         case STIVALE2_MMAP_BOOTLOADER_RECLAIMABLE:
-                            return BlkTypeAvailable;
+                            return PageBlockType::Reclaimable;
                         default:
-                            return BlkTypeReserved;
+                            return PageBlockType::Reserved;
                     }
                 };
                 for (u64 index = 0; index < mmap->entries; index++) {
@@ -132,13 +140,18 @@ extern "C" [[noreturn]] void kload_stivale2(stivale2_struct* pointer) {
                     if (end > bootConfig.memory.maxSize) {
                         bootConfig.memory.maxSize = end;
                     }
+                    PageBlockType blockType = getEntryType(entry->type);
+                    if (blockType == PageBlockType::Available) {
+                        bootConfig.memory.usableSize += entry->length;
+                    }
+                    bootConfig.memory.totalSize += entry->length;
                     bootConfig.memory.ranges[segmentId++] =
-                        PageBlock(start, end, getEntryType(entry->type));
+                      PageBlock(start, end, blockType);
                 }
             }
             case STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID: {
                 stivale2_struct_tag_framebuffer* fb =
-                    reinterpret_cast<stivale2_struct_tag_framebuffer*>(tag);
+                  reinterpret_cast<stivale2_struct_tag_framebuffer*>(tag);
                 bootConfig.graphic[0] = { .width   = fb->framebuffer_width,
                                           .height  = fb->framebuffer_height,
                                           .address = fb->framebuffer_addr,
@@ -151,12 +164,19 @@ extern "C" [[noreturn]] void kload_stivale2(stivale2_struct* pointer) {
 
     kmain(bootConfig);
 
-    while (true) asm("hlt");
+    while (true)
+        asm("hlt");
 }
 
 SbrxkrnlX64Impl::SbrxkrnlX64Impl()
-    : SiberixKernel(Architecture::X86_64, bootConfig) {}
+  : SiberixKernel(Architecture::X86_64, bootConfig)
+{
+}
 
 SbrxkrnlX64Impl::~SbrxkrnlX64Impl() {}
 
-BootConfig& SiberixKernel::getBootConfig() { return bootConfig; }
+BootConfig&
+SiberixKernel::getBootConfig()
+{
+    return bootConfig;
+}
