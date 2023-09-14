@@ -92,7 +92,7 @@ public:
 class X64KernelAddressSpace : public X64AddressSpace
 {
 public:
-    X64KernelAddressSpace()  = default;
+    X64KernelAddressSpace();
     ~X64KernelAddressSpace() = default;
 
     u64  allocate4KPages(u64 amount) override;
@@ -101,17 +101,5 @@ public:
     bool isPagePresent(u64 address) override;
     u64  convertVirtToPhys(u64 address) override;
 };
-
-void
-initializeVirtualMemory();
-
-u64
-kAllocate4KPages(u64 amount);
-
-void
-kFree4KPages(u64 address, u64 amount);
-
-void
-kMap4KPages(u64 phys, u64 virt, u64 amount);
 
 } // namespace Paging

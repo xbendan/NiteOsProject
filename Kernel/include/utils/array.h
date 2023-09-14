@@ -2,8 +2,9 @@
 
 #include <common/typedefs.h>
 
-template <typename T>
-class ArrayList {
+template<typename T>
+class ArrayList
+{
 private:
     T*  array;
     u64 count;
@@ -11,18 +12,22 @@ private:
 
 public:
     ArrayList()
-        : ArrayList(8) {}
+      : ArrayList(8)
+    {
+    }
 
     ArrayList(u64 size)
-        : count(0) {
+      : count(0)
+    {
         array = new T[size];
     }
 
     ~ArrayList() { delete[] array; }
 };
 
-template <typename T, int size>
-class SizedArrayList {
+template<typename T, int size>
+class SizedArrayList
+{
 private:
     T   array[size];
     u64 count      = 0;
@@ -30,12 +35,15 @@ private:
 
 public:
     SizedArrayList()
-        : count(0) {}
+      : count(0)
+    {
+    }
     ~SizedArrayList() {}
 
     T& operator[](int index) { return array[index < size ? index : 0]; }
 
-    bool contains(T& obj) {
+    bool contains(T& obj)
+    {
         for (int i = 0; i < count; i++) {
             if (array[i] == obj) {
                 return true;
@@ -50,18 +58,29 @@ public:
 
     u64 capacity() { return size; }
 
-    void add(T obj) {
+    void add(T obj)
+    {
         if (count > size) {
             return;
         }
         array[count++] = obj;
     }
 
+    void add(T* objPtr)
+    {
+        if (count > size) {
+            return;
+        }
+        memcpy(&(array[count]), objPtr, objectSize);
+        count++;
+    }
+
     void remove(T obj) {}
 
     void remove(u64 index) {}
 
-    int indexOf(T& obj) {
+    int indexOf(T& obj)
+    {
         for (int i = 0; i < count; i++) {
             if (array[i] == obj) {
                 return i;

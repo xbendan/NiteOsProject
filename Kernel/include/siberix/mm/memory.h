@@ -3,7 +3,8 @@
 #include <siberix/mm/page.h>
 #include <siberix/mm/types.h>
 
-class MemoryServiceProvider {
+class MemoryServiceProvider
+{
 public:
     MemoryServiceProvider();
     ~MemoryServiceProvider();
@@ -49,14 +50,16 @@ public:
     /// @param address
     void       free(u64 address);
 
-    // u64        page2pfn(Pageframe& page) { return page.address / PAGE_SIZE_4K; }
-    // Pageframe* pfn2page(u64 pfn) {
+    // u64        page2pfn(Pageframe& page) { return page.address /
+    // PAGE_SIZE_4K; } Pageframe* pfn2page(u64 pfn) {
     //     u32 sectionId = pfn >> 18;
     //     u32 offset    = pfn - (sectionId * 262144);
-    //     return reinterpret_cast<Pageframe*>(m_pageSections[sectionId].pages[offset]);
+    //     return
+    //     reinterpret_cast<Pageframe*>(m_pageSections[sectionId].pages[offset]);
     // };
     // Pageframe*   addr2page(u64 address) { return pfn2page(address >> 12); }
-    // PageSection* addr2sect(u64 address) { return &(m_pageSections[address >> 30]); }
+    // PageSection* addr2sect(u64 address) { return &(m_pageSections[address >>
+    // 30]); }
 
     u64  getTotalPages() { return this->totalPages; }
     u64  getAvailablePages() { return this->availablePages; }
@@ -65,13 +68,16 @@ public:
     u64  getSwappedPages() { return this->swappedPages; }
     void calculate();
 
-    PageBlock&   getPageBlock(u8 index) { return m_pageBlocks[index]; }
-    PageSection& getPageSect(u64 address) { return m_pageSections[address >> 30]; }
+    inline PageBlock&   getPageBlock(u8 index) { return m_pageBlocks[index]; }
+    inline PageSection& getPageSect(u64 address)
+    {
+        return m_pageSections[address >> 30];
+    }
 
 private:
-    u64          totalPages, availablePages, allocatedPages, cachedPages, swappedPages;
-    PageAlloc*   m_pageAlloc;
-    MemoryAlloc* m_memoryAlloc;
+    u64 totalPages, availablePages, allocatedPages, cachedPages, swappedPages;
+    PageAlloc*                       m_pageAlloc;
+    MemoryAlloc*                     m_memoryAlloc;
     SizedArrayList<PageBlock, 256>   m_pageBlocks;
     SizedArrayList<PageSection, 256> m_pageSections;
 };

@@ -18,19 +18,23 @@
 class SegAlloc : public PageAlloc
 {
 public:
-    SegAlloc();
+    SegAlloc(SizedArrayList<PageBlock, 256>& blockRefs);
     ~SegAlloc();
 
     Pageframe* allocatePhysMemory4KPages(u64 amount) override;
     u64        allocatePhysMemory4K(u64 amount) override;
     void       freePhysMemory4K(u64 address) override;
     void       freePhysMemory4K(Pageframe* page) override;
+
+private:
+    SizedArrayList<PageBlock, 256>& m_blockRefs;
 };
 
 class BuddyAlloc : public PageAlloc
 {
 public:
-    BuddyAlloc();
+    BuddyAlloc(SizedArrayList<PageSection, 256>& sectRefs,
+               SizedArrayList<PageBlock, 256>&   blockRefs);
     ~BuddyAlloc();
 
     Pageframe* allocatePhysMemory4KPages(u64 amount) override;

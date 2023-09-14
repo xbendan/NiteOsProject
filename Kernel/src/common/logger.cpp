@@ -4,17 +4,22 @@
 SizedArrayList<Logger*, 256> Logger::loggers = SizedArrayList<Logger*, 256>();
 SizedArrayList<LoggerReceiver*, 60> Logger::receivers =
   SizedArrayList<LoggerReceiver*, 60>();
-Logger      Logger::anonymousLogger("system");
-static char buf[256];
+Logger Logger::anonymousLogger("system");
 
-#include <arch/x86_64/serial.h>
-
-// extern SerialPortLoggerReceiver _serialPortReceiver;
+char*              logPrefix   = "[%s]";
+static const char* logLevels[] = { "Info", "Success", "Warn", "Error" };
 
 void
 Logger::log(LoggerLevel level, const char* fmt, va_list args)
 {
+    char buf[256];
     memset(buf, 0, 256);
+
+    strfmt(buf, "[%s] ", logLevels[level]);
+    for (int i = 0; i < receivers.length(); i++) {
+        receivers[i]->write(buf);
+    }
+
     strfmts(buf, fmt, args);
     for (int i = 0; i < receivers.length(); i++) {
         receivers[i]->write(buf);
@@ -65,18 +70,19 @@ Logger::error(const char* fmt, ...)
     log(LOG_ERROR, fmt, args);
     va_end(args);
 
-    log(LOG_ERROR, "System is shutting to avoid further damage.");
-    printStackTrace();
+    log(LOG_ERROR, "!! System is shutting to avoid further damage !!\n");
 }
 
 void
-Logger::printStackTrace()
+Logger::error(void* regs, const char* fmt, ...)
 {
-}
+    va_list args;
+    va_start(args, fmt);
+    log(LOG_ERROR, fmt, args);
+    va_end(args);
 
-void
-Logger::printStackTrace(const char* fmt, ...)
-{
+    log(LOG_ERROR, "!! System is shutting to avoid further damage !!\n");
+    printStackTrace(regs);
 }
 
 const char*

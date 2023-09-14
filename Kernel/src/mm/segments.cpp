@@ -4,9 +4,10 @@
 #include <siberix/mm/page.h>
 #include <utils/alignment.h>
 
-extern Process kernelProcess;
-
-SegAlloc::SegAlloc() {}
+SegAlloc::SegAlloc(SizedArrayList<PageBlock, 256>& blockRefs)
+  : m_blockRefs(blockRefs)
+{
+}
 
 SegAlloc::~SegAlloc() {}
 
@@ -27,16 +28,15 @@ SegAlloc::allocatePhysMemory4K(u64 amount)
     u64 address = 0;
     int i       = 0;
     while (!address && i < 256) {
-        PageBlock& block = siberix()->getMemory().getPageBlock(i);
-        if (block.type == PageBlockType::Available &&
-            block.end - block.start > (amount * PAGE_SIZE_4K)) {
-            address      = block.start;
-            block.start += (amount * PAGE_SIZE_4K);
+        PageBlock& block = m_blockRefs[i];
+        if (block.m_type == PageBlockType::Available &&
+            (block.m_end - block.m_start) > (amount * PAGE_SIZE_4K)) {
+            address        = block.m_start;
+            block.m_start += (amount * PAGE_SIZE_4K);
             break;
         }
         i++;
     }
-    Logger::getAnonymousLogger().info("Address=%x.\n", address);
     return address;
 }
 

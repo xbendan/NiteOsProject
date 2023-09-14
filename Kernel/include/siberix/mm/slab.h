@@ -2,7 +2,8 @@
 
 #define SLAB_MAX_BLOCK_ORDER 16
 
-struct SlabCpuCache {
+struct SlabCpuCache
+{
     /*
      * Pointer to the next object, this is a double pointer
      * because the area this pointer point to is also a pointer
@@ -13,13 +14,15 @@ struct SlabCpuCache {
     LinkedList<Pageframe> partial;
 };
 
-struct SlabNode {
+struct SlabNode
+{
     Spinlock              lock;
     u64                   nr_partial;
     LinkedList<Pageframe> partial;
 };
 
-class SlabCache {
+class SlabCache
+{
 public:
     SlabCache(u64 size, u64 flags);
     ~SlabCache();
@@ -43,9 +46,10 @@ public:
     u32          reserved;
 };
 
-class SlabAlloc : public MemoryAlloc {
+class SlabAlloc : public MemoryAlloc
+{
 public:
-    SlabAlloc();
+    SlabAlloc(PageAlloc*);
     ~SlabAlloc();
 
     /**

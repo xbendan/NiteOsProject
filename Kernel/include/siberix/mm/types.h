@@ -15,20 +15,27 @@ enum PageBlockType
 
 struct PageBlock
 {
-    u64           start, end;
-    PageBlockType type;
+    u64           m_start, m_end;
+    PageBlockType m_type;
 
     PageBlock()
-      : start(0)
-      , end(0)
-      , type(PageBlockType::Reserved)
+      : m_start(0)
+      , m_end(0)
+      , m_type(PageBlockType::Reserved)
+    {
+    }
+
+    PageBlock(PageBlock& pageBlock)
+      : m_start(pageBlock.m_start)
+      , m_end(pageBlock.m_end)
+      , m_type(pageBlock.m_type)
     {
     }
 
     PageBlock(u64 _start, u64 _end, PageBlockType _type)
-      : start(_start)
-      , end(_end)
-      , type(_type)
+      : m_start(_start)
+      , m_end(_end)
+      , m_type(_type)
     {
     }
 };
@@ -61,8 +68,8 @@ struct Pageframe
 
 struct PageSection
 {
-    u16  nid;
-    u64* pages;
+    u16        nid;
+    Pageframe* pages;
 };
 
 class MemoryAlloc

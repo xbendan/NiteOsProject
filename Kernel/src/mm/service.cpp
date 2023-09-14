@@ -28,58 +28,58 @@ MemoryServiceProvider::MemoryServiceProvider()
     for (int i = 0; i < 256; i++) {
         pageBlock = &(bootConfig.memory.ranges[i]);
 
-        alignUpRef(pageBlock->start, PAGE_SIZE_4K);
-        alignDownRef(pageBlock->end, PAGE_SIZE_4K);
-        if (pageBlock->end == 0) {
+        alignUpRef(pageBlock->m_start, PAGE_SIZE_4K);
+        alignDownRef(pageBlock->m_end, PAGE_SIZE_4K);
+        if (pageBlock->m_end == 0) {
             break;
         }
-        if ((pageBlock->end - pageBlock->start) < PAGE_SIZE_4K) {
+        if ((pageBlock->m_end - pageBlock->m_start) < PAGE_SIZE_4K) {
             continue;
         }
 
         Logger::getAnonymousLogger().info(
-          "A page block imported. (Start[0x%x],End[0x%x],Type[%u])\n",
-          pageBlock->start,
-          pageBlock->end,
-          pageBlock->type);
+          "Page block imported. (Start[0x%x],End[0x%x],Type[%u])\n",
+          pageBlock->m_start,
+          pageBlock->m_end,
+          pageBlock->m_type);
 
-        m_pageBlocks.add(*pageBlock);
+        m_pageBlocks.add(pageBlock);
     }
 
-    static SegAlloc segAlloc = SegAlloc();
+    static SegAlloc segAlloc = SegAlloc(m_pageBlocks);
     this->m_pageAlloc = _segAlloc = &segAlloc;
 
     AddressSpace* kernelAddressSpace =
       siberix()->getKernelProcess()->getAddressSpace();
     u64 address = 0;
-    for (int i = 0; i < 256 && m_pageBlocks[i].end; i++) {
-        pageBlock = &(m_pageBlocks[i]);
-        if (pageBlock->type != PageBlockType::Available) {
+    for (int i = 0; i < 256 && m_pageBlocks[i].m_end; i++) {
+        pageBlock = &m_pageBlocks[i];
+        if (pageBlock->m_type != PageBlockType::Available) {
             continue;
         }
 
-        address = pageBlock->start;
-        while (address < pageBlock->end) {
+        address = pageBlock->m_start;
+        while (address < pageBlock->m_end) {
             PageSection& pageSect = m_pageSections[address >> 30];
             if (!pageSect.pages) {
                 u64 virt =
                       kernelAddressSpace->allocate4KPages(SECTION_PAGE_USE),
                     phys       = allocPhysMemory4K(SECTION_PAGE_USE);
-                pageSect.pages = reinterpret_cast<u64*>(virt);
+                pageSect.pages = reinterpret_cast<Pageframe*>(virt);
                 kernelAddressSpace->map(phys, virt, SECTION_PAGE_USE);
             }
             address += PAGE_SIZE_1G;
         }
     }
 
-    for (;;)
-        asm("hlt");
-
-    static BuddyAlloc buddyAlloc = BuddyAlloc();
+    static BuddyAlloc buddyAlloc = BuddyAlloc(m_pageSections, m_pageBlocks);
     this->m_pageAlloc = _buddyAlloc = &buddyAlloc;
 
-    static SlabAlloc slabAlloc = SlabAlloc();
+    static SlabAlloc slabAlloc = SlabAlloc(m_pageAlloc);
     this->m_memoryAlloc = _slabAlloc = &slabAlloc;
+
+    for (;;)
+        asm("hlt");
 
     Logger::getAnonymousLogger().info("Initialized memory allocation.\n");
 }

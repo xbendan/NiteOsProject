@@ -19,12 +19,9 @@ UnhandledException(RegisterContext* context)
 void
 GeneralProtectionFault(RegisterContext* context)
 {
-    u64 addr;
-    asm volatile("mov %%cr2, %[addr]" : [addr] "=r"(addr));
 
     Logger::getAnonymousLogger().info(
-      "General Protection Fault [%u]\nError Code: %u\nRAX=%x",
-      context->intno,
+      "General Protection Fault\nError Code: %u\nRAX=%x",
       context->err,
       context->rax);
 
@@ -35,7 +32,7 @@ GeneralProtectionFault(RegisterContext* context)
 void
 PageFault(RegisterContext* context)
 {
-    Logger::getAnonymousLogger().info("Page Fault [%u]");
+    Logger::getAnonymousLogger().error(context, "Page Fault!\n");
 
     for (;;)
         asm("cli; hlt");
@@ -83,7 +80,7 @@ fDispatchInterrupts(RegisterContext* context)
     if (data->handler != nullptr) {
         data->handler(context);
     } else if (!(context->ss & 0x3)) {
-        Logger::getAnonymousLogger().printStackTrace();
+        Logger::getAnonymousLogger().error(context, "Kernel Panic!");
     }
 
     if (context->intno >= 0x20) {

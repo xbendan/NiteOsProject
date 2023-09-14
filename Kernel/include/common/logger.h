@@ -31,7 +31,6 @@ public:
     ~Logger() {}
 
     /// @brief
-    /// @param level
     /// @param fmt
     /// @param args
     void        log(LoggerLevel level, const char* fmt, va_list args);
@@ -56,12 +55,12 @@ public:
     /// @param fmt
     /// @param
     void        error(const char* fmt, ...);
+    /// @brief
+    /// @param fmt
+    /// @param
+    void        error(void* regs, const char* fmt, ...);
     /// @brief Print current stack trace
-    void        printStackTrace();
-    /// @brief Print current stack trace with message.
-    /// @param fmt message format
-    /// @param va message arguments
-    void        printStackTrace(const char* fmt, ...);
+    void        printStackTrace(void* regs);
     /// @brief
     /// @return
     const char* getName();

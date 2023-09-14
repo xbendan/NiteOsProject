@@ -13,61 +13,6 @@ static inline pagetable_t kHeapTables[TABLES_PER_DIR]
   __attribute__((aligned(PAGE_SIZE_4K)));
 static inline pagetable_t* kPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
 
-X64KernelAddressSpace kAddressSpace;
-
-void
-Paging::initializeVirtualMemory()
-{
-    kAddressSpace = X64KernelAddressSpace();
-
-    // Initialize memory space for PML4 and PDPT
-    memset(&kAddressSpace.pml4, 0, sizeof(pml4_t));
-    memset(&kAddressSpace.pdpts, 0, sizeof(pdpt_t));
-
-    // Set kernel PML4 entries
-    setPageFrame(&(kAddressSpace.pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]),
-                 ((u64)&kAddressSpace.pdpts) - KERNEL_VIRTUAL_BASE,
-                 (0x3));
-    kAddressSpace.pml4[0] =
-      kAddressSpace.pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)];
-
-    // Set kernel PDPT entries
-    setPageFrame(&(kAddressSpace.pdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)]),
-                 ((u64)&kPageDirs) - KERNEL_VIRTUAL_BASE,
-                 (0x3));
-    kAddressSpace.pageDirs[0] = &kPageDirs[0];
-    for (int i = 0; i < TABLES_PER_DIR; i++) {
-        setPageFrame(&(kPageDirs[i]), (PAGE_SIZE_2M * i), (0x93));
-    }
-
-    // Set kernel heap space
-    setPageFrame(&(kAddressSpace.pdpts[KERNEL_HEAP_PDPT_INDEX]),
-                 ((u64)&kHeapDirs) - KERNEL_VIRTUAL_BASE,
-                 (0x3));
-    for (int i = 0; i < TABLES_PER_DIR; i++) {
-        setPageFrame(
-          &(kHeapDirs[i]), ((u64)&kHeapTables[i]) - KERNEL_VIRTUAL_BASE, (0x3));
-        kPageTablePointers[KERNEL_HEAP_PDPT_INDEX][i] = &kHeapTables[i];
-    }
-
-    // Set kernel IO mapping
-    for (int i = 0; i < 4; i++) {
-        setPageFrame(
-          &(kAddressSpace.pdpts[PDPT_GET_INDEX(IO_VIRTUAL_BASE) + i]),
-          ((u64)&kIoDirs[i] - KERNEL_VIRTUAL_BASE),
-          (0x3));
-        for (int j = 0; j < TABLES_PER_DIR; j++) {
-            setPageFrame(
-              &(kIoDirs[i][j]), (PAGE_SIZE_1G * i + PAGE_SIZE_2M * j), (0x93));
-        }
-    }
-    kAddressSpace.pdpts[0] =
-      kAddressSpace.pdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)];
-    kAddressSpace.pml4Phys = ((u64)&kAddressSpace.pml4) - KERNEL_VIRTUAL_BASE;
-
-    asm("mov %%rax, %%cr3" ::"a"(kAddressSpace.pml4Phys));
-}
-
 u64
 X64AddressSpace::allocate4KPages(u64 amount)
 {
@@ -127,63 +72,55 @@ X64AddressSpace::convertVirtToPhys(u64 address)
     return 0;
 }
 
-u64
-X64KernelAddressSpace::allocate4KPages(u64 amount)
+X64KernelAddressSpace::X64KernelAddressSpace()
 {
-    return kAllocate4KPages(amount);
-}
+    // Initialize memory space for PML4 and PDPT
+    memset(&pml4, 0, sizeof(pml4_t));
+    memset(&pdpts, 0, sizeof(pdpt_t));
 
-void
-X64KernelAddressSpace::free4KPages(u64 address, u64 amount)
-{
-    kFree4KPages(address, amount);
-}
+    // Set kernel PML4 entries
+    setPageFrame(&(pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)]),
+                 ((u64)&pdpts) - KERNEL_VIRTUAL_BASE,
+                 (0x3));
+    pml4[0] = pml4[PML4_GET_INDEX(KERNEL_VIRTUAL_BASE)];
 
-void
-X64KernelAddressSpace::map(u64 phys, u64 virt, u64 amount)
-{
-    kMap4KPages(phys, virt, amount);
-}
-
-bool
-X64KernelAddressSpace::isPagePresent(u64 address)
-{
-    if (PML4_GET_INDEX(address) != KERNEL_HEAP_PML4_INDEX) {
-        return false;
+    // Set kernel PDPT entries
+    setPageFrame(&(pdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)]),
+                 ((u64)&kPageDirs) - KERNEL_VIRTUAL_BASE,
+                 (0x3));
+    pageDirs[0] = &kPageDirs[0];
+    for (int i = 0; i < TABLES_PER_DIR; i++) {
+        setPageFrame(&(kPageDirs[i]), (PAGE_SIZE_2M * i), (0x93));
     }
 
-    pagetable_t* table =
-      kPageTablePointers[PDPT_GET_INDEX(address)][PDIR_GET_INDEX(address)];
-    if (table != nullptr) {
-        return (*table)[PAGE_GET_INDEX(address)] & PageFlags::Present;
-    } else {
-        return false;
-    }
-}
-
-u64
-X64KernelAddressSpace::convertVirtToPhys(u64 address)
-{
-    if (PML4_GET_INDEX(address) != (PDPTS_PER_PML4 - 1)) {
-        return 0;
+    // Set kernel heap space
+    setPageFrame(&(pdpts[KERNEL_HEAP_PDPT_INDEX]),
+                 ((u64)&kHeapDirs) - KERNEL_VIRTUAL_BASE,
+                 (0x3));
+    for (int i = 0; i < TABLES_PER_DIR; i++) {
+        setPageFrame(
+          &(kHeapDirs[i]), ((u64)&kHeapTables[i]) - KERNEL_VIRTUAL_BASE, (0x3));
+        kPageTablePointers[KERNEL_HEAP_PDPT_INDEX][i] = &kHeapTables[i];
     }
 
-    u64 pdptIndex = PDPT_GET_INDEX(address);
-    u64 pdirIndex = PDIR_GET_INDEX(address);
-    u64 pageIndex = PAGE_GET_INDEX(address);
-    if (pdptIndex != PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)) {
-        return (PAGE_SIZE_2M * pdirIndex) + (address % PAGE_SIZE_2M);
-    } else {
-        pagetable_t* pageTable = kPageTablePointers[pdptIndex][pdirIndex];
-        return (pageTable && ((*pageTable)[pageIndex] & PageFlags::Present))
-                 ? (((*pageTable)[pageIndex] & PAGE_FRAME) +
-                    (address % PAGE_SIZE_4K))
-                 : 0;
+    // Set kernel IO mapping
+    for (int i = 0; i < 4; i++) {
+        setPageFrame(&(pdpts[PDPT_GET_INDEX(IO_VIRTUAL_BASE) + i]),
+                     ((u64)&kIoDirs[i] - KERNEL_VIRTUAL_BASE),
+                     (0x3));
+        for (int j = 0; j < TABLES_PER_DIR; j++) {
+            setPageFrame(
+              &(kIoDirs[i][j]), (PAGE_SIZE_1G * i + PAGE_SIZE_2M * j), (0x93));
+        }
     }
+    pdpts[0] = pdpts[PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)];
+    pml4Phys = ((u64)&pml4) - KERNEL_VIRTUAL_BASE;
+
+    asm("mov %%rax, %%cr3" ::"a"(pml4Phys));
 }
 
 u64
-Paging::kAllocate4KPages(u64 amount)
+X64KernelAddressSpace::allocate4KPages(u64 amount)
 {
     u64 offset        = 0;
     u64 pageDirOffset = 0;
@@ -230,11 +167,86 @@ Paging::kAllocate4KPages(u64 amount)
 }
 
 void
-Paging::kFree4KPages(u64 address, u64 amount)
+X64KernelAddressSpace::free4KPages(u64 address, u64 amount)
 {
 }
 
 void
-Paging::kMap4KPages(u64 phys, u64 virt, u64 amount)
+X64KernelAddressSpace::map(u64 phys, u64 virt, u64 amount)
 {
+    u64 pdptIndex, pdirIndex, pageIndex;
+
+    while (amount--) {
+        pdptIndex = PDPT_GET_INDEX(virt);
+        pdirIndex = PDIR_GET_INDEX(virt);
+        pageIndex = PAGE_GET_INDEX(virt);
+
+        pagetable_t* pageTable = kPageTablePointers[pdptIndex][pdirIndex];
+        if (!pageTable) {
+            Logger::getAnonymousLogger().warn("No page table.");
+
+            u64 pageDirPhys = siberix()->getMemory().allocPhysMemory4K(1),
+                pageDirVirt = allocate4KPages(1);
+            map(pageDirPhys, pageDirVirt, 1);
+            u64 pageTablesPhys = siberix()->getMemory().allocPhysMemory4K(512),
+                pageTablesVirt = allocate4KPages(512);
+            map(pageTablesPhys, pageTablesVirt, 512);
+
+            setPageFrame(&pdpts[pdptIndex], pageDirPhys, 0x3);
+            for (int i = 0; i < TABLES_PER_DIR; i++) {
+                setPageFrame((u64*)pageDirVirt + (i * sizeof(pde_t)),
+                             pageTablesPhys + (i * sizeof(pagetable_t)),
+                             0x3);
+                kPageTablePointers[pdptIndex][i] =
+                  reinterpret_cast<pagetable_t*>(pageTablesVirt +
+                                                 (i * sizeof(pagetable_t)));
+            }
+
+            pageTable = kPageTablePointers[pdptIndex][pdirIndex];
+        }
+
+        setPageFrame(&((*pageTable)[pageIndex]),
+                     phys,
+                     PageFlags::Present | PageFlags::Writable);
+
+        phys += PAGE_SIZE_4K;
+        virt += PAGE_SIZE_4K;
+    }
+}
+
+bool
+X64KernelAddressSpace::isPagePresent(u64 address)
+{
+    if (PML4_GET_INDEX(address) != KERNEL_HEAP_PML4_INDEX) {
+        return false;
+    }
+
+    pagetable_t* table =
+      kPageTablePointers[PDPT_GET_INDEX(address)][PDIR_GET_INDEX(address)];
+    if (table != nullptr) {
+        return (*table)[PAGE_GET_INDEX(address)] & PageFlags::Present;
+    } else {
+        return false;
+    }
+}
+
+u64
+X64KernelAddressSpace::convertVirtToPhys(u64 address)
+{
+    if (PML4_GET_INDEX(address) != (PDPTS_PER_PML4 - 1)) {
+        return 0;
+    }
+
+    u64 pdptIndex = PDPT_GET_INDEX(address);
+    u64 pdirIndex = PDIR_GET_INDEX(address);
+    u64 pageIndex = PAGE_GET_INDEX(address);
+    if (pdptIndex != PDPT_GET_INDEX(KERNEL_VIRTUAL_BASE)) {
+        return (PAGE_SIZE_2M * pdirIndex) + (address % PAGE_SIZE_2M);
+    } else {
+        pagetable_t* pageTable = kPageTablePointers[pdptIndex][pdirIndex];
+        return (pageTable && ((*pageTable)[pageIndex] & PageFlags::Present))
+                 ? (((*pageTable)[pageIndex] & PAGE_FRAME) +
+                    (address % PAGE_SIZE_4K))
+                 : 0;
+    }
 }

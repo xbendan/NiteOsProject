@@ -58,13 +58,13 @@ kload_limine()
     auto                  getMemoryEntryType = [](u8 entry) -> PageBlockType {
         switch (entry) {
             case LIMINE_MEMMAP_USABLE:
-                return BlkTypeAvailable;
+                return PageBlockType::Available;
             case LIMINE_MEMMAP_KERNEL_AND_MODULES:
-                return BlkTypeKernel;
+                return PageBlockType::KernelOrModule;
             case LIMINE_MEMMAP_BAD_MEMORY:
-                return BlkTypeBadram;
+                return PageBlockType::Badram;
             default:
-                return BlkTypeReserved;
+                return PageBlockType::Reserved;
         }
     };
     while (entries[index]) {

@@ -185,3 +185,28 @@ TaskStateSegment::init(GdtPackage* package)
     asm volatile("mov %%rsp, %0" : "=r"(rsp[0]));
     asm volatile("ltr %%ax" ::"a"(0x28));
 }
+
+void
+Logger::printStackTrace(void* _registers)
+{
+    if (_registers == nullptr) {
+        return;
+    }
+    RegisterContext* registers = reinterpret_cast<RegisterContext*>(_registers);
+
+    log(LOG_INFO,
+        "\n(hex)rax=0x%x\n(hex)rbx=0x%x\n(hex)rcx=0x%x\n(hex)rdx=0x%x\n(hex)"
+        "rsi=0x%x\n(hex)rdi=0x%x\n(hex)rsp=0x%x\n(hex)rbp=0x%x\n(bin)rflags=%"
+        "b\n(oct)cs=%u\n(oct)ss=%u\n",
+        registers->rax,
+        registers->rbx,
+        registers->rcx,
+        registers->rdx,
+        registers->rsi,
+        registers->rdi,
+        registers->rsp,
+        registers->rbp,
+        registers->rflags,
+        registers->cs,
+        registers->ss);
+}
