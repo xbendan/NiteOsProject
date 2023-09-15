@@ -2,12 +2,12 @@
 #include <siberix/mm/page.h>
 
 u64
-page2pfn(Pageframe& page)
+page2pfn(PageFrame& page)
 {
     return page.address / PAGE_SIZE_4K;
 }
 
-Pageframe*
+PageFrame*
 pfn2page(u64 pfn)
 {
     u32 sectionId = pfn >> 18;
@@ -15,7 +15,7 @@ pfn2page(u64 pfn)
     return &(siberix()->getMemory().getPageSect(sectionId).pages[offset]);
 };
 
-Pageframe*
+PageFrame*
 addr2page(u64 address)
 {
     return pfn2page(address >> 12);

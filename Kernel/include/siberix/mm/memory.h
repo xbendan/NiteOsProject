@@ -1,5 +1,6 @@
 #pragma once
 
+#include <siberix/mm/addrspace.h>
 #include <siberix/mm/page.h>
 #include <siberix/mm/types.h>
 
@@ -9,22 +10,47 @@ public:
     MemoryServiceProvider();
     ~MemoryServiceProvider();
 
-    /// @brief
-    /// @param amount
-    /// @return
+    /**
+     * @brief
+     *
+     * @param amount
+     * @return u64
+     */
     u64        alloc4KPages(u64 amount);
-    /// @brief
-    /// @param amount
-    /// @param _pointer
-    /// @return
-    u64        alloc4KPages(u64 amount, Pageframe** _pointer);
+    /**
+     * @brief
+     *
+     * @param amount
+     * @param addressSpace
+     * @return u64
+     */
+    u64        alloc4KPages(u64 amount, AddressSpace* addressSpace);
+    /**
+     * @brief
+     *
+     * @param amount
+     * @param pageOut
+     * @return u64
+     */
+    u64        alloc4KPages(u64 amount, PageFrame** pageOut);
+    /**
+     * @brief
+     *
+     * @param amount
+     * @param addressSpace
+     * @param pageOut
+     * @return u64
+     */
+    u64        alloc4KPages(u64           amount,
+                            AddressSpace* addressSpace,
+                            PageFrame**   pageOut);
     /// @brief
     /// @param address
     void       free4KPages(u64 address, u64 amount);
     /// @brief
     /// @param amount
     /// @return
-    Pageframe* allocPhysMemory4KPages(u64 amount);
+    PageFrame* allocPhysMemory4KPages(u64 amount);
     /// @brief
     /// @param amount
     /// @return
@@ -34,7 +60,7 @@ public:
     void       freePhysMemory4KPages(u64 address);
     /// @brief
     /// @param page
-    void       freePhysMemory4KPages(Pageframe* page);
+    void       freePhysMemory4KPages(PageFrame* page);
     /// @brief
     /// @param amount
     /// @return

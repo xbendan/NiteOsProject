@@ -25,7 +25,7 @@ BuddyAlloc::BuddyAlloc(SizedArrayList<PageSection, 256>& sectRefs,
         while (address < addrEnd - PAGE_MAX_SIZE) {
             u32 _sectId      = (address >> 30),
                 _offset      = (address >> 12) - (_sectId * PAGES_PER_SET);
-            Pageframe* pages = &(sectRefs[_sectId].pages[_offset]);
+            PageFrame* pages = &(sectRefs[_sectId].pages[_offset]);
             if (!pages) {
                 Logger::getAnonymousLogger().error(
                   "Section pages is not allocated!\n");
@@ -38,7 +38,7 @@ BuddyAlloc::BuddyAlloc(SizedArrayList<PageSection, 256>& sectRefs,
               address + PAGE_MAX_SIZE,
               (u64)pages);
 
-            memset(pages, 0, sizeof(Pageframe) * PAGES_PER_SET);
+            memset(pages, 0, sizeof(PageFrame) * PAGES_PER_SET);
             pages->order = PAGE_MAX_ORDER;
             for (u64 i = 0; i < PAGES_PER_SET; i++) {
                 pages[i].flags   = 1;
@@ -46,7 +46,7 @@ BuddyAlloc::BuddyAlloc(SizedArrayList<PageSection, 256>& sectRefs,
                 pages[i].address = address + (i * PAGE_SIZE_4K);
             }
             pageList[PAGE_MAX_ORDER].add(
-              reinterpret_cast<ListNode<Pageframe>*>(pages));
+              reinterpret_cast<ListNode<PageFrame>*>(pages));
 
             address += PAGE_MAX_SIZE;
         }
@@ -55,7 +55,7 @@ BuddyAlloc::BuddyAlloc(SizedArrayList<PageSection, 256>& sectRefs,
 
 BuddyAlloc::~BuddyAlloc() {}
 
-Pageframe*
+PageFrame*
 BuddyAlloc::allocatePhysMemory4KPages(u64 amount)
 {
     u8 order = getPageOrder(getPageAlignment(amount));
@@ -63,8 +63,8 @@ BuddyAlloc::allocatePhysMemory4KPages(u64 amount)
         return nullptr;
     }
 
-    Pageframe*             page   = nullptr;
-    LinkedList<Pageframe>* list   = nullptr;
+    PageFrame*             page   = nullptr;
+    LinkedList<PageFrame>* list   = nullptr;
     u8                     _order = order;
     while (_order <= PAGE_MAX_ORDER) {
         if (pageList[_order].count()) {
@@ -75,7 +75,7 @@ BuddyAlloc::allocatePhysMemory4KPages(u64 amount)
     }
 
     if (list != nullptr) {
-        page = reinterpret_cast<Pageframe*>(list->extract());
+        page = reinterpret_cast<PageFrame*>(list->extract());
         while (_order-- > order) {
             page = expand(page);
         }
@@ -100,7 +100,7 @@ BuddyAlloc::freePhysMemory4K(u64 address)
 }
 
 void
-BuddyAlloc::freePhysMemory4K(Pageframe* page)
+BuddyAlloc::freePhysMemory4K(PageFrame* page)
 {
 }
 
@@ -109,8 +109,8 @@ BuddyAlloc::markPagesUsed(u64 addressStart, u64 addressEnd)
 {
 }
 
-Pageframe*
-BuddyAlloc::expand(Pageframe* page)
+PageFrame*
+BuddyAlloc::expand(PageFrame* page)
 {
     if (page->flags & PFLAGS_KMEM) {
         Logger::getLogger("mem").warn(
@@ -120,51 +120,51 @@ BuddyAlloc::expand(Pageframe* page)
     }
 
     /* Remove this page from upper order list */
-    pageList[page->order].remove(reinterpret_cast<ListNode<Pageframe>*>(page));
+    pageList[page->order].remove(reinterpret_cast<ListNode<PageFrame>*>(page));
     /* Decrease the order and find the lower tier list */
-    LinkedList<Pageframe>& freelist = pageList[--page->order];
+    LinkedList<PageFrame>& freelist = pageList[--page->order];
 
-    u64        offset  = ((1 << page->order) * sizeof(Pageframe));
-    Pageframe* newPage = reinterpret_cast<Pageframe*>(page + offset);
+    u64        offset  = ((1 << page->order) * sizeof(PageFrame));
+    PageFrame* newPage = reinterpret_cast<PageFrame*>(page + offset);
 
     newPage->order  = page->order;
     newPage->flags |= PFLAGS_FREE;
 
     /* Insert this page into the lower tier free list */
-    freelist.add(reinterpret_cast<ListNode<Pageframe>*>(newPage));
+    freelist.add(reinterpret_cast<ListNode<PageFrame>*>(newPage));
 
     return page;
 }
 
-Pageframe*
-BuddyAlloc::combine(Pageframe* page)
+PageFrame*
+BuddyAlloc::combine(PageFrame* page)
 {
-    u32  offset = (1 << (page->order)) * sizeof(Pageframe);
+    u32  offset = (1 << (page->order)) * sizeof(PageFrame);
     bool align  = !(page->address % offset);
 
-    Pageframe* newPage =
-      reinterpret_cast<Pageframe*>(align ? page + offset : page - offset);
+    PageFrame* newPage =
+      reinterpret_cast<PageFrame*>(align ? page + offset : page - offset);
     if (newPage->flags & PFLAGS_FREE) {
-        Pageframe* result = align ? page : newPage;
-        pageList[newPage->order].remove((ListNode<Pageframe>*)newPage);
-        pageList[++result->order].add((ListNode<Pageframe>*)result);
+        PageFrame* result = align ? page : newPage;
+        pageList[newPage->order].remove((ListNode<PageFrame>*)newPage);
+        pageList[++result->order].add((ListNode<PageFrame>*)result);
 
         return result;
     } else {
-        pageList[page->order].add((ListNode<Pageframe>*)page);
+        pageList[page->order].add((ListNode<PageFrame>*)page);
         return nullptr;
     }
 }
 
-Pageframe*
-BuddyAlloc::combine(Pageframe* lpage, Pageframe* rpage)
+PageFrame*
+BuddyAlloc::combine(PageFrame* lpage, PageFrame* rpage)
 {
     if (!(lpage->flags & PFLAGS_FREE) || !(rpage->flags & PFLAGS_FREE)) {
         return nullptr;
     }
-    pageList[lpage->order].remove((ListNode<Pageframe>*)lpage);
-    pageList[rpage->order].remove((ListNode<Pageframe>*)rpage);
+    pageList[lpage->order].remove((ListNode<PageFrame>*)lpage);
+    pageList[rpage->order].remove((ListNode<PageFrame>*)rpage);
 
-    pageList[++lpage->order].add((ListNode<Pageframe>*)lpage);
+    pageList[++lpage->order].add((ListNode<PageFrame>*)lpage);
     return lpage;
 }

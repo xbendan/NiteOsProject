@@ -10,18 +10,15 @@ u16 blockSize[] = { 8,   16,  24,  32,  48,   64,   96,   128,
 SlabAlloc::SlabAlloc(PageAlloc* pageAlloc)
 {
     int           i = 0;
-    AddressSpace* __kernelAddressSpace =
+    AddressSpace* addressSpace =
       siberix()->getKernelProcess()->getAddressSpace();
     for (; i < SLAB_MAX_BLOCK_ORDER; i += 1) {
-        u64 phys = pageAlloc->allocatePhysMemory4K(1),
-            virt = __kernelAddressSpace->allocate4KPages(1);
-        Logger::getAnonymousLogger().info(
-          "Initialize slab cache [%u] at %x\n", i, (u64)__kernelAddressSpace);
-        __kernelAddressSpace->map(phys, virt, 1);
+        u64 phys = pageAlloc->allocatePhysMemory4K(4),
+            virt = addressSpace->allocate4KPages(4);
+        addressSpace->map(phys, virt, 1);
 
-        asm("cli; hlt");
-        caches[i]  = (SlabCache*)virt;
-        *caches[i] = SlabCache(blockSize[i], 0);
+        caches[i]    = reinterpret_cast<SlabCache*>(virt);
+        (*caches[i]) = SlabCache(blockSize[i], 0);
     }
 }
 
@@ -51,11 +48,14 @@ SlabAlloc::alloc(u64 size)
      */
     SlabCache*    cache   = getCache(size);
     SlabCpuCache* cpu     = &cache->cpus[0];
-    Pageframe*    page    = cpu->page;
+    PageFrame*    page    = cpu->page;
     u64           address = 0;
 
     if (!page || page->slabInuse >= page->slabObjects)
         page = cpu->page = cache->request4KPage(&address);
+
+    Logger::getAnonymousLogger().info(
+      "Allocate with \'new\', given address is ?\n");
 
     /*
      * The value of 'page->freelist' indicates where the next object is,
@@ -81,11 +81,11 @@ SlabAlloc::free(u64 address)
 {
 }
 
-SlabCache::SlabCache(u64 size, u64 flags)
+SlabCache::SlabCache(u64 _size, u64 _flags)
+  : size(_size)
+  , flags(_flags)
+  , reserved(PAGE_SIZE_4K % _size)
 {
-    this->size     = size;
-    this->flags    = flags;
-    this->reserved = (PAGE_SIZE_4K % size);
     // for (int i = 0; i < 256; i++) {
     //     u64 virt = 0;
     //     request4KPage(&virt);
@@ -95,11 +95,12 @@ SlabCache::SlabCache(u64 size, u64 flags)
 
 SlabCache::~SlabCache() {}
 
-Pageframe*
+PageFrame*
 SlabCache::request4KPage(u64* addrVirt)
 {
-    Pageframe* page;
-    u64        addr = siberix()->getMemory().alloc4KPages(1, &page);
+    PageFrame* page;
+    u64        addr = siberix()->getMemory().alloc4KPages(
+      1, siberix()->getKernelProcess()->getAddressSpace(), &page);
 
     if (addrVirt != nullptr) {
         *addrVirt = addr;

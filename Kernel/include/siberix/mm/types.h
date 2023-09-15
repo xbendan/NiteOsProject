@@ -44,7 +44,7 @@ struct PageBlock
 #define PAGE_SIZE_2M 0x200000UL
 #define PAGE_SIZE_1G 0x40000000UL
 
-struct Pageframe
+struct PageFrame
 {
     ListHead lru;
     u8       order;
@@ -59,7 +59,7 @@ struct Pageframe
     {
         u64        priv;
         void*      slabCache;
-        Pageframe* first;
+        PageFrame* first;
     };
     void**     freelist;
     spinlock_t lock;
@@ -69,7 +69,7 @@ struct Pageframe
 struct PageSection
 {
     u16        nid;
-    Pageframe* pages;
+    PageFrame* pages;
 };
 
 class MemoryAlloc
@@ -82,8 +82,8 @@ public:
 class PageAlloc
 {
 public:
-    virtual Pageframe* allocatePhysMemory4KPages(u64 amount) = 0;
+    virtual PageFrame* allocatePhysMemory4KPages(u64 amount) = 0;
     virtual u64        allocatePhysMemory4K(u64 amount)      = 0;
     virtual void       freePhysMemory4K(u64 address)         = 0;
-    virtual void       freePhysMemory4K(Pageframe* page)     = 0;
+    virtual void       freePhysMemory4K(PageFrame* page)     = 0;
 };

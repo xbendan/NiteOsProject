@@ -10,15 +10,15 @@ struct SlabCpuCache
      * to the next object.
      */
     void**                freelist;
-    Pageframe*            page;
-    LinkedList<Pageframe> partial;
+    PageFrame*            page;
+    LinkedList<PageFrame> partial;
 };
 
 struct SlabNode
 {
     Spinlock              lock;
     u64                   nr_partial;
-    LinkedList<Pageframe> partial;
+    LinkedList<PageFrame> partial;
 };
 
 class SlabCache
@@ -27,7 +27,7 @@ public:
     SlabCache(u64 size, u64 flags);
     ~SlabCache();
 
-    Pageframe* request4KPage(u64* addrVirt);
+    PageFrame* request4KPage(u64* addrVirt);
 
     /* The list head to connect different cache */
     // listhead_t lru;
@@ -36,8 +36,8 @@ public:
 
     /* Indicate the cache for individual CPU core */
     SlabCpuCache cpus[256];
-    u64          flags;
     u32          size;
+    u64          flags;
     u32          objectSize;
     u32          objectAlignment;
     u32          offset;

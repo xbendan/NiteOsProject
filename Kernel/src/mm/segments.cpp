@@ -11,11 +11,11 @@ SegAlloc::SegAlloc(SizedArrayList<PageBlock, 256>& blockRefs)
 
 SegAlloc::~SegAlloc() {}
 
-Pageframe*
+PageFrame*
 SegAlloc::allocatePhysMemory4KPages(u64 amount)
 {
     u64        address = allocatePhysMemory4K(amount);
-    Pageframe* page    = addr2page(address);
+    PageFrame* page    = addr2page(address);
     if (!page->address) {
         page->address = address;
     }
@@ -46,6 +46,6 @@ SegAlloc::freePhysMemory4K(u64 address)
 }
 
 void
-SegAlloc::freePhysMemory4K(Pageframe* page)
+SegAlloc::freePhysMemory4K(PageFrame* page)
 {
 }

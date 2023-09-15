@@ -21,10 +21,10 @@ public:
     SegAlloc(SizedArrayList<PageBlock, 256>& blockRefs);
     ~SegAlloc();
 
-    Pageframe* allocatePhysMemory4KPages(u64 amount) override;
+    PageFrame* allocatePhysMemory4KPages(u64 amount) override;
     u64        allocatePhysMemory4K(u64 amount) override;
     void       freePhysMemory4K(u64 address) override;
-    void       freePhysMemory4K(Pageframe* page) override;
+    void       freePhysMemory4K(PageFrame* page) override;
 
 private:
     SizedArrayList<PageBlock, 256>& m_blockRefs;
@@ -37,16 +37,16 @@ public:
                SizedArrayList<PageBlock, 256>&   blockRefs);
     ~BuddyAlloc();
 
-    Pageframe* allocatePhysMemory4KPages(u64 amount) override;
+    PageFrame* allocatePhysMemory4KPages(u64 amount) override;
     u64        allocatePhysMemory4K(u64 amount) override;
     void       freePhysMemory4K(u64 address) override;
-    void       freePhysMemory4K(Pageframe* page) override;
+    void       freePhysMemory4K(PageFrame* page) override;
     void       markPagesUsed(u64 addressStart, u64 addressEnd);
-    Pageframe* expand(Pageframe* page);
-    Pageframe* combine(Pageframe* page);
-    Pageframe* combine(Pageframe* lpage, Pageframe* rpage);
+    PageFrame* expand(PageFrame* page);
+    PageFrame* combine(PageFrame* page);
+    PageFrame* combine(PageFrame* lpage, PageFrame* rpage);
 
-    static inline bool checkAlignment(Pageframe* page)
+    static inline bool checkAlignment(PageFrame* page)
     {
         return !((page->address) % ((1 << page->order) * PAGE_SIZE_4K));
     }
@@ -77,16 +77,16 @@ private:
      * The lowest is 0, equals to 4KiB (1 page)
      * The highest is 10, equals to 4MiB (1024 pages)
      */
-    LinkedList<Pageframe> pageList[PAGE_MAX_ORDER + 1];
+    LinkedList<PageFrame> pageList[PAGE_MAX_ORDER + 1];
     u64                   flags;
     spinlock_t            lock;
 };
 
 u64
-page2pfn(Pageframe* page);
-Pageframe*
+page2pfn(PageFrame* page);
+PageFrame*
 pfn2page(u64 pfn);
-Pageframe*
+PageFrame*
 addr2page(u64 address);
 PageSection*
 addr2sect(u64 address);

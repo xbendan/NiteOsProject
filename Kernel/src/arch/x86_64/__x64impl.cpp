@@ -107,6 +107,8 @@ SiberixKernel::setupArch()
     this->m_devices   = new DeviceConnectivity();
     this->m_scheduler = new Scheduler(&kernelProcess);
 
+    asm("cli; hlt");
+
     k->m_cpus[0] = new Cpu{
         .apicId        = 0,
         .gdt           = &k->m_gdt,

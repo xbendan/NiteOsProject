@@ -65,7 +65,7 @@ MemoryServiceProvider::MemoryServiceProvider()
                 u64 virt =
                       kernelAddressSpace->allocate4KPages(SECTION_PAGE_USE),
                     phys       = allocPhysMemory4K(SECTION_PAGE_USE);
-                pageSect.pages = reinterpret_cast<Pageframe*>(virt);
+                pageSect.pages = reinterpret_cast<PageFrame*>(virt);
                 kernelAddressSpace->map(phys, virt, SECTION_PAGE_USE);
             }
             address += PAGE_SIZE_1G;
@@ -78,9 +78,6 @@ MemoryServiceProvider::MemoryServiceProvider()
     static SlabAlloc slabAlloc = SlabAlloc(m_pageAlloc);
     this->m_memoryAlloc = _slabAlloc = &slabAlloc;
 
-    for (;;)
-        asm("hlt");
-
     Logger::getAnonymousLogger().info("Initialized memory allocation.\n");
 }
 
@@ -89,22 +86,52 @@ MemoryServiceProvider::~MemoryServiceProvider() {}
 u64
 MemoryServiceProvider::alloc4KPages(u64 amount)
 {
-    return alloc4KPages(amount, nullptr);
+    return alloc4KPages(amount, thisProcess()->getAddressSpace(), nullptr);
 }
 
 u64
-MemoryServiceProvider::alloc4KPages(u64 amount, Pageframe** _pointer)
+MemoryServiceProvider::alloc4KPages(u64 amount, AddressSpace* addressSpace)
 {
-    Pageframe* page = allocPhysMemory4KPages(amount);
+    return alloc4KPages(amount, addressSpace, nullptr);
+}
 
-    if (_pointer != nullptr)
-        *_pointer = page;
-    u64 phys = page->address;
-    u64 virt = allocVirtMemory4KPages(amount);
-    if (!(phys && virt)) {
+u64
+MemoryServiceProvider::alloc4KPages(u64 amount, PageFrame** out_page)
+{
+    return alloc4KPages(amount, thisProcess()->getAddressSpace(), out_page);
+}
+
+u64
+MemoryServiceProvider::alloc4KPages(u64           amount,
+                                    AddressSpace* addressSpace,
+                                    PageFrame**   pageOut)
+{
+    PageFrame* page = allocPhysMemory4KPages(amount);
+    u64 phys = page->address, virt = addressSpace->allocate4KPages(amount);
+
+    /*
+        Check whether phys and virt contains valid address
+        If not, consider page swapping or terminate the process
+     */
+    if (!phys) {
+        Logger::getLogger("mem_alloc")
+          .warn("This machine has already ran out of memory. Try swap pages\n");
+
         return 0;
     }
-    thisProcess()->getAddressSpace()->map(virt, phys, amount);
+    if (!virt) {
+        Logger::getLogger("mem_alloc")
+          .warn("This process ran out of its address space. Consider terminate "
+                "it.\n");
+        return 0;
+    }
+
+    // Assign the out page pointer if it exists
+    if (pageOut != nullptr) {
+        *pageOut = page;
+    }
+
+    addressSpace->map(phys, virt, amount);
     return virt;
 }
 
@@ -113,7 +140,7 @@ MemoryServiceProvider::free4KPages(u64 address, u64 amount)
 {
 }
 
-Pageframe*
+PageFrame*
 MemoryServiceProvider::allocPhysMemory4KPages(u64 amount)
 {
     return m_pageAlloc->allocatePhysMemory4KPages(amount);
@@ -132,7 +159,7 @@ MemoryServiceProvider::freePhysMemory4KPages(u64 address)
 }
 
 void
-MemoryServiceProvider::freePhysMemory4KPages(Pageframe* page)
+MemoryServiceProvider::freePhysMemory4KPages(PageFrame* page)
 {
     m_pageAlloc->freePhysMemory4K(page);
 }
