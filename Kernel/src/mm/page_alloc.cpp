@@ -79,8 +79,6 @@ BuddyAlloc::allocatePhysMemory4KPages(u64 amount)
         while (_order-- > order) {
             page = expand(page);
         }
-        for (;;)
-            asm("hlt");
         page->flags &= ~PFLAGS_FREE;
         return page;
     } else {
@@ -126,8 +124,8 @@ BuddyAlloc::expand(Pageframe* page)
     /* Decrease the order and find the lower tier list */
     LinkedList<Pageframe>& freelist = pageList[--page->order];
 
-    Pageframe* newPage = reinterpret_cast<Pageframe*>(
-      ((u64)&page) + ((1 << page->order) * sizeof(Pageframe)));
+    u64        offset  = ((1 << page->order) * sizeof(Pageframe));
+    Pageframe* newPage = reinterpret_cast<Pageframe*>(page + offset);
 
     newPage->order  = page->order;
     newPage->flags |= PFLAGS_FREE;
@@ -141,11 +139,11 @@ BuddyAlloc::expand(Pageframe* page)
 Pageframe*
 BuddyAlloc::combine(Pageframe* page)
 {
-    u32  osize = (1 << (page->order)) * sizeof(Pageframe);
-    bool align = !(page->address % osize);
+    u32  offset = (1 << (page->order)) * sizeof(Pageframe);
+    bool align  = !(page->address % offset);
 
     Pageframe* newPage =
-      reinterpret_cast<Pageframe*>(align ? page + osize : page - osize);
+      reinterpret_cast<Pageframe*>(align ? page + offset : page - offset);
     if (newPage->flags & PFLAGS_FREE) {
         Pageframe* result = align ? page : newPage;
         pageList[newPage->order].remove((ListNode<Pageframe>*)newPage);

@@ -9,17 +9,17 @@ u16 blockSize[] = { 8,   16,  24,  32,  48,   64,   96,   128,
 
 SlabAlloc::SlabAlloc(PageAlloc* pageAlloc)
 {
-    static int           i = 0;
-    static AddressSpace* __kernelAddressSpace =
+    int           i = 0;
+    AddressSpace* __kernelAddressSpace =
       siberix()->getKernelProcess()->getAddressSpace();
     for (; i < SLAB_MAX_BLOCK_ORDER; i += 1) {
-        u64 phys = pageAlloc->allocatePhysMemory4K(1);
-        u64 virt = __kernelAddressSpace->allocate4KPages(1);
+        u64 phys = pageAlloc->allocatePhysMemory4K(1),
+            virt = __kernelAddressSpace->allocate4KPages(1);
         Logger::getAnonymousLogger().info(
           "Initialize slab cache [%u] at %x\n", i, (u64)__kernelAddressSpace);
-        asm("cli; hlt");
-        // kernelAddressSpace->map(phys, virt, 1);
+        __kernelAddressSpace->map(phys, virt, 1);
 
+        asm("cli; hlt");
         caches[i]  = (SlabCache*)virt;
         *caches[i] = SlabCache(blockSize[i], 0);
     }
@@ -83,8 +83,6 @@ SlabAlloc::free(u64 address)
 
 SlabCache::SlabCache(u64 size, u64 flags)
 {
-    for (;;)
-        asm("hlt");
     this->size     = size;
     this->flags    = flags;
     this->reserved = (PAGE_SIZE_4K % size);
