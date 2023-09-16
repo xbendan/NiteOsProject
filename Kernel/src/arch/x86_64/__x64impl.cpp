@@ -101,13 +101,11 @@ SiberixKernel::setupArch()
     _serialPort         = SerialPortDevice();
     _serialPortReceiver = SerialPortLoggerReceiver(&_serialPort);
     Logger::getLoggerReceivers().add(&_serialPortReceiver);
-    Logger::getAnonymousLogger().info("Initialized serial port logging\n");
+    Logger::getAnonymousLogger().success("Initialized serial port logging\n");
 
     this->m_memory    = MemoryServiceProvider();
     this->m_devices   = new DeviceConnectivity();
     this->m_scheduler = new Scheduler(&kernelProcess);
-
-    asm("cli; hlt");
 
     k->m_cpus[0] = new Cpu{
         .apicId        = 0,
@@ -120,13 +118,12 @@ SiberixKernel::setupArch()
     k->m_cpus[0]->tss.init(&k->m_gdt);
     setCpuLocal(k->m_cpus[0]);
 
-    (new SerialPortDevice())->initialize();    /* Serial Port */
-    (new SmbiosDevice())->initialize();        /* System Management BIOS */
-    (new AcpiPmDevice())->initialize();        /* ACPI Power Management */
-    (new PciControllerDevice())->initialize(); /* PCI Controller */
+    // (new SerialPortDevice())->initialize();    /* Serial Port */
+    new SmbiosDevice();        /* System Management BIOS */
+    new AcpiPmDevice();        /* ACPI Power Management */
+    new PciControllerDevice(); /* PCI Controller */
 
     _apic = new ApicDevice(); /* APIC Controller */
-    _apic->initialize();
     getConnectivity()
       ->enumerateDevice(DeviceType::Processor)
       .forEach([&](Device& device) -> void {
@@ -179,7 +176,8 @@ TaskStateSegment::init(GdtPackage* package)
     memset(this, 0, sizeof(TaskStateSegment));
 
     for (int i = 0; i < 3; i++) {
-        ist[i] = (u64)siberix()->getMemory().alloc4KPages(8);
+        ist[i] =
+          (u64)siberix()->getMemory().alloc4KPages(8, kernelAddressSpace);
         memset((void*)ist[i], 0, PAGE_SIZE_4K);
         ist[i] += PAGE_SIZE_4K * 8;
     }

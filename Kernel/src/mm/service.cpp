@@ -78,7 +78,7 @@ MemoryServiceProvider::MemoryServiceProvider()
     static SlabAlloc slabAlloc = SlabAlloc(m_pageAlloc);
     this->m_memoryAlloc = _slabAlloc = &slabAlloc;
 
-    Logger::getAnonymousLogger().info("Initialized memory allocation.\n");
+    Logger::getAnonymousLogger().success("Initialized memory allocation.\n");
 }
 
 MemoryServiceProvider::~MemoryServiceProvider() {}

@@ -3,16 +3,19 @@
 #include <siberix/fs/vfs.h>
 #include <siberix/proc/types.h>
 
-enum ProcessFlags {
+enum ProcessFlags
+{
     ProcessFlagIdle = 0x01
 };
 
+class Scheduler;
 class ProcessFactory;
 
-class Process {
+class Process
+{
 public:
     Process();
-    Process(const char *name, File *file, u32 processId, TaskType type);
+    Process(const char* name, File* file, u32 processId, TaskType type);
     ~Process();
 
     void start();
@@ -37,52 +40,63 @@ public:
      */
     void terminate(int stopCode);
 
-    const char           *getName() { return m_name; }
-    u32                   getProcessId() { return m_processId; }
-    TaskType              getType() { return m_type; }
-    File                 *getFile() { return m_file; }
-    Thread               *getMainThread() { return m_mainThread; }
-    LinkedList<Thread *> &getChildrenThreadList() { return m_childrenThreadList; }
-    void          setAddressSpace(AddressSpace *addressSpace) { m_addressSpace = addressSpace; }
-    AddressSpace *getAddressSpace() { return m_addressSpace; }
+    const char*          getName() { return m_name; }
+    u32                  getProcessId() { return m_processId; }
+    TaskType             getType() { return m_type; }
+    File*                getFile() { return m_file; }
+    Thread*              getMainThread() { return m_mainThread; }
+    LinkedList<Thread*>& getChildrenThreadList()
+    {
+        return m_childrenThreadList;
+    }
+
+    void setAddressSpace(AddressSpace* addressSpace)
+    {
+        m_addressSpace = addressSpace;
+    }
+
+    AddressSpace* getAddressSpace() { return m_addressSpace; }
 
 protected:
-    const char *m_name;      /* Name of the process */
-    u32         m_processId; /* Process Id, 0~255 are reserved for kernel process */
-    TaskType    m_type;      /* Current process type */
-    File       *m_file;      /* Pointer to the source file, can be NULL */
+    const char* m_name; /* Name of the process */
+    u32 m_processId;    /* Process Id, 0~255 are reserved for kernel process */
+    TaskType m_type;    /* Current process type */
+    File*    m_file;    /* Pointer to the source file, can be NULL */
     // Activity *m_activity; /* Pointer to the Activity */
 
     u64 m_flags;
     u16 m_handles; /* Register handles amount */
 
-    struct {
+    struct
+    {
         Spinlock m_lock;
         Spinlock m_handleLock;
     };
 
-    Thread              *m_mainThread;
-    LinkedList<Thread *> m_childrenThreadList;
+    Thread*             m_mainThread;
+    LinkedList<Thread*> m_childrenThreadList;
 
     u64 m_entryPoint;
     u64 m_heap;
     u32 m_nextThreadId;
 
-    AddressSpace *m_addressSpace;
+    AddressSpace* m_addressSpace;
 
     friend Thread;
+    friend Scheduler;
     friend ProcessFactory;
 };
 
-class ProcessFactory {
+class ProcessFactory
+{
 public:
     ProcessFactory();
     ~ProcessFactory();
 
-    Process *createProcess(const char *name);
-    Process *createElfProcess(File *file);
-    Process *createIdleProcess();
-    Process *createProcessEx(const char *name, File *file, TaskType type);
-    Thread  *createThread(Process *process);
-    Thread  *createIdleThread();
+    Process* createProcess(const char* name);
+    Process* createElfProcess(File* file);
+    Process* createIdleProcess();
+    Process* createProcessEx(const char* name, File* file, TaskType type);
+    Thread*  createThread(Process* process);
+    Thread*  createIdleThread();
 };

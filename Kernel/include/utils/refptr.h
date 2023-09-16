@@ -1,7 +1,9 @@
-template <typename T>
-class RefPtr<T> {
+template<typename T>
+class RefPtr
+{
 public:
-    inline RefPtr<T>& operator=(const RefPtr<T>& ptr) {
+    inline RefPtr<T>& operator=(const RefPtr<T>& ptr)
+    {
         obj      = ptr.obj;
         refCount = ptr.refCount;
 

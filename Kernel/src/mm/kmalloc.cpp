@@ -40,8 +40,14 @@ SlabAlloc::getCache(u32 size)
 u64
 SlabAlloc::alloc(u64 size)
 {
-    if (size > PAGE_SIZE_4K)
-        return siberix()->getMemory().alloc4KPages(alignUp(size, PAGE_SIZE_4K));
+    if (size > PAGE_SIZE_4K) {
+        Logger::getAnonymousLogger().warn(
+          "Try to allocate object over size (%u)\n", size);
+        return siberix()->getMemory().alloc4KPages(
+          alignUp(size, PAGE_SIZE_4K) / PAGE_SIZE_4K,
+          siberix()->getKernelProcess()->getAddressSpace());
+    }
+
     /*
      * Find the cache with suitable size
      * request size >= cache size
@@ -53,9 +59,6 @@ SlabAlloc::alloc(u64 size)
 
     if (!page || page->slabInuse >= page->slabObjects)
         page = cpu->page = cache->request4KPage(&address);
-
-    Logger::getAnonymousLogger().info(
-      "Allocate with \'new\', given address is ?\n");
 
     /*
      * The value of 'page->freelist' indicates where the next object is,

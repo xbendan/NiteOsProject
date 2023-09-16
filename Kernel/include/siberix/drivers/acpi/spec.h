@@ -2,7 +2,8 @@
 
 #include <common/typedefs.h>
 
-struct AcpiRsdp {
+struct AcpiRsdp
+{
     char signature[8];
     u8   checksum;
     char oemId[6];
@@ -10,14 +11,16 @@ struct AcpiRsdp {
     u32  rsdtAddress;
 } __attribute__((packed));
 
-struct AcpiXsdp : public AcpiRsdp {
+struct AcpiXsdp : public AcpiRsdp
+{
     u32 length;
     u64 xsdtAddress;
     u8  checksumEx;
     u8  reserved[3];
 };
 
-struct AcpiTable {
+struct AcpiTable
+{
     char signature[4];
     u32  length;
     u8   revision;
@@ -27,17 +30,20 @@ struct AcpiTable {
     u32  oemRevision;
     u32  creatorId;
     u32  creatorRevision;
-} __attribute__((packed)) __attribute__((aligned(8)));
+} __attribute__((packed));
 
-struct AcpiRsdt : public AcpiTable {
+struct AcpiRsdt : public AcpiTable
+{
     u32 pointers[];
 } __attribute__((packed));
 
-struct AcpiXsdt : public AcpiTable {
+struct AcpiXsdt : public AcpiTable
+{
     u64 pointers[];
 } __attribute__((packed));
 
-struct AcpiAddress {
+struct AcpiAddress
+{
     /**
      * @brief address space indicates where to read data
      * 0: System Memory
@@ -61,58 +67,67 @@ struct AcpiAddress {
     u64 address;
 };
 
-struct MadtEntry {
+struct MadtEntry
+{
     u8 type;
     u8 length;
 } __attribute__((packed));
 
-struct Madt /* Multiple APIC Description Table */ : public AcpiTable {
+struct Madt /* Multiple APIC Description Table */ : public AcpiTable
+{
     u32       address;
     u32       flags;
     MadtEntry entries[];
 } __attribute__((packed));
 
-struct MadtLocalApic : public MadtEntry {
+struct MadtLocalApic : public MadtEntry
+{
     u8  processorId;
     u8  apicId;
     u32 flags;
 } __attribute__((packed));
 
-struct MadtIoApic : public MadtEntry {
+struct MadtIoApic : public MadtEntry
+{
     u8  apicId;
     u8  __reserved__;
     u32 address;
     u32 gSiB;
 } __attribute__((packed));
 
-struct MadtIso : public MadtEntry {
+struct MadtIso : public MadtEntry
+{
     u8  busSource;
     u8  irqSource;
     u32 gSi;
     u16 flags;
 } __attribute__((packed));
 
-struct MadtNmi : public MadtEntry {
+struct MadtNmi : public MadtEntry
+{
     u8  processorId;
     u16 flags;
     u8  lInt;
 } __attribute__((packed));
 
-struct MadtLocalx2Apic : public MadtEntry {
+struct MadtLocalx2Apic : public MadtEntry
+{
     u16 __reserved__;
     u32 x2apicId;
     u32 flags;
     u32 uid;
 } __attribute__((packed));
 
-struct MadtNmix2Apic : public MadtEntry {
+struct MadtNmix2Apic : public MadtEntry
+{
     u16 flags;
     u32 uid;
     u8  lInt;
     u8  __reserved__[3];
 } __attribute__((packed));
 
-struct Hpet : public AcpiTable {
+struct Hpet : public AcpiTable
+{
     u8          hwrevId;
     u8          info;
     u16         pciVendorId;
@@ -122,7 +137,8 @@ struct Hpet : public AcpiTable {
     u8          pageProtection;
 };
 
-struct McfgAddress {
+struct McfgAddress
+{
     u64 base;
     u16 sgn;
     u8  busStart;
@@ -130,12 +146,14 @@ struct McfgAddress {
     u32 __reserved__;
 };
 
-struct PciMcfg : public AcpiTable {
+struct PciMcfg : public AcpiTable
+{
     u64         __reserved__;
     McfgAddress baseAddresses[];
 };
 
-struct AcpiFadt /* Fixed ACPI Description Table */ : public AcpiTable {
+struct AcpiFadt /* Fixed ACPI Description Table */ : public AcpiTable
+{
     u32 fwctrl;
     u32 dsdt;
 
@@ -196,16 +214,19 @@ struct AcpiFadt /* Fixed ACPI Description Table */ : public AcpiTable {
     AcpiAddress x_gpe1Block;
 };
 
-struct AcpiFacs /* Firmware ACPI Control Structure */ {};
+struct AcpiFacs /* Firmware ACPI Control Structure */
+{};
 
-struct AcpiSbst /* Smart Battery Description Table */ : public AcpiTable {
+struct AcpiSbst /* Smart Battery Description Table */ : public AcpiTable
+{
     u32 warningEnergyLevel;
     u32 lowEnergyLevel;
     u32 criticalEnergyLevel;
 };
 
 struct AcpiEcdt /* Embedded Controller Boot Resources Table */
-    : public AcpiTable {
+  : public AcpiTable
+{
     AcpiAddress ecCtrl;
     AcpiAddress ecData;
     u32         uid;
@@ -214,10 +235,12 @@ struct AcpiEcdt /* Embedded Controller Boot Resources Table */
 };
 
 struct AcpiDsdt /* Differentiated System Description Table */
-    : public AcpiTable {
+  : public AcpiTable
+{
     u8 aml[];
 };
 
-struct AcpiSsdt /* Secondary System Description Table */ : public AcpiTable {
+struct AcpiSsdt /* Secondary System Description Table */ : public AcpiTable
+{
     u8 aml[];
 };

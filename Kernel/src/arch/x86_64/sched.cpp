@@ -12,14 +12,23 @@
 Scheduler::Scheduler() {}
 
 Scheduler::Scheduler(Process* kernelProcess)
-    : m_nextPID(1),
-      m_timeSlice(50),
-      m_kernelProcess(kernelProcess),
-      m_processFactory(new ProcessFactory()) {}
+  : m_nextPID(1)
+  , m_timeSlice(50)
+  , m_kernelProcess(kernelProcess)
+  , m_processList(new Process*[65536])
+  , m_processFactory(new ProcessFactory())
+{
+    kernelProcess->m_mainThread =
+      getProcessFactory()->createThread(kernelProcess);
+
+    Logger::getLogger("sched").success("Initialized default scheduler.\n");
+}
 
 Scheduler::~Scheduler() {}
 
-void Scheduler::switchThread(Thread* t) {
+void
+Scheduler::switchThread(Thread* t)
+{
     Cpu*       cpu    = getCpuLocal();
     X64Thread* thread = static_cast<X64Thread*>(t);
 
@@ -31,7 +40,7 @@ void Scheduler::switchThread(Thread* t) {
     cpu->tss.rsp[0]    = reinterpret_cast<u64>(thread->kernelStack);
 
     asm volatile(
-        R"(mov %0, %%rsp;
+      R"(mov %0, %%rsp;
             mov %1, %%rax;
             pop %%r15;
             pop %%r14;
@@ -52,10 +61,13 @@ void Scheduler::switchThread(Thread* t) {
             pop %%rax
             addq $8, %%rsp
             iretq)" ::"r"(&thread->registers),
-        "r"(reinterpret_cast<Paging::X64AddressSpace*>(process->getAddressSpace())->pml4Phys));
+      "r"(reinterpret_cast<Paging::X64AddressSpace*>(process->getAddressSpace())
+            ->pml4Phys));
 }
 
-bool Scheduler::addProcess(Process* process) {
+bool
+Scheduler::addProcess(Process* process)
+{
     if (m_processList[process->getProcessId()] != nullptr) {
         return false;
     }
@@ -63,12 +75,32 @@ bool Scheduler::addProcess(Process* process) {
     return true;
 }
 
-Process* Scheduler::getKernelProcess() { return m_kernelProcess; }
+Process*
+Scheduler::getKernelProcess()
+{
+    return m_kernelProcess;
+}
 
-ProcessFactory* Scheduler::getProcessFactory() { return m_processFactory; }
+ProcessFactory*
+Scheduler::getProcessFactory()
+{
+    return m_processFactory;
+}
 
-ThreadQueue& Scheduler::getThreadQueue() { return m_queue; }
+ThreadQueue&
+Scheduler::getThreadQueue()
+{
+    return m_queue;
+}
 
-Process* thisProcess() { return getCpuLocal()->currentThread->m_parent; }
+Process*
+thisProcess()
+{
+    return getCpuLocal()->currentThread->m_parent;
+}
 
-Thread* thisThread() { return getCpuLocal()->currentThread; }
+Thread*
+thisThread()
+{
+    return getCpuLocal()->currentThread;
+}

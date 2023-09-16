@@ -5,7 +5,8 @@
 #include <siberix/proc/process.h>
 #include <utils/array.h>
 
-class ThreadQueue {
+class ThreadQueue
+{
 public:
     void    computeNewPrioirty();
     void    computeNewPriority(u8 dynamic);
@@ -17,7 +18,8 @@ private:
     LinkedList<Thread&> m_priorityList;
 };
 
-class Scheduler {
+class Scheduler
+{
 public:
     Scheduler();
     Scheduler(Process* kernelProcess);
@@ -39,10 +41,12 @@ private:
     u32             m_nextPID = 1;
     u64             m_timeSlice;
     Process*        m_kernelProcess;
-    Process*        m_processList[65536];
+    Process**       m_processList;
     ProcessFactory* m_processFactory;
     ThreadQueue     m_queue;
 };
 
-Process* thisProcess();
-Thread*  thisThread();
+Process*
+thisProcess();
+Thread*
+thisThread();

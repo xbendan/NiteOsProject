@@ -6,13 +6,27 @@
 #include <siberix/drivers/acpi/acpi_timer.h>
 
 AcpiPmDevice::AcpiPmDevice()
-    : Device("ACPI Power Management") {
+  : Device("ACPI Power Management")
+{
     const char* signature = "RSD PTR ";
 
-    u64 address = 0x0;
-    while (!rsdp && (address <= 0xfffff)) {
-        if (!memcmp((void*)address, signature, 8)) rsdp = reinterpret_cast<AcpiRsdp*>(address);
-        address += 0x10;
+    u64  address    = 0;
+    auto f_findRsdp = [&](u64 addrStart, u64 addrEnd) -> AcpiRsdp* {
+        address = addrStart;
+        while (address <= addrEnd) {
+            if (memcmp((void*)IOVB(address), signature, 8) == 0) {
+                return reinterpret_cast<AcpiRsdp*>(IOVB(address));
+            }
+            address += 0x10;
+        }
+        return 0;
+    };
+    rsdp = f_findRsdp(0x0, 0x7bff + 1);
+    if (!rsdp) {
+        rsdp = f_findRsdp(0x80000, 0x9ffff + 1);
+        if (!rsdp) {
+            rsdp = f_findRsdp(0xe0000, 0xfffff + 1);
+        }
     }
 
     /*
@@ -20,7 +34,8 @@ AcpiPmDevice::AcpiPmDevice()
      * We cannot initialize ACPI without it.
      */
     if (!rsdp) {
-        Logger::getLogger("acpi").error("ACPI root system description pointer not found!");
+        Logger::getLogger("acpi").error(
+          "ACPI root system description pointer not found!\n");
         return;
     }
 
@@ -43,7 +58,8 @@ AcpiPmDevice::AcpiPmDevice()
             xsdt = reinterpret_cast<AcpiXsdt*>(IOVB(xsdp->xsdtAddress));
             break;
         default:
-            Logger::getLogger("acpi").error("Invalid ACPI revision number %u", rsdp->revision);
+            Logger::getLogger("acpi").error("Invalid ACPI revision number %u\n",
+                                            rsdp->revision);
             break;
     }
 
@@ -59,28 +75,34 @@ AcpiPmDevice::AcpiPmDevice()
             siberix()->addTimer(*device, true);
             siberix()->getConnectivity()->registerDevice(device);
         } else {
-            Logger::getLogger("acpi").error("ACPI Timer ran into problem. Giving up installing.");
+            Logger::getLogger("acpi").error(
+              "ACPI Timer ran into problem. Giving up installing.");
         }
     }
 
-    m_flags |= DeviceInitialized;
+    m_flags    |= DeviceInitialized;
+    m_deviceId  = siberix()->getConnectivity()->registerDevice(this);
 };
 
 AcpiPmDevice::~AcpiPmDevice() {}
 
-template <typename T>
-T* AcpiPmDevice::findTable(const char* str, int index) {
-    if (!memcmp("DSDT", str, 4)) return reinterpret_cast<T*>(fadt->dsdt);
+template<typename T>
+T*
+AcpiPmDevice::findTable(const char* str, int index)
+{
+    if (memcmp("DSDT", str, 4) == 0)
+        return reinterpret_cast<T*>(IOVB(fadt->dsdt));
 
     if (!rsdp) {
         return nullptr;
     }
 
-    u64 entries = rsdp->revision ? (xsdt->length - sizeof(AcpiTable)) / sizeof(u64)
-                                 : (rsdt->length - sizeof(AcpiTable)) / sizeof(u32);
+    u64 entries = rsdp->revision
+                    ? (xsdt->length - sizeof(AcpiTable)) / sizeof(u64)
+                    : (rsdt->length - sizeof(AcpiTable)) / sizeof(u32);
     int _index  = 0;
     for (int i = 0; i < entries; i++) {
-        u64        entry = rsdp->revision ? xsdt->pointers[i] : rsdt->pointers[i];
+        u64 entry = rsdp->revision ? xsdt->pointers[i] : rsdt->pointers[i];
         AcpiTable* table = reinterpret_cast<AcpiTable*>(IOVB(entry));
         if (memcmp(table->signature, str, 4) == 0 && (_index++ == index)) {
             return reinterpret_cast<T*>(table);

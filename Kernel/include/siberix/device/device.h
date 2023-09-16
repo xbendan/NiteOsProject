@@ -5,7 +5,8 @@
 
 extern const char* _unknownDeviceName;
 
-enum class DeviceType : u8 {
+enum class DeviceType : u8
+{
     Biometric,
     Bluetooth,
     DiskDrive,
@@ -31,7 +32,8 @@ enum class DeviceType : u8 {
     Unknown
 };
 
-enum class DeviceBus {
+enum class DeviceBus
+{
     Software = 0,
     PCI      = 1,
     USB      = 2,
@@ -41,7 +43,8 @@ enum class DeviceBus {
     Unknown = 5
 };
 
-enum DeviceFlags : u64 {
+enum DeviceFlags : u64
+{
     DeviceInitialized        = 0x01,
     DeviceInstalled          = 0x02,
     DeviceExceptionOccurred  = 0x04,
@@ -49,7 +52,8 @@ enum DeviceFlags : u64 {
     DeviceDriverIncompatible = 0x10
 };
 
-class Device {
+class Device
+{
 public:
     Device(const char* _name, DeviceBus _bus, DeviceType _type);
     Device(const char* _name);
@@ -60,19 +64,27 @@ public:
     inline u64                  getId() { return this->m_deviceId; }
     inline DeviceType           getType() { return this->m_type; }
     inline DeviceBus            getBus() { return this->m_bus; }
-    inline LinkedList<Device&>& getDependencies() { return this->m_dependencies; }
-    inline bool isDependentWith(Device& device) { return m_dependencies.contains(device); }
-    bool        isInitialized() { return (m_flags & DeviceInitialized); }
-    bool        isInstalled() { return (m_flags & DeviceInstalled); }
-    bool        isWorking() {
+    inline LinkedList<Device&>& getDependencies()
+    {
+        return this->m_dependencies;
+    }
+    inline bool isDependentWith(Device& device)
+    {
+        return m_dependencies.contains(device);
+    }
+    bool isInitialized() { return (m_flags & DeviceInitialized); }
+    bool isInstalled() { return (m_flags & DeviceInstalled); }
+    bool isWorking()
+    {
         return (m_flags & DeviceInitialized) &&
-               !(m_flags &
-                 (DeviceExceptionOccurred | DeviceDriverError | DeviceDriverIncompatible));
+               !(m_flags & (DeviceExceptionOccurred | DeviceDriverError |
+                            DeviceDriverIncompatible));
     }
 
-    bool operator==(Device& device) { return this->m_deviceId == device.m_deviceId; }
-
-    void initialize();
+    bool operator==(Device& device)
+    {
+        return this->m_deviceId == device.m_deviceId;
+    }
 
     virtual void enable()  = 0;
     virtual void disable() = 0;

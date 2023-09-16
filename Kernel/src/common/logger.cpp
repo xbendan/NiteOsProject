@@ -71,6 +71,9 @@ Logger::error(const char* fmt, ...)
     va_end(args);
 
     log(LOG_ERROR, "!! System is shutting to avoid further damage !!\n");
+
+    for (;;)
+        asm("cli; hlt");
 }
 
 void

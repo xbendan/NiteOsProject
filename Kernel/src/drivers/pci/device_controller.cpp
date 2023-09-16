@@ -6,27 +6,31 @@
 #include <siberix/drivers/pci/devices.h>
 
 PciControllerDevice::PciControllerDevice()
-    : Device("PCI Controller", DeviceBus::PCI, DeviceType::Firmware) {
+  : Device("PCI Controller", DeviceBus::PCI, DeviceType::Firmware)
+{
     m_deviceList          = LinkedList<PciDevice&>();
     m_enhancedAddressList = LinkedList<McfgAddress*>();
 
     AcpiPmDevice* acpiDevice = reinterpret_cast<AcpiPmDevice*>(
-        siberix()->getConnectivity()->findDevice("ACPI Power Management"));
+      siberix()->getConnectivity()->findDevice("ACPI Power Management"));
     if (acpiDevice == nullptr) {
-        Logger::getLogger("pci").error("No ACPI Device found. Abort to load PCI controller.");
+        Logger::getLogger("pci").error(
+          "No ACPI Device found. Abort to load PCI controller.\n");
         m_flags |= (DeviceExceptionOccurred);
         return;
     } else {
         m_mcfgTable = acpiDevice->findTable<PciMcfg>("MCFG");
         if (m_mcfgTable == nullptr) {
-            Logger::getLogger("pci").error(
-                "No PCI MCFG table found. Abort to load PCI controller.");
+            Logger::getLogger("pci").warn(
+              "No PCI MCFG table found. Abort to load PCI controller.\n");
             return;
         }
     }
 
     m_accessMode = PCIConfigAccessMode::Enhanced;
-    for (unsigned i = 0; i < (m_mcfgTable->length - sizeof(PciMcfg)) / sizeof(McfgAddress); i++) {
+    for (unsigned i = 0;
+         i < (m_mcfgTable->length - sizeof(PciMcfg)) / sizeof(McfgAddress);
+         i++) {
         McfgAddress* base = &m_mcfgTable->baseAddresses[i];
         if (base->sgn) {
         }
@@ -48,97 +52,146 @@ PciControllerDevice::PciControllerDevice()
             }
         }
     }
+
+    m_flags    |= DeviceFlags::DeviceInitialized;
+    m_deviceId  = siberix()->getConnectivity()->registerDevice(this);
 }
 
 PciControllerDevice::~PciControllerDevice() {}
 
-u8 PciControllerDevice::configReadByte(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg) {
+u8
+PciControllerDevice::configReadByte(u8                 bus,
+                                    u8                 slot,
+                                    u8                 func,
+                                    PCIConfigRegisters reg)
+{
     outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
     return (u8)((inDWord32(0xcfc) >> (reg & 2) * 8) & 0xff);
 }
 
-u16 PciControllerDevice::configReadWord(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg) {
+u16
+PciControllerDevice::configReadWord(u8                 bus,
+                                    u8                 slot,
+                                    u8                 func,
+                                    PCIConfigRegisters reg)
+{
     outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
     return (u16)((inDWord32(0xcfc) >> (reg & 2) * 8) & 0xff);
 }
 
-u32 PciControllerDevice::configReadDWord(u8 bus, u8 slot, u8 func, PCIConfigRegisters reg) {
+u32
+PciControllerDevice::configReadDWord(u8                 bus,
+                                     u8                 slot,
+                                     u8                 func,
+                                     PCIConfigRegisters reg)
+{
     outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
     return inDWord32(0xcfc);
 }
 
-void PciControllerDevice::configWriteByte(
-    u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u8 data) {
+void
+PciControllerDevice::configWriteByte(u8                 bus,
+                                     u8                 slot,
+                                     u8                 func,
+                                     PCIConfigRegisters reg,
+                                     u8                 data)
+{
     outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
     outDWord32(0xcfc,
                (inDWord32(0xcfc) & (~(0xff << ((reg & 3) * 8)))) |
-                   (static_cast<u32>(data) << ((reg & 3) * 8)));
+                 (static_cast<u32>(data) << ((reg & 3) * 8)));
 }
 
-void PciControllerDevice::configWriteWord(
-    u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u16 data) {
+void
+PciControllerDevice::configWriteWord(u8                 bus,
+                                     u8                 slot,
+                                     u8                 func,
+                                     PCIConfigRegisters reg,
+                                     u16                data)
+{
     outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
     outDWord32(0xcfc,
                (inDWord32(0xcfc) & (~(0xffff << ((reg & 2) * 8)))) |
-                   (static_cast<u32>(data) << ((reg & 3) * 8)));
+                 (static_cast<u32>(data) << ((reg & 3) * 8)));
 }
 
-void PciControllerDevice::configWriteDWord(
-    u8 bus, u8 slot, u8 func, PCIConfigRegisters reg, u32 data) {
+void
+PciControllerDevice::configWriteDWord(u8                 bus,
+                                      u8                 slot,
+                                      u8                 func,
+                                      PCIConfigRegisters reg,
+                                      u32                data)
+{
     outDWord32(0xcf8, PCI_PACKAGE_ADDRESS(bus, slot, func, reg));
     outDWord32(0xcfc, data);
 }
 
-bool PciControllerDevice::checkDevice(u8 bus, u8 device, u8 func) {
+bool
+PciControllerDevice::checkDevice(u8 bus, u8 device, u8 func)
+{
     return !(getVendorID(bus, device, func) == 0xffff);
 }
 
-PciDevice& PciControllerDevice::connectDevice(u8 bus, u8 slot, u8 func) {
+PciDevice&
+PciControllerDevice::connectDevice(u8 bus, u8 slot, u8 func)
+{
     PciDevice* device = new PciDevice(bus, slot, func);
     m_deviceList.add(*device);
     return *device;
 }
 
-PciDevice* PciControllerDevice::findDevice(u16 deviceID, u16 vendorID) {
+PciDevice*
+PciControllerDevice::findDevice(u16 deviceID, u16 vendorID)
+{
     for (u32 i = 0; i < m_deviceList.count(); i++) {
         PciDevice& device = m_deviceList[i];
-        if (device.getDeviceID() == deviceID && device.getVendorID() == vendorID) {
+        if (device.getDeviceID() == deviceID &&
+            device.getVendorID() == vendorID) {
             return &device;
         }
     }
     return nullptr;
 }
 
-PciDevice* PciControllerDevice::findGenericDevice(u16 classCode, u16 subclass) {
+PciDevice*
+PciControllerDevice::findGenericDevice(u16 classCode, u16 subclass)
+{
     for (u32 i = 0; i < m_deviceList.count(); i++) {
         PciDevice& device = m_deviceList[i];
-        if (device.getClassCode() == classCode && device.getSubclass() == subclass) {
+        if (device.getClassCode() == classCode &&
+            device.getSubclass() == subclass) {
             return &device;
         }
     }
     return nullptr;
 }
 
-void PciControllerDevice::enumerateDevice(u16 deviceID,
-                                          u16 vendorID,
-                                          void (*consumer)(PciDevice& device)) {
+void
+PciControllerDevice::enumerateDevice(u16  deviceID,
+                                     u16  vendorID,
+                                     void (*consumer)(PciDevice& device))
+{
     ListNode<PciDevice&>* node = m_deviceList.first();
     while (node != nullptr) {
         PciDevice& device = node->obj;
-        if (device.getDeviceID() == deviceID && device.getVendorID() == vendorID) {
+        if (device.getDeviceID() == deviceID &&
+            device.getVendorID() == vendorID) {
             consumer(device);
         }
         node = node->next;
     }
 }
 
-void PciControllerDevice::enumerateGenericDevice(u8 classCode,
-                                                 u8 subclass,
-                                                 void (*consumer)(PciDevice& device)) {
+void
+PciControllerDevice::enumerateGenericDevice(u8   classCode,
+                                            u8   subclass,
+                                            void (*consumer)(PciDevice& device))
+{
     ListNode<PciDevice&>* node = m_deviceList.first();
     while (node != nullptr) {
         PciDevice& device = node->obj;
-        if (device.getClassCode() == classCode && device.getSubclass() == subclass) {
+        if (device.getClassCode() == classCode &&
+            device.getSubclass() == subclass) {
             consumer(device);
         }
     }
