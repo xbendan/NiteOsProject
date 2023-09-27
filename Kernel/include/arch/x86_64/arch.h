@@ -5,12 +5,14 @@
 #include <siberix/core/runtimes.h>
 #include <siberix/mm/addrspace.h>
 
-class SbrxkrnlX64Impl : public SiberixKernel {
+class SbrxkrnlX64Impl : public SiberixKernel
+{
 public:
     SbrxkrnlX64Impl();
     ~SbrxkrnlX64Impl();
 
-    bool setupArch();
+    bool                setupArch();
+    Supplier<Interrupt> getInterrupt(unsigned index);
 
     GdtPackage m_gdt;
     GdtPtr     m_gdtPtr;
@@ -18,19 +20,25 @@ public:
     Cpu*       m_cpus[256];
 };
 
-static inline u64 readMSR(u64 msr) {
+static inline u64
+readMSR(u64 msr)
+{
     u32 low, high;
     asm volatile("rdmsr" : "=a"(low), "=d"(high) : "c"(msr));
     return ((u64)high << 32) | low;
 }
 
-static inline void writeMSR(u32 msr, u64 value) {
+static inline void
+writeMSR(u32 msr, u64 value)
+{
     u32 low  = value & 0xFFFFFFFF;
     u32 high = value >> 32;
     asm volatile("wrmsr" : : "c"(msr), "a"(low), "d"(high));
 }
 
-static inline void setCpuLocal(Cpu* cpu) {
+static inline void
+setCpuLocal(Cpu* cpu)
+{
     cpu->self = cpu;
     asm volatile("wrmsr" ::"a"((u64)cpu & 0xffffffff) /*Value low*/,
                  "d"(((u64)cpu >> 32) & 0xffffffff) /*Value high*/,
@@ -40,17 +48,20 @@ static inline void setCpuLocal(Cpu* cpu) {
                  "c"(MSR_GS_BASE) /*Set Kernel GS Base*/);
 }
 
-static inline Cpu* getCpuLocal() {
+static inline Cpu*
+getCpuLocal()
+{
     Cpu* cpu;
     asm volatile("swapgs; movq %%gs:0, %0; swapgs;" : "=r"(cpu));
     return cpu;
 }
 
-static inline bool checkInterrupts() {
+static inline bool
+checkInterrupts()
+{
     volatile unsigned long flags;
-    asm volatile(
-        "pushfq;"
-        "pop %0;"
-        : "=rm"(flags)::"memory", "cc");
+    asm volatile("pushfq;"
+                 "pop %0;"
+                 : "=rm"(flags)::"memory", "cc");
     return (flags & 0x200) != 0;
 }

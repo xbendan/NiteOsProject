@@ -28,7 +28,7 @@ namespace Paging
 
     pagetable_t *kernelPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
 
-    void PageFaultHandler(InterruptData *data, RegisterContext *context)
+    void PageFaultHandler(Interrupt *data, RegisterContext *context)
     {
         
     }

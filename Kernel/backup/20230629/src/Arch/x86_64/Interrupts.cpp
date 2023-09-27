@@ -4,15 +4,15 @@
 #include <Arch/x86_64/Interrupts.h>
 #include <System.h>
 
-void UnhandlededException(InterruptData *data, RegisterContext *context)
+void UnhandlededException(Interrupt *data, RegisterContext *context)
 {
     DisableInterrupts();
-    System::Panic("Unhandled Expcetion! Name=%s", data->name);
+    System::Panic("Unhandled Expcetion! Name=%s", data->m_name);
     while (true)
         ;
 }
 
-InterruptData g_IntData[256] =
+Interrupt g_IntData[256] =
 {
     [0] = { "Division Error", IntTypeFault, false },
     [1] = { "Debug", (IntTypeFault | IntTypeTrap), false },
@@ -50,7 +50,7 @@ InterruptData g_IntData[256] =
 extern "C" void* DispatchInterrupts(void *rsp)
 {
     RegisterContext *context = reinterpret_cast<RegisterContext *>(rsp);
-    InterruptData *data = &g_IntData[context->intno];
+    Interrupt *data = &g_IntData[context->intno];
 
     if (data->handler != nullptr)
     {
@@ -74,7 +74,7 @@ extern "C" void* DispatchInterrupts(void *rsp)
 
 bool RegisterIRQ(uint8_t intno, irqhandle_t handler)
 {
-    InterruptData *intData = &g_IntData[intno];
+    Interrupt *intData = &g_IntData[intno];
     if (handler == nullptr || intData->handler)
         return false;
 

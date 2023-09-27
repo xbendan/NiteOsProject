@@ -27,9 +27,10 @@ ApicDevice::ApicDevice()
         switch (entry->type) {
             case 0x00: /* Processor Local APIC */ {
                 MadtLocalApic* apicLocal = static_cast<MadtLocalApic*>(entry);
-                if ((apicLocal->flags & 0x3) && apicLocal->apicId) {
+                if (apicLocal->flags & 0x3) {
                     siberix()->getConnectivity()->registerDevice(
                       new ProcessorDevice(apicLocal->apicId));
+
                     m_interfaces[apicLocal->apicId] =
                       ApicLocalInterface(apicLocal->apicId, this);
                 }
@@ -79,11 +80,24 @@ ApicDevice::ApicDevice()
     baseVirtIO  = IOVB(basePhys);
     ioRegSelect = (u32*)(baseVirtIO + IO_APIC_REGSEL);
     ioWindow    = (u32*)(baseVirtIO + IO_APIC_WIN);
+    interrupts  = ioRead(IO_APIC_REGISTER_VER) >> 16;
+    // lWriteBase(lReadBase() | (1UL << 11));
+
+    Logger::getLogger("apic").info("APIC initialized with base address %x.\n",
+                                   basePhys);
+
+    m_interfaces[0].setup();
 
     for (int i = 0; i < m_overrides.length(); i++) {
         MadtIso* iso = m_overrides[i];
         ioWrite64(IO_APIC_RED_TABLE_ENT(iso->gSi), iso->irqSource + 0x20);
     }
+
+    if ((readMSR(0x1b)) != 0) {
+        m_flags |= DeviceFlags::DeviceInitialized;
+    }
+
+    siberix()->getConnectivity()->registerDevice(this);
 }
 
 ApicDevice::~ApicDevice() {}

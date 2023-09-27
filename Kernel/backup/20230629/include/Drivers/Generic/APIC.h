@@ -98,7 +98,7 @@ private:
     volatile uint64_t m_Ticks;
 
 public:
-    static void TimerEvent(InterruptData *data, RegisterContext *regs);
+    static void TimerEvent(Interrupt *data, RegisterContext *regs);
 
     LocalAPICTimer();
     ~LocalAPICTimer();

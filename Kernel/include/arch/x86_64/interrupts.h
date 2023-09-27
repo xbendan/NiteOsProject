@@ -4,7 +4,8 @@
 extern u64      intTables[];
 extern IdtEntry idtEntryList[IDT_ENTRY_COUNT];
 
-enum IntType {
+enum IntType
+{
     IntTypeFault     = 0x1,
     IntTypeTrap      = 0x2,
     IntTypeInterrupt = 0x4,
@@ -13,14 +14,16 @@ enum IntType {
 
 typedef void (*irq_t)(RegisterContext*);
 
-struct InterruptData {
-    const char* name;
-    u8          type;
-    bool        hasErrCode;
-    irq_t       handler;
+struct Interrupt
+{
+    const char* m_name;
+    u8          m_type;
+    bool        m_hasErrCode;
+    irq_t       m_executor;
 
-    inline bool isFault() { return (type & IntTypeFault); }
-    inline bool isTrap() { return (type & IntTypeTrap); }
-    inline bool isInterrupt() { return (type & IntTypeInterrupt); }
-    inline bool hasErrorCode() { return hasErrCode; }
+    inline bool isFault() { return (m_type & IntTypeFault); }
+    inline bool isTrap() { return (m_type & IntTypeTrap); }
+    inline bool isInterrupt() { return (m_type & IntTypeInterrupt); }
+    inline bool hasErrorCode() { return m_hasErrCode; }
+    inline void setExecutor(irq_t executor) { m_executor = executor; }
 };

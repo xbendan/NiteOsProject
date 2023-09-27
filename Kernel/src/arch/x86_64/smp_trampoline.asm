@@ -17,6 +17,7 @@ bits 16
 SMPTrampolineStart:
 
 cli
+hlt
 cld
 
 mov ax, SMP_MAGIC

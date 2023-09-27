@@ -5,53 +5,80 @@
 #include <siberix/drivers/acpi/acpi_device.h>
 #include <siberix/drivers/acpi/acpi_timer.h>
 
-u32 ACPI_TIMER_READ_XMMIO(u32 data) { return *(u32*)(IOVB(data)); }
+u32
+ACPI_TIMER_READ_XMMIO(u32 data)
+{
+    return *(u32*)(IOVB(data));
+}
 
-u32 ACPI_TIMER_READ_XIO(u32 data) { return inDWord32(data); }
+u32
+ACPI_TIMER_READ_XIO(u32 data)
+{
+    return inDWord32(data);
+}
 
-u32 ACPI_TIMER_READ_IO(u32 data) { return inDWord32(data); }
+u32
+ACPI_TIMER_READ_IO(u32 data)
+{
+    return inDWord32(data);
+}
 
-AcpiTimerDevice::AcpiTimerDevice()
-    : TimerDevice("ACPI Timer") {
-    Device* device = siberix()->getConnectivity()->findDevice("ACPI Power Management");
-    if (device == nullptr) {
-        Logger::getLogger("acpi").error(
-            "ACPI Power Management device not detected or not installed.");
-        return;
-    }
-    AcpiFadt* fadt = static_cast<AcpiPmDevice*>(device)->fadt;
+AcpiTimerDevice::AcpiTimerDevice(AcpiFadt* fadt)
+  : TimerDevice("ACPI Timer")
+{
     if (fadt == nullptr) {
-        Logger::getLogger("acpi").error("Fixed ACPI Description Table not found.");
+        Logger::getLogger("acpi").error(
+          "Fixed ACPI Description Table not found.");
         return;
     }
 
-    this->m_timerLength = fadt->pmtTimerLength;
-    this->m_xpmtAddress = &fadt->x_pmtTimerBlock;
+    this->m_pmt         = fadt->pmtTimerLength;
+    this->m_xpmt        = &fadt->x_pmtTimerBlock;
     this->m_is32bitMode = (fadt->flags & (1 << 7));
-    switch (m_xpmtAddress->addressSpace) {
-        case 0: /* Memory */ {
-            m_reader = ACPI_TIMER_READ_XMMIO;
-            m_data   = m_xpmtAddress->address;
-        }
-        case 1: /* IO */ {
-            m_reader = ACPI_TIMER_READ_XIO;
-            m_data   = m_xpmtAddress->address;
-        }
-        default: /* Unsupported */ {
-            Logger::getLogger("acpi").warn(
-                "Advanced ACPI Timer is not supported! Go back to eariler "
-                "version.");
-            m_reader = ACPI_TIMER_READ_IO;
-            m_data   = fadt->pmtTimerBlock;
-        }
+
+    if (fadt->pmtTimerLength != 4) {
+        Logger::getLogger("acpi").warn(
+          "ACPI timer length is %u, FADT len=%u, Header=%u\n",
+          fadt->pmtTimerLength,
+          sizeof(AcpiFadt),
+          sizeof(AcpiTable));
+        return;
     }
 
-    m_flags |= DeviceInitialized;
+    if (m_xpmt->address && (m_xpmt->addressSpace <= 1)) {
+        switch (m_xpmt->addressSpace) {
+            case 0: /* Memory */ {
+                m_reader = ACPI_TIMER_READ_XMMIO;
+                m_data   = m_xpmt->address;
+                break;
+            }
+            case 1: /* IO */ {
+                m_reader = ACPI_TIMER_READ_XIO;
+                m_data   = m_xpmt->address;
+                break;
+            }
+        }
+    } else {
+        Logger::getLogger("acpi").warn(
+          "Advanced ACPI Timer is not supported! Go back to eariler "
+          "version. Data=%u\n",
+          fadt->pmtTimerBlock);
+        m_reader = ACPI_TIMER_READ_IO;
+        m_data   = fadt->pmtTimerBlock;
+    }
+
+    Logger::getLogger("acpi").info(
+      "ACPI timer initialized with address space %u\n", m_xpmt->addressSpace);
+
+    m_flags    |= DeviceInitialized;
+    m_deviceId  = siberix()->getConnectivity()->registerDevice(this);
 }
 
 AcpiTimerDevice::~AcpiTimerDevice() {}
 
-void AcpiTimerDevice::sleep(Duration duration) {
+void
+AcpiTimerDevice::sleep(Duration duration)
+{
     u64 ms = duration.amount;
     switch (duration.span) {
         case TimeSpan::Millisecond:
@@ -94,15 +121,18 @@ void AcpiTimerDevice::sleep(Duration duration) {
     sleep(ms);
 }
 
-void AcpiTimerDevice::sleep(u64 ms) {
+void
+AcpiTimerDevice::sleep(u64 ms)
+{
     u64 clock   = 3579545 * ms / 1000;
     u64 counter = 0;
-    u64 last    = m_reader(m_data);
+    u64 last    = time().as(TimeSpan::Millisecond);
     u64 current = 0;
     while (counter < clock) {
-        current = m_reader(m_data);
+        current = time().as(TimeSpan::Millisecond);
         if (current < last) {
-            counter += (m_is32bitMode ? 0x100000000ul : 0x1000000) + current - last;
+            counter +=
+              (m_is32bitMode ? 0x100000000ul : 0x1000000) + current - last;
         } else {
             counter += current - last;
         }
@@ -111,4 +141,8 @@ void AcpiTimerDevice::sleep(u64 ms) {
     }
 }
 
-Duration AcpiTimerDevice::time() { return Duration(0); }
+Duration
+AcpiTimerDevice::time()
+{
+    return Duration(TimeSpan::Millisecond, m_reader(m_data));
+}

@@ -13,7 +13,7 @@ namespace Input
 
     static volatile int keySet = 0;
 
-    void KeyHandler(InterruptData *data, RegisterContext *context)
+    void KeyHandler(Interrupt *data, RegisterContext *context)
     {
         while (!(ReadByte8(PS2_COMMAND_PORT) & PS2RegOutputBuffer))
             ;

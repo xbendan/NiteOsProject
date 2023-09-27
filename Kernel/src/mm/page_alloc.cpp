@@ -32,12 +32,6 @@ BuddyAlloc::BuddyAlloc(SizedArrayList<PageSection, 256>& sectRefs,
                 return;
             }
 
-            Logger::getAnonymousLogger().info(
-              "Initialize memory from %x to %x, pages at %x\n",
-              address,
-              address + PAGE_MAX_SIZE,
-              (u64)pages);
-
             memset(pages, 0, sizeof(PageFrame) * PAGES_PER_SET);
             pages->order = PAGE_MAX_ORDER;
             for (u64 i = 0; i < PAGES_PER_SET; i++) {

@@ -68,16 +68,13 @@ AcpiPmDevice::AcpiPmDevice()
     hpet = findTable<Hpet>("HPET");
     mcfg = findTable<PciMcfg>("MCFG");
 
-    if (fadt->pmtTimerLength == 4) {
-        /* Initialize ACPI Timer */
-        TimerDevice* device = new AcpiTimerDevice();
-        if (device->isWorking()) {
-            siberix()->addTimer(*device, true);
-            siberix()->getConnectivity()->registerDevice(device);
-        } else {
-            Logger::getLogger("acpi").error(
-              "ACPI Timer ran into problem. Giving up installing.");
-        }
+    /* Initialize ACPI Timer */
+    TimerDevice* device = new AcpiTimerDevice(fadt);
+    if (device->isWorking()) {
+        siberix()->addTimer(device, true);
+    } else {
+        Logger::getLogger("acpi").error(
+          "ACPI Timer ran into problem. Giving up installing.");
     }
 
     m_flags    |= DeviceInitialized;
@@ -90,12 +87,12 @@ template<typename T>
 T*
 AcpiPmDevice::findTable(const char* str, int index)
 {
-    if (memcmp("DSDT", str, 4) == 0)
-        return reinterpret_cast<T*>(IOVB(fadt->dsdt));
-
     if (!rsdp) {
         return nullptr;
     }
+
+    if (memcmp("DSDT", str, 4) == 0)
+        return reinterpret_cast<T*>(IOVB(fadt->dsdt));
 
     u64 entries = rsdp->revision
                     ? (xsdt->length - sizeof(AcpiTable)) / sizeof(u64)
@@ -105,6 +102,16 @@ AcpiPmDevice::findTable(const char* str, int index)
         u64 entry = rsdp->revision ? xsdt->pointers[i] : rsdt->pointers[i];
         AcpiTable* table = reinterpret_cast<AcpiTable*>(IOVB(entry));
         if (memcmp(table->signature, str, 4) == 0 && (_index++ == index)) {
+            u8  sum     = 0;
+            u8* pointer = reinterpret_cast<u8*>(table);
+            for (u64 i = 0; i < table->length; i++) {
+                sum += pointer[i];
+            }
+            Logger::getLogger("acpi").info(
+              "The checksum of table %s is %u, given is %u\n",
+              table->signature,
+              sum & 0xff,
+              table->checksum);
             return reinterpret_cast<T*>(table);
         }
     }

@@ -43,19 +43,19 @@ public:
 
     Clock& getClock() { return m_clock; }
 
-    void addTimer(TimerDevice& timer, bool setAsDefault = false)
+    void addTimer(TimerDevice* timer, bool setAsDefault = false)
     {
-        if (!m_timers.contains(timer)) {
-            m_timers.add(timer);
-            if (setAsDefault) {
-                m_defaultTimer = &timer;
-            }
+        // if (!m_timers.contains(timer)) {
+        m_timers.add(timer);
+        if (setAsDefault) {
+            m_defaultTimer = timer;
         }
+        // }
     }
 
-    TimerDevice& getDefaultTimer()
+    TimerDevice* getDefaultTimer()
     {
-        return m_defaultTimer == nullptr ? m_timers[0] : *m_defaultTimer;
+        return m_defaultTimer == nullptr ? m_timers[0] : m_defaultTimer;
     }
 
 protected:
@@ -68,7 +68,7 @@ protected:
     DeviceConnectivity*      m_devices;
     Scheduler*               m_scheduler;
     Clock                    m_clock;
-    LinkedList<TimerDevice&> m_timers;
+    LinkedList<TimerDevice*> m_timers;
     TimerDevice*             m_defaultTimer;
 };
 

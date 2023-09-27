@@ -2,8 +2,9 @@
 #include <siberix/core/runtimes.h>
 
 ApicTimerDevice::ApicTimerDevice(ApicLocalInterface& interface)
-    : TimerDevice("APIC Timer"),
-      m_interface(interface) {
+  : TimerDevice("APIC Timer")
+  , m_interface(interface)
+{
     u64 hertz = 1000;
     u32 irq   = 0x20;
     u32 t     = 0xffffffff;
@@ -13,7 +14,7 @@ ApicTimerDevice::ApicTimerDevice(ApicLocalInterface& interface)
     interface.write(LOCAL_APIC_LVT_TIMER, 0x0);
 
     interface.write(LOCAL_APIC_TIMER_INITIAL_COUNT, t);
-    siberix()->getDefaultTimer().sleep(100);
+    siberix()->getDefaultTimer()->sleep(100);
     interface.write(LOCAL_APIC_LVT_TIMER, 0x10000);
 
     m_busClock = (t - time().as(TimeSpan::Millisecond)) * 0x10 * 10;
@@ -25,11 +26,19 @@ ApicTimerDevice::ApicTimerDevice(ApicLocalInterface& interface)
 
 ApicTimerDevice::~ApicTimerDevice() {}
 
-void ApicTimerDevice::sleep(Duration duration) {}
+void
+ApicTimerDevice::sleep(Duration duration)
+{
+}
 
-void ApicTimerDevice::sleep(u64 ms) {}
+void
+ApicTimerDevice::sleep(u64 ms)
+{
+}
 
-Duration ApicTimerDevice::time() {
+Duration
+ApicTimerDevice::time()
+{
     u32 t = m_interface.read(LOCAL_APIC_TIMER_CURRENT_COUNT);
     return Duration(TimeSpan::Millisecond, (m_busClock - t) / 10 / 0x10);
 }

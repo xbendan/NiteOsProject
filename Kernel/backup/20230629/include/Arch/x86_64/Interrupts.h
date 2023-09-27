@@ -5,9 +5,9 @@
 inline void DisableInterrupts() { asm("cli"); }
 inline void EnableInterrupts() { asm("sti"); }
 
-struct InterruptData;
+struct Interrupt;
 
-typedef void (*irqhandle_t)(InterruptData*, RegisterContext*);
+typedef void (*irqhandle_t)(Interrupt*, RegisterContext*);
 
 enum InterruptType
 {
@@ -17,17 +17,17 @@ enum InterruptType
     IntTypeAbort = 0x8
 };
 
-struct InterruptData
+struct Interrupt
 {
-    const char *name;
+    const char *m_name;
     uint8_t type;
-    bool hasErrCode;
+    bool m_hasErrCode;
     irqhandle_t handler;
 
     bool IsFault() { return (type & IntTypeFault); }
     bool IsTrap() { return (type & IntTypeTrap); }
     bool IsInterrupt() { return (type & IntTypeInterrupt); }
-    bool HasErrorCode() { return hasErrCode; }
+    bool HasErrorCode() { return m_hasErrCode; }
 };
 
 bool RegisterIRQ(uint8_t intno, irqhandle_t handler);

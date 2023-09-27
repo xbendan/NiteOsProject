@@ -3,9 +3,10 @@
 
 typedef u32 (*tickreader_t)(u32);
 
-class AcpiTimerDevice : public TimerDevice {
+class AcpiTimerDevice : public TimerDevice
+{
 public:
-    AcpiTimerDevice();
+    AcpiTimerDevice(AcpiFadt* fadt);
     ~AcpiTimerDevice();
 
     void enable() override {}
@@ -16,8 +17,8 @@ public:
     Duration time() override;
 
 private:
-    u8           m_timerLength;
-    AcpiAddress* m_xpmtAddress;
+    u8           m_pmt;
+    AcpiAddress* m_xpmt;
     bool         m_is32bitMode;
     u32          m_data;
     tickreader_t m_reader;

@@ -34,6 +34,8 @@
 #define LOCAL_APIC_ICR_PENDING 0x1000
 #define LOCAL_APIC_NMI ((4 << 8))
 
+#define LOCAL_APIC_BASE 0xFFFFFFFFFF000
+
 #define ICR_VECTOR(x) (x & 0xFF)
 #define ICR_MESSAGE_TYPE_FIXED 0
 #define ICR_MESSAGE_TYPE_LOW_PRIORITY (1 << 8)
@@ -75,6 +77,7 @@ public:
     void setup();
     u32  read(u32 reg);
     void eoi();
+    u8   getApicId() { return apicId; }
 
 private:
     u8   apicId;
@@ -96,7 +99,7 @@ public:
 private:
     ApicLocalInterface& m_interface;
     u64                 m_busClock;
-    u64                 m_ticks;
+    volatile u64        m_ticks;
 };
 
 class ApicDevice : public Device
@@ -108,16 +111,18 @@ public:
     void enable() override;
     void disable() override;
 
-    void                       ioWrite(u32 reg, u32 data);
-    u32                        ioRead(u32 reg);
-    void                       ioWrite64(u32 reg, u64 data);
-    u64                        ioRead64(u32 reg);
-    void                       lWriteBase(u64 val);
-    u64                        lReadBase();
+    void ioWrite(u32 reg, u32 data);
+    u32  ioRead(u32 reg);
+    void ioWrite64(u32 reg, u64 data);
+    u64  ioRead64(u32 reg);
+    void lWriteBase(u64 val);
+    u64  lReadBase();
+
     inline ApicLocalInterface& getInterface(u8 apicId)
     {
         return m_interfaces[apicId];
     }
+
     inline ApicLocalInterface& getInterface()
     {
         return m_interfaces[getCpuLocal()->apicId];
@@ -126,6 +131,7 @@ public:
 private:
     u64           basePhys;
     u64           baseVirtIO;
+    u32           interrupts;
     volatile u32* ioRegSelect;
     volatile u32* ioWindow;
 

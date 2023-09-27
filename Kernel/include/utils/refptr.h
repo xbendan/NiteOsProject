@@ -20,4 +20,4 @@ public:
 protected:
     unsigned* refCount = nullptr;
     T*        obj      = nullptr;
-}
+};

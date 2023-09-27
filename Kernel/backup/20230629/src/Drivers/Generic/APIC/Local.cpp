@@ -10,7 +10,7 @@
 #include <Arch/x86_64/Interrupts.h>
 #include <Arch/x86_64/pic.h>
 
-void SpuriousInterruptHandler(InterruptData *, RegisterContext * regs) { System::Out("Spurious interrupted."); }
+void SpuriousInterruptHandler(Interrupt *, RegisterContext * regs) { System::Out("Spurious interrupted."); }
 
 namespace APIC::Local
 {

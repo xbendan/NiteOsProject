@@ -38,7 +38,7 @@ PageFault(RegisterContext* context)
         asm("cli; hlt");
 }
 
-InterruptData interrupts[256] = {
+Interrupt interrupts[256] = {
     [0]  = {"Division Error",                  IntTypeFault,                 false},
     [1]  = { "Debug",                          (IntTypeFault | IntTypeTrap), false},
     [2]  = { "Non-maskable Interrupt",         IntTypeInterrupt,             false},
@@ -72,13 +72,19 @@ InterruptData interrupts[256] = {
     [30] = { "Security Exception",             IntTypeFault,                 true }
 };
 
+Supplier<Interrupt>
+SbrxkrnlX64Impl::getInterrupt(unsigned index)
+{
+    return Supplier<Interrupt>(index >= 256 ? nullptr : &interrupts[index]);
+}
+
 extern "C" void*
 fDispatchInterrupts(RegisterContext* context)
 {
-    InterruptData* data = &(interrupts[context->intno]);
+    Interrupt* data = &(interrupts[context->intno]);
 
-    if (data->handler != nullptr) {
-        data->handler(context);
+    if (data->m_executor != nullptr) {
+        data->m_executor(context);
     } else if (!(context->ss & 0x3)) {
         Logger::getAnonymousLogger().error(context, "Kernel Panic!");
     }

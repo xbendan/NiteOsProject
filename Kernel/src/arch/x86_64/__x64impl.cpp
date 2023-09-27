@@ -17,8 +17,8 @@
 extern "C" void _lgdt(u64);
 extern "C" void _lidt(u64);
 
-extern void* smpTrampolineStart;
-extern void* smpTrampolineEnd;
+extern void* SMPTrampolineStart;
+extern void* SMPTrampolineEnd;
 
 volatile u16* smpMagicValue      = (u16*)SMP_TRAMPOLINE_DATA_START_FLAG;
 volatile u16* smpTrampolineCpuID = (u16*)SMP_TRAMPOLINE_CPU_ID;
@@ -103,6 +103,7 @@ SiberixKernel::setupArch()
     Logger::getLoggerReceivers().add(&_serialPortReceiver);
     Logger::getAnonymousLogger().success("Initialized serial port logging\n");
 
+    this->m_timers    = LinkedList<TimerDevice*>();
     this->m_memory    = MemoryServiceProvider();
     this->m_devices   = new DeviceConnectivity();
     this->m_scheduler = new Scheduler(&kernelProcess);
@@ -123,6 +124,10 @@ SiberixKernel::setupArch()
     new AcpiPmDevice();        /* ACPI Power Management */
     new PciControllerDevice(); /* PCI Controller */
 
+    memcpy((void*)(SMP_TRAMPOLINE_ENTRY),
+           &SMPTrampolineStart,
+           ((u64)&SMPTrampolineEnd) - ((u64)&SMPTrampolineStart));
+
     _apic = new ApicDevice(); /* APIC Controller */
     getConnectivity()
       ->enumerateDevice(DeviceType::Processor)
@@ -130,10 +135,11 @@ SiberixKernel::setupArch()
           u32 processorId =
             static_cast<ProcessorDevice&>(device).getProcessorId();
           if (processorId) {
-              Logger::getLogger("hw").info("CPU [%u] is being initialized",
-                                           processorId);
-
               ApicLocalInterface& interface = _apic->getInterface(processorId);
+              Logger::getLogger("hw").info(
+                "CPU [%u] is being initialized, apic id [%u]\n",
+                processorId,
+                interface.getApicId());
 
               *smpMagicValue      = 0;
               *smpTrampolineCpuID = processorId;
@@ -144,13 +150,15 @@ SiberixKernel::setupArch()
               asm volatile("mov %%cr3, %%rax" : "=a"(*smpRegisterCR3));
 
               interface.sendInterrupt(ICR_DSH_DEST, ICR_MESSAGE_TYPE_INIT, 0);
-              // Sleep 50 ms
+              //   getDefaultTimer()->sleep(50);
               while (*smpMagicValue != 0xb33f) {
                   interface.sendInterrupt(ICR_DSH_DEST,
                                           ICR_MESSAGE_TYPE_STARTUP,
                                           (SMP_TRAMPOLINE_ENTRY >> 12));
-                  // Sleep 200 ms
+                  //   getDefaultTimer()->sleep(200);
               }
+
+              asm("cli; hlt");
 
               while (!doneInit)
                   asm("pause");

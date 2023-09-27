@@ -6,7 +6,7 @@
 
 using namespace APIC::Local;
 
-void ApicTimerDevice::TimerEvent(InterruptData *data, RegisterContext *regs)
+void ApicTimerDevice::TimerEvent(Interrupt *data, RegisterContext *regs)
 {
     System::Out("Tick!");
     g_Timers[TimerAPIC]->Tick();
