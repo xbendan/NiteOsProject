@@ -1,29 +1,34 @@
-#include <utils/collections.h>
-#include <utils/supplier.h>
+#pragma once
 
-template<typename T>
-class Stream
-{
-public:
-    Stream();
-    Stream(Collection<T>& c);
-    Stream(unsigned size);
-    ~Stream();
+#include <utils/collection.h>
+#include <utils/functions/predicate.h>
+#include <utils/optional.h>
 
-    Stream<T>& filter(bool (*predicate_t)(T&));
+namespace utils {
+    template <typename T>
+    class Stream
+    {
+    public:
+        Stream();
+        Stream(Collection<T>& c);
+        Stream(unsigned size);
+        ~Stream();
 
-    template<typename N>
-    Stream<N>& map(N (*function_t)(T&));
+        Stream<T>& filter(Predicate<T> predicate);
 
-    Supplier<T> findFirst();
+        template <typename N>
+        Stream<N>& map(N (*function_t)(T&));
 
-    bool allMatch(bool (*predicate_t)(T&));
+        Optional<T> findFirst();
 
-    bool anyMatch(bool (*predicate_t)(T&));
+        bool allMatch(utils::function::Predicate<T> predicate);
 
-    void forEach(void (*consume_t)(T&));
+        bool anyMatch(utils::function::Predicate<T> predicate);
 
-    Stream<T>& limit(unsigned size);
+        void forEach(utils::function::Consumer<T> consumer);
 
-    Stream<T>& skip(unsigned size);
-};
+        Stream<T>& limit(unsigned size);
+
+        Stream<T>& skip(unsigned size);
+    };
+}

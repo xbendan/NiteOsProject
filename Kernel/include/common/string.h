@@ -1,3 +1,5 @@
+#pragma once
+
 extern "C"
 {
     void* memset(void* src, int c, unsigned long count);
@@ -25,15 +27,3 @@ extern "C"
 
     char* strdup(const char* s);
 }
-
-class String
-{
-public:
-    String();
-    String(const char* str);
-    ~String();
-
-private:
-    const char* m_string;
-    int         m_length;
-};

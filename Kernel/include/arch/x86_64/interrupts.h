@@ -1,3 +1,5 @@
+#pragma once
+
 #include <arch/x86_64/types.h>
 #include <common/typedefs.h>
 

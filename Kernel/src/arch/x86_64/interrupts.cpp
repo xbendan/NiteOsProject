@@ -72,11 +72,14 @@ Interrupt interrupts[256] = {
     [30] = { "Security Exception",             IntTypeFault,                 true }
 };
 
-Supplier<Interrupt>
+utils::Optional<Interrupt>
 SbrxkrnlX64Impl::getInterrupt(unsigned index)
 {
-    return Supplier<Interrupt>(index >= 256 ? nullptr : &interrupts[index]);
+    return utils::Optional<Interrupt>(index >= 256 ? nullptr
+                                                   : &interrupts[index]);
 }
+
+extern ApicDevice* _apic;
 
 extern "C" void*
 fDispatchInterrupts(RegisterContext* context)

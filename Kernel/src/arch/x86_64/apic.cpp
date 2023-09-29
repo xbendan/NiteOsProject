@@ -91,6 +91,8 @@ ApicDevice::ApicDevice()
     for (int i = 0; i < m_overrides.length(); i++) {
         MadtIso* iso = m_overrides[i];
         ioWrite64(IO_APIC_RED_TABLE_ENT(iso->gSi), iso->irqSource + 0x20);
+        Logger::getLogger("apic").info(
+          "Remapped IRQ from [%u] to [%u]\n", iso->gSi, iso->irqSource + 0x20);
     }
 
     if ((readMSR(0x1b)) != 0) {

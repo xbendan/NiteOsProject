@@ -3,6 +3,7 @@
 #include <common/format.h>
 #include <common/string.h>
 #include <utils/array.h>
+#include <utils/collection.h>
 #include <utils/linked_list.h>
 
 enum LoggerLevel
@@ -24,7 +25,7 @@ class Logger
 {
 public:
     Logger(const char* _name)
-      : name(_name)
+      : m_name(_name)
     {
     }
     Logger() {}
@@ -65,30 +66,31 @@ public:
     /// @return
     const char* getName();
 
-    static void                                 log2all(char* text);
+    static void                                initialize();
     /// @brief
     /// @return
-    static SizedArrayList<LoggerReceiver*, 60>& getLoggerReceivers();
-    static SizedArrayList<Logger*, 256>&        getLoggers();
+    static utils::Collection<LoggerReceiver*>* getLoggerReceivers();
+    static utils::Collection<Logger*>*         getLoggers();
     /**
      * @brief Get a logger with specific name.
      *
      * @param name Logger name
      * @return The pointer to new logger.
      */
-    static Logger&                              getLogger(const char* name);
+    static Logger&                             getLogger(const char* name);
     /**
      * @brief Get an anonymous logger.
      *
      * @return The pointer to new logger.
      */
-    static Logger&                              getAnonymousLogger();
+    static Logger&                             getAnonymousLogger();
 
-public:
-    const char* name;
+private:
+    const char* m_name;
     // SizedArrayList<String, 256> messages;
 
-    static SizedArrayList<LoggerReceiver*, 60> receivers;
-    static SizedArrayList<Logger*, 256>        loggers;
-    static Logger                              anonymousLogger;
+    static utils::Collection<LoggerReceiver*>* receivers;
+    static utils::Collection<Logger*>*         loggers;
+
+    static Logger anonymousLogger;
 };

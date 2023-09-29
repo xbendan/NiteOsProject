@@ -14,7 +14,7 @@ ApicTimerDevice::ApicTimerDevice(ApicLocalInterface& interface)
     interface.write(LOCAL_APIC_LVT_TIMER, 0x0);
 
     interface.write(LOCAL_APIC_TIMER_INITIAL_COUNT, t);
-    siberix()->getDefaultTimer()->sleep(100);
+    siberix()->getTimeNClock().sleep(100);
     interface.write(LOCAL_APIC_LVT_TIMER, 0x10000);
 
     m_busClock = (t - time().as(TimeSpan::Millisecond)) * 0x10 * 10;

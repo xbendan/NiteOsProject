@@ -1,5 +1,6 @@
 #pragma once
 
+#include <arch/x86_64/interrupts.h>
 #include <arch/x86_64/paging.h>
 #include <arch/x86_64/types.h>
 #include <siberix/core/runtimes.h>
@@ -11,8 +12,9 @@ public:
     SbrxkrnlX64Impl();
     ~SbrxkrnlX64Impl();
 
-    bool                setupArch();
-    Supplier<Interrupt> getInterrupt(unsigned index);
+    bool setupArch();
+
+    utils::Optional<Interrupt> getInterrupt(unsigned index);
 
     GdtPackage m_gdt;
     GdtPtr     m_gdtPtr;

@@ -135,8 +135,6 @@ private:
     volatile u32* ioRegSelect;
     volatile u32* ioWindow;
 
-    static ApicLocalInterface            m_interfaces[256];
-    static SizedArrayList<MadtIso*, 256> m_overrides;
+    static ApicLocalInterface   m_interfaces[256];
+    static Array<MadtIso*, 256> m_overrides;
 };
-
-extern ApicDevice* _apic;

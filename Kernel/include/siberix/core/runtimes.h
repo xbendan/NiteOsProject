@@ -1,5 +1,6 @@
 #pragma once
 
+#include <siberix/core/instructions.h>
 #include <siberix/core/power.h>
 #include <siberix/core/time.h>
 #include <siberix/device/connectivity.h>
@@ -9,12 +10,39 @@
 #include <siberix/proc/process.h>
 #include <siberix/proc/sched.h>
 
+#include <utils/result.h>
+
 enum class Architecture
 {
     Undefined,
     X86_64,
     ARMv7,
     RISC_V
+};
+
+class TimeNClock
+{
+public:
+    Clock&                       clock();
+    utils::Optional<TimerDevice> timer();
+    Result<Void> addTimer(TimerDevice* device, bool setAsDefault = false)
+    {
+        if (device == nullptr) {
+            return Result<Void>(ResultResponse::NullPointerException);
+        }
+
+        m_timers.add(device);
+        if (setAsDefault) {
+            m_defaultTimer = device;
+        }
+    }
+    u64  getTimestamp();
+    void sleep(u64) {}
+
+private:
+    Clock                    m_clock;
+    LinkedList<TimerDevice*> m_timers;
+    TimerDevice*             m_defaultTimer;
 };
 
 class SiberixKernel
@@ -36,40 +64,21 @@ public:
     MemoryServiceProvider& getMemory() { return m_memory; }
     DeviceConnectivity*    getConnectivity() { return m_devices; }
     Scheduler*             getScheduler() { return m_scheduler; }
-    Process*               getKernelProcess();
+    TimeNClock&            getTimeNClock() { return m_timeNClocks; }
 
-    u64  getTimestamp();
-    void sleep(u64 ms);
-
-    Clock& getClock() { return m_clock; }
-
-    void addTimer(TimerDevice* timer, bool setAsDefault = false)
-    {
-        // if (!m_timers.contains(timer)) {
-        m_timers.add(timer);
-        if (setAsDefault) {
-            m_defaultTimer = timer;
-        }
-        // }
-    }
-
-    TimerDevice* getDefaultTimer()
-    {
-        return m_defaultTimer == nullptr ? m_timers[0] : m_defaultTimer;
-    }
+    Process* getKernelProcess();
 
 protected:
     bool         m_isInitialized;
     Architecture m_arch;
     BootConfig&  m_bootConfig;
 
-    MemoryServiceProvider    m_memory;
-    PowerEngine              m_energy;
-    DeviceConnectivity*      m_devices;
-    Scheduler*               m_scheduler;
-    Clock                    m_clock;
-    LinkedList<TimerDevice*> m_timers;
-    TimerDevice*             m_defaultTimer;
+    MemoryServiceProvider      m_memory;
+    PowerEngine                m_energy;
+    DeviceConnectivity*        m_devices;
+    Scheduler*                 m_scheduler;
+    LinkedList<InstructionSet> m_instructionSets;
+    TimeNClock                 m_timeNClocks;
 };
 
 SiberixKernel*

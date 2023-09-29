@@ -1,87 +1,101 @@
 #pragma once
 
 #include <common/typedefs.h>
-#include <utils/collections.h>
-#include <utils/supplier.h>
+#include <utils/collection.h>
+#include <utils/optional.h>
 
-template<typename T, unsigned size>
-class Array : public Collection
-{
-public:
-    Array() = default;
-    ~Array() { delete m_arr; }
-
-    int size() override { return size; }
-
-    T& get(unsigned index) override { return m_arr[index]; }
-
-    int indexOf(T& objRef) override
+namespace utils {
+    template <typename T, unsigned Capacity>
+    class Array : public Collection<T>
     {
-        for (unsigned index = 0; index < length(); index++) {
-            if (m_arr[index] == objRef)
-                return index;
-        }
-        return -1;
-    }
+    public:
+        Array() = default;
+        ~Array() {}
 
-    int lastIndexOf(T& objRef) override
-    {
-        int last = -1;
-        for (unsigned index = -1;; index < length(); index++) {
-            if (m_arr[index] == objRef)
-                last = index;
-        }
-        return last;
-    }
+        int size() override { return Capacity; }
 
-    virtual void insert(T& objRef, unsigned index) = 0;
-
-    void add(T& objRef)
-    {
-        if (m_count >= size) {
-            return;
-        }
-        memcpy(&(m_arr[m_count]), &objRef, m_objectSize);
-        m_count++;
-    }
-
-    bool remove(unsigned index) override
-    {
-        if (index < 0 || index >= length()) {
-            return false;
+        Optional<T> get(unsigned index) override
+        {
+            return Optional<T>(index < 0 || index >= length() ? nullptr
+                                                              : &m_arr[index]);
         }
 
-        if (index != size - 1) {
-            memcpy(&(m_arr[index]), &(m_arr[index + 1]), length() - index);
+        int indexOf(T& objRef) override
+        {
+            for (unsigned index = 0; index < length(); index++) {
+                if (m_arr[index] == objRef)
+                    return index;
+            }
+            return -1;
         }
-        m_count--;
-        return true;
-    }
 
-    bool remove(T& objRef) override { return remove(indexOf(objRef)); }
+        int lastIndexOf(T& objRef) override
+        {
+            int last = -1;
+            for (unsigned index = -1; index < length(); index++) {
+                if (m_arr[index] == objRef)
+                    last = index;
+            }
+            return last;
+        }
 
-    Stream<T>& stream() override {}
+        void insert(T& objRef, unsigned index) override {}
 
-    unsigned length() { return m_count; }
+        void add(T& objRef)
+        {
+            if (m_count >= Capacity) {
+                return;
+            }
+            memcpy(&(m_arr[m_count]), &objRef, m_objectSize);
+            m_count++;
+        }
 
-    unsigned getObjectSize() { return m_objectSize; }
+        bool remove(unsigned index) override
+        {
+            if (index < 0 || index >= length()) {
+                return false;
+            }
 
-    Supplier<T> operator[](int index)
-    {
-        return Supplier<T>(index < 0 || index >= length() ? nullptr
-                                                          : &m_arr[index]);
-    }
+            if (index != Capacity - 1) {
+                memcpy(&(m_arr[index]), &(m_arr[index + 1]), length() - index);
+            }
+            m_count--;
+            return true;
+        }
 
-    void operator+=(T& objRef) { add(objRef); }
-    void operator-=(T& objRef) { remove(objRef); }
+        bool remove(T& objRef) override { return remove(indexOf(objRef)); }
 
-private:
-    T        m_arr[size];
-    unsigned m_count;
-    unsigned m_objectSize = sizeof(T);
-};
+        Stream<T>& stream() override {}
 
-template<typename T>
+        void forEach(
+          const utils::function::Function<void(T)>& consumer) override
+        {
+            for (int i = 0; i < m_count; i++) {
+                consumer(m_arr[i]);
+            }
+        }
+
+        unsigned length() { return m_count; }
+
+        unsigned getObjectSize() { return m_objectSize; }
+
+        Optional<T> operator[](int index)
+        {
+            return Optional<T>(index < 0 || index >= length() ? nullptr
+                                                              : &m_arr[index]);
+        }
+
+        void operator+=(T& objRef) { add(objRef); }
+        void operator-=(T& objRef) { remove(objRef); }
+
+    private:
+        T        m_arr[Capacity];
+        unsigned m_count;
+        unsigned m_objectSize = sizeof(T);
+    };
+}
+
+template <typename T>
 class ArrayList
 {
 private:
@@ -104,7 +118,7 @@ public:
     ~ArrayList() { delete[] array; }
 };
 
-template<typename T, int size>
+template <typename T, int size>
 class SizedArrayList
 {
 private:

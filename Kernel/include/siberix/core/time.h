@@ -3,7 +3,8 @@
 #include <common/typedefs.h>
 #include <utils/linked_list.h>
 
-enum class TimeSpan {
+enum class TimeSpan
+{
     Nanosecond,
     Microsecond,
     Millisecond,
@@ -15,25 +16,32 @@ enum class TimeSpan {
     Year
 };
 
-struct Month {
-    const char *fullname;
-    const char *abbr;
+struct Month
+{
+    const char* fullname;
+    const char* abbr;
     u8          index;
     u8          days;
 };
 
-struct Duration {
+struct Duration
+{
     TimeSpan span;
     u64      amount;
 
     constexpr Duration(TimeSpan s, u64 a)
-        : span(s),
-          amount(a) {}
+      : span(s)
+      , amount(a)
+    {
+    }
     constexpr Duration(u64 ms)
-        : span(TimeSpan::Millisecond),
-          amount(ms) {}
+      : span(TimeSpan::Millisecond)
+      , amount(ms)
+    {
+    }
 
-    constexpr u64 as(TimeSpan _span) {
+    constexpr u64 as(TimeSpan _span)
+    {
         switch (span) {
             case TimeSpan::Nanosecond: {
                 return amount / 1000000;
@@ -67,17 +75,21 @@ struct Duration {
     }
 };
 
-class Clock {
+class Clock
+{
 public:
     Clock() = default;
     Clock(u32 s, u32 mi, u32 h, u32 d, u32 mo, u32 y)
-        : seconds(s),
-          minutes(mi),
-          hours(h),
-          days(d),
-          months(mo),
-          years(y) {}
-    Clock(u64 timestamp) {
+      : seconds(s)
+      , minutes(mi)
+      , hours(h)
+      , days(d)
+      , months(mo)
+      , years(y)
+    {
+    }
+    Clock(u64 timestamp)
+    {
         seconds    = timestamp % 60;
         timestamp /= 60;
         minutes    = timestamp % 60;
@@ -98,11 +110,13 @@ public:
     u32 getDays() { return days; }
     u32 getMonths() { return months; }
     u32 getYears() { return years; }
-    u64 getAsTimestamp() {
-        return (u64)seconds + (u64)minutes * 60 + (u64)hours * 3600 + (u64)days * 86400 +
-               (u64)months * 2592000 + (u64)years * 31104000;
+    u64 getAsTimestamp()
+    {
+        return (u64)seconds + (u64)minutes * 60 + (u64)hours * 3600 +
+               (u64)days * 86400 + (u64)months * 2592000 +
+               (u64)years * 31104000;
     }
-    const char *getAsString();
+    const char* getAsString();
 
 private:
     u32 seconds;

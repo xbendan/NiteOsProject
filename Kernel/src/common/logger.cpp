@@ -1,29 +1,39 @@
 #include <common/format.h>
 #include <common/logger.h>
 
-SizedArrayList<Logger*, 256> Logger::loggers = SizedArrayList<Logger*, 256>();
-SizedArrayList<LoggerReceiver*, 60> Logger::receivers =
-  SizedArrayList<LoggerReceiver*, 60>();
-Logger Logger::anonymousLogger("system");
+#include <utils/array.h>
+
+Logger Logger::anonymousLogger("_");
 
 char*              logPrefix   = "[%s]";
 static const char* logLevels[] = { "Info", "Success", "Warn", "Error" };
 
 void
+Logger::initialize()
+{
+    static utils::Array<Logger*, 256> _loggers = utils::Array<Logger*, 256>();
+    static utils::Array<LoggerReceiver*, 60> _receivers =
+      utils::Array<LoggerReceiver*, 60>();
+
+    loggers   = static_cast<utils::Collection<Logger*>*>(&_loggers);
+    receivers = static_cast<utils::Collection<LoggerReceiver*>*>(&_receivers);
+}
+
+void
 Logger::log(LoggerLevel level, const char* fmt, va_list args)
 {
-    char buf[256];
-    memset(buf, 0, 256);
+    char buf0[8];
+    char buf1[256];
+    strfmt(buf0, "[%s] ", logLevels[level]);
+    strfmt(buf1, fmt, args);
+    for (int i = 0; i < receivers->size(); i++) {
+        LoggerReceiver* r = *((*receivers)[i].get());
+        r->write(buf0);
+        r->write(buf1);
+    };
 
-    strfmt(buf, "[%s] ", logLevels[level]);
-    for (int i = 0; i < receivers.length(); i++) {
-        receivers[i]->write(buf);
-    }
-
-    strfmts(buf, fmt, args);
-    for (int i = 0; i < receivers.length(); i++) {
-        receivers[i]->write(buf);
-    }
+    receivers->forEach(utils::function::Function<void(LoggerReceiver*)>(
+      [](LoggerReceiver* r) -> void { r->write(buf0); }));
 }
 
 void
@@ -91,16 +101,16 @@ Logger::error(void* regs, const char* fmt, ...)
 const char*
 Logger::getName()
 {
-    return name;
+    return m_name;
 }
 
-SizedArrayList<Logger*, 256>&
+utils::Collection<Logger*>*
 Logger::getLoggers()
 {
     return loggers;
 }
 
-SizedArrayList<LoggerReceiver*, 60>&
+utils::Collection<LoggerReceiver*>*
 Logger::getLoggerReceivers()
 {
     return receivers;
@@ -109,14 +119,15 @@ Logger::getLoggerReceivers()
 Logger&
 Logger::getLogger(const char* name)
 {
-    for (int i = 0; i < loggers.length(); i++) {
-        if (strcmp(loggers[i]->getName(), name) == 0) {
-            return *loggers[i];
+    for (int i = 0; i < loggers->size(); i++) {
+        Logger* loggerPtr = *(loggers->get(i).get());
+        if (strcmp(loggerPtr->getName(), name) == 0) {
+            return *loggerPtr;
         }
     }
 
     Logger* logger = new Logger(name);
-    Logger::getLoggers().add(logger);
+    Logger::getLoggers()->add(logger);
     return *logger;
 }
 

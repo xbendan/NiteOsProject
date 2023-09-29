@@ -86,8 +86,8 @@ public:
         return this->m_deviceId == device.m_deviceId;
     }
 
-    virtual void enable()  = 0;
-    virtual void disable() = 0;
+    virtual void enable() {}
+    virtual void disable() {}
 
 protected:
     const char* m_name;
