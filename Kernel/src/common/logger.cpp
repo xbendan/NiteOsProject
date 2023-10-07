@@ -31,9 +31,6 @@ Logger::log(LoggerLevel level, const char* fmt, va_list args)
         r->write(buf0);
         r->write(buf1);
     };
-
-    receivers->forEach(utils::function::Function<void(LoggerReceiver*)>(
-      [](LoggerReceiver* r) -> void { r->write(buf0); }));
 }
 
 void

@@ -26,6 +26,6 @@ namespace utils {
         virtual bool               remove(T& objRef)                 = 0;
         virtual Stream<T>&         stream()                          = 0;
 
-        virtual void forEach(utils::function::Function<void(T)>& consumer) = 0;
+        virtual void forEach(utils::function::Function<void(T)> consumer) = 0;
     };
 }
