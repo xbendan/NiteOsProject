@@ -1,6 +1,40 @@
+#include <common/cstring.h>
 #include <siberix/mm/page.h>
 
 #define SLAB_MAX_BLOCK_ORDER 16
+
+namespace siberix::mm::slices {
+
+    class SliceCpuCache
+    {
+        /*
+         * Pointer to the next object, this is a double pointer
+         * because the area this pointer point to is also a pointer
+         * to the next object.
+         */
+        void**                       m_freelist;
+        PageFrame*                   m_page;
+        utils::LinkedList<PageFrame> m_partial;
+    };
+
+    class SliceNuma
+    {
+        Spinlock                     m_spinlock;
+        UInt64                       m_partial;
+        utils::LinkedList<PageFrame> m_partial;
+    };
+
+    class SliceCargo
+    {
+        String m_name;
+        UInt32 m_size;
+        UInt64 m_flags;
+        UInt32 m_objectSize;
+        UInt32 m_objectAlign;
+        UInt32 m_offset;
+        UInt64 m_partial;
+    };
+}
 
 struct SlabCpuCache
 {

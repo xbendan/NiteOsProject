@@ -14,7 +14,7 @@ namespace utils {
         Collection()  = default;
         ~Collection() = default;
 
-        Optional<T> operator[](unsigned index) { return get(index); }
+        virtual Optional<T> operator[](unsigned index) { return get(index); }
 
         virtual int                size()                            = 0;
         virtual utils::Optional<T> get(unsigned index)               = 0;

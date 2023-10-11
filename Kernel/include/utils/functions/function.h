@@ -1,6 +1,5 @@
 #pragma once
 
-#include <utils/tuple.h>
 #include <utils/type_check.h>
 
 namespace utils::function {

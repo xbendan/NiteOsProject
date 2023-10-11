@@ -30,6 +30,8 @@ namespace utils {
             return m_objPtr == val.m_objPtr;
         }
 
+        static Optional<Type> Empty<Type>() { return Optional<Type>(); }
+
     private:
         T* m_objPtr;
     };

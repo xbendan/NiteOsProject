@@ -4,6 +4,11 @@
 #include <siberix/mm/page.h>
 #include <siberix/mm/types.h>
 
+namespace siberix::mm {
+    class MemoryAllocator
+    {};
+}
+
 class MemoryServiceProvider
 {
 public:

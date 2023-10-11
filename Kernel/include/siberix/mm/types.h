@@ -4,6 +4,29 @@
 #include <utils/linked_list.h>
 #include <utils/spinlock.h>
 
+namespace siberix::mm {
+
+    class PageFrame
+    {
+        unsigned char m_orderInList;
+        unsigned char m_flags;
+        struct
+        {
+            unsigned _inuse : 16;
+            unsigned _objects : 15;
+            unsigned _frozen : 1;
+        } m_slab __attribute__((packed));
+        union
+        {
+            PageFrame* m_pageHead;
+            void*      m_sliceCargo; // If this page was put into cargo
+        };
+        void**             m_cargos;
+        Spinlock           m_spinlock;
+        unsigned long long m_address;
+    };
+}
+
 enum PageBlockType
 {
     Available,

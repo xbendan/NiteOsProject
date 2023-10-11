@@ -4,6 +4,36 @@
 #include <siberix/device/types.h>
 #include <siberix/proc/process.h>
 #include <utils/array.h>
+#include <utils/queue.h>
+
+namespace siberix::proc::scheduling {
+
+    using namespace utils;
+
+    class ThreadQueue : public utils::Queue<Thread>
+    {
+    public:
+        void computeNewPriority();
+        void computeNewPriority(u8 dynamic);
+        void cleanThreads();
+    };
+
+    class Scheduler
+    {
+    public:
+        Scheduler(Process* kernelProcess);
+        ~Scheduler();
+
+        void                     switchNewThread(Thread* newThread);
+        bool                     addProcess(Process* process);
+        bool                     addProcess(Process* process, u8 priority);
+        Result<Process>          getProcessById(u16 processId);
+        Process*                 getKernelProcess();
+        ProcessFactory*          getProcessFactory();
+        Collection<Process*>*    getProcessList();
+        ArrayList<ThreadQueue*>* getThreadQueues();
+    };
+}
 
 class ThreadQueue
 {
