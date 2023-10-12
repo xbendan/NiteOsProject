@@ -11,7 +11,7 @@ SlabAlloc::SlabAlloc(PageAlloc* pageAlloc)
 {
     int           i = 0;
     AddressSpace* addressSpace =
-      siberix()->getKernelProcess()->getAddressSpace();
+      kern()->getKernelProcess()->getAddressSpace();
     for (; i < SLAB_MAX_BLOCK_ORDER; i += 1) {
         u64 phys = pageAlloc->allocatePhysMemory4K(4),
             virt = addressSpace->allocate4KPages(4);
@@ -43,9 +43,9 @@ SlabAlloc::alloc(u64 size)
     if (size > PAGE_SIZE_4K) {
         Logger::getAnonymousLogger().warn(
           "Try to allocate object over size (%u)\n", size);
-        return siberix()->getMemory().alloc4KPages(
+        return kern()->getMemory().alloc4KPages(
           alignUp(size, PAGE_SIZE_4K) / PAGE_SIZE_4K,
-          siberix()->getKernelProcess()->getAddressSpace());
+          kern()->getKernelProcess()->getAddressSpace());
     }
 
     /*
@@ -102,8 +102,8 @@ PageFrame*
 SlabCache::request4KPage(u64* addrVirt)
 {
     PageFrame* page;
-    u64        addr = siberix()->getMemory().alloc4KPages(
-      1, siberix()->getKernelProcess()->getAddressSpace(), &page);
+    u64        addr = kern()->getMemory().alloc4KPages(
+      1, kern()->getKernelProcess()->getAddressSpace(), &page);
 
     if (addrVirt != nullptr) {
         *addrVirt = addr;

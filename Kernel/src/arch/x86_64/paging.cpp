@@ -139,7 +139,7 @@ X64KernelAddressSpace::allocate4KPages(u64 amount)
             counter++;
             if (counter >= amount) {
                 // u64 physMemory =
-                //   siberix()->getMemory().allocPhysMemory4K(amount);
+                //   kern()->getMemory().allocPhysMemory4K(amount);
                 address =
                   ((pageDirOffset * PAGE_SIZE_2M) + (offset * PAGE_SIZE_4K)) |
                   0xFFFFFFFFC0000000;
@@ -185,10 +185,10 @@ X64KernelAddressSpace::map(u64 phys, u64 virt, u64 amount)
         if (!pageTable) {
             Logger::getAnonymousLogger().warn("No page table.");
 
-            u64 pageDirPhys = siberix()->getMemory().allocPhysMemory4K(1),
+            u64 pageDirPhys = kern()->getMemory().allocPhysMemory4K(1),
                 pageDirVirt = allocate4KPages(1);
             map(pageDirPhys, pageDirVirt, 1);
-            u64 pageTablesPhys = siberix()->getMemory().allocPhysMemory4K(512),
+            u64 pageTablesPhys = kern()->getMemory().allocPhysMemory4K(512),
                 pageTablesVirt = allocate4KPages(512);
             map(pageTablesPhys, pageTablesVirt, 512);
 

@@ -169,14 +169,14 @@ kload_stivale2(stivale2_struct* pointer)
 }
 
 SbrxkrnlX64Impl::SbrxkrnlX64Impl()
-  : SiberixKernel(Architecture::X86_64, bootConfig)
+  : KernelComponents(Architecture::X86_64, bootConfig)
 {
 }
 
 SbrxkrnlX64Impl::~SbrxkrnlX64Impl() {}
 
 BootConfig&
-SiberixKernel::getBootConfig()
+KernelComponents::getBootConfig()
 {
     return bootConfig;
 }

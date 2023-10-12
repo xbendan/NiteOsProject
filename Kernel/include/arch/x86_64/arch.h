@@ -4,9 +4,10 @@
 #include <arch/x86_64/paging.h>
 #include <arch/x86_64/types.h>
 #include <siberix/core/runtimes.h>
+#include <siberix/hal/hwcpu.h>
 #include <siberix/mm/addrspace.h>
 
-class SbrxkrnlX64Impl : public SiberixKernel
+class SbrxkrnlX64Impl : public KernelComponents
 {
 public:
     SbrxkrnlX64Impl();
@@ -19,7 +20,6 @@ public:
     GdtPackage m_gdt;
     GdtPtr     m_gdtPtr;
     IdtPtr     m_idtPtr;
-    Cpu*       m_cpus[256];
 };
 
 static inline u64

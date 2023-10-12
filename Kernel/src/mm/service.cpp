@@ -16,7 +16,7 @@ extern Process kernelProcess;
 
 MemoryServiceProvider::MemoryServiceProvider()
 {
-    BootConfig& bootConfig = siberix()->getBootConfig();
+    BootConfig& bootConfig = kern()->getBootConfig();
     Logger::getAnonymousLogger().info(
       "[%u] bytes memory detected.\n[%u] bytes usable.\nMax memory address is "
       "at [0x%x].\n",
@@ -50,7 +50,7 @@ MemoryServiceProvider::MemoryServiceProvider()
     this->m_pageAlloc = _segAlloc = &segAlloc;
 
     AddressSpace* kernelAddressSpace =
-      siberix()->getKernelProcess()->getAddressSpace();
+      kern()->getKernelProcess()->getAddressSpace();
     u64 address = 0;
     for (int i = 0; i < 256 && m_pageBlocks[i].m_end; i++) {
         pageBlock = &m_pageBlocks[i];

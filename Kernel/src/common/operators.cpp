@@ -3,19 +3,19 @@
 void*
 operator new(unsigned long size)
 {
-    return (void*)siberix()->getMemory().alloc(size);
+    return (void*)kern()->getMemory().alloc(size);
 }
 
 void*
 operator new[](unsigned long size)
 {
-    return (void*)siberix()->getMemory().alloc(size);
+    return (void*)kern()->getMemory().alloc(size);
 }
 
 void
 operator delete(void* p)
 {
-    siberix()->getMemory().free((u64)p);
+    kern()->getMemory().free((u64)p);
 }
 
 void
@@ -27,7 +27,7 @@ operator delete(void* p, unsigned long)
 void
 operator delete[](void* p)
 {
-    siberix()->getMemory().free((u64)p);
+    kern()->getMemory().free((u64)p);
 }
 
 void

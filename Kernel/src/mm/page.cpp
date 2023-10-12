@@ -12,7 +12,7 @@ pfn2page(u64 pfn)
 {
     u32 sectionId = pfn >> 18;
     u32 offset    = pfn - (sectionId * 262144);
-    return &(siberix()->getMemory().getPageSect(sectionId).pages[offset]);
+    return &(kern()->getMemory().getPageSect(sectionId).pages[offset]);
 };
 
 PageFrame*
@@ -24,5 +24,5 @@ addr2page(u64 address)
 PageSection*
 addr2sect(u64 address)
 {
-    return &(siberix()->getMemory().getPageSect(address >> 30));
+    return &(kern()->getMemory().getPageSect(address >> 30));
 }

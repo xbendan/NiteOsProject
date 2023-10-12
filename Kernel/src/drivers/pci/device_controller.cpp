@@ -12,7 +12,7 @@ PciControllerDevice::PciControllerDevice()
     m_enhancedAddressList = LinkedList<McfgAddress*>();
 
     AcpiPmDevice* acpiDevice = reinterpret_cast<AcpiPmDevice*>(
-      siberix()->getConnectivity()->findDevice("ACPI Power Management"));
+      kern()->getConnectivity()->findDevice("ACPI Power Management"));
     if (acpiDevice == nullptr) {
         Logger::getLogger("pci").error(
           "No ACPI Device found. Abort to load PCI controller.\n");
@@ -54,7 +54,7 @@ PciControllerDevice::PciControllerDevice()
     }
 
     m_flags    |= DeviceFlags::DeviceInitialized;
-    m_deviceId  = siberix()->getConnectivity()->registerDevice(this);
+    m_deviceId  = kern()->getConnectivity()->registerDevice(this);
 }
 
 PciControllerDevice::~PciControllerDevice() {}

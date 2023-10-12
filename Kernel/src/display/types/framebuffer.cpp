@@ -7,7 +7,7 @@
 
 FramebufferVideoOutput::FramebufferVideoOutput()
     : PixelVideoOutput(nullptr) {
-    BootConfig& boot = siberix()->getBootConfig();
+    BootConfig& boot = kern()->getBootConfig();
 
     if (!boot.graphic[0].address) {
         return;
@@ -58,11 +58,11 @@ void FramebufferVideoOutput::setBufferOptions(bool isDoubleBuffering) {
     }
     u64 size = m_width * m_height * m_bytesPerPixel;
     if (isDoubleBuffering) {
-        siberix()->getMemory().free4KPages((u64)m_buffer,
+        kern()->getMemory().free4KPages((u64)m_buffer,
                                            alignUp(size, static_cast<u64>(PAGE_SIZE_4K)));
     } else {
         m_doubleBuffering = reinterpret_cast<u8*>(
-            siberix()->getMemory().alloc4KPages(alignUp(size, static_cast<u64>(PAGE_SIZE_4K))));
+            kern()->getMemory().alloc4KPages(alignUp(size, static_cast<u64>(PAGE_SIZE_4K))));
     }
     m_isDoubleBuffering = isDoubleBuffering;
 }

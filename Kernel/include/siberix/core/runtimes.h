@@ -45,16 +45,16 @@ private:
     TimerDevice*             m_defaultTimer;
 };
 
-class SiberixKernel
+class KernelComponents
 {
 public:
-    SiberixKernel(Architecture arch, BootConfig& bootConfig)
+    KernelComponents(Architecture arch, BootConfig& bootConfig)
       : m_isInitialized(false)
       , m_arch(arch)
       , m_bootConfig(bootConfig)
     {
     }
-    ~SiberixKernel() {}
+    ~KernelComponents() {}
 
     bool setupArch();
 
@@ -73,13 +73,15 @@ protected:
     Architecture m_arch;
     BootConfig&  m_bootConfig;
 
-    MemoryServiceProvider      m_memory;
-    PowerEngine                m_energy;
-    DeviceConnectivity*        m_devices;
-    Scheduler*                 m_scheduler;
-    LinkedList<InstructionSet> m_instructionSets;
-    TimeNClock                 m_timeNClocks;
+    MemoryServiceProvider m_memory;
+    PowerEngine           m_energy;
+    DeviceConnectivity*   m_devices;
+    Scheduler*            m_scheduler;
+    TimeNClock            m_timeNClocks;
+
+    utils::LinkedList<InstructionSet>                        m_instructionSets;
+    utils::Collection<siberix::hal::LogicalProcessingUnit*>* m_cpus;
 };
 
-SiberixKernel*
-siberix();
+KernelComponents*
+kern();

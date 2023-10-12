@@ -34,7 +34,7 @@ SmbiosDevice::SmbiosDevice()
 
     if (m_version) {
         m_flags    |= DeviceInitialized;
-        m_deviceId  = siberix()->getConnectivity()->registerDevice(this);
+        m_deviceId  = kern()->getConnectivity()->registerDevice(this);
     } else {
         Logger::getLogger("smbios").error("SMBIOS structure not detected.");
     }

@@ -14,7 +14,7 @@ Process::Process(const char *_name, File *_file, u32 _processId, TaskType _type)
     }
 
     m_flags |= (ProcessFlagIdle);
-    // m_mainThread  = siberix()->getProcessFactory()->createThread(this);
+    // m_mainThread  = kern()->getProcessFactory()->createThread(this);
     // m_childrenThreadList.add(new ListNode<Thread *>(m_mainThread));
 }
 

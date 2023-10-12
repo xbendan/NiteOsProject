@@ -5,14 +5,14 @@
 #include <siberix/device/types.h>
 #include <siberix/drivers/acpi/acpi_device.h>
 
-ApicLocalInterface            ApicDevice::m_interfaces[256];
+ApicLocal            ApicDevice::m_interfaces[256];
 SizedArrayList<MadtIso*, 256> ApicDevice::m_overrides;
 
 ApicDevice::ApicDevice()
   : Device("Advanced Programmable Interrupt Controller")
 {
     AcpiPmDevice* acpiDevice = static_cast<AcpiPmDevice*>(
-      siberix()->getConnectivity()->findDevice("ACPI Power Management"));
+      kern()->getConnectivity()->findDevice("ACPI Power Management"));
     if (acpiDevice == nullptr) {
         Logger::getLogger("apic").warn(
           "ACPI device not detected! Stop loading APIC.");
@@ -28,11 +28,11 @@ ApicDevice::ApicDevice()
             case 0x00: /* Processor Local APIC */ {
                 MadtLocalApic* apicLocal = static_cast<MadtLocalApic*>(entry);
                 if (apicLocal->flags & 0x3) {
-                    siberix()->getConnectivity()->registerDevice(
+                    kern()->getConnectivity()->registerDevice(
                       new ProcessorDevice(apicLocal->apicId));
 
                     m_interfaces[apicLocal->apicId] =
-                      ApicLocalInterface(apicLocal->apicId, this);
+                      ApicLocal(apicLocal->apicId, this);
                 }
                 break;
             }
@@ -99,7 +99,7 @@ ApicDevice::ApicDevice()
         m_flags |= DeviceFlags::DeviceInitialized;
     }
 
-    siberix()->getConnectivity()->registerDevice(this);
+    kern()->getConnectivity()->registerDevice(this);
 }
 
 ApicDevice::~ApicDevice() {}

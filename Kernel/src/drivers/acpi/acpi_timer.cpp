@@ -71,7 +71,7 @@ AcpiTimerDevice::AcpiTimerDevice(AcpiFadt* fadt)
       "ACPI timer initialized with address space %u\n", m_xpmt->addressSpace);
 
     m_flags    |= DeviceInitialized;
-    m_deviceId  = siberix()->getConnectivity()->registerDevice(this);
+    m_deviceId  = kern()->getConnectivity()->registerDevice(this);
 }
 
 AcpiTimerDevice::~AcpiTimerDevice() {}

@@ -10,7 +10,7 @@ Device::Device(const char* _name, DeviceBus _bus, DeviceType _type)
   , m_bus(_bus)
   , m_type(_type)
 {
-    // m_deviceId = siberix()->getConnectivity()->registerDevice(this);
+    // m_deviceId = kern()->getConnectivity()->registerDevice(this);
 
     m_flags |= DeviceFlags::DeviceInstalled;
     m_flags |= DeviceFlags::DeviceInitialized;
@@ -21,7 +21,7 @@ Device::Device(const char* _name)
   , m_bus(DeviceBus::Unknown)
   , m_type(DeviceType::Unknown)
 {
-    // m_deviceId = siberix()->getConnectivity().registerDevice(this);
+    // m_deviceId = kern()->getConnectivity().registerDevice(this);
 }
 
 Device::Device(DeviceBus bus, DeviceType type)
@@ -29,7 +29,7 @@ Device::Device(DeviceBus bus, DeviceType type)
   , m_bus(bus)
   , m_type(type)
 {
-    // m_deviceId = siberix()->getConnectivity().registerDevice(this);
+    // m_deviceId = kern()->getConnectivity().registerDevice(this);
 }
 
 Device::~Device() {}

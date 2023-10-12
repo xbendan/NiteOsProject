@@ -20,7 +20,7 @@ IntervalTimerDevice::IntervalTimerDevice(u32 freq)
   : TimerDevice("Programmable Interval Timer Device")
   , m_frequency(freq)
 {
-    static_cast<SbrxkrnlX64Impl*>(siberix())->getInterrupt(0x20).ifPresent(
+    static_cast<SbrxkrnlX64Impl*>(kern())->getInterrupt(0x20).ifPresent(
       [](Interrupt& interrupt) -> void {
           interrupt.setExecutor(TimerTickEvent);
       });

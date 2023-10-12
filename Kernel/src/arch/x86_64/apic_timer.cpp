@@ -1,7 +1,7 @@
 #include <arch/x86_64/apic.h>
 #include <siberix/core/runtimes.h>
 
-ApicTimerDevice::ApicTimerDevice(ApicLocalInterface& interface)
+ApicTimerDevice::ApicTimerDevice(ApicLocal& interface)
   : TimerDevice("APIC Timer")
   , m_interface(interface)
 {
@@ -14,7 +14,7 @@ ApicTimerDevice::ApicTimerDevice(ApicLocalInterface& interface)
     interface.write(LOCAL_APIC_LVT_TIMER, 0x0);
 
     interface.write(LOCAL_APIC_TIMER_INITIAL_COUNT, t);
-    siberix()->getTimeNClock().sleep(100);
+    kern()->getTimeNClock().sleep(100);
     interface.write(LOCAL_APIC_LVT_TIMER, 0x10000);
 
     m_busClock = (t - time().as(TimeSpan::Millisecond)) * 0x10 * 10;

@@ -71,14 +71,14 @@ AcpiPmDevice::AcpiPmDevice()
     /* Initialize ACPI Timer */
     TimerDevice* device = new AcpiTimerDevice(fadt);
     if (device->isWorking()) {
-        siberix()->addTimer(device, true);
+        kern()->addTimer(device, true);
     } else {
         Logger::getLogger("acpi").error(
           "ACPI Timer ran into problem. Giving up installing.");
     }
 
     m_flags    |= DeviceInitialized;
-    m_deviceId  = siberix()->getConnectivity()->registerDevice(this);
+    m_deviceId  = kern()->getConnectivity()->registerDevice(this);
 };
 
 AcpiPmDevice::~AcpiPmDevice() {}

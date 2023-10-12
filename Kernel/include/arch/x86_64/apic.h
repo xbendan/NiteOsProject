@@ -64,12 +64,12 @@
 
 class ApicDevice;
 
-class ApicLocalInterface
+class ApicLocal
 {
 public:
-    ApicLocalInterface();
-    ApicLocalInterface(u8 _apicId, ApicDevice* _apic);
-    ~ApicLocalInterface();
+    ApicLocal();
+    ApicLocal(u8 _apicId, ApicDevice* _apic);
+    ~ApicLocal();
 
     void sendInterrupt(u32 vector);
     void sendInterrupt(u32 dsh, u32 type, u8 vector);
@@ -89,7 +89,7 @@ private:
 class ApicTimerDevice : public TimerDevice
 {
 public:
-    ApicTimerDevice(ApicLocalInterface& interface);
+    ApicTimerDevice(ApicLocal& interface);
     ~ApicTimerDevice();
 
     void     sleep(Duration duration) override;
@@ -97,7 +97,7 @@ public:
     Duration time() override;
 
 private:
-    ApicLocalInterface& m_interface;
+    ApicLocal& m_interface;
     u64                 m_busClock;
     volatile u64        m_ticks;
 };
@@ -118,12 +118,12 @@ public:
     void lWriteBase(u64 val);
     u64  lReadBase();
 
-    inline ApicLocalInterface& getInterface(u8 apicId)
+    inline ApicLocal& getInterface(u8 apicId)
     {
         return m_interfaces[apicId];
     }
 
-    inline ApicLocalInterface& getInterface()
+    inline ApicLocal& getInterface()
     {
         return m_interfaces[getCpuLocal()->apicId];
     }
@@ -135,6 +135,6 @@ private:
     volatile u32* ioRegSelect;
     volatile u32* ioWindow;
 
-    static ApicLocalInterface   m_interfaces[256];
+    static ApicLocal   m_interfaces[256];
     static Array<MadtIso*, 256> m_overrides;
 };

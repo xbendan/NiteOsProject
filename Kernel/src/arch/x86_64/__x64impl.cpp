@@ -37,8 +37,8 @@ ApicDevice*                    _apic;
 SerialPortDevice               _serialPort;
 SerialPortLoggerReceiver       _serialPortReceiver;
 
-SiberixKernel*
-siberix()
+KernelComponents*
+kern()
 {
     return &sbrxkrnl;
 }
@@ -46,7 +46,7 @@ siberix()
 void
 trampolineStart(u16 cpuId)
 {
-    SbrxkrnlX64Impl* sbrxkrnl = static_cast<SbrxkrnlX64Impl*>(siberix());
+    SbrxkrnlX64Impl* sbrxkrnl = static_cast<SbrxkrnlX64Impl*>(kern());
     Cpu*             cpu      = getCpuLocal();
 
     setCpuLocal(cpu);
@@ -78,7 +78,7 @@ trampolineStart(u16 cpuId)
 }
 
 bool
-SiberixKernel::setupArch()
+KernelComponents::setupArch()
 {
     asm("cli");
     SbrxkrnlX64Impl* k = reinterpret_cast<SbrxkrnlX64Impl*>(this);
@@ -141,7 +141,7 @@ SiberixKernel::setupArch()
           u32 processorId =
             static_cast<ProcessorDevice&>(device).getProcessorId();
           if (processorId) {
-              ApicLocalInterface& interface = _apic->getInterface(processorId);
+              ApicLocal& interface = _apic->getInterface(processorId);
               Logger::getLogger("hw").info(
                 "CPU [%u] is being initialized, apic id [%u]\n",
                 processorId,
@@ -175,7 +175,7 @@ SiberixKernel::setupArch()
 }
 
 Process*
-SiberixKernel::getKernelProcess()
+KernelComponents::getKernelProcess()
 {
     return &kernelProcess;
 }
@@ -188,8 +188,7 @@ TaskStateSegment::init(GdtPackage* package)
     memset(this, 0, sizeof(TaskStateSegment));
 
     for (int i = 0; i < 3; i++) {
-        ist[i] =
-          (u64)siberix()->getMemory().alloc4KPages(8, kernelAddressSpace);
+        ist[i] = (u64)kern()->getMemory().alloc4KPages(8, kernelAddressSpace);
         memset((void*)ist[i], 0, PAGE_SIZE_4K);
         ist[i] += PAGE_SIZE_4K * 8;
     }

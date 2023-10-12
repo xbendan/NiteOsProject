@@ -32,6 +32,6 @@ kmain(BootConfig& bootConfig)
     //     s_ctors[i]();
     // }
 
-    siberix()->setupArch();
+    kern()->setupArch();
     drawSplash();
 }
