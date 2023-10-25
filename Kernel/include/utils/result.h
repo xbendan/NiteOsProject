@@ -50,7 +50,12 @@ public:
       , m_response(response)
     {
     }
-    Result(T const* objPtr, ResultResponse response)
+    Result(T* const objPtr)
+      : Optional<T>(objPtr)
+      , m_response(ResultResponse::Success)
+    {
+    }
+    Result(T* const objPtr, ResultResponse response)
       : Optional<T>(objPtr)
       , m_response(response)
     {

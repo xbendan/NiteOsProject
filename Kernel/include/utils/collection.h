@@ -1,6 +1,6 @@
 #pragma once
 
-#include <utils/functions/consumer.h>
+#include <utils/func/consumer.h>
 #include <utils/optional.h>
 
 namespace utils {
@@ -14,18 +14,19 @@ namespace utils {
         Collection()  = default;
         ~Collection() = default;
 
-        virtual Optional<T> operator[](unsigned index) { return get(index); }
+        virtual T& operator[](unsigned index) = 0;
 
-        virtual int                size()                            = 0;
-        virtual utils::Optional<T> get(unsigned index)               = 0;
-        virtual int                indexOf(T& objRef)                = 0;
-        virtual int                lastIndexOf(T& objRef)            = 0;
-        virtual void               insert(T& objRef, unsigned index) = 0;
-        virtual void               add(T& objRef)                    = 0;
-        virtual bool               remove(unsigned index)            = 0;
-        virtual bool               remove(T& objRef)                 = 0;
-        virtual Stream<T>&         stream()                          = 0;
+        virtual int         size()                            = 0;
+        virtual Optional<T> get(unsigned index)               = 0;
+        virtual int         indexOf(T& objRef)                = 0;
+        virtual int         lastIndexOf(T& objRef)            = 0;
+        virtual void        insert(T& objRef, unsigned index) = 0;
+        virtual void        add(T& objRef)                    = 0;
+        virtual bool        remove(unsigned index)            = 0;
+        virtual bool        remove(T& objRef)                 = 0;
+        virtual bool        contains(T& objRef)               = 0;
+        virtual void        clear()                           = 0;
 
-        virtual void forEach(utils::function::Function<void(T)> consumer) = 0;
+        virtual void forEach(utils::func::Consumer<T> consumer) = 0;
     };
 }

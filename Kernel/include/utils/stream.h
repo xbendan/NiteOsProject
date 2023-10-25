@@ -1,7 +1,7 @@
 #pragma once
 
 #include <utils/collection.h>
-#include <utils/functions/predicate.h>
+#include <utils/func/predicate.h>
 #include <utils/optional.h>
 
 namespace utils {
@@ -21,11 +21,11 @@ namespace utils {
 
         Optional<T> findFirst();
 
-        bool allMatch(utils::function::Predicate<T> predicate);
+        bool allMatch(utils::func::Predicate<T> predicate);
 
-        bool anyMatch(utils::function::Predicate<T> predicate);
+        bool anyMatch(utils::func::Predicate<T> predicate);
 
-        void forEach(utils::function::Consumer<T> consumer);
+        void forEach(utils::func::Consumer<T> consumer);
 
         Stream<T>& limit(unsigned size);
 

@@ -5,9 +5,6 @@
 #include <siberix/device/types.h>
 #include <siberix/drivers/acpi/acpi_device.h>
 
-ApicLocal            ApicDevice::m_interfaces[256];
-SizedArrayList<MadtIso*, 256> ApicDevice::m_overrides;
-
 ApicDevice::ApicDevice()
   : Device("Advanced Programmable Interrupt Controller")
 {
@@ -31,8 +28,8 @@ ApicDevice::ApicDevice()
                     kern()->getConnectivity()->registerDevice(
                       new ProcessorDevice(apicLocal->apicId));
 
-                    m_interfaces[apicLocal->apicId] =
-                      ApicLocal(apicLocal->apicId, this);
+                    (*m_apicLocals)[apicLocal->apicId] =
+                      new ApicLocal(apicLocal->apicId, this);
                 }
                 break;
             }
@@ -43,7 +40,7 @@ ApicDevice::ApicDevice()
                 break;
             }
             case 0x02: /* Interrupt Source Override */ {
-                m_overrides.add(static_cast<MadtIso*>(entry));
+                m_overrides->add(static_cast<MadtIso*>(entry));
                 break;
             }
             case 0x03: /* Non-maskable Interrupt */ {

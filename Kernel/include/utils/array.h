@@ -14,6 +14,8 @@ namespace utils {
 
         int size() override { return Capacity; }
 
+        T& operator[](unsigned index) { return m_arr[index]; }
+
         Optional<T> get(unsigned index) override
         {
             return Optional<T>(index < 0 || index >= length() ? nullptr
@@ -65,10 +67,15 @@ namespace utils {
 
         bool remove(T& objRef) override { return remove(indexOf(objRef)); }
 
-        Stream<T>& stream() override {}
+        bool contains(T& objRef) override { return indexOf(objRef) != -1; }
 
-        void forEach(
-          const utils::function::Function<void(T)>& consumer) override
+        void clear() override
+        {
+            memset(&m_arr, 0, sizeof(T) * length());
+            m_count = 0;
+        }
+
+        void forEach(const utils::func::Consumer<T>& consumer) override
         {
             for (int i = 0; i < m_count; i++) {
                 consumer(m_arr[i]);

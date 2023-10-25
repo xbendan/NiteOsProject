@@ -307,6 +307,7 @@ class X64LogicalProcessingUnit : public siberix::hal::LogicalProcessingUnit
 public:
     X64LogicalProcessingUnit(UInt32      cpuId,
                              UInt32      apicId,
+                             ApicLocal*  apicLocal,
                              GdtPackage* gdt,
                              GdtPtr      gdtPtr,
                              IdtPtr      idtPtr)
@@ -328,7 +329,7 @@ public:
 
 private:
     UInt32           m_apicId;
-    ApicLocal        m_apicLocal;
+    ApicLocal*       m_apicLocal;
     GdtPackage*      m_gdt;
     GdtPtr           m_gdtPtr;
     IdtPtr           m_idtPtr;

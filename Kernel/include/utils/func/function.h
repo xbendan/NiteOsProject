@@ -2,7 +2,7 @@
 
 #include <utils/type_check.h>
 
-namespace utils::function {
+namespace utils::func {
     template <typename>
     class Function;
 
@@ -10,14 +10,15 @@ namespace utils::function {
     class Function<ReturnType(Arguments...)>
     {
     public:
-        template <typename Callable,
-                  typename = typename IsEnabled<
-                    utils::Instanceof<decltype(utils::declval<Callable>()(
-                                        utils::declval<Arguments>()...)),
-                                      ReturnType>::value>::type>
-        Function(Callable&& callable)
+        template <typename Callable>
+        Function(Callable&& callable,
+                 typename IsEnabled<
+                   utils::Instanceof<decltype(utils::declval<Callable>()(
+                                       utils::declval<Arguments>()...)),
+                                     ReturnType>::value>::type)
           : m_callable(
-              new CallableWrapper<typename declval<Callable>::type>(callable))
+              new CallableWrapper<typename utils::declval<Callable>::type>(
+                callable))
         {
         }
 
@@ -52,6 +53,6 @@ namespace utils::function {
 
         CallableBase* m_callable = nullptr;
 
-        ReturnType (*m_invoker)(void* p, Argument arg) = nullptr;
+        ReturnType (*m_invoker)(void* p, Arguments arg) = nullptr;
     };
 }

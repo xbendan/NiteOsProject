@@ -108,6 +108,7 @@ namespace utils {
         void add(T& objRef) override
         {
             auto elem = new LinkedListElement<T>(objRef);
+            m_lock.acquire();
 
             if (m_head == nullptr) {
                 m_head = elem;
@@ -116,6 +117,8 @@ namespace utils {
             }
             m_tail = elem;
             m_count++;
+
+            m_lock.release();
         }
 
         bool remove(unsigned index) override
@@ -123,6 +126,8 @@ namespace utils {
             if (index >= m_count) {
                 return false;
             }
+            m_lock.acquire();
+
             LinkedListElement<T>* elem = m_head;
             for (int i = 0; i < index; i++) {
                 elem = elem->next();
@@ -140,13 +145,67 @@ namespace utils {
                 m_head = elem->next();
             }
             delete elem;
+
+            m_lock.release();
         }
 
-        virtual bool remove(T& objRef) = 0;
+        bool remove(T& objRef)
+        {
+            LinkedListElement<T>* elem = m_head;
+            while (elem) {
+                if (elem->object() == objRef) {
+                    if (elem->hasPrev()) {
+                        elem->previous()->next(elem->next());
+                    }
+                    if (elem->hasNext()) {
+                        elem->next()->previous(elem->previous());
+                    }
+                    if (elem == m_tail) {
+                        m_tail = elem->previous();
+                    }
+                    if (elem == m_head) {
+                        m_head = elem->next();
+                    }
+                    delete elem;
 
-        virtual Stream<T>& stream() = 0;
+                    return true;
+                }
+                elem = elem->next();
+            }
+            return false;
+        }
 
-        void forEach(utils::function::Function<void(T)> consumer) override {}
+        bool contains(T& objRef) override
+        {
+            LinkedListElement<T>* elem = m_head;
+            while (elem) {
+                if (elem->object() == objRef) {
+                    return true;
+                }
+                elem = elem->next();
+            }
+            return false;
+        }
+
+        void clear() override
+        {
+            m_lock.acquire();
+
+            LinkedListElement<T>* elem = m_head;
+            while (elem && elem->hasNext()) {
+                LinkedListElement<T>* e = elem->back;
+
+                elem->obj.~T();
+                elem = e;
+            }
+            m_head  = nullptr;
+            m_tail  = nullptr;
+            m_count = 0;
+
+            m_lock.release();
+        }
+
+        void forEach(utils::func::Consumer<T> consumer) override {}
 
         LinkedListElement<T>* head() { return m_head; }
         LinkedListElement<T>* tail() { return m_tail; }

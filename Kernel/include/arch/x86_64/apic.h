@@ -97,9 +97,9 @@ public:
     Duration time() override;
 
 private:
-    ApicLocal& m_interface;
-    u64                 m_busClock;
-    volatile u64        m_ticks;
+    ApicLocal&   m_interface;
+    u64          m_busClock;
+    volatile u64 m_ticks;
 };
 
 class ApicDevice : public Device
@@ -118,14 +118,15 @@ public:
     void lWriteBase(u64 val);
     u64  lReadBase();
 
-    inline ApicLocal& getInterface(u8 apicId)
-    {
-        return m_interfaces[apicId];
-    }
+    utils::Collection<ApicLocal*>* getApicLocals() { return m_apicLocals; }
 
-    inline ApicLocal& getInterface()
+    Result<ApicLocal> getApicLocal(unsigned index)
     {
-        return m_interfaces[getCpuLocal()->apicId];
+        if (index >= m_apicLocals->size()) {
+            return Result<ApicLocal>(ResultResponse::OutOfBoundException);
+        } else {
+            return Result<ApicLocal>(m_apicLocals->get(index).getAsReference());
+        }
     }
 
 private:
@@ -135,6 +136,6 @@ private:
     volatile u32* ioRegSelect;
     volatile u32* ioWindow;
 
-    static ApicLocal   m_interfaces[256];
-    static Array<MadtIso*, 256> m_overrides;
+    utils::Collection<ApicLocal*>* m_apicLocals;
+    utils::Array<MadtIso*, 256>*   m_overrides;
 };

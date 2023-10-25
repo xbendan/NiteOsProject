@@ -1,6 +1,6 @@
 #pragma once
 
-#include <utils/functions/consumer.h>
+#include <utils/func/consumer.h>
 
 namespace utils {
     template <typename T>
@@ -8,7 +8,7 @@ namespace utils {
     {
     public:
         Optional() = default;
-        Optional(T const* objPtr)
+        Optional(T* const objPtr)
           : m_objPtr(const_cast<T*>(objPtr))
         {
         }
@@ -17,8 +17,9 @@ namespace utils {
         bool isEmpty() { return m_objPtr == nullptr; }
         bool isPresent() { return m_objPtr != nullptr; }
         T*   get() { return m_objPtr; }
+        T&   getAsReference() { return *m_objPtr; }
         T*   orElse(T* fallback) { return isPresent() ? m_objPtr : fallback; }
-        void ifPresent(utils::function::Consumer<T&> consumer)
+        void ifPresent(utils::func::Consumer<T&> consumer)
         {
             if (isPresent()) {
                 consumer(*m_objPtr);
@@ -30,7 +31,11 @@ namespace utils {
             return m_objPtr == val.m_objPtr;
         }
 
-        static Optional<Type> Empty<Type>() { return Optional<Type>(); }
+        template <typename Type>
+        static Optional<Type> Empty()
+        {
+            return Optional<Type>();
+        }
 
     private:
         T* m_objPtr;

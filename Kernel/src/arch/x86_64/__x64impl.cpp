@@ -128,10 +128,26 @@ KernelComponents::setupArch()
     new SmbiosDevice();        /* System Management BIOS */
     new AcpiPmDevice();        /* ACPI Power Management */
     new PciControllerDevice(); /* PCI Controller */
+    auto apic = new ApicDevice();
 
-    memcpy((void*)(SMP_TRAMPOLINE_ENTRY),
-           &SMPTrampolineStart,
-           ((u64)&SMPTrampolineEnd) - ((u64)&SMPTrampolineStart));
+    m_cpus = new Array<siberix::hal::LogicalProcessingUnit*,
+                       apic->getApicLocals()->size()>
+
+      memcpy((void*)(SMP_TRAMPOLINE_ENTRY),
+             &SMPTrampolineStart,
+             ((u64)&SMPTrampolineEnd) - ((u64)&SMPTrampolineStart));
+
+    m_timeNClocks.addTimer(new IntervalTimerDevice(1000), true);
+
+    utils::func::Function<int(Device&)> f =
+      utils::func::Function<int(Device&)>([](Device& device) -> int {});
+
+    getConnectivity()
+      ->enumerateDevice(DeviceType::Processor)
+      .forEach(utils::func::Consumer<Device&>([](Device& device) -> void {
+          u32 processorId =
+            static_cast<ProcessorDevice&>(device).getProcessorId();
+      }));
 
     _apic = new ApicDevice(); /* APIC Controller */
     getTimeNClock().addTimer(new IntervalTimerDevice(1000), true);

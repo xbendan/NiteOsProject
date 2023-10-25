@@ -12,14 +12,6 @@
 
 #include <utils/result.h>
 
-enum class Architecture
-{
-    Undefined,
-    X86_64,
-    ARMv7,
-    RISC_V
-};
-
 class TimeNClock
 {
 public:
@@ -40,17 +32,16 @@ public:
     void sleep(u64) {}
 
 private:
-    Clock                    m_clock;
-    LinkedList<TimerDevice*> m_timers;
-    TimerDevice*             m_defaultTimer;
+    Clock                           m_clock;
+    utils::LinkedList<TimerDevice*> m_timers;
+    TimerDevice*                    m_defaultTimer;
 };
 
 class KernelComponents
 {
 public:
-    KernelComponents(Architecture arch, BootConfig& bootConfig)
+    KernelComponents(BootConfig& bootConfig)
       : m_isInitialized(false)
-      , m_arch(arch)
       , m_bootConfig(bootConfig)
     {
     }
@@ -69,9 +60,8 @@ public:
     Process* getKernelProcess();
 
 protected:
-    bool         m_isInitialized;
-    Architecture m_arch;
-    BootConfig&  m_bootConfig;
+    bool        m_isInitialized;
+    BootConfig& m_bootConfig;
 
     MemoryServiceProvider m_memory;
     PowerEngine           m_energy;

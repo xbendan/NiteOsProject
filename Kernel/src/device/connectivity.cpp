@@ -57,7 +57,7 @@ DeviceConnectivity::findDevice(const char* name)
     return nullptr;
 }
 
-LinkedList<Device&>&
+utils::LinkedList<Device&>&
 DeviceConnectivity::enumerateDevice(DeviceType type)
 {
     return m_deviceList[static_cast<u8>(type)];
