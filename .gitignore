@@ -37,4 +37,5 @@ Thirdparty
 
 Kernel/dist/*
 Kernel/build/*
+Kernel/backup/*
 Kernel/debug/*
