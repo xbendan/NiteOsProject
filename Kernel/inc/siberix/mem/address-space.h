@@ -14,7 +14,20 @@ namespace Kern::Mem {
         }
         ~AddressSpace() { delete m_zeroPage; }
 
-        virtual UInt64  alloc4KPages(UInt64 amount)                  = 0;
+        /**
+         * @brief Allocate virtual 4K pages
+         *
+         * @param amount
+         * @param writable whether the page is writable
+         * @param directMap2M allow the page directory entry to directly map to
+         * physical address when the remained amount is over 512 pages.
+         * @return UInt64 the virtual address of the allocated pages
+         */
+        virtual UInt64  alloc4KPages(UInt64  amount,
+                                     Boolean isWritable      = true,
+                                     Boolean isWriteThrough  = false,
+                                     Boolean isCacheDisabled = false,
+                                     Boolean directMap2M     = true)     = 0;
         virtual Void    free4KPages(UInt64 address, UInt64 amount)   = 0;
         virtual Void    map(UInt64 phys, UInt64 virt, UInt64 amount) = 0;
         virtual Boolean isPagePresent(UInt64 address)                = 0;

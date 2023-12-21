@@ -1,4 +1,4 @@
-#include <stdcxx/concepts.h>
+#include <stdcxx/type-traits.h>
 
 namespace Xtra::Math {
     // Align the nearest _lower_ aligned address
@@ -6,7 +6,7 @@ namespace Xtra::Math {
     // ex: 9 with align = 8 -> 16
     // ex: 7 with align = 8 -> 0
     template <typename T>
-        requires Std::Integral<T>
+        requires Std::IsIntegral<T>
     static inline T alignDown(T _addr, T _align)
     {
         return (_addr) & ~(_align - 1);
@@ -17,28 +17,28 @@ namespace Xtra::Math {
     // ex: 9 with align = 8 -> 16
     // ex: 7 with align = 8 -> 8
     template <typename T>
-        requires Std::Integral<T>
+        requires Std::IsIntegral<T>
     static inline T alignUp(T _addr, T _align)
     {
         return ((_addr + _align) - 1) & ~(_align - 1);
     }
 
     template <typename T>
-        requires Std::Integral<T>
+        requires Std::IsIntegral<T>
     static inline T alignDownRef(T& _addr, T _align)
     {
         return (_addr = alignDown(_addr, _align));
     }
 
     template <typename T>
-        requires Std::Integral<T>
+        requires Std::IsIntegral<T>
     static inline T alignUpRef(T& _addr, T _align)
     {
         return (_addr = alignUp(_addr, _align));
     }
 
     template <typename T>
-        requires Std::Integral<T>
+        requires Std::IsIntegral<T>
     static inline T alignTwoExponent(T x)
     {
         x--;

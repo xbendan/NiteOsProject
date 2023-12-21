@@ -1,0 +1,71 @@
+#include <siberix/mem/mem-alloc.h>
+#include <stdcxx/array.h>
+#include <stdcxx/string.h>
+
+namespace Kern::Mem {
+    class SlubAllocator : public MemoryAllocatorBase
+    {
+    public:
+        SlubAllocator();
+        ~SlubAllocator() = delete;
+
+        UInt64 alloc(UInt64 size) override;
+        void   free(void* address) override;
+
+    protected:
+        /**
+         * @brief The struct records the using status of cpu pages
+         *
+         * Each cpu has its own record, and can only access its own
+         * page list for thread safety.
+         */
+        class MemoryPoolNode
+        {
+        public:
+            Void**                   _freelist;
+            /**
+             * @brief The page that is currently in used.
+             *
+             * Once all the space in this page is used, it will be
+             * removed.
+             */
+            Page4K*                  _page;
+            /**
+             * @brief The list contains all pages that are not fully used
+             *
+             * Usually the page is fullfiled with assigned objects and it
+             * will be removed, but once an object inside a full page was
+             * released, it will be added to this list and wait for the
+             * next allocation.
+             */
+            Std::LinkedList<Page4K*> _partial;
+        };
+
+        class MemoryPool
+        {
+            Std::String<Utf8>             m_name;
+            UInt64                        m_objSize;
+            UInt64                        m_flags;
+            Std::Array<MemoryPoolNode, 0> m_nodes;
+
+            MemoryPool(Std::String<Utf8> name, UInt64 objSize, UInt64 flags = 0)
+              : m_name(name)
+              , m_objSize(objSize)
+              , m_flags(flags)
+            {
+            }
+        };
+
+        template <typename Object>
+        class ObjectPool : MemoryPool
+        {
+        public:
+            ObjectPool()
+              : MemoryPool(sizeof(Object))
+            {
+            }
+        };
+
+        Std::LinkedList<MemoryPool*> m_pools;
+    };
+}

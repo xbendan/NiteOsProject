@@ -53,11 +53,14 @@ namespace Kern::Platform::X64 {
         // I hate nested pointers.
     }
 
-    UInt64 X64Pages::alloc4KPages(UInt64 amount)
+    UInt64 X64Pages::alloc4KPages(UInt64  amount,
+                                  Boolean isWritable,
+                                  Boolean isWriteThrough,
+                                  Boolean isCacheDisabled,
+                                  Boolean directMap2M)
     {
         if (!_bitmap) {
-            _bitmap =
-              new Std::BitmapDouble<UInt64>(DIRS_PER_PDPT, TABLES_PER_DIR);
+            _bitmap = new Std::BitmapDouble<UInt64>(16384 / 8, 1024);
         }
         UInt64 bitmapIndex = _bitmap->findFree(amount);
         UInt64 pageIndex   = 0;
@@ -67,6 +70,21 @@ namespace Kern::Platform::X64 {
             pageIndex = bitmapIndex & 512;
             pdirIndex = bitmapIndex >> 9;
             pdptIndex = bitmapIndex >> 18;
+            if (!_pageDirs[pdptIndex]) {
+                _pageDirs[pdptIndex] =
+                  reinterpret_cast<PdirTable*>(new PdirEntry[DIRS_PER_PDPT]);
+                _pageTables[pdptIndex] = new PageTable*[DIRS_PER_PDPT];
+                (*_pageDirs[pdptIndex])[pdirIndex] //
+                  .present()
+                  .user()
+                  .writable()
+                  .address((UInt64)&_pageTables[pdptIndex][pdirIndex] -
+                           KERNEL_VIRTUAL_BASE);
+            }
+
+            if (!_pageTables[pdptIndex][pdirIndex]) {
+                _pageTables
+            }
         }
     }
 

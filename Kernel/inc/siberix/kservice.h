@@ -9,7 +9,7 @@ namespace Kern {
      * @brief Kernel-mode service
      *
      */
-    class KernelService
+    class KernelServiceMain
     {
     public:
         bool isInitialized() { return m_isInitialized; }
@@ -27,8 +27,11 @@ namespace Kern {
     private:
         bool                      m_isInitialized;
         Mem::AddressSpace*        m_addressSpace;
-        Mem::IMemoryAlloc*        m_memoryAlloc;
-        Mem::IMemoryAlloc*        m_pagedAlloc;
+        Mem::MemoryAllocatorBase*       m_memoryAlloc;
+        Mem::MemoryAllocatorBase*       m_pagedAlloc;
         Device::DeviceManagement* m_deviceManagement;
     };
 }
+
+Kern::KernelServiceMain*
+kern();

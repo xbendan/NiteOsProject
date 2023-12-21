@@ -309,10 +309,14 @@ namespace Kern::Platform::X64 {
     class X64Pages : public Mem::AddressSpace
     {
     public:
-        X64Pages();
+        X64Pages() = delete;
         ~X64Pages();
 
-        UInt64  alloc4KPages(UInt64 amount) override;
+        UInt64  alloc4KPages(UInt64  amount,
+                             Boolean isWritable      = true,
+                             Boolean isWriteThrough  = false,
+                             Boolean isCacheDisabled = false,
+                             Boolean directMap2M     = true) override;
         Void    free4KPages(UInt64 address, UInt64 amount) override;
         Void    map(UInt64 phys, UInt64 virt, UInt64 amount) override;
         Boolean isPagePresent(UInt64 address) override;
@@ -366,7 +370,11 @@ namespace Kern::Platform::X64 {
     public:
         X64KernelPages();
 
-        UInt64  alloc4KPages(UInt64 amount) override;
+        UInt64  alloc4KPages(UInt64  amount,
+                             Boolean isWritable      = true,
+                             Boolean isWriteThrough  = false,
+                             Boolean isCacheDisabled = false,
+                             Boolean directMap2M     = true) override;
         Void    free4KPages(UInt64 address, UInt64 amount) override;
         Void    map(UInt64 phys, UInt64 virt, UInt64 amount) override;
         Boolean isPagePresent(UInt64 address) override;

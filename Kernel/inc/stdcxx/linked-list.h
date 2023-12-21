@@ -5,18 +5,26 @@ namespace Std {
     class LinkedList : public List<T>
     {
     public:
-        struct Element
+        struct Entry
         {
-            constexpr Element(T& t)
-              : _value(Move(t))
-              , _next(nullptr)
+            Entry<T>* _next;
+            Entry<T>* _previous;
+
+            constexpr Entry()
+              : _next(nullptr)
               , _previous(nullptr)
             {
             }
+        };
 
-            Element<T>* _next;
-            Element<T>* _previous;
-            T           _value;
+        struct Element : Entry<T>
+        {
+            constexpr Element(T& t)
+              : _value(Move(t))
+              , Entry<T>()
+            {
+            }
+            T _value;
         };
 
         /* --- Constructors --- */
@@ -190,8 +198,8 @@ namespace Std {
         Iterator<T>& iterator() override { return Iterator<T>(_head); }
 
     private:
-        Element* _head;
-        Element* _tail;
-        UInt64   _size;
+        Entry<T>* _head;
+        Entry<T>* _tail;
+        UInt64    _size;
     };
 }
