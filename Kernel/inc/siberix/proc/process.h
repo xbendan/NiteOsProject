@@ -14,7 +14,7 @@ namespace Kern::Task {
 
     private:
         Std::String<Utf8>  m_name;
-        UInt32             m_processId;
+        uint32_t             m_processId;
         Mem::AddressSpace* m_addressSpace;
 
         struct
@@ -26,8 +26,8 @@ namespace Kern::Task {
         Thread*                  m_mainThread;
         Std::LinkedList<Thread*> m_childrenThreadList;
 
-        UInt64 m_entryPoint;
-        UInt64 m_heap;
-        UInt32 m_nextThreadId;
+        uint64_t m_entryPoint;
+        uint64_t m_heap;
+        uint32_t m_nextThreadId;
     };
 }

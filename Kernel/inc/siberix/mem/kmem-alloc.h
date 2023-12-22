@@ -9,7 +9,7 @@ namespace Kern::Mem {
         SlubAllocator();
         ~SlubAllocator() = delete;
 
-        UInt64 alloc(UInt64 size) override;
+        uint64_t alloc(uint64_t size) override;
         void   free(void* address) override;
 
     protected:
@@ -22,7 +22,7 @@ namespace Kern::Mem {
         class MemoryPoolNode
         {
         public:
-            Void**                   _freelist;
+            void**                   _freelist;
             /**
              * @brief The page that is currently in used.
              *
@@ -44,11 +44,11 @@ namespace Kern::Mem {
         class MemoryPool
         {
             Std::String<Utf8>             m_name;
-            UInt64                        m_objSize;
-            UInt64                        m_flags;
+            uint64_t                        m_objSize;
+            uint64_t                        m_flags;
             Std::Array<MemoryPoolNode, 0> m_nodes;
 
-            MemoryPool(Std::String<Utf8> name, UInt64 objSize, UInt64 flags = 0)
+            MemoryPool(Std::String<Utf8> name, uint64_t objSize, uint64_t flags = 0)
               : m_name(name)
               , m_objSize(objSize)
               , m_flags(flags)

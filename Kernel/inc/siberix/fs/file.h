@@ -14,7 +14,7 @@ namespace Kern::IO::FileSystem {
         Std::String<Utf16> m_path;
         Std::String<Utf16> m_name;
         Std::UUID          m_uuid;
-        UInt64             m_size;
-        UInt64             m_bytesTaken;
+        uint64_t             m_size;
+        uint64_t             m_bytesTaken;
     };
 }

@@ -6,7 +6,7 @@ namespace Kern::Task {
     class Scheduler
     {
     private:
-        UInt32 m_nextPID;
+        uint32_t m_nextPID;
     };
 
     class ProcessFactory

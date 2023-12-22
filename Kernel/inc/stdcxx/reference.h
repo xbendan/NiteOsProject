@@ -20,19 +20,19 @@ namespace Std {
     };
 
     template <typename T>
-    constexpr Boolean IsLvalueReference = false;
+    constexpr bool IsLvalueReference = false;
 
     template <typename T>
-    constexpr Boolean IsLvalueReference<T&> = true;
+    constexpr bool IsLvalueReference<T&> = true;
 
     template <typename T>
     concept LvalueReference = IsLvalueReference<T>;
 
     template <typename>
-    constexpr Boolean IsRvalueReference = false;
+    constexpr bool IsRvalueReference = false;
 
     template <typename T>
-    constexpr Boolean IsRvalueReference<T&&> = true;
+    constexpr bool IsRvalueReference<T&&> = true;
 
     template <typename T>
     concept RvalueReference = IsRvalueReference<T>;
@@ -50,25 +50,25 @@ namespace Std {
     };
 
     template <>
-    struct AddRvalueReference<Void>
+    struct AddRvalueReference<void>
     {
         using Type = void;
     };
 
     template <>
-    struct AddRvalueReference<const Void>
+    struct AddRvalueReference<const void>
     {
         using Type = const void;
     };
 
     template <>
-    struct AddRvalueReference<volatile Void>
+    struct AddRvalueReference<volatile void>
     {
         using Type = volatile void;
     };
 
     template <>
-    struct AddRvalueReference<const volatile Void>
+    struct AddRvalueReference<const volatile void>
     {
         using Type = const volatile void;
     };

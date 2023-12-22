@@ -5,9 +5,9 @@ namespace Xtra::Concurrent {
     class Spinlock
     {
     public:
-        Boolean acquireTest()
+        bool acquireTest()
         {
-            Boolean result = m_lock.compareAndExchange(false, true);
+            bool result = m_lock.compareAndExchange(false, true);
             // Memory barrier
 
             if (!result) {
@@ -16,14 +16,14 @@ namespace Xtra::Concurrent {
             return result;
         }
 
-        Boolean acquire()
+        bool acquire()
         {
             while (!acquireTest()) {
                 // wait
             }
         }
 
-        Void release()
+        void release()
         {
             // Memory barrier
             m_lock.store(false);
@@ -31,6 +31,6 @@ namespace Xtra::Concurrent {
         }
 
     private:
-        Atomic<Boolean> m_lock{};
+        Atomic<bool> m_lock{};
     };
 }

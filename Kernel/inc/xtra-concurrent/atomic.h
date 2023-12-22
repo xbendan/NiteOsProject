@@ -30,7 +30,7 @@ namespace Xtra::Concurrent {
             return __atomic_exchange_n(&m_value, desired, order);
         }
 
-        Boolean compareAndExchange(
+        bool compareAndExchange(
           T                expected,
           T                desired,
           AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
@@ -97,13 +97,13 @@ namespace Xtra::Concurrent {
             return __atomic_fetch_sub(&m_value, 1, order);
         }
 
-        Void inc(
+        void inc(
           AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
         {
             __atomic_add_fetch(&m_value, 1, order);
         }
 
-        Void dec(
+        void dec(
           AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
         {
             __atomic_sub_fetch(&m_value, 1, order);
@@ -115,14 +115,14 @@ namespace Xtra::Concurrent {
             return __atomic_load_n(&m_value, order);
         }
 
-        Void store(
+        void store(
           T                val,
           AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
         {
             __atomic_store_n(&m_value, val, order);
         }
 
-        Boolean isLockFree()
+        bool isLockFree()
         {
             return __atomic_is_lock_free(sizeof(T), &m_value);
         }

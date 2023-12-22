@@ -3,33 +3,42 @@
 
 namespace Std {
     // clang-format off
-    template <typename T> constexpr Boolean IsIntegral = false;
-    template <> constexpr Boolean IsIntegral<unsigned char> = true;
-    template <> constexpr Boolean IsIntegral<unsigned short> = true;
-    template <> constexpr Boolean IsIntegral<unsigned int> = true;
-    template <> constexpr Boolean IsIntegral<unsigned long> = true;
-    template <> constexpr Boolean IsIntegral<unsigned long long> = true;
-    template <> constexpr Boolean IsIntegral<char> = true;
-    template <> constexpr Boolean IsIntegral<short> = true;
-    template <> constexpr Boolean IsIntegral<int> = true;
-    template <> constexpr Boolean IsIntegral<long> = true;
-    template <> constexpr Boolean IsIntegral<long long> = true;
+    struct TrueType {
+        static constexpr bool Value = true;
+    };
 
-    template <typename T> constexpr Boolean IsFloatingPoint = false;
-    template <> constexpr Boolean IsFloatingPoint<float> = true;
-    template <> constexpr Boolean IsFloatingPoint<double> = true;
-    template <> constexpr Boolean IsFloatingPoint<long double> = true;
+    struct FalseType {
+        static constexpr bool Value = false;
+    };
 
-    template <typename T> constexpr Boolean IsArithmetic = IsIntegral<T> || IsFloatingPoint<T>;
+    template <typename T> constexpr bool IsIntegral = false;
+    template <> constexpr bool IsIntegral<unsigned char> = true;
+    template <> constexpr bool IsIntegral<unsigned short> = true;
+    template <> constexpr bool IsIntegral<unsigned int> = true;
+    template <> constexpr bool IsIntegral<unsigned long> = true;
+    template <> constexpr bool IsIntegral<unsigned long long> = true;
+    template <> constexpr bool IsIntegral<char> = true;
+    template <> constexpr bool IsIntegral<short> = true;
+    template <> constexpr bool IsIntegral<int> = true;
+    template <> constexpr bool IsIntegral<long> = true;
+    template <> constexpr bool IsIntegral<long long> = true;
+
+    template <typename T> constexpr bool IsFloatingPoint = false;
+    template <> constexpr bool IsFloatingPoint<float> = true;
+    template <> constexpr bool IsFloatingPoint<double> = true;
+    template <> constexpr bool IsFloatingPoint<long double> = true;
+
+    template <typename T> 
+    using IsArithmetic = IsIntegral<T> || IsFloatingPoint<T>;
 
     template <typename T1, typename T2> constexpr bool IsSame = false;
     template <typename T1> constexpr bool IsSame<T1, T1> = true;
 
-    template <typename T> constexpr Boolean IsConst = false;
-    template <typename T> constexpr Boolean IsConst<const T> = true;
+    template <typename T> constexpr bool IsConst = false;
+    template <typename T> constexpr bool IsConst<const T> = true;
 
-    template <typename T> constexpr Boolean IsVolatile = false;
-    template <typename T> constexpr Boolean IsVolatile<volatile T> = true;
+    template <typename T> constexpr bool IsVolatile = false;
+    template <typename T> constexpr bool IsVolatile<volatile T> = true;
 
     template <typename T> struct RemoveConstant { using Value = T; };
     template <typename T> struct RemoveConstant<const T> { using Value = T; };
@@ -42,17 +51,44 @@ namespace Std {
 
     template <typename T> struct IsVoid : IsSame<void, RemoveConstVolatile<T>::Value> {};
     
-    template <typename T> constexpr Boolean IsPointer = false;
-    template <typename T> constexpr Boolean IsPointer<T*> = true;
+    template <typename T> constexpr bool IsPointer = false;
+    template <typename T> constexpr bool IsPointer<T*> = true;
 
-    template <typename T> constexpr Boolean IsArray = false;
-    template <typename T> constexpr Boolean IsArray<T[]> = true;
-    template <typename T, unsigned N> constexpr Boolean IsArray<T[N]> = true;
+    template <typename T> constexpr bool IsArray = false;
+    template <typename T> constexpr bool IsArray<T[]> = true;
+    template <typename T, unsigned N> constexpr bool IsArray<T[N]> = true;
 
     template <typename> constexpr bool IsFunction = false;
     template <typename Ret, typename... Args> constexpr bool IsFunction<Ret(Args...)> = true;
     template <typename Ret, typename... Args> constexpr bool IsFunction<Ret(Args..., ...)> = true;
     template <typename F, typename... Args> concept IsCallable = requires(F f) { f(declval<Args>()...); };
+
+    template <typename> constexpr bool IsClass = false;
+    template <typename T> constexpr bool IsClass<T> = __is_class(T);
+
+    template <typename T> constexpr bool IsUnion = false;
+    template <typename T> constexpr bool IsUnion<T> = __is_union(T);
+
+    template <typename T> constexpr bool IsEnum = false;
+    template <typename T> constexpr bool IsEnum<T> = __is_enum(T);
+
+    namespace _ {
+        template <typename> 
+        FalseType TestPtrConversion(const volatile void*);
+        template <typename T>
+        TrueType TestPtrConversion(const volatile T*);
+
+        template <typename, typename>
+        auto TestIsBaseOf(...) -> TrueType;
+        template <typename Base, typename Derived>
+        auto TestIsBaseOf(int) -> decltype(TestPtrConversion<Base>(declval<Derived*>(nullptr)));
+    }
+
+    template <typename B, typename D>
+    using IsBaseOf = 
+        IsClass<B> && 
+        IsClass<D> &&
+        decltype(_::TestIsBaseOf<B, D>(0));
 
     // clang-format on
 }

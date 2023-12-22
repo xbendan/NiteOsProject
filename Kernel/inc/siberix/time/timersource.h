@@ -6,7 +6,7 @@ namespace Kern::Time {
     public:
         virtual ~TimerSource() = default;
 
-        virtual UInt64 getTicks()     = 0;
-        virtual UInt64 getFrequency() = 0;
+        virtual uint64_t getTicks()     = 0;
+        virtual uint64_t getFrequency() = 0;
     };
 }

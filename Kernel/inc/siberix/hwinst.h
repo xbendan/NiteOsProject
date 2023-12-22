@@ -6,9 +6,9 @@ namespace Kern::Hal {
     public:
         virtual void enable()  = 0;
         virtual void disable() = 0;
-        Boolean      isEnabled() { return enabled; }
+        bool      isEnabled() { return enabled; }
 
     private:
-        Boolean enabled;
+        bool enabled;
     };
 }

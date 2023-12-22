@@ -5,19 +5,19 @@
 namespace Kern::Init {
     struct BootConfigTable
     {
-        UInt64 _checksum;
-        UInt64 _bootTime;
+        uint64_t _checksum;
+        uint64_t _bootTime;
         Char*  _bootloaderName;
 
-        UInt64             _memTotalSize;
-        UInt64             _memMaxSize;
-        UInt64             _memUsableSize;
-        Std::Range<UInt64> _memRanges;
+        uint64_t             _memTotalSize;
+        uint64_t             _memMaxSize;
+        uint64_t             _memUsableSize;
+        Std::Range<uint64_t> _memRanges;
 
-        UInt64 _gfxWidth;
-        UInt64 _gfxHeight;
-        UInt64 _gfxAddress;
-        UInt64 _gfxPitch;
-        UInt16 _gfxBpp;
+        uint64_t _gfxWidth;
+        uint64_t _gfxHeight;
+        uint64_t _gfxAddress;
+        uint64_t _gfxPitch;
+        uint16_t _gfxBpp;
     };
 }

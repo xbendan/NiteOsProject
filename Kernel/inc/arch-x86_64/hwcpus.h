@@ -15,33 +15,33 @@ namespace Kern::Platform::X64 {
         MSR_KERN_GS_BASE      = 0xc0000102,
     };
 
-    static inline UInt64 rdmsr(UInt32 reg)
+    static inline uint64_t rdmsr(uint32_t reg)
     {
-        UInt32 low, high;
+        uint32_t low, high;
         asm volatile("rdmsr" : "=a"(low), "=d"(high) : "c"(reg));
-        return ((UInt64)high << 32) | low;
+        return ((uint64_t)high << 32) | low;
     }
 
-    static inline Void wrmsr(UInt32 reg, UInt64 value)
+    static inline void wrmsr(uint32_t reg, uint64_t value)
     {
-        UInt32 low  = value & 0xFFFFFFFF;
-        UInt32 high = value >> 32;
+        uint32_t low  = value & 0xFFFFFFFF;
+        uint32_t high = value >> 32;
         asm volatile("wrmsr" : : "c"(reg), "a"(low), "d"(high));
     }
 
-    static inline Void swapgs()
+    static inline void swapgs()
     {
         asm volatile("swapgs");
     }
 
-    static inline Void setCPULocal(Kern::Hal::Cpu* cpu)
+    static inline void setCPULocal(Kern::Hal::Cpu* cpu)
     {
         cpu->m_self = cpu;
-        asm volatile("wrmsr" ::"a"((UInt64)cpu & 0xffffffff) /*Value low*/,
-                     "d"(((UInt64)cpu >> 32) & 0xffffffff) /*Value high*/,
+        asm volatile("wrmsr" ::"a"((uint64_t)cpu & 0xffffffff) /*Value low*/,
+                     "d"(((uint64_t)cpu >> 32) & 0xffffffff) /*Value high*/,
                      "c"(MSR_KERN_GS_BASE) /*Set Kernel GS Base*/);
-        asm volatile("wrmsr" ::"a"((UInt64)cpu & 0xffffffff) /*Value low*/,
-                     "d"(((UInt64)cpu >> 32) & 0xffffffff) /*Value high*/,
+        asm volatile("wrmsr" ::"a"((uint64_t)cpu & 0xffffffff) /*Value low*/,
+                     "d"(((uint64_t)cpu >> 32) & 0xffffffff) /*Value high*/,
                      "c"(MSR_GS_BASE) /*Set Kernel GS Base*/);
     }
 

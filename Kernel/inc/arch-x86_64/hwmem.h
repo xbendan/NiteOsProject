@@ -16,62 +16,62 @@ namespace Kern::Platform::X64 {
     {
         struct
         {
-            UInt64 _present : 1;
-            UInt64 _writable : 1;
-            UInt64 _user : 1;
-            UInt64 _writeThrough : 1;
-            UInt64 _cacheDisabled : 1;
-            UInt64 _accessed : 1;
-            UInt64 _ignored : 1;
-            UInt64 _pageSize : 1;
-            UInt64 _ignored2 : 4;
-            UInt64 _address : 40;
-            UInt64 _ignored3 : 11;
-            UInt64 _disableExecute : 1;
+            uint64_t _present : 1;
+            uint64_t _writable : 1;
+            uint64_t _user : 1;
+            uint64_t _writeThrough : 1;
+            uint64_t _cacheDisabled : 1;
+            uint64_t _accessed : 1;
+            uint64_t _ignored : 1;
+            uint64_t _pageSize : 1;
+            uint64_t _ignored2 : 4;
+            uint64_t _address : 40;
+            uint64_t _ignored3 : 11;
+            uint64_t _disableExecute : 1;
         };
-        UInt64 _raw;
+        uint64_t _raw;
 
-        constexpr Pml4Entry& present(Boolean present = true)
+        constexpr Pml4Entry& present(bool present = true)
         {
             _present = present;
             return *this;
         }
-        constexpr Pml4Entry& writable(Boolean writable = true)
+        constexpr Pml4Entry& writable(bool writable = true)
         {
             _writable = writable;
             return *this;
         }
-        constexpr Pml4Entry& user(Boolean user = true)
+        constexpr Pml4Entry& user(bool user = true)
         {
             _user = user;
             return *this;
         }
-        constexpr Pml4Entry& writeThrough(Boolean writeThrough = true)
+        constexpr Pml4Entry& writeThrough(bool writeThrough = true)
         {
             _writeThrough = writeThrough;
             return *this;
         }
-        constexpr Pml4Entry& cacheDisabled(Boolean cacheDisabled = true)
+        constexpr Pml4Entry& cacheDisabled(bool cacheDisabled = true)
         {
             _cacheDisabled = cacheDisabled;
             return *this;
         }
-        constexpr Pml4Entry& accessed(Boolean accessed = true)
+        constexpr Pml4Entry& accessed(bool accessed = true)
         {
             _accessed = accessed;
             return *this;
         }
-        constexpr Pml4Entry& pageSize(Boolean pageSize = true)
+        constexpr Pml4Entry& pageSize(bool pageSize = true)
         {
             _pageSize = pageSize;
             return *this;
         }
-        constexpr Pml4Entry& address(UInt64 address)
+        constexpr Pml4Entry& address(uint64_t address)
         {
             _address = address & PAGE_FRAME;
             return *this;
         }
-        constexpr Pml4Entry& disableExecute(Boolean disableExecute = true)
+        constexpr Pml4Entry& disableExecute(bool disableExecute = true)
         {
             _disableExecute = disableExecute;
             return *this;
@@ -82,62 +82,62 @@ namespace Kern::Platform::X64 {
     {
         struct
         {
-            UInt64 _present : 1;
-            UInt64 _writable : 1;
-            UInt64 _user : 1;
-            UInt64 _writeThrough : 1;
-            UInt64 _cacheDisabled : 1;
-            UInt64 _accessed : 1;
-            UInt64 _ignored : 1;
-            UInt64 _pageSize : 1;
-            UInt64 _ignored2 : 4;
-            UInt64 _address : 40;
-            UInt64 _ignored3 : 11;
-            UInt64 _disableExecute : 1;
+            uint64_t _present : 1;
+            uint64_t _writable : 1;
+            uint64_t _user : 1;
+            uint64_t _writeThrough : 1;
+            uint64_t _cacheDisabled : 1;
+            uint64_t _accessed : 1;
+            uint64_t _ignored : 1;
+            uint64_t _pageSize : 1;
+            uint64_t _ignored2 : 4;
+            uint64_t _address : 40;
+            uint64_t _ignored3 : 11;
+            uint64_t _disableExecute : 1;
         };
-        UInt64 _raw;
+        uint64_t _raw;
 
-        constexpr PdptEntry& present(Boolean present = true)
+        constexpr PdptEntry& present(bool present = true)
         {
             _present = present;
             return *this;
         }
-        constexpr PdptEntry& writable(Boolean writable = true)
+        constexpr PdptEntry& writable(bool writable = true)
         {
             _writable = writable;
             return *this;
         }
-        constexpr PdptEntry& user(Boolean user = true)
+        constexpr PdptEntry& user(bool user = true)
         {
             _user = user;
             return *this;
         }
-        constexpr PdptEntry& writeThrough(Boolean writeThrough = true)
+        constexpr PdptEntry& writeThrough(bool writeThrough = true)
         {
             _writeThrough = writeThrough;
             return *this;
         }
-        constexpr PdptEntry& cacheDisabled(Boolean cacheDisabled = true)
+        constexpr PdptEntry& cacheDisabled(bool cacheDisabled = true)
         {
             _cacheDisabled = cacheDisabled;
             return *this;
         }
-        constexpr PdptEntry& accessed(Boolean accessed = true)
+        constexpr PdptEntry& accessed(bool accessed = true)
         {
             _accessed = accessed;
             return *this;
         }
-        constexpr PdptEntry& pageSize(Boolean pageSize = true)
+        constexpr PdptEntry& pageSize(bool pageSize = true)
         {
             _pageSize = pageSize;
             return *this;
         }
-        constexpr PdptEntry& address(UInt64 address)
+        constexpr PdptEntry& address(uint64_t address)
         {
             _address = address & PAGE_FRAME;
             return *this;
         }
-        constexpr PdptEntry& disableExecute(Boolean disableExecute = true)
+        constexpr PdptEntry& disableExecute(bool disableExecute = true)
         {
             _disableExecute = disableExecute;
             return *this;
@@ -149,73 +149,73 @@ namespace Kern::Platform::X64 {
     {
         struct
         {
-            UInt64 _present : 1;
-            UInt64 _writable : 1;
-            UInt64 _user : 1;
-            UInt64 _writeThrough : 1;
-            UInt64 _cacheDisabled : 1;
-            UInt64 _accessed : 1;
-            UInt64 _dirty : 1;
-            UInt64 _pageSize : 1;
-            UInt64 _global : 1;
-            UInt64 _ignored : 3;
-            UInt64 _address : 40;
-            UInt64 _ignored2 : 11;
-            UInt64 _disableExecute : 1;
+            uint64_t _present : 1;
+            uint64_t _writable : 1;
+            uint64_t _user : 1;
+            uint64_t _writeThrough : 1;
+            uint64_t _cacheDisabled : 1;
+            uint64_t _accessed : 1;
+            uint64_t _dirty : 1;
+            uint64_t _pageSize : 1;
+            uint64_t _global : 1;
+            uint64_t _ignored : 3;
+            uint64_t _address : 40;
+            uint64_t _ignored2 : 11;
+            uint64_t _disableExecute : 1;
         };
-        UInt64 _raw;
+        uint64_t _raw;
 
-        constexpr PdirEntry& present(Boolean present = true)
+        constexpr PdirEntry& present(bool present = true)
         {
             _present = present;
             return *this;
         }
-        constexpr PdirEntry& writable(Boolean writable = true)
+        constexpr PdirEntry& writable(bool writable = true)
         {
             _writable = writable;
             return *this;
         }
-        constexpr PdirEntry& user(Boolean user = true)
+        constexpr PdirEntry& user(bool user = true)
         {
             _user = user;
             return *this;
         }
-        constexpr PdirEntry& writeThrough(Boolean writeThrough = true)
+        constexpr PdirEntry& writeThrough(bool writeThrough = true)
         {
             _writeThrough = writeThrough;
             return *this;
         }
-        constexpr PdirEntry& cacheDisabled(Boolean cacheDisabled = true)
+        constexpr PdirEntry& cacheDisabled(bool cacheDisabled = true)
         {
             _cacheDisabled = cacheDisabled;
             return *this;
         }
-        constexpr PdirEntry& accessed(Boolean accessed = true)
+        constexpr PdirEntry& accessed(bool accessed = true)
         {
             _accessed = accessed;
             return *this;
         }
-        constexpr PdirEntry& dirty(Boolean dirty = true)
+        constexpr PdirEntry& dirty(bool dirty = true)
         {
             _dirty = dirty;
             return *this;
         }
-        constexpr PdirEntry& pageSize(Boolean pageSize = true)
+        constexpr PdirEntry& pageSize(bool pageSize = true)
         {
             _pageSize = pageSize;
             return *this;
         }
-        constexpr PdirEntry& global(Boolean global = true)
+        constexpr PdirEntry& global(bool global = true)
         {
             _global = global;
             return *this;
         }
-        constexpr PdirEntry& address(UInt64 address)
+        constexpr PdirEntry& address(uint64_t address)
         {
             _address = address & PAGE_FRAME;
             return *this;
         }
-        constexpr PdirEntry& disableExecute(Boolean disableExecute = true)
+        constexpr PdirEntry& disableExecute(bool disableExecute = true)
         {
             _disableExecute = disableExecute;
             return *this;
@@ -227,73 +227,73 @@ namespace Kern::Platform::X64 {
     {
         struct
         {
-            UInt64 _present : 1;
-            UInt64 _writable : 1;
-            UInt64 _user : 1;
-            UInt64 _writeThrough : 1;
-            UInt64 _cacheDisabled : 1;
-            UInt64 _accessed : 1;
-            UInt64 _dirty : 1;
-            UInt64 _attribute : 1;
-            UInt64 _global : 1;
-            UInt64 _ignored : 3;
-            UInt64 _address : 40;
-            UInt64 _ignored2 : 11;
-            UInt64 _disableExecute : 1;
+            uint64_t _present : 1;
+            uint64_t _writable : 1;
+            uint64_t _user : 1;
+            uint64_t _writeThrough : 1;
+            uint64_t _cacheDisabled : 1;
+            uint64_t _accessed : 1;
+            uint64_t _dirty : 1;
+            uint64_t _attribute : 1;
+            uint64_t _global : 1;
+            uint64_t _ignored : 3;
+            uint64_t _address : 40;
+            uint64_t _ignored2 : 11;
+            uint64_t _disableExecute : 1;
         };
-        UInt64 _raw;
+        uint64_t _raw;
 
-        constexpr PageEntry& present(Boolean present = true)
+        constexpr PageEntry& present(bool present = true)
         {
             _present = present;
             return *this;
         }
-        constexpr PageEntry& writable(Boolean writable = true)
+        constexpr PageEntry& writable(bool writable = true)
         {
             _writable = writable;
             return *this;
         }
-        constexpr PageEntry& user(Boolean user = true)
+        constexpr PageEntry& user(bool user = true)
         {
             _user = user;
             return *this;
         }
-        constexpr PageEntry& writeThrough(Boolean writeThrough = true)
+        constexpr PageEntry& writeThrough(bool writeThrough = true)
         {
             _writeThrough = writeThrough;
             return *this;
         }
-        constexpr PageEntry& cacheDisabled(Boolean cacheDisabled = true)
+        constexpr PageEntry& cacheDisabled(bool cacheDisabled = true)
         {
             _cacheDisabled = cacheDisabled;
             return *this;
         }
-        constexpr PageEntry& accessed(Boolean accessed = true)
+        constexpr PageEntry& accessed(bool accessed = true)
         {
             _accessed = accessed;
             return *this;
         }
-        constexpr PageEntry& dirty(Boolean dirty = true)
+        constexpr PageEntry& dirty(bool dirty = true)
         {
             _dirty = dirty;
             return *this;
         }
-        constexpr PageEntry& attribute(Boolean attribute = true)
+        constexpr PageEntry& attribute(bool attribute = true)
         {
             _attribute = attribute;
             return *this;
         }
-        constexpr PageEntry& global(Boolean global = true)
+        constexpr PageEntry& global(bool global = true)
         {
             _global = global;
             return *this;
         }
-        constexpr PageEntry& address(UInt64 address)
+        constexpr PageEntry& address(uint64_t address)
         {
             _address = address & PAGE_FRAME;
             return *this;
         }
-        constexpr PageEntry& disableExecute(Boolean disableExecute = true)
+        constexpr PageEntry& disableExecute(bool disableExecute = true)
         {
             _disableExecute = disableExecute;
             return *this;
@@ -312,17 +312,17 @@ namespace Kern::Platform::X64 {
         X64Pages() = delete;
         ~X64Pages();
 
-        UInt64  alloc4KPages(UInt64  amount,
-                             Boolean isWritable      = true,
-                             Boolean isWriteThrough  = false,
-                             Boolean isCacheDisabled = false,
-                             Boolean directMap2M     = true) override;
-        Void    free4KPages(UInt64 address, UInt64 amount) override;
-        Void    map(UInt64 phys, UInt64 virt, UInt64 amount) override;
-        Boolean isPagePresent(UInt64 address) override;
-        UInt64  convertVirtToPhys(UInt64 address) override;
+        uint64_t  alloc4KPages(uint64_t  amount,
+                             bool isWritable      = true,
+                             bool isWriteThrough  = false,
+                             bool isCacheDisabled = false,
+                             bool directMap2M     = true) override;
+        void    free4KPages(uint64_t address, uint64_t amount) override;
+        void    map(uint64_t phys, uint64_t virt, uint64_t amount) override;
+        bool isPagePresent(uint64_t address) override;
+        uint64_t  convertVirtToPhys(uint64_t address) override;
 
-        Void load() override
+        void load() override
         {
             asm volatile("mov %%rax, %%cr3" : : "a"(_pml4Phys));
         }
@@ -348,7 +348,7 @@ namespace Kern::Platform::X64 {
          */
         PageTable*** _pageTables;
 
-        UInt64               _pml4Phys;
+        uint64_t               _pml4Phys;
         Pdpt*                _pdptOfKernel;
         /*
             For each user-mode address space, the bitmap is used to track the
@@ -360,9 +360,9 @@ namespace Kern::Platform::X64 {
             Therefore, we use a two-dimensional array to track it. Each time we
             allocate 4 pages (16384 bytes) for the record, these pages can track
             about 16384 * 8 = 131,072 pages, hence the 2D array is exactly
-            equals to "UInt64 array[16384 / 8][1024]"
+            equals to "uint64_t array[16384 / 8][1024]"
          */
-        Std::Bitmap<UInt64>* _bitmap;
+        Std::Bitmap<uint64_t>* _bitmap;
     };
 
     class X64KernelPages : public X64Pages
@@ -370,33 +370,33 @@ namespace Kern::Platform::X64 {
     public:
         X64KernelPages();
 
-        UInt64  alloc4KPages(UInt64  amount,
-                             Boolean isWritable      = true,
-                             Boolean isWriteThrough  = false,
-                             Boolean isCacheDisabled = false,
-                             Boolean directMap2M     = true) override;
-        Void    free4KPages(UInt64 address, UInt64 amount) override;
-        Void    map(UInt64 phys, UInt64 virt, UInt64 amount) override;
-        Boolean isPagePresent(UInt64 address) override;
-        UInt64  convertVirtToPhys(UInt64 address) override;
+        uint64_t  alloc4KPages(uint64_t  amount,
+                             bool isWritable      = true,
+                             bool isWriteThrough  = false,
+                             bool isCacheDisabled = false,
+                             bool directMap2M     = true) override;
+        void    free4KPages(uint64_t address, uint64_t amount) override;
+        void    map(uint64_t phys, uint64_t virt, uint64_t amount) override;
+        bool isPagePresent(uint64_t address) override;
+        uint64_t  convertVirtToPhys(uint64_t address) override;
     };
 
-    inline constexpr UInt8 pml4IndexOf(UInt64 addr)
+    inline constexpr uint8_t pml4IndexOf(uint64_t addr)
     {
         return (addr >> 39) & 0x1FF;
     }
 
-    inline constexpr UInt8 pdptIndexOf(UInt64 addr)
+    inline constexpr uint8_t pdptIndexOf(uint64_t addr)
     {
         return (addr >> 30) & 0x1FF;
     }
 
-    inline constexpr UInt8 pdirIndexOf(UInt64 addr)
+    inline constexpr uint8_t pdirIndexOf(uint64_t addr)
     {
         return (addr >> 21) & 0x1FF;
     }
 
-    inline constexpr UInt8 pageIndexOf(UInt64 addr)
+    inline constexpr uint8_t pageIndexOf(uint64_t addr)
     {
         return (addr >> 12) & 0x1FF;
     }

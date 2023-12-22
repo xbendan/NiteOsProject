@@ -14,59 +14,59 @@ namespace Kern::Platform::X64 {
     // clang-format off
 
     struct GdtPtr {
-        UInt16 limit;
-        UInt64 base;
+        uint16_t limit;
+        uint64_t base;
     } __attribute__((packed));
 
     struct GdtEntry {
-        UInt16 limitLow;
-        UInt16 baseLow;
-        UInt8  baseMedium;
-        UInt8  access;
-        UInt8  granularity;
-        UInt8  baseHigh;
+        uint16_t limitLow;
+        uint16_t baseLow;
+        uint8_t  baseMedium;
+        uint8_t  access;
+        uint8_t  granularity;
+        uint8_t  baseHigh;
     } __attribute__((packed));
 
     struct GdtExtraEntry {
-        UInt32 baseHighest;
-        UInt32 __reserved__;
+        uint32_t baseHighest;
+        uint32_t __reserved__;
     } __attribute__((packed));
 
     struct GdtPackage;
 
     class TaskStateSegment {
     public:
-        UInt32 __reserved__0 __attribute__((aligned(0x10)));
-        UInt64 rsp[3];
-        UInt64 __reserved__1;
-        UInt64 ist[7];
-        UInt32 __reserved__2;
-        UInt32 __reserved__3;
-        UInt16 __reserved__4;
-        UInt16 iopbOffset;
+        uint32_t __reserved__0 __attribute__((aligned(0x10)));
+        uint64_t rsp[3];
+        uint64_t __reserved__1;
+        uint64_t ist[7];
+        uint32_t __reserved__2;
+        uint32_t __reserved__3;
+        uint16_t __reserved__4;
+        uint16_t iopbOffset;
 
         void init(GdtPackage *package);
     } __attribute__((packed));
 
     struct GdtTssEntry {
-        UInt16 len;
-        UInt16 baseLow;
-        UInt8  baseMedium;
-        UInt8  flags_a;
-        UInt8  flags_b;
-        UInt8  baseHigh;
-        UInt32 baseUpper;
-        UInt32 __reserved__;
+        uint16_t len;
+        uint16_t baseLow;
+        uint8_t  baseMedium;
+        uint8_t  flags_a;
+        uint8_t  flags_b;
+        uint8_t  baseHigh;
+        uint32_t baseUpper;
+        uint32_t __reserved__;
 
         GdtTssEntry() {}
         GdtTssEntry(TaskStateSegment &tss)
             : len(sizeof(TaskStateSegment)),
-            baseLow(((UInt64)&tss) & 0xffff),
-            baseMedium(((UInt64)&tss) >> 16 & 0xff),
+            baseLow(((uint64_t)&tss) & 0xffff),
+            baseMedium(((uint64_t)&tss) >> 16 & 0xff),
             flags_a(0b10001001),
             flags_b(0),
-            baseHigh(((UInt64)&tss) >> 24 & 0xff),
-            baseUpper(((UInt64)&tss) >> 32 & 0xffffffff),
+            baseHigh(((uint64_t)&tss) >> 24 & 0xff),
+            baseUpper(((uint64_t)&tss) >> 32 & 0xffffffff),
             __reserved__() {}
     } __attribute__((packed));
 
@@ -128,18 +128,18 @@ namespace Kern::Platform::X64 {
     // clang-format off
 
     struct IdtPtr {
-        UInt16 limit;
-        UInt64 base;
+        uint16_t limit;
+        uint64_t base;
     } __attribute__((packed));
 
     struct IdtEntry {
-        UInt16 baseLow;
-        UInt16 selector;
-        UInt8  ist;
-        UInt8  flags;
-        UInt16 baseMedium;
-        UInt32 baseHigh;
-        UInt32 __reserved__ = 0;
+        uint16_t baseLow;
+        uint16_t selector;
+        uint8_t  ist;
+        uint8_t  flags;
+        uint16_t baseMedium;
+        uint32_t baseHigh;
+        uint32_t __reserved__ = 0;
 
         constexpr IdtEntry()
             : baseLow(0),
@@ -149,13 +149,13 @@ namespace Kern::Platform::X64 {
             baseMedium(0),
             baseHigh(0) {}
 
-        constexpr IdtEntry(UInt8 num, UInt64 base, UInt16 sel, UInt8 flags, UInt8 ist)
-            : baseLow((UInt16)(base & 0xffff)),
+        constexpr IdtEntry(uint8_t num, uint64_t base, uint16_t sel, uint8_t flags, uint8_t ist)
+            : baseLow((uint16_t)(base & 0xffff)),
             selector(sel),
             ist(ist),
             flags(flags),
-            baseMedium((UInt16)(base >> 16 & 0xffff)),
-            baseHigh((UInt32)(base >> 32) & 0xffffffff) {}
+            baseMedium((uint16_t)(base >> 16 & 0xffff)),
+            baseHigh((uint32_t)(base >> 32) & 0xffffffff) {}
     } __attribute__((packed));
 
     // clang-format on

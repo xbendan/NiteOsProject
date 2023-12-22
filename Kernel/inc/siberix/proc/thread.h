@@ -16,20 +16,20 @@ namespace Kern::Task {
     class Thread
     {
     public:
-        Thread(Process* process, UInt32 threadId);
+        Thread(Process* process, uint32_t threadId);
         ~Thread() = default;
 
-        UInt32   getThreadId() const { return m_threadId; }
+        uint32_t   getThreadId() const { return m_threadId; }
         Process* getParent() const { return m_process; }
-        UInt8    getPriority() { return m_priority; }
+        uint8_t    getPriority() { return m_priority; }
 
         ThreadState& state() { return m_state; }
 
     private:
-        UInt32      m_threadId;
+        uint32_t      m_threadId;
         Process*    m_process;
         ThreadState m_state;
-        UInt8       m_priority;
+        uint8_t       m_priority;
 
         Xtra::Concurrent::Spinlock m_lock;
         Xtra::Concurrent::Spinlock m_stateLock;

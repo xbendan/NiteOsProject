@@ -4,7 +4,7 @@
 namespace Kern::Mem {
     SlubAllocator::SlubAllocator() {}
 
-    UInt64 SlubAllocator::alloc(UInt64 size)
+    uint64_t SlubAllocator::alloc(uint64_t size)
     {
         return 0;
     }

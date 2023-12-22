@@ -38,7 +38,7 @@ namespace Std {
         String(const char* str)
           : m_data(reinterpret_cast<Unit*>(const_cast<char*>(str)))
           , m_length(strlen(str)){};
-        String(Unit const*, UInt64);
+        String(Unit const*, uint64_t);
         String(String const&);
         String(String&&);
 
@@ -57,6 +57,6 @@ namespace Std {
 
     private:
         Unit*  m_data;
-        UInt64 m_length;
+        uint64_t m_length;
     };
 }

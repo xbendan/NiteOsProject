@@ -12,7 +12,7 @@ namespace Xtra::Reflect {
 
     private:
         bool  _withTemplate;
-        UInt8 _params;
+        uint8_t _params;
     };
 
 }

@@ -17,21 +17,21 @@ namespace Kern::Time {
     struct Duration
     {
         TimeSpan _span;
-        UInt64   _amount;
+        uint64_t   _amount;
 
-        constexpr Duration(TimeSpan s, UInt64 a)
+        constexpr Duration(TimeSpan s, uint64_t a)
           : _span(s)
           , _amount(a)
         {
         }
 
-        constexpr Duration(UInt64 ms)
+        constexpr Duration(uint64_t ms)
           : _span(TimeSpan::Millisecond)
           , _amount(ms)
         {
         }
 
-        UInt64 getAs(TimeSpan span)
+        uint64_t getAs(TimeSpan span)
         {
             switch (_span) {
                 case TimeSpan::Nanosecond: {

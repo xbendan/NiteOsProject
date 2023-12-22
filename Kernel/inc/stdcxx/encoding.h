@@ -2,21 +2,21 @@
 #include <stdcxx/types.h>
 
 /// @brief The type of encoding rune, it has another name: code point
-using EncodingRune = UInt32;
+using EncodingRune = uint32_t;
 
 template <typename T>
 concept Encoding = requires(T t, EncodingRune& r, typename T::Unit unit) {
     {
         T::getUnitLength(unit)
-    } -> Std::Same<UInt8>;
+    } -> Std::Same<uint8_t>;
     {
         T::getRuneLength(r)
-    } -> Std::Same<UInt8>;
+    } -> Std::Same<uint8_t>;
 };
 
 struct Utf8
 {
-    using Unit = UInt8;
+    using Unit = uint8_t;
 
     /**
      * @brief Get the byte length of specific char code
@@ -41,7 +41,7 @@ struct Utf8
      * @param unit the first byte of the character
      * @return byte length of current character
      */
-    static constexpr UInt8 getUnitLength(Unit unit)
+    static constexpr uint8_t getUnitLength(Unit unit)
     {
         if ((unit & 0x80) == 0x00) {
             return 1;
@@ -70,7 +70,7 @@ struct Utf8
      * @param rune
      * @return rune length
      */
-    static constexpr UInt8 getRuneLength(EncodingRune rune)
+    static constexpr uint8_t getRuneLength(EncodingRune rune)
     {
         if (rune < 0x80) {
             return 1;
@@ -91,9 +91,9 @@ struct Utf8
 
 struct Utf16
 {
-    using Unit = UInt16;
+    using Unit = uint16_t;
 
-    static constexpr UInt8 getUnitLength(Unit unit)
+    static constexpr uint8_t getUnitLength(Unit unit)
     {
         if ((unit & 0xFC00) == 0xD800) {
             return 2;
@@ -101,7 +101,7 @@ struct Utf16
             return 1;
     }
 
-    static constexpr UInt8 getRuneLength(EncodingRune rune)
+    static constexpr uint8_t getRuneLength(EncodingRune rune)
     {
         if (rune < 0x10000) {
             return 1;

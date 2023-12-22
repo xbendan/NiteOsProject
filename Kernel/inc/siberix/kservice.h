@@ -15,14 +15,14 @@ namespace Kern {
         bool isInitialized() { return m_isInitialized; }
 
         /* --- Memory --- */
-        UInt64 alloc4KPages(UInt64 amount);
-        UInt64 alloc4KPages(UInt64             amount,
+        uint64_t alloc4KPages(uint64_t amount);
+        uint64_t alloc4KPages(uint64_t             amount,
                             Mem::AddressSpace* addressSpace,
                             Mem::Page4K**      pageReference);
-        Void   free4KPages(UInt64 address, UInt64 amount);
+        void   free4KPages(uint64_t address, uint64_t amount);
 
-        UInt64 alloc(UInt64 size);
-        Void   free(UInt64 address);
+        uint64_t alloc(uint64_t size);
+        void   free(uint64_t address);
 
     private:
         bool                      m_isInitialized;

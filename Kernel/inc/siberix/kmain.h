@@ -2,3 +2,6 @@
 
 void
 kmain(Kern::Init::BootConfigTable& bootConfig);
+
+namespace Kern::Main {
+}

@@ -15,7 +15,7 @@ namespace Std {
           : ArrayList(DEFAULT_ARRAY_LIST_CAPACITY)
         {
         }
-        ArrayList(UInt32 capacity)
+        ArrayList(uint32_t capacity)
           : _buffer(new T[capacity])
           , _capacity(capacity)
           , _length(0)
@@ -29,15 +29,15 @@ namespace Std {
 
         /* --- Methods --- */
 
-        Void add(T const& value) {}
+        void add(T const& value) {}
 
-        virtual Void remove(UInt64 i)   = 0;
-        virtual Void remove(T const& t) = 0;
-        virtual Void clear()            = 0;
-        virtual T*   get(UInt64 i)      = 0;
+        virtual void remove(uint64_t i)   = 0;
+        virtual void remove(T const& t) = 0;
+        virtual void clear()            = 0;
+        virtual T*   get(uint64_t i)      = 0;
 
         /* --- Operators --- */
-        T& operator[](UInt64 index)
+        T& operator[](uint64_t index)
         {
             if (index >= _length) {
                 // TODO: Throw exception
@@ -47,7 +47,7 @@ namespace Std {
 
     private:
         T*     _buffer;
-        UInt64 _capacity;
-        UInt64 _length;
+        uint64_t _capacity;
+        uint64_t _length;
     };
 }

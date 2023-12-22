@@ -17,7 +17,7 @@ namespace Std {
 
         ~Queue() = default;
 
-        Void enqueue(T const& value) { _list.add(value); }
+        void enqueue(T const& value) { _list.add(value); }
 
         T* dequeue()
         {

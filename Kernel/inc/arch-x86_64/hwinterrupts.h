@@ -9,41 +9,41 @@
 #define INT_TYPE_INTERRUPT 0x4
 #define INT_TYPE_ABORT 0x8
 
-extern UInt64 g_interruptTables[];
+extern uint64_t g_interruptTables[];
 
 namespace Kern::Platform::X64 {
     struct InterruptRecord
     {
         const char* m_name;
-        UInt8       m_type;
-        Boolean     m_hasErrCode;
+        uint8_t       m_type;
+        bool     m_hasErrCode;
 
-        Void (*m_handler)(Registers*);
+        void (*m_handler)(Registers*);
     };
 
-    Void UnhandledException(Registers* context);
+    void UnhandledException(Registers* context);
 
-    Void DivisionError(Registers* context);
-    Void Debug(Registers* context);
-    Void NonMaskableInterrupt(Registers* context);
-    Void Breakpoint(Registers* context);
-    Void Overflow(Registers* context);
-    Void BoundRangeExceeded(Registers* context);
-    Void InvalidOpcode(Registers* context);
-    Void DeviceNotAvailable(Registers* context);
-    Void DoubleFault(Registers* context);
-    Void CoprocessorSegmentOverrun(Registers* context);
-    Void InvalidTaskStateSegment(Registers* context);
-    Void SegmentNotPresent(Registers* context);
-    Void StackSegmentFault(Registers* context);
-    Void GeneralProtectionFault(Registers* context);
-    Void PageFault(Registers* context);
-    Void AlignmentCheck(Registers* context);
-    Void MachineCheck(Registers* context);
-    Void SIMDException(Registers* context);
-    Void VirtualizationException(Registers* context);
-    Void ControlProtectionException(Registers* context);
-    Void HypervisorInjectionException(Registers* context);
-    Void VMMCommunicationException(Registers* context);
-    Void SecurityException(Registers* context);
+    void DivisionError(Registers* context);
+    void Debug(Registers* context);
+    void NonMaskableInterrupt(Registers* context);
+    void Breakpoint(Registers* context);
+    void Overflow(Registers* context);
+    void BoundRangeExceeded(Registers* context);
+    void InvalidOpcode(Registers* context);
+    void DeviceNotAvailable(Registers* context);
+    void DoubleFault(Registers* context);
+    void CoprocessorSegmentOverrun(Registers* context);
+    void InvalidTaskStateSegment(Registers* context);
+    void SegmentNotPresent(Registers* context);
+    void StackSegmentFault(Registers* context);
+    void GeneralProtectionFault(Registers* context);
+    void PageFault(Registers* context);
+    void AlignmentCheck(Registers* context);
+    void MachineCheck(Registers* context);
+    void SIMDException(Registers* context);
+    void VirtualizationException(Registers* context);
+    void ControlProtectionException(Registers* context);
+    void HypervisorInjectionException(Registers* context);
+    void VMMCommunicationException(Registers* context);
+    void SecurityException(Registers* context);
 }

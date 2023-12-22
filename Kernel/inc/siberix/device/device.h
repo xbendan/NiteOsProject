@@ -3,7 +3,7 @@
 #include <stdcxx/string.h>
 #include <stdcxx/uuid.h>
 
-namespace Kern::Device {
+namespace Kern {
     enum DeviceType
     {
         Biometric,
@@ -59,10 +59,10 @@ namespace Kern::Device {
         Device(DeviceBus bus, DeviceType type);
 
         inline Std::String<Utf16> getName() { return this->m_name; }
-        inline UInt64             getId() { return this->m_deviceId; }
+        inline uint64_t             getId() { return this->m_deviceId; }
         inline DeviceBus          getBus() { return this->m_bus; }
         inline DeviceType         getType() { return this->m_type; }
-        inline UInt64             getFlags() { return this->m_flags; }
+        inline uint64_t             getFlags() { return this->m_flags; }
 
         Device& operator=(Device&& other)
         {
@@ -77,14 +77,23 @@ namespace Kern::Device {
             return *this;
         }
 
+        static Device*                   findDevice(Std::String<Utf8> name);
+        static Device*                   findDevice(Std::UUID uuid);
+        static Device*                   findDevice(uint64_t deviceId);
+        static Std::LinkedList<Device&>& getAllDevices();
+        static uint64_t                    count();
+
     private:
         Std::String<Utf16> m_name;
         Std::UUID          m_uuid;
-        UInt64             m_deviceId;
-        UInt64             m_flags;
+        uint64_t             m_deviceId;
+        uint64_t             m_flags;
 
         DeviceBus                m_bus;
         DeviceType               m_type;
         Std::LinkedList<Device&> m_dependencies;
+
+        static inline Std::LinkedList<Device&> m_devices;
+        static inline bool                  m_isAutoConnect;
     };
 }

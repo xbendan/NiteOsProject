@@ -5,7 +5,7 @@ namespace Kern::Platform::X64::Apic {
     {
     private:
         Interface& m_interface;
-        UInt64     m_busClock;
-        UInt64 volatile m_ticks;
+        uint64_t     m_busClock;
+        uint64_t volatile m_ticks;
     };
 }

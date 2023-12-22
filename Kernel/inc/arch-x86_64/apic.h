@@ -65,31 +65,31 @@ namespace Kern::Platform::X64::Apic {
     class Interface
     {
     private:
-        UInt8    m_apicId;
-        UInt64   m_basePhys;
-        UInt64   m_baseVirt;
+        uint8_t    m_apicId;
+        uint64_t   m_basePhys;
+        uint64_t   m_baseVirt;
         CpuArch* m_cpu;
     };
 
     class ApicDevice
     {
     public:
-        Void   ioRegWrite(UInt32 reg, UInt32 data);
-        UInt32 ioRegRead(UInt32 reg);
-        Void   ioRedTblWrite(UInt32 index, UInt64 data);
-        UInt64 ioRedTblRead(UInt32 index);
+        void   ioRegWrite(uint32_t reg, uint32_t data);
+        uint32_t ioRegRead(uint32_t reg);
+        void   ioRedTblWrite(uint32_t index, uint64_t data);
+        uint64_t ioRedTblRead(uint32_t index);
 
-        Void   localBaseWrite(UInt64 data);
-        UInt64 localBaseRead();
-        Void   localRegWrite(UInt32 reg, UInt32 data);
-        UInt32 localRegRead(UInt32 reg);
+        void   localBaseWrite(uint64_t data);
+        uint64_t localBaseRead();
+        void   localRegWrite(uint32_t reg, uint32_t data);
+        uint32_t localRegRead(uint32_t reg);
 
     private:
-        UInt64                       m_ioBasePhys;
-        UInt64                       m_ioBaseVirt;
-        UInt32                       m_interrupts;
-        volatile UInt32*             m_ioRegSel;
-        volatile UInt32*             m_ioWindow;
+        uint64_t                       m_ioBasePhys;
+        uint64_t                       m_ioBaseVirt;
+        uint32_t                       m_interrupts;
+        volatile uint32_t*             m_ioRegSel;
+        volatile uint32_t*             m_ioWindow;
         Std::LinkedList<Interface*>* m_interfaces;
         Std::LinkedList<MadtIso*>*   m_overrides;
     };

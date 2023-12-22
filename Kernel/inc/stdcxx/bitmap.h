@@ -6,11 +6,11 @@ namespace Std {
         requires Std::IsIntegral<T>
     struct Bitmap
     {
-        UInt8  _bits = sizeof(T) * 8;
-        UInt64 _size;
+        uint8_t  _bits = sizeof(T) * 8;
+        uint64_t _size;
         T*     _data;
 
-        constexpr Bitmap(UInt64 size)
+        constexpr Bitmap(uint64_t size)
           : _size(size)
         {
             _data = new T[size / _bits];
@@ -18,16 +18,16 @@ namespace Std {
 
         ~Bitmap() { delete[] _data; }
 
-        virtual Void set(UInt64 pos)
+        virtual void set(uint64_t pos)
         {
             _data[pos / _bits] |= (1 << (pos % _bits));
         }
 
-        virtual Void setAll(UInt64 pos, UInt64 amount)
+        virtual void setAll(uint64_t pos, uint64_t amount)
         {
             while (amount) {
-                UInt8   bitsOffset = pos % _bits;
-                UInt64& data       = getDataAt(pos);
+                uint8_t   bitsOffset = pos % _bits;
+                uint64_t& data       = getDataAt(pos);
                 if (!bitsOffset && amount >= _bits) {
                     /*
                         Set all bits in the data
@@ -44,11 +44,11 @@ namespace Std {
             }
         }
 
-        virtual Void clearAll(UInt64 pos, UInt64 amount)
+        virtual void clearAll(uint64_t pos, uint64_t amount)
         {
             while (amount) {
-                UInt8   bitsOffset = pos % _bits;
-                UInt64& data       = getDataAt(pos);
+                uint8_t   bitsOffset = pos % _bits;
+                uint64_t& data       = getDataAt(pos);
                 if (!bitsOffset && amount >= _bits) {
                     /*
                         Clear all bits in the data
@@ -64,24 +64,24 @@ namespace Std {
             }
         }
 
-        virtual Void clear(UInt64 pos)
+        virtual void clear(uint64_t pos)
         {
             _data[pos / _bits] &= ~(1 << (pos % _bits));
         }
 
-        virtual Boolean test(UInt64 pos)
+        virtual bool test(uint64_t pos)
         {
             return _data[pos / _bits] & (1 << (pos % _bits));
         }
 
-        virtual T& getDataAt(UInt64 pos) { return _data[pos / _bits]; }
+        virtual T& getDataAt(uint64_t pos) { return _data[pos / _bits]; }
 
-        virtual UInt64 findFree(UInt64 amount)
+        virtual uint64_t findFree(uint64_t amount)
         {
-            UInt64 pos  = 0;
-            UInt64 free = 0;
+            uint64_t pos  = 0;
+            uint64_t free = 0;
             while (free < amount) {
-                UInt64& data = getDataAt(pos);
+                uint64_t& data = getDataAt(pos);
                 if (~data == 0) {
                     free  = 0;
                     pos  += _bits;
@@ -111,13 +111,13 @@ namespace Std {
         requires Std::IsIntegral<T>
     struct BitmapDouble : Bitmap<T>
     {
-        // UInt8  _bits = sizeof(T) * 8;
+        // uint8_t  _bits = sizeof(T) * 8;
 
         T**    _data;
-        UInt32 _dimensionL1;
-        UInt32 _dimensionL2;
+        uint32_t _dimensionL1;
+        uint32_t _dimensionL2;
 
-        constexpr BitmapDouble(UInt32 dimensionL1, UInt32 dimensionL2)
+        constexpr BitmapDouble(uint32_t dimensionL1, uint32_t dimensionL2)
           : _dimensionL1(dimensionL1)
           , _dimensionL2(dimensionL2)
         {
@@ -127,32 +127,32 @@ namespace Std {
 
         ~BitmapDouble()
         {
-            for (UInt32 i = 0; i < _dimensionL2; i++) {
+            for (uint32_t i = 0; i < _dimensionL2; i++) {
                 delete[] _data[i];
             }
             delete[] _data;
         }
 
-        Void set(UInt64 pos) override
+        void set(uint64_t pos) override
         {
             getDataAt(pos) |= (1 << (pos & _bits));
         }
 
-        Void clear(UInt64 pos) override
+        void clear(uint64_t pos) override
         {
             getDataAt(pos) &= ~(1 << (pos & _bits));
         }
 
-        Boolean test(UInt64 pos) override
+        bool test(uint64_t pos) override
         {
             return getDataAt(pos) & (1 << (pos & _bits));
         }
 
-        T& getDataAt(UInt64 pos) override
+        T& getDataAt(uint64_t pos) override
         {
             pos          /= _bits;
-            UInt32 dimL1  = pos & _dimensionL1;
-            UInt32 dimL2  = (pos / _dimensionL1) & _dimensionL2;
+            uint32_t dimL1  = pos & _dimensionL1;
+            uint32_t dimL2  = (pos / _dimensionL1) & _dimensionL2;
 
             if (!_data[dimL2]) {
                 _data[dimL2] = new T[_dimensionL1];

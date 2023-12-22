@@ -6,10 +6,10 @@ namespace Std {
     {
         union
         {
-            UInt8  _bytes[16];
-            UInt16 _words[8];
-            UInt32 _dwords[4];
-            UInt64 _qwords[2];
+            uint8_t  _bytes[16];
+            uint16_t _words[8];
+            uint32_t _dwords[4];
+            uint64_t _qwords[2];
         };
 
         inline bool operator==(const UUID& uuid) const

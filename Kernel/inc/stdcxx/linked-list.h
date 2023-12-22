@@ -7,8 +7,9 @@ namespace Std {
     public:
         struct Entry
         {
-            Entry<T>* _next;
-            Entry<T>* _previous;
+            using EntryType = Entry<T>;
+            EntryType* _next;
+            EntryType* _previous;
 
             constexpr Entry()
               : _next(nullptr)
@@ -17,14 +18,16 @@ namespace Std {
             }
         };
 
-        struct Element : Entry<T>
+        struct Element
         {
             constexpr Element(T& t)
               : _value(Move(t))
               , Entry<T>()
             {
             }
-            T _value;
+            Element<T>* _next;
+            Element<T>* _previous;
+            T           _value;
         };
 
         /* --- Constructors --- */
@@ -49,7 +52,7 @@ namespace Std {
 
         /* --- Methods --- */
 
-        Void add(T const& value)
+        void add(T const& value)
         {
             auto elem = new Element<T>(value);
             if (_size == 0) {
@@ -63,7 +66,7 @@ namespace Std {
             _size++;
         }
 
-        Void remove(UInt64 i)
+        void remove(uint64_t i)
         {
             if (i >= _size) {
                 return;
@@ -89,7 +92,7 @@ namespace Std {
                 delete elem;
             } else {
                 auto elem = _head;
-                for (UInt64 j = 0; j < i; j++) {
+                for (uint64_t j = 0; j < i; j++) {
                     elem = elem->_next;
                 }
                 elem->_previous->_next = elem->_next;
@@ -100,7 +103,7 @@ namespace Std {
             _size--;
         }
 
-        Void remove(T const& value)
+        void remove(T const& value)
         {
             if (_size == 0) {
                 return;
@@ -138,7 +141,7 @@ namespace Std {
             }
         }
 
-        Void clear()
+        void clear()
         {
             auto elem = _head;
             while (elem) {
@@ -151,17 +154,21 @@ namespace Std {
             _size = 0;
         }
 
-        T* get(UInt64 i)
+        T* get(uint64_t i)
         {
             if (i >= _size) {
                 return nullptr;
             }
-            return &((*this)[i]);
+            auto elem = _head;
+            for (uint64_t j = 0; j < i; j++) {
+                elem = elem->_next;
+            }
+            return Std::IsBaseOf<Entry<T>, T> ? elem : &elem->_value;
         }
 
         /* --- Operators --- */
 
-        T& operator[](UInt64 i)
+        T& operator[](uint64_t i)
         {
             if (i >= _size) {
                 // Panic;
@@ -169,13 +176,13 @@ namespace Std {
 
             if (i < _size / 2) {
                 auto elem = _head;
-                for (UInt64 i = 0; i < i; i++) {
+                for (uint64_t i = 0; i < i; i++) {
                     elem = elem->_next;
                 }
                 return elem->_value;
             } else {
                 auto elem = _tail;
-                for (UInt64 i = _size - 1; i > i; i--) {
+                for (uint64_t i = _size - 1; i > i; i--) {
                     elem = elem->_previous;
                 }
                 return elem->_value;
@@ -198,8 +205,8 @@ namespace Std {
         Iterator<T>& iterator() override { return Iterator<T>(_head); }
 
     private:
-        Entry<T>* _head;
-        Entry<T>* _tail;
-        UInt64    _size;
+        Element* _head;
+        Element* _tail;
+        uint64_t _size;
     };
 }

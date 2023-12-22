@@ -5,12 +5,12 @@ namespace Std {
     class Iterator
     {
     public:
-        Iterator(UInt64 length)
+        Iterator(uint64_t length)
           : _list(new T*[length])
         {
         }
 
-        Boolean hasNext() { return _index < _list.length(); }
+        bool hasNext() { return _index < _list.length(); }
 
         T* next()
         {
@@ -22,7 +22,7 @@ namespace Std {
 
     private:
         T**    _list;
-        UInt64 _index;
+        uint64_t _index;
     };
 
     template <typename T>

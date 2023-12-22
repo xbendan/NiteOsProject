@@ -35,5 +35,5 @@ namespace Kern::Platform::X64 {
         [30] = { "Security Exception",             INT_TYPE_FAULT,                 true }
     };
 
-    Void DivisionError(Registers* context) {}
+    void DivisionError(Registers* context) {}
 }

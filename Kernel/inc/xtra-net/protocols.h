@@ -5,9 +5,9 @@ namespace Xtra::Network {
     {
         union
         {
-            UInt8  _bytes[4];
-            UInt16 _words[2];
-            UInt32 _dwords[1];
+            uint8_t  _bytes[4];
+            uint16_t _words[2];
+            uint32_t _dwords[1];
         };
     };
 
@@ -15,8 +15,8 @@ namespace Xtra::Network {
     {
         union
         {
-            UInt8  _bytes[6];
-            UInt16 _words[3];
+            uint8_t  _bytes[6];
+            uint16_t _words[3];
         };
     };
 }

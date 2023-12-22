@@ -5,41 +5,41 @@
 struct AcpiRsdp
 {
     char   _signature[8];
-    UInt8  _checksum;
+    uint8_t  _checksum;
     char   _oemId[6];
-    UInt8  _revision;
-    UInt32 _rsdtAddress;
+    uint8_t  _revision;
+    uint32_t _rsdtAddress;
 } __attribute__((packed));
 
 struct AcpiXsdp : public AcpiRsdp
 {
-    UInt32 _length;
-    UInt64 _xsdtAddress;
-    UInt8  _checksumEx;
-    UInt8  _reserved[3];
+    uint32_t _length;
+    uint64_t _xsdtAddress;
+    uint8_t  _checksumEx;
+    uint8_t  _reserved[3];
 };
 
 struct AcpiTable
 {
     char   _signature[4];
-    UInt32 _length;
-    UInt8  _revision;
-    UInt8  _checksum;
+    uint32_t _length;
+    uint8_t  _revision;
+    uint8_t  _checksum;
     char   _oemId[6];
     char   _oemTableId[8];
-    UInt32 _oemRevision;
-    UInt32 _creatorId;
-    UInt32 _creatorRevision;
+    uint32_t _oemRevision;
+    uint32_t _creatorId;
+    uint32_t _creatorRevision;
 } __attribute__((packed));
 
 struct AcpiRsdt : public AcpiTable
 {
-    UInt32 _pointers[];
+    uint32_t _pointers[];
 } __attribute__((packed));
 
 struct AcpiXsdt : public AcpiTable
 {
-    UInt64 _pointers[];
+    uint64_t _pointers[];
 } __attribute__((packed));
 
 struct AcpiAddress
@@ -60,150 +60,150 @@ struct AcpiAddress
      * 0x0b-0x7f: reserved
      * 0x80-0xff: OEM defined
      */
-    UInt8  _addressSpace;
-    UInt8  _bitWidth;
-    UInt8  _bitOffset;
-    UInt8  _accessSize;
-    UInt64 _address;
+    uint8_t  _addressSpace;
+    uint8_t  _bitWidth;
+    uint8_t  _bitOffset;
+    uint8_t  _accessSize;
+    uint64_t _address;
 };
 
 struct MadtEntry
 {
-    UInt8 _type;
-    UInt8 _length;
+    uint8_t _type;
+    uint8_t _length;
 } __attribute__((packed));
 
 struct Madt /* Multiple APIC Description Table */ : public AcpiTable
 {
-    UInt32    _address;
-    UInt32    _flags;
+    uint32_t    _address;
+    uint32_t    _flags;
     MadtEntry _entries[];
 } __attribute__((packed));
 
 struct MadtLocalApic : public MadtEntry
 {
-    UInt8  _processorId;
-    UInt8  _apicId;
-    UInt32 _flags;
+    uint8_t  _processorId;
+    uint8_t  _apicId;
+    uint32_t _flags;
 } __attribute__((packed));
 
 struct MadtIoApic : public MadtEntry
 {
-    UInt8  _apicId;
-    UInt8  __reserved__;
-    UInt32 _address;
-    UInt32 _gSiB;
+    uint8_t  _apicId;
+    uint8_t  __reserved__;
+    uint32_t _address;
+    uint32_t _gSiB;
 } __attribute__((packed));
 
 struct MadtIso : public MadtEntry
 {
-    UInt8  _busSource;
-    UInt8  _irqSource;
-    UInt32 _gsi;
-    UInt16 _flags;
+    uint8_t  _busSource;
+    uint8_t  _irqSource;
+    uint32_t _gsi;
+    uint16_t _flags;
 } __attribute__((packed));
 
 struct MadtNmi : public MadtEntry
 {
-    UInt8  _processorId;
-    UInt16 _flags;
-    UInt8  _lInt;
+    uint8_t  _processorId;
+    uint16_t _flags;
+    uint8_t  _lInt;
 } __attribute__((packed));
 
 struct MadtLocalx2Apic : public MadtEntry
 {
-    UInt16 __reserved__;
-    UInt32 _x2apicId;
-    UInt32 _flags;
-    UInt32 _uid;
+    uint16_t __reserved__;
+    uint32_t _x2apicId;
+    uint32_t _flags;
+    uint32_t _uid;
 } __attribute__((packed));
 
 struct MadtNmix2Apic : public MadtEntry
 {
-    UInt16 _flags;
-    UInt32 _uid;
-    UInt8  _lInt;
-    UInt8  __reserved__[3];
+    uint16_t _flags;
+    uint32_t _uid;
+    uint8_t  _lInt;
+    uint8_t  __reserved__[3];
 } __attribute__((packed));
 
 struct Hpet : public AcpiTable
 {
-    UInt8       _hwrevId;
-    UInt8       _info;
-    UInt16      _pciVendorId;
+    uint8_t       _hwrevId;
+    uint8_t       _info;
+    uint16_t      _pciVendorId;
     AcpiAddress _address;
-    UInt8       _hpetNumber;
-    UInt16      _minTick;
-    UInt8       _pageProtection;
+    uint8_t       _hpetNumber;
+    uint16_t      _minTick;
+    uint8_t       _pageProtection;
 };
 
 struct McfgAddress
 {
-    UInt64 _base;
-    UInt16 _sgn;
-    UInt8  _busStart;
-    UInt8  _busEnd;
-    UInt32 __reserved__;
+    uint64_t _base;
+    uint16_t _sgn;
+    uint8_t  _busStart;
+    uint8_t  _busEnd;
+    uint32_t __reserved__;
 };
 
 struct PciMcfg : public AcpiTable
 {
-    UInt64      __reserved__;
+    uint64_t      __reserved__;
     McfgAddress _baseAddresses[];
 };
 
 struct AcpiFadt /* Fixed ACPI Description Table */ : public AcpiTable
 {
-    UInt32 _fwctrl;
-    UInt32 _dsdt;
+    uint32_t _fwctrl;
+    uint32_t _dsdt;
 
-    UInt8 __reserved__0;
+    uint8_t __reserved__0;
 
-    UInt8  _ppmp;
-    UInt16 _sciInt;
-    UInt32 _smiCmd;
-    UInt8  _enable;
-    UInt8  _disable;
-    UInt8  _s4biosReq;
-    UInt8  _pStateCtrl;
-    UInt32 _pm1aEventBlock;
-    UInt32 _pm1bEventBlock;
-    UInt32 _pm1aCtrlBlock;
-    UInt32 _pm1bCtrlBlock;
-    UInt32 _pmtTimerBlock;
-    UInt32 _gpe0Block;
-    UInt32 _gpe1Block;
-    UInt8  _pm1EventLength;
-    UInt8  _pm1CtrlLength;
-    UInt8  _pm2CtrlLength;
-    UInt8  _pmtTimerLength;
-    UInt8  _gpe0Length;
-    UInt8  _gpe1Length;
-    UInt8  _gpe1Base;
-    UInt8  _cStateCtrl;
-    UInt16 _worstC2Latency;
-    UInt16 _worstC3Latency;
-    UInt16 _flushSize;
-    UInt16 _flushStride;
-    UInt8  _dutyOffset;
-    UInt8  _dutyWidth;
-    UInt8  _dayAlarm;
-    UInt8  _monthAlarm;
-    UInt8  _century;
+    uint8_t  _ppmp;
+    uint16_t _sciInt;
+    uint32_t _smiCmd;
+    uint8_t  _enable;
+    uint8_t  _disable;
+    uint8_t  _s4biosReq;
+    uint8_t  _pStateCtrl;
+    uint32_t _pm1aEventBlock;
+    uint32_t _pm1bEventBlock;
+    uint32_t _pm1aCtrlBlock;
+    uint32_t _pm1bCtrlBlock;
+    uint32_t _pmtTimerBlock;
+    uint32_t _gpe0Block;
+    uint32_t _gpe1Block;
+    uint8_t  _pm1EventLength;
+    uint8_t  _pm1CtrlLength;
+    uint8_t  _pm2CtrlLength;
+    uint8_t  _pmtTimerLength;
+    uint8_t  _gpe0Length;
+    uint8_t  _gpe1Length;
+    uint8_t  _gpe1Base;
+    uint8_t  _cStateCtrl;
+    uint16_t _worstC2Latency;
+    uint16_t _worstC3Latency;
+    uint16_t _flushSize;
+    uint16_t _flushStride;
+    uint8_t  _dutyOffset;
+    uint8_t  _dutyWidth;
+    uint8_t  _dayAlarm;
+    uint8_t  _monthAlarm;
+    uint8_t  _century;
 
-    UInt16 _bootFlagIAPC;
+    uint16_t _bootFlagIAPC;
 
-    UInt8 __reserved__1;
+    uint8_t __reserved__1;
 
-    UInt32 _flags;
+    uint32_t _flags;
 
     AcpiAddress _resetRegistry;
-    UInt8       _resetValue;
-    UInt16      _bootFlagARM;
-    UInt8       _minor;
+    uint8_t       _resetValue;
+    uint16_t      _bootFlagARM;
+    uint8_t       _minor;
 
-    UInt64      x_fwctrl;
-    UInt64      x_dsdt;
+    uint64_t      x_fwctrl;
+    uint64_t      x_dsdt;
     AcpiAddress x_pm1aEventBlock;
     AcpiAddress x_pm1bEventBlock;
     AcpiAddress x_pm1aCtrlBlock;
@@ -219,9 +219,9 @@ struct AcpiFacs /* Firmware ACPI Control Structure */
 
 struct AcpiSbst /* Smart Battery Description Table */ : public AcpiTable
 {
-    UInt32 _warningEnergyLevel;
-    UInt32 _lowEnergyLevel;
-    UInt32 _criticalEnergyLevel;
+    uint32_t _warningEnergyLevel;
+    uint32_t _lowEnergyLevel;
+    uint32_t _criticalEnergyLevel;
 };
 
 struct AcpiEcdt /* Embedded Controller Boot Resources Table */
@@ -229,18 +229,18 @@ struct AcpiEcdt /* Embedded Controller Boot Resources Table */
 {
     AcpiAddress _ecCtrl;
     AcpiAddress _ecData;
-    UInt32      _uid;
-    UInt8       _gpeBit;
-    UInt8       _ecId[];
+    uint32_t      _uid;
+    uint8_t       _gpeBit;
+    uint8_t       _ecId[];
 };
 
 struct AcpiDsdt /* Differentiated System Description Table */
   : public AcpiTable
 {
-    UInt8 _aml[];
+    uint8_t _aml[];
 };
 
 struct AcpiSsdt /* Secondary System Description Table */ : public AcpiTable
 {
-    UInt8 _aml[];
+    uint8_t _aml[];
 };

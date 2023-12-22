@@ -1,23 +1,16 @@
-#ifndef VAL_TYPE_H
-#define VAL_TYPE_H
+#pragma once
 
-using UInt8  = unsigned char;
-using UInt16 = unsigned short;
-using UInt32 = unsigned int;
-using UInt64 = unsigned long long;
+using uint8_t  = unsigned char;
+using uint16_t = unsigned short;
+using uint32_t = unsigned int;
+using uint64_t = unsigned long long;
 
-using Int8  = signed char;
-using Int16 = signed short;
-using Int32 = signed int;
-using Int64 = signed long long;
+using int8_t  = signed char;
+using int16_t = signed short;
+using int32_t = signed int;
+using int64_t = signed long long;
 
-using Char  = char;
-using Byte  = unsigned char;
-using Word  = unsigned short;
-using DWord = unsigned int;
-using QWord = unsigned long long;
-
-using Void    = void;
-using Boolean = bool;
-
-#endif // VAL_TYPE_H
+using byte  = unsigned char;
+using word  = unsigned short;
+using dword = unsigned int;
+using qword = unsigned long long;
