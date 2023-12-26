@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/encoding.h>
 
 extern "C"
@@ -56,7 +58,7 @@ namespace Std {
         bool operator!=(String const&) const;
 
     private:
-        Unit*  m_data;
+        Unit*    m_data;
         uint64_t m_length;
     };
 }

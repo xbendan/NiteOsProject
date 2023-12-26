@@ -7,17 +7,22 @@ namespace Kern::Init {
     {
         uint64_t _checksum;
         uint64_t _bootTime;
-        Char*  _bootloaderName;
 
-        uint64_t             _memTotalSize;
-        uint64_t             _memMaxSize;
-        uint64_t             _memUsableSize;
-        Std::Range<uint64_t> _memRanges;
+        struct Mem
+        {
+            uint64_t             _totalSize;
+            uint64_t             _maxSize;
+            uint64_t             _usableSize;
+            Std::Range<uint64_t> _ranges[32];
+        } _mem;
 
-        uint64_t _gfxWidth;
-        uint64_t _gfxHeight;
-        uint64_t _gfxAddress;
-        uint64_t _gfxPitch;
-        uint16_t _gfxBpp;
+        struct Gfx
+        {
+            uint64_t _width;
+            uint64_t _height;
+            uint64_t _address;
+            uint64_t _pitch;
+            uint16_t _bpp;
+        } _gfx;
     };
 }

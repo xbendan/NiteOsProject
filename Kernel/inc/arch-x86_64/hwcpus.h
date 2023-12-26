@@ -36,7 +36,6 @@ namespace Kern::Platform::X64 {
 
     static inline void setCPULocal(Kern::Hal::Cpu* cpu)
     {
-        cpu->m_self = cpu;
         asm volatile("wrmsr" ::"a"((uint64_t)cpu & 0xffffffff) /*Value low*/,
                      "d"(((uint64_t)cpu >> 32) & 0xffffffff) /*Value high*/,
                      "c"(MSR_KERN_GS_BASE) /*Set Kernel GS Base*/);

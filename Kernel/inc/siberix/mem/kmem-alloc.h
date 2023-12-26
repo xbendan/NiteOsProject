@@ -3,14 +3,14 @@
 #include <stdcxx/string.h>
 
 namespace Kern::Mem {
-    class SlubAllocator : public MemoryAllocatorBase
+    class KernMemAlloc : public IMemAlloc
     {
     public:
-        SlubAllocator();
-        ~SlubAllocator() = delete;
+        KernMemAlloc();
+        ~KernMemAlloc() = delete;
 
         uint64_t alloc(uint64_t size) override;
-        void   free(void* address) override;
+        void     free(void* address) override;
 
     protected:
         /**
@@ -43,29 +43,34 @@ namespace Kern::Mem {
 
         class MemoryPool
         {
-            Std::String<Utf8>             m_name;
-            uint64_t                        m_objSize;
-            uint64_t                        m_flags;
-            Std::Array<MemoryPoolNode, 0> m_nodes;
-
-            MemoryPool(Std::String<Utf8> name, uint64_t objSize, uint64_t flags = 0)
+        public:
+            MemoryPool(Std::String<Utf8> name,
+                       uint64_t          objSize,
+                       uint64_t          flags = 0)
               : m_name(name)
               , m_objSize(objSize)
               , m_flags(flags)
             {
             }
+
+        private:
+            Std::String<Utf8>          m_name;
+            uint64_t                   m_objSize;
+            uint64_t                   m_flags;
+            Std::Array<MemoryPoolNode> m_nodes;
         };
 
-        template <typename Object>
+        template <typename T>
         class ObjectPool : MemoryPool
         {
         public:
             ObjectPool()
-              : MemoryPool(sizeof(Object))
+              : MemoryPool(sizeof(T))
             {
             }
         };
 
         Std::LinkedList<MemoryPool*> m_pools;
+        uint32_t                     m_poolSizes[12];
     };
 }

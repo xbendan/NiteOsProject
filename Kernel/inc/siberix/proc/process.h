@@ -14,7 +14,7 @@ namespace Kern::Task {
 
     private:
         Std::String<Utf8>  m_name;
-        uint32_t             m_processId;
+        uint32_t           m_processId;
         Mem::AddressSpace* m_addressSpace;
 
         struct

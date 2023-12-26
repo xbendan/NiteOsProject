@@ -8,10 +8,10 @@ template <typename T>
 concept Encoding = requires(T t, EncodingRune& r, typename T::Unit unit) {
     {
         T::getUnitLength(unit)
-    } -> Std::Same<uint8_t>;
+    } -> Std::SameAs<uint8_t>;
     {
         T::getRuneLength(r)
-    } -> Std::Same<uint8_t>;
+    } -> Std::SameAs<uint8_t>;
 };
 
 struct Utf8

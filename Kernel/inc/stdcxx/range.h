@@ -3,11 +3,13 @@
 
 namespace Std {
     template <typename N>
-        requires Integral<N>
+        requires IsIntegral<N>
     struct Range
     {
         N _min;
         N _max;
+
+        Range() = default;
 
         Range(N min, N max)
           : _min(min)

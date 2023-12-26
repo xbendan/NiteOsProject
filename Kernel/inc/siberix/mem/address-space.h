@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/types.h>
 
 namespace Kern::Mem {
@@ -23,15 +25,15 @@ namespace Kern::Mem {
          * physical address when the remained amount is over 512 pages.
          * @return uint64_t the virtual address of the allocated pages
          */
-        virtual uint64_t  alloc4KPages(uint64_t  amount,
-                                     bool isWritable      = true,
-                                     bool isWriteThrough  = false,
-                                     bool isCacheDisabled = false,
-                                     bool directMap2M     = true)     = 0;
-        virtual void    free4KPages(uint64_t address, uint64_t amount)   = 0;
-        virtual void    map(uint64_t phys, uint64_t virt, uint64_t amount) = 0;
-        virtual bool isPagePresent(uint64_t address)                = 0;
-        virtual uint64_t  convertVirtToPhys(uint64_t address)            = 0;
+        virtual uint64_t alloc4KPages(uint64_t amount,
+                                      bool     isWritable      = true,
+                                      bool     isWriteThrough  = false,
+                                      bool     isCacheDisabled = false,
+                                      bool     directMap2M     = true)              = 0;
+        virtual void     free4KPages(uint64_t address, uint64_t amount)     = 0;
+        virtual void     map(uint64_t phys, uint64_t virt, uint64_t amount) = 0;
+        virtual bool     isPagePresent(uint64_t address)                    = 0;
+        virtual uint64_t convertVirtToPhys(uint64_t address)                = 0;
 
         virtual void load() = 0;
 
@@ -59,6 +61,6 @@ namespace Kern::Mem {
             they are factually accessed. This page is used to prevent the
             kernel from allocating a lot of pages that are not used.
          */
-        void*  m_zeroPage;
+        void*    m_zeroPage;
     };
 }

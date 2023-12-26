@@ -18,6 +18,27 @@ namespace Kern::Mem {
             }
         }
 
+        uint64_t find(uint8_t* val, uint64_t size, uint64_t offset = 0x1)
+        {
+            if (!_size) {
+                return 0;
+            }
+            for (uint64_t i = 0; i < _size; i++) {
+                if (((uint8_t*)_base)[i] == *val) {
+                    uint64_t j = 0;
+                    for (; j < size; j++) {
+                        if (((uint8_t*)_base)[i + j] != val[j]) {
+                            break;
+                        }
+                    }
+                    if (j == size) {
+                        return i;
+                    }
+                }
+            }
+            return 0;
+        }
+
         void clone(AddressRange& other) {}
     };
 

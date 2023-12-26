@@ -20,8 +20,9 @@ namespace Kern::Mem {
         requires Std::IsIntegral<T> or Std::IsSame<T, Page4K*>
     void FreePhysMemory4K(T waitForRelease);
 
-    class MemoryAllocatorBase
+    class IMemAlloc
     {
+    public:
         virtual uint64_t alloc(uint64_t size) = 0;
         virtual void     free(void* address)  = 0;
     };

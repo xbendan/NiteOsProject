@@ -1,5 +1,13 @@
 #include <arch-x86_64/hwmem.h>
-#include <siberix/mem/mem-range.h>
+#include <siberix/mem/mem.h>
+#include <siberix/mem/range.h>
+
+namespace Kern::Mem {
+    uint64_t copyAsIoAddress(uint64_t address)
+    {
+        // TODO: Implement
+    }
+}
 
 namespace Kern::Platform::X64 {
     using namespace Kern::Mem;
@@ -37,8 +45,9 @@ namespace Kern::Platform::X64 {
     X64Pages::~X64Pages()
     {
         delete _bitmap;
-        for (uint16_t pageDirsOffset = 0; pageDirsOffset < DIRS_PER_PDPT &&
-                                        pageDirsOffset * PAGE_SIZE_1G < m_bound;
+        for (uint16_t pageDirsOffset = 0;
+             pageDirsOffset < DIRS_PER_PDPT &&
+             pageDirsOffset * PAGE_SIZE_1G < m_bound;
              pageDirsOffset++) {
             delete _pageDirs[pageDirsOffset];
             if (!_pageTables[pageDirsOffset]) {
@@ -53,11 +62,11 @@ namespace Kern::Platform::X64 {
         // I hate nested pointers.
     }
 
-    uint64_t X64Pages::alloc4KPages(uint64_t  amount,
-                                  bool isWritable,
-                                  bool isWriteThrough,
-                                  bool isCacheDisabled,
-                                  bool directMap2M)
+    uint64_t X64Pages::alloc4KPages(uint64_t amount,
+                                    bool     isWritable,
+                                    bool     isWriteThrough,
+                                    bool     isCacheDisabled,
+                                    bool     directMap2M)
     {
         if (!_bitmap) {
             _bitmap = new Std::BitmapDouble<uint64_t>(16384 / 8, 1024);

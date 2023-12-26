@@ -3,6 +3,15 @@
 
 namespace Std {
     // clang-format off
+    template <class T, T t>
+    struct IntegralConstant {
+        static constexpr T Value = t;
+        using ValueType = T;
+        using Type = IntegralConstant<T, t>;
+        constexpr operator ValueType() const noexcept { return Value; }
+        constexpr ValueType operator()() const noexcept { return Value; }
+    };
+
     struct TrueType {
         static constexpr bool Value = true;
     };
@@ -34,6 +43,8 @@ namespace Std {
     template <typename T1, typename T2> constexpr bool IsSame = false;
     template <typename T1> constexpr bool IsSame<T1, T1> = true;
 
+    template <typename T1, typename T2> concept SameAs = IsSame<T1, T2>;
+
     template <typename T> constexpr bool IsConst = false;
     template <typename T> constexpr bool IsConst<const T> = true;
 
@@ -63,8 +74,8 @@ namespace Std {
     template <typename Ret, typename... Args> constexpr bool IsFunction<Ret(Args..., ...)> = true;
     template <typename F, typename... Args> concept IsCallable = requires(F f) { f(declval<Args>()...); };
 
-    template <typename> constexpr bool IsClass = false;
-    template <typename T> constexpr bool IsClass<T> = __is_class(T);
+    template <typename T>
+    struct IsClass : IntegralConstant<bool, __is_class(T)> {};
 
     template <typename T> constexpr bool IsUnion = false;
     template <typename T> constexpr bool IsUnion<T> = __is_union(T);
@@ -84,11 +95,14 @@ namespace Std {
         auto TestIsBaseOf(int) -> decltype(TestPtrConversion<Base>(declval<Derived*>(nullptr)));
     }
 
+    // template <typename B, typename D>
+    // using IsBaseOf = 
+    //     IsClass<B>::Value && 
+    //     IsClass<D>::Value &&
+    //     decltype(_::TestIsBaseOf<B, D>(0));
+    
     template <typename B, typename D>
-    using IsBaseOf = 
-        IsClass<B> && 
-        IsClass<D> &&
-        decltype(_::TestIsBaseOf<B, D>(0));
+    struct IsBaseOf : IntegralConstant<bool, __is_base_of(B, D)> {};
 
     // clang-format on
 }

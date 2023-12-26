@@ -1,6 +1,7 @@
-#include <acpi/spec.h>
 #include <arch-x86_64/hwtypes.h>
-#include <siberix/device/device.h>
+#include <drivers/acpi/spec.h>
+#include <siberix/dvc/device.h>
+#include <siberix/hwtypes.h>
 #include <stdcxx/linked-list.h>
 #include <stdcxx/types.h>
 
@@ -65,31 +66,38 @@ namespace Kern::Platform::X64::Apic {
     class Interface
     {
     private:
-        uint8_t    m_apicId;
-        uint64_t   m_basePhys;
-        uint64_t   m_baseVirt;
+        uint8_t  m_apicId;
+        uint64_t m_basePhys;
+        uint64_t m_baseVirt;
         CpuArch* m_cpu;
     };
 
     class ApicDevice
+      : public Hal::ICpuHost
+      , public Device
     {
     public:
-        void   ioRegWrite(uint32_t reg, uint32_t data);
+        void     ioRegWrite(uint32_t reg, uint32_t data);
         uint32_t ioRegRead(uint32_t reg);
-        void   ioRedTblWrite(uint32_t index, uint64_t data);
+        void     ioRedTblWrite(uint32_t index, uint64_t data);
         uint64_t ioRedTblRead(uint32_t index);
 
-        void   localBaseWrite(uint64_t data);
+        void     localBaseWrite(uint64_t data);
         uint64_t localBaseRead();
-        void   localRegWrite(uint32_t reg, uint32_t data);
+        void     localRegWrite(uint32_t reg, uint32_t data);
         uint32_t localRegRead(uint32_t reg);
 
+        uint32_t  getCpuAmount() override;
+        Hal::Cpu* getCpu(uint32_t processorId) override;
+        Hal::Cpu* getCpuCurrent() override;
+        void      launchAll() override;
+
     private:
-        uint64_t                       m_ioBasePhys;
-        uint64_t                       m_ioBaseVirt;
-        uint32_t                       m_interrupts;
-        volatile uint32_t*             m_ioRegSel;
-        volatile uint32_t*             m_ioWindow;
+        uint64_t                     m_ioBasePhys;
+        uint64_t                     m_ioBaseVirt;
+        uint32_t                     m_interrupts;
+        volatile uint32_t*           m_ioRegSel;
+        volatile uint32_t*           m_ioWindow;
         Std::LinkedList<Interface*>* m_interfaces;
         Std::LinkedList<MadtIso*>*   m_overrides;
     };

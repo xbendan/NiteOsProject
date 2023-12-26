@@ -5,9 +5,12 @@ namespace Std {
     class LinkedList : public List<T>
     {
     public:
+        using IsObjectInherited = Std::IsBaseOf<Entry<T>, T>;
+
         struct Entry
         {
             using EntryType = Entry<T>;
+
             EntryType* _next;
             EntryType* _previous;
 
@@ -18,16 +21,14 @@ namespace Std {
             }
         };
 
-        struct Element
+        struct Element : Entry<T>
         {
             constexpr Element(T& t)
               : _value(Move(t))
               , Entry<T>()
             {
             }
-            Element<T>* _next;
-            Element<T>* _previous;
-            T           _value;
+            T _value;
         };
 
         /* --- Constructors --- */
@@ -54,14 +55,15 @@ namespace Std {
 
         void add(T const& value)
         {
-            auto elem = new Element<T>(value);
+            Entry<T>* elem = IsObjectInherited ? &value : new Element<T>(value);
             if (_size == 0) {
                 _head = elem;
                 _tail = elem;
             } else {
                 _tail->_next    = elem;
                 elem->_previous = _tail;
-                _tail           = elem;
+
+                _tail = elem;
             }
             _size++;
         }
@@ -109,9 +111,9 @@ namespace Std {
                 return;
             }
 
-            Element* elem = _head;
+            auto* elem = _head;
             while (elem) {
-                if (elem->_value == value) {
+                if ((IsObjectInherited ? *elem : elem->_value) == value) {
                     if (elem == head) {
                         _head = _head->_next;
                         if (_head) {
@@ -131,7 +133,7 @@ namespace Std {
                         elem->_next->_previous = elem->_previous;
                     }
 
-                    Element* next = n->next;
+                    auto* next = n->next;
                     delete elem;
                     elem = next;
                     _size--;
@@ -179,13 +181,13 @@ namespace Std {
                 for (uint64_t i = 0; i < i; i++) {
                     elem = elem->_next;
                 }
-                return elem->_value;
+                return (Std::IsBaseOf<Entry<T>, T>() ? *elem : elem->_value)
             } else {
                 auto elem = _tail;
                 for (uint64_t i = _size - 1; i > i; i--) {
                     elem = elem->_previous;
                 }
-                return elem->_value;
+                return (Std::IsBaseOf<Entry<T>, T>() ? *elem : elem->_value)
             }
         }
 
