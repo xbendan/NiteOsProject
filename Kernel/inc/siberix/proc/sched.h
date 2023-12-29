@@ -11,10 +11,10 @@ namespace Kern::Task {
         uint32_t m_nextPID;
     };
 
-    class IProcessHost
+    class ITaskHost
     {
     public:
-        virtual ~IProcessHost() = default;
+        virtual ~ITaskHost() = default;
 
         Scheduler*      getScheduler() { return m_scheduler; }
         ProcessFactory* getProcessFactory() { return m_processFactory; }
@@ -69,12 +69,12 @@ namespace Kern::Task {
         Thread* createIdleThread();
 
     private:
-        ProcessFactory(IProcessHost* host)
+        ProcessFactory(ITaskHost* host)
           : m_host(host)
         {
         }
 
-        friend IProcessHost;
-        IProcessHost* m_host;
+        friend ITaskHost;
+        ITaskHost* m_host;
     };
 }

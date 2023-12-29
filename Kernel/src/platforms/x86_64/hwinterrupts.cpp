@@ -1,6 +1,15 @@
 #include <arch-x86_64/hwinterrupts.h>
+#include <siberix/hwtypes.h>
+
+namespace Kern::Hal {
+    // clang-format off
+    void CPU::enableInterrupts() { asm volatile("sti"); }
+    void CPU::disableInterrupts() { asm volatile("cli"); }
+    // clang-format on
+}
 
 namespace Kern::Platform::X64 {
+    IdtEntry idtEntry[256] = {};
     InterruptRecord interruptRecords[256] = {
         [0]  = {"Division Error",                  INT_TYPE_FAULT,                 false},
         [1]  = { "Debug",                          (INT_TYPE_FAULT | INT_TYPE_TRAP), false},

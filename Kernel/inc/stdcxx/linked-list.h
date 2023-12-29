@@ -1,12 +1,11 @@
 #include <stdcxx/list.h>
+#include <stdcxx/type-traits.h>
 
 namespace Std {
     template <typename T>
     class LinkedList : public List<T>
     {
     public:
-        using IsObjectInherited = Std::IsBaseOf<Entry<T>, T>;
-
         struct Entry
         {
             using EntryType = Entry<T>;
@@ -19,6 +18,8 @@ namespace Std {
               , _previous(nullptr)
             {
             }
+
+            constexpr bool isLinked() { return _next || _previous; }
         };
 
         struct Element : Entry<T>
@@ -30,6 +31,8 @@ namespace Std {
             }
             T _value;
         };
+
+        using IsObjectInherited = Std::IsBaseOf<Entry<T>, T>;
 
         /* --- Constructors --- */
 
@@ -56,6 +59,23 @@ namespace Std {
         void add(T const& value)
         {
             Entry<T>* elem = IsObjectInherited ? &value : new Element<T>(value);
+            if (_size == 0) {
+                _head = elem;
+                _tail = elem;
+            } else {
+                _tail->_next    = elem;
+                elem->_previous = _tail;
+
+                _tail = elem;
+            }
+            _size++;
+        }
+
+        template <typename _T>
+            requires Std::IsBaseOf<Entry, _T>::value
+        void add(T* value)
+        {
+            Entry<T>* elem = value;
             if (_size == 0) {
                 _head = elem;
                 _tail = elem;
@@ -168,6 +188,37 @@ namespace Std {
             return Std::IsBaseOf<Entry<T>, T> ? elem : &elem->_value;
         }
 
+        T* takeFirst()
+        {
+            auto ent = _head;
+            if (_head == _tail) {
+                _head = nullptr;
+                _tail = nullptr;
+            } else {
+                _head            = _head->_next;
+                _head->_previous = nullptr;
+            }
+            _size--;
+            return IsObjectInherited ? ent : &ent->_value;
+        }
+
+        T* takeLast()
+        {
+            auto ent = _tail;
+            if (_head == _tail) {
+                _head = nullptr;
+                _tail = nullptr;
+            } else {
+                _tail          = _tail->_previous;
+                _tail->_next   = nullptr;
+                ent->_previous = nullptr;
+            }
+            _size--;
+            return IsObjectInherited ? ent : &ent->_value;
+        }
+
+        size_t size() { return _size; }
+
         /* --- Operators --- */
 
         T& operator[](uint64_t i)
@@ -207,8 +258,8 @@ namespace Std {
         Iterator<T>& iterator() override { return Iterator<T>(_head); }
 
     private:
-        Element* _head;
-        Element* _tail;
+        Entry*   _head;
+        Entry*   _tail;
         uint64_t _size;
     };
 }

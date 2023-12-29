@@ -1,4 +1,4 @@
-#include <siberix/kmain.h>
+#include <siberix/main.h>
 #include <siberix/mem/kmem-alloc.h>
 
 namespace Kern::Mem {

@@ -37,8 +37,7 @@ namespace Std {
     template <> constexpr bool IsFloatingPoint<double> = true;
     template <> constexpr bool IsFloatingPoint<long double> = true;
 
-    template <typename T> 
-    using IsArithmetic = IsIntegral<T> || IsFloatingPoint<T>;
+    template <typename T> constexpr bool IsArithmetic = IsIntegral<T> || IsFloatingPoint<T>;
 
     template <typename T1, typename T2> constexpr bool IsSame = false;
     template <typename T1> constexpr bool IsSame<T1, T1> = true;

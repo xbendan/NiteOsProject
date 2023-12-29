@@ -1,5 +1,6 @@
 #include <drivers/acpi/device.h>
-#include <siberix/khost.h>
+#include <siberix/panic.h>
+#include <siberix/mem/mem.h>
 #include <siberix/mem/range.h>
 
 namespace Kern::Hal {
@@ -17,6 +18,7 @@ namespace Kern::Hal {
          */
         if (!rsdpAddress) {
             // TODO: Kernel panic
+            panic("ACPI: RSDP not found");
             return;
         } else {
             m_rsdp = reinterpret_cast<AcpiRsdp*>(rsdpAddress);

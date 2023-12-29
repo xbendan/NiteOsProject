@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/types.h>
 
 namespace Kern::Platform::X64 {
@@ -45,7 +47,7 @@ namespace Kern::Platform::X64 {
         uint16_t __reserved__4;
         uint16_t iopbOffset;
 
-        void init(GdtPackage *package);
+        void init(GdtPackage *pack);
     } __attribute__((packed));
 
     struct GdtTssEntry {

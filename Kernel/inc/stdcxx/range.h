@@ -9,9 +9,9 @@ namespace Std {
         N _min;
         N _max;
 
-        Range() = default;
+        constexpr Range() = default;
 
-        Range(N min, N max)
+        constexpr Range(N min, N max)
           : _min(min)
           , _max(max)
         {

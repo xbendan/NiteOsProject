@@ -309,18 +309,19 @@ namespace Kern::Platform::X64 {
     class X64Pages : public Mem::AddressSpace
     {
     public:
-        X64Pages() = delete;
+        X64Pages();
+        X64Pages(Pdpt* pdptOfKernel);
         ~X64Pages();
 
-        uint64_t  alloc4KPages(uint64_t  amount,
-                             bool isWritable      = true,
-                             bool isWriteThrough  = false,
-                             bool isCacheDisabled = false,
-                             bool directMap2M     = true) override;
-        void    free4KPages(uint64_t address, uint64_t amount) override;
-        void    map(uint64_t phys, uint64_t virt, uint64_t amount) override;
-        bool isPagePresent(uint64_t address) override;
-        uint64_t  convertVirtToPhys(uint64_t address) override;
+        uint64_t alloc4KPages(uint64_t amount,
+                              bool     isWritable      = true,
+                              bool     isWriteThrough  = false,
+                              bool     isCacheDisabled = false,
+                              bool     directMap2M     = true) override;
+        void     free4KPages(uint64_t address, uint64_t amount) override;
+        void     map(uint64_t phys, uint64_t virt, uint64_t amount) override;
+        bool     isPagePresent(uint64_t address) override;
+        uint64_t convertVirtToPhys(uint64_t address) override;
 
         void load() override
         {
@@ -349,7 +350,7 @@ namespace Kern::Platform::X64 {
         PageTable*** _pageTables;
 
         uint64_t               _pml4Phys;
-        Pdpt*                _pdptOfKernel;
+        Pdpt*                  _pdptOfKern;
         /*
             For each user-mode address space, the bitmap is used to track the
             allocated pages. In total, each address space can take up to 512
@@ -370,15 +371,15 @@ namespace Kern::Platform::X64 {
     public:
         X64KernelPages();
 
-        uint64_t  alloc4KPages(uint64_t  amount,
-                             bool isWritable      = true,
-                             bool isWriteThrough  = false,
-                             bool isCacheDisabled = false,
-                             bool directMap2M     = true) override;
-        void    free4KPages(uint64_t address, uint64_t amount) override;
-        void    map(uint64_t phys, uint64_t virt, uint64_t amount) override;
-        bool isPagePresent(uint64_t address) override;
-        uint64_t  convertVirtToPhys(uint64_t address) override;
+        uint64_t alloc4KPages(uint64_t amount,
+                              bool     isWritable      = true,
+                              bool     isWriteThrough  = false,
+                              bool     isCacheDisabled = false,
+                              bool     directMap2M     = true) override;
+        void     free4KPages(uint64_t address, uint64_t amount) override;
+        void     map(uint64_t phys, uint64_t virt, uint64_t amount) override;
+        bool     isPagePresent(uint64_t address) override;
+        uint64_t convertVirtToPhys(uint64_t address) override;
     };
 
     inline constexpr uint8_t pml4IndexOf(uint64_t addr)

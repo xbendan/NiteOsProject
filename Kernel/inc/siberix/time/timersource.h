@@ -1,10 +1,10 @@
 #include <stdcxx/types.h>
 
 namespace Kern::Time {
-    class TimerSource
+    class ITimerSource
     {
     public:
-        virtual ~TimerSource() = default;
+        virtual ~ITimerSource() = default;
 
         virtual uint64_t getTicks()     = 0;
         virtual uint64_t getFrequency() = 0;

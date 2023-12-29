@@ -1,4 +1,4 @@
-#include <siberix/dvc/device-host.h>
+#include <siberix/dvc/connectivity.h>
 #include <siberix/fs/vfs.h>
 #include <siberix/init/boot-info.h>
 #include <siberix/mem/mem.h>
@@ -27,6 +27,9 @@ namespace Kern::Main {
     Io::FsNode*            getFsNode(Std::String<Utf16> path);
     Io::VirtualFileSystem& vfs();
 
-    Mem::IMemHost*      getHostedMemory();
-    Task::IProcessHost* getHostedProcess();
+    Init::BootConfigTable* getBootConfig();
+    Mem::IMemoryHost*      getHostedMemory();
+    Task::ITaskHost*       getHostedProcess();
+
+    [[noreturn]] void main(Init::BootConfigTable& bootConfig);
 }

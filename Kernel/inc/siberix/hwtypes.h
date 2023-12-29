@@ -2,7 +2,7 @@
 #include <stdcxx/types.h>
 
 namespace Kern::Hal {
-    class Cpu
+    class CPU
     {
     public:
         enum class Signal : uint32_t
@@ -14,8 +14,8 @@ namespace Kern::Hal {
             SCHED = 4,
         };
 
-        Cpu() = delete;
-        constexpr Cpu(uint32_t processorId)
+        CPU() = delete;
+        constexpr CPU(uint32_t processorId)
           : m_self(this)
           , m_processorId(processorId)
           , m_currentThread(nullptr)
@@ -25,8 +25,11 @@ namespace Kern::Hal {
 
         void sendSignal(Signal signal);
 
+        inline void enableInterrupts();
+        inline void disableInterrupts();
+
     private:
-        Cpu*                m_self;
+        CPU*                m_self;
         uint32_t            m_processorId;
         Kern::Task::Thread* m_currentThread;
         Kern::Task::Thread* m_idleThread;
@@ -38,8 +41,8 @@ namespace Kern::Hal {
         virtual ~ICpuHost() = default;
 
         virtual uint32_t getCpuAmount()               = 0;
-        virtual Cpu*     getCpu(uint32_t processorId) = 0;
-        virtual Cpu*     getCpuCurrent()              = 0;
+        virtual CPU*     getCpu(uint32_t processorId) = 0;
+        virtual CPU*     getCpuCurrent()              = 0;
         virtual void     launchAll()                  = 0;
     };
 

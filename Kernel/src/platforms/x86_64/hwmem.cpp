@@ -19,9 +19,10 @@ namespace Kern::Platform::X64 {
       __attribute__((aligned(PAGE_SIZE_4K)));
     static inline PageTable* kPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
 
-    X64Pages::X64Pages()
+    X64Pages::X64Pages(Pdpt* pdptOfKern)
       : _bitmap(new Std::BitmapDouble<uint64_t>(16384 / 8, 1024))
       , _pml4Phys((uint64_t)&_pml4 - KERNEL_VIRTUAL_BASE)
+      , _pdptOfKern(pdptOfKern)
     {
         _pml4[0] //
           .present()
@@ -161,6 +162,12 @@ namespace Kern::Platform::X64 {
         _pml4Phys = (uint64_t)&_pml4 - KERNEL_VIRTUAL_BASE;
     }
 
-    uint64_t X64KernelPages::alloc4KPages(uint64_t amount) {}
+    uint64_t X64KernelPages::alloc4KPages(uint64_t amount,
+                                          bool     isWritable      = true,
+                                          bool     isWriteThrough  = false,
+                                          bool     isCacheDisabled = false,
+                                          bool     directMap2M     = true)
+    {
+    }
 
 }

@@ -1,4 +1,5 @@
 #include <stdcxx/linked-list.h>
+#include <stdcxx/math.h>
 #include <stdcxx/types.h>
 
 #define PAGE_SIZE_4K 4096ULL
@@ -10,6 +11,8 @@
 #define PAGE_FLAG_LOCK (1 << 3)
 #define PAGE_FLAG_DIRTY (1 << 4)
 #define PAGE_FLAG_SHARE (1 << 5)
+#define PAGE_PART_SIZE (PAGE_SIZE_1G / 8)
+#define PAGE_PART_COUNT (PAGE_PART_SIZE / PAGE_SIZE_4K)
 
 namespace Kern::Mem {
     struct Page4K : Std::LinkedList<Page4K>::Entry
@@ -35,12 +38,14 @@ namespace Kern::Mem {
         };
         uint64_t _address;
 
-        inline uint64_t offset()
+        inline bool isFree()
         {
-            return (1 << _order) * sizeof(Page4K) * PAGE_SIZE_4K;
+            return _flags & (PAGE_FLAG_FREE   //
+                             | PAGE_FLAG_KMEM //
+                             | PAGE_FLAG_SWAP);
         }
 
-        inline bool isLeftPage() { return !(_address % offset()); }
+        inline uint64_t size() { return (1 << _order) * PAGE_SIZE_4K; }
 
         constexpr Page4K* split()
         {
@@ -59,17 +64,31 @@ namespace Kern::Mem {
 
         constexpr Page4K* merge(Page4K* page)
         {
-            if (!(_flags & PAGE_FLAG_FREE && page->_flags & PAGE_FLAG_FREE)) {
+            if (/* Ensure both pages are free and can be merged */
+                !(_flags & PAGE_FLAG_FREE && page->_flags & PAGE_FLAG_FREE) //
+                ||
+                /* Ensure these pages are connected in address */
+                (abs(_address - page->_address) != (size()))) {
+
                 return nullptr;
             }
 
-            Page4K* newPage = reinterpret_cast<Page4K*>(
-              isLeftPage() ? this + offset() : this - offset());
-
-            Page4K* result = isLeftPage() ? this : newPage;
+            Page4K* result = (_address % (size() * 2)) //
+                               ? this
+                               : page;
             result->_order++;
 
             return result;
         }
+
+        constexpr Page4K* merge() {}
     };
+
+    struct PagePartitionModel
+    {
+        Page4K*  _pages;
+        uint32_t _modelId;
+    };
+
+    Page4K* pageOf(uint64_t address);
 }

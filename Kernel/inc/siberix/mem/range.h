@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/type-traits.h>
 #include <stdcxx/types.h>
 
@@ -44,16 +46,9 @@ namespace Kern::Mem {
 
     template <typename T, typename U>
         requires((Std::IsIntegral<T> or Std::IsPointer<T>) and
-                 (Std::IsIntegral<U> or Std::IsPointer<U>))
+                 (Std::IsIntegral<U>))
     AddressRange rangeOf(T base, U size)
     {
         return AddressRange{ ._base = (uint64_t)base, ._size = (uint64_t)size };
-    }
-
-    template <typename T>
-        requires Std::IsIntegral<T> or Std::IsPointer<T>
-    AddressRange rangeOf(uint64_t base)
-    {
-        return AddressRange{ ._base = (uint64_t)base };
     }
 }

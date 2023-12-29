@@ -1,7 +1,7 @@
 #include <stdcxx/types.h>
 
-namespace Kern::Time {
-    enum class TimeSpan
+namespace Kern {
+    enum class TimeUnit
     {
         Nanosecond,
         Microsecond,
@@ -16,49 +16,49 @@ namespace Kern::Time {
 
     struct Duration
     {
-        TimeSpan _span;
-        uint64_t   _amount;
+        TimeUnit _span;
+        uint64_t _amount;
 
-        constexpr Duration(TimeSpan s, uint64_t a)
+        constexpr Duration(TimeUnit s, uint64_t a)
           : _span(s)
           , _amount(a)
         {
         }
 
         constexpr Duration(uint64_t ms)
-          : _span(TimeSpan::Millisecond)
+          : _span(TimeUnit::Millisecond)
           , _amount(ms)
         {
         }
 
-        uint64_t getAs(TimeSpan span)
+        uint64_t getAs(TimeUnit span)
         {
             switch (_span) {
-                case TimeSpan::Nanosecond: {
+                case TimeUnit::Nanosecond: {
                     return _amount / 1000000;
                 }
-                case TimeSpan::Microsecond: {
+                case TimeUnit::Microsecond: {
                     return _amount / 1000;
                 }
-                case TimeSpan::Millisecond: {
+                case TimeUnit::Millisecond: {
                     return _amount;
                 }
-                case TimeSpan::Second: {
+                case TimeUnit::Second: {
                     return _amount * 1000;
                 }
-                case TimeSpan::Minute: {
+                case TimeUnit::Minute: {
                     return _amount * 1000 * 60;
                 }
-                case TimeSpan::Hour: {
+                case TimeUnit::Hour: {
                     return _amount * 1000 * 60 * 60;
                 }
-                case TimeSpan::Day: {
+                case TimeUnit::Day: {
                     return _amount * 1000 * 60 * 60 * 24;
                 }
-                case TimeSpan::Month: {
+                case TimeUnit::Month: {
                     return _amount * 1000 * 60 * 60 * 24 * 30;
                 }
-                case TimeSpan::Year: {
+                case TimeUnit::Year: {
                     return _amount * 1000 * 60 * 60 * 24 * 365;
                 }
             }

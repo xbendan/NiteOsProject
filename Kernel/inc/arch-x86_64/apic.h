@@ -69,7 +69,7 @@ namespace Kern::Platform::X64::Apic {
         uint8_t  m_apicId;
         uint64_t m_basePhys;
         uint64_t m_baseVirt;
-        CpuArch* m_cpu;
+        CPUX64Impl* m_cpu;
     };
 
     class ApicDevice
@@ -88,8 +88,8 @@ namespace Kern::Platform::X64::Apic {
         uint32_t localRegRead(uint32_t reg);
 
         uint32_t  getCpuAmount() override;
-        Hal::Cpu* getCpu(uint32_t processorId) override;
-        Hal::Cpu* getCpuCurrent() override;
+        Hal::CPU* getCpu(uint32_t processorId) override;
+        Hal::CPU* getCpuCurrent() override;
         void      launchAll() override;
 
     private:

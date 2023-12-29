@@ -34,7 +34,7 @@ namespace Kern::Platform::X64 {
         asm volatile("swapgs");
     }
 
-    static inline void setCPULocal(Kern::Hal::Cpu* cpu)
+    static inline void setCPULocal(Kern::Hal::CPU* cpu)
     {
         asm volatile("wrmsr" ::"a"((uint64_t)cpu & 0xffffffff) /*Value low*/,
                      "d"(((uint64_t)cpu >> 32) & 0xffffffff) /*Value high*/,
@@ -44,9 +44,9 @@ namespace Kern::Platform::X64 {
                      "c"(MSR_GS_BASE) /*Set Kernel GS Base*/);
     }
 
-    static inline Kern::Hal::Cpu* getCPULocal()
+    static inline Kern::Hal::CPU* getCPULocal()
     {
-        Kern::Hal::Cpu* cpu;
+        Kern::Hal::CPU* cpu;
         asm volatile("swapgs; movq %%gs:0, %0; swapgs;" : "=r"(cpu));
         return cpu;
     }

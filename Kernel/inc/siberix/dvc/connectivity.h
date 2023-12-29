@@ -13,10 +13,10 @@ namespace Kern {
         virtual Std::Array<Device&>& scan() = 0;
     };
 
-    class DeviceHost
+    class DeviceConnectivity
     {
     public:
-        DeviceHost();
+        DeviceConnectivity();
 
         Device*                   findDevice(Std::String<Utf8> name);
         Device*                   findDevice(Std::UUID uuid);

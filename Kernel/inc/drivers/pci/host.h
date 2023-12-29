@@ -6,7 +6,7 @@ namespace PCI {
     class PCIDeviceEnumerator : public Kern::DeviceEnumerator
     {
     public:
-        PCIDeviceEnumerator(Kern::DeviceHost* deviceHost)
+        PCIDeviceEnumerator(Kern::DeviceConnectivity* deviceHost)
           : Kern::DeviceEnumerator("PCI Device Enumerator")
           , m_deviceHost(deviceHost)
         {
@@ -20,7 +20,7 @@ namespace PCI {
         PCIInfo* getDevice(uint8_t classCode, uint8_t subclassCode);
 
     private:
-        Kern::DeviceHost*           m_deviceHost;
+        Kern::DeviceConnectivity*           m_deviceHost;
         Std::LinkedList<PCIDevice&> m_devices;
     };
 }

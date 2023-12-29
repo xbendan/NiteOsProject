@@ -15,8 +15,8 @@ namespace Kern::Platform::X64 {
     struct InterruptRecord
     {
         const char* m_name;
-        uint8_t       m_type;
-        bool     m_hasErrCode;
+        uint8_t     m_type;
+        bool        m_hasErrCode;
 
         void (*m_handler)(Registers*);
     };

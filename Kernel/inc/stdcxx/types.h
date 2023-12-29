@@ -15,6 +15,8 @@ using word  = unsigned short;
 using dword = unsigned int;
 using qword = unsigned long long;
 
+using size_t = unsigned long long;
+
 using le8_t  = uint8_t __attribute__((bitwise));
 using le16_t = uint16_t __attribute__((bitwise));
 using le32_t = uint32_t __attribute__((bitwise));
