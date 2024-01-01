@@ -11,7 +11,7 @@ namespace Kern {
         DiskDrive,
         DiskController,
         DisplayAdapter,
-        DisplayMonitor,
+        DisplayOutput,
         Firmware,
         HumanInterfaceDevice,
         Keyboard,
@@ -51,12 +51,12 @@ namespace Kern {
         DriverIncompatible = 0x10
     };
 
-    class Device
+    class IDevice
     {
     public:
-        Device(Std::String<Utf8> name, DeviceType type);
-        Device(Std::String<Utf8> name);
-        Device(DeviceType type);
+        IDevice(Std::String<Utf8> name, DeviceType type);
+        IDevice(Std::String<Utf8> name);
+        IDevice(DeviceType type);
 
         inline Std::String<Utf8> getName() { return this->m_name; }
         inline uint64_t          getId() { return this->m_deviceId; }
@@ -64,7 +64,7 @@ namespace Kern {
         inline DeviceType        getType() { return this->m_type; }
         inline uint64_t          getFlags() { return this->m_flags; }
 
-        Device& operator=(Device&& other)
+        IDevice& operator=(IDevice&& other)
         {
             if (this != &other) {
                 m_name         = Std::Move(other.m_name);
@@ -82,7 +82,7 @@ namespace Kern {
         uint64_t          m_deviceId;
         uint64_t          m_flags;
 
-        DeviceType               m_type;
-        Std::LinkedList<Device&> m_dependencies;
+        DeviceType                m_type;
+        Std::LinkedList<IDevice&> m_dependencies;
     };
 }

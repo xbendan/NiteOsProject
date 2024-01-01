@@ -52,6 +52,14 @@ namespace Std {
             other.m_buffer = nullptr;
             other.m_length = 0;
         }
+        Array(T* buffer, uint64_t length)
+        {
+            if (m_buffer != nullptr)
+                delete[] m_buffer;
+
+            m_buffer = buffer;
+            m_length = length;
+        }
         ~Array()
         {
             if (m_buffer != nullptr)
@@ -87,5 +95,34 @@ namespace Std {
     private:
         T*       m_buffer;
         uint64_t m_length;
+    };
+
+    template <typename T, uint64_t Capacity>
+    class StaticArray
+    {
+    public:
+        constexpr StaticArray() = default;
+        constexpr StaticArray(const T (&newArray)[Capacity])
+        {
+            for (uint64_t i = 0; i < Capacity; ++i) {
+                m_buffer[i] = newArray[i];
+            }
+        }
+
+        T&       operator[](uint64_t index) { return m_buffer[index]; }
+        T const& operator[](uint64_t index) const { return m_buffer[index]; }
+        void     operator=(StaticArray const& other) = delete;
+        void     operator=(StaticArray&& other)      = delete;
+        void     operator=(const T (&newArray)[Capacity])
+        {
+            for (uint64_t i = 0; i < Capacity; ++i) {
+                m_buffer[i] = newArray[i];
+            }
+        }
+
+        uint64_t length() const { return Capacity; }
+
+    private:
+        T m_buffer[Capacity];
     };
 }

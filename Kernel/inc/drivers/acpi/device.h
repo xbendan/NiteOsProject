@@ -3,7 +3,7 @@
 #include <stdcxx/type-traits.h>
 
 namespace Kern::Hal {
-    class AcpiPmDevice : public Device
+    class AcpiPmDevice : public IDevice
     {
     public:
         AcpiPmDevice();

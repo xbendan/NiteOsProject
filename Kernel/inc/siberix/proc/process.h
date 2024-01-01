@@ -1,3 +1,5 @@
+#pragma once
+
 #include <siberix/mem/address-space.h>
 #include <siberix/proc/thread.h>
 #include <stdcxx/linked-list.h>
@@ -9,7 +11,7 @@ namespace Kern::Task {
     class Process
     {
     public:
-        Process();
+        Process()  = default;
         ~Process() = default;
 
     private:

@@ -6,29 +6,33 @@
 
 #define PAGE_PART_SIZE (PAGE_SIZE_1G / 4)
 
-namespace Kern::Mem {
-    BlockAlloc _blockAlloc;
-    BuddyAlloc _buddyAlloc;
-    Page4K**   _pageSets;
+namespace Kern::Svc {
+    Page4K** _pageSets;
 
-    IMemoryHost::IMemoryHost()
-      : m_physAlloc(&(_blockAlloc = BlockAlloc()))
-      , m_addressSpaceKern(Init::setupVirtMemory())
+    void MemSvcHost::onLoad()
     {
-        Init::BootConfigTable::Mem& mem = Main::getBootConfig()->_mem;
+        m_addressSpaceKern = Init::setupVirtMemory();
 
-        m_totalSize  = mem._totalSize;
-        m_usableSize = mem._usableSize;
+        static BlockAlloc _blockAlloc = BlockAlloc();
+        m_physAlloc                   = &_blockAlloc;
+        m_totalSize                   = Main::getBootConfig()->_mem._totalSize;
+        m_usableSize                  = Main::getBootConfig()->_mem._usableSize;
 
         uint64_t partition = PAGE_SIZE_1G / 4;
-        uint64_t max       = alignUp(mem._maxSize, partition);
-        _pageSets          = (Page4K**)alloc4KPages(
+        uint64_t max = alignUp(Main::getBootConfig()->_mem._maxSize, partition);
+        _pageSets    = (Page4K**)alloc4KPages(
           divCeil(max / partition * sizeof(Page4K**), PAGE_SIZE_4K));
 
         for (int i = 0; i < max; i++) {
-            _pageSets[i] = alloc4KPages(
+            _pageSets[i] = (Page4K*)alloc4KPages(
               divCeil(partition / PAGE_SIZE_4K * sizeof(Page4K), PAGE_SIZE_4K));
         }
+
+        static BuddyAlloc _buddyAlloc = BuddyAlloc();
+        m_physAlloc                   = &_buddyAlloc;
+
+        static KernMemAlloc _kernMemAlloc = KernMemAlloc();
+        m_kmalloc                         = &_kernMemAlloc;
     }
 
     Page4K* pageOf(uint64_t address)

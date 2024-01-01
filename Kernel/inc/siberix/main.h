@@ -19,17 +19,17 @@ namespace Kern::Main {
                                            Io::File*         file,
                                            Io::Directory*    workingDirectory,
                                            Std::Array<Std::String<Utf8>> args);
-    Device*                findDevice(Std::String<Utf8> name);
-    Device*                findDevice(Std::UUID uuid);
-    void                   registerDevice(Device* device);
-    void                   unregisterDevice(Device* device);
+    IDevice*                findDevice(Std::String<Utf8> name);
+    IDevice*                findDevice(Std::UUID uuid);
+    void                   registerDevice(IDevice* device);
+    void                   unregisterDevice(IDevice* device);
     Io::RootFsNode&        getFsRoot();
     Io::FsNode*            getFsNode(Std::String<Utf16> path);
     Io::VirtualFileSystem& vfs();
 
     Init::BootConfigTable* getBootConfig();
-    Mem::IMemoryHost*      getHostedMemory();
-    Task::ITaskHost*       getHostedProcess();
+    Mem::MemSvcHost*      getHostedMemory();
+    Task::TaskSvcHost*       getHostedProcess();
 
     [[noreturn]] void main(Init::BootConfigTable& bootConfig);
 }

@@ -13,7 +13,7 @@ namespace PCI {
         }
         ~PCIDeviceEnumerator();
 
-        Std::Array<Kern::Device&>& scan() override;
+        Std::Array<Kern::IDevice&>& scan() override;
         bool     checkDevice(uint8_t bus, uint8_t slot, uint8_t func);
         bool     checkDevice(PCIInfo& info);
         PCIInfo* getDevice(uint16_t deviceId, uint16_t vendorId);

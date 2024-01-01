@@ -34,7 +34,8 @@ namespace Std {
     template <Encoding E>
     class String
     {
-        using Unit = typename E::Unit;
+        using Encoding = E;
+        using Unit     = typename E::Unit;
 
     public:
         String(const char* str)
@@ -48,13 +49,33 @@ namespace Std {
         String& operator=(String const&);
         String& operator=(String&&);
 
-        bool equals(String const&) const;
+        bool equals(String const& other) const
+        {
+            if (m_length != other.m_length) {
+                return false;
+            } else {
+                if (Unit == other::Unit) {
+                    for (uint64_t i = 0; i < m_length; i++) {
+                        if (m_data[i] != other.m_data[i]) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else {
+                    // TODO: Implement
+                    return false;
+                }
+            }
+        }
+
         bool equalsIgnoreCase(String const&) const;
         bool isStartWith(String const&) const;
         bool isEndWith(String const&) const;
         bool contains(String const&) const;
 
-        bool operator==(String const&) const;
+        Unit const& operator[](uint64_t) const { return m_data[i]; }
+
+        bool operator==(String const& other) const { return equals(other); }
         bool operator!=(String const&) const;
 
     private:

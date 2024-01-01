@@ -1,6 +1,7 @@
 #include <arch-x86_64/hwinterrupts.h>
 #include <arch-x86_64/hwtypes.h>
 #include <siberix/main.h>
+#include <siberix/svc/svc-host.h>
 
 extern "C"
 {
@@ -37,5 +38,15 @@ namespace Kern::Init {
             .base  = (uint64_t)&idtEntry,
         };
         _lidt((uint64_t)&cpu0.m_idtPtr);
+    }
+
+    Std::Array<Svc::SvcLoader<Svc::ISvcHost>*>* getLoaders()
+    {
+        static Std::Array<Svc::SvcLoader<Svc::ISvcHost>*> loaders = {
+            new Svc::SvcLoader<Svc::MemSvcHost>(),
+            new Svc::SvcLoader<Svc::TaskSvcHost>(),
+            new Svc::SvcLoader<Svc::IoSvcHost>(),
+        };
+        return &loaders;
     }
 }

@@ -7,6 +7,6 @@
 namespace Kern::Init {
     void                setupPhysMemory();
     Mem::AddressSpace*  setupVirtMemory();
-    Task::ITaskHost*    setupTask();
+    Task::TaskSvcHost*    setupTask();
     DeviceConnectivity* setupDevices();
 }

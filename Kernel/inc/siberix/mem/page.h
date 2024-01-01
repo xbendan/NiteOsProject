@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/linked-list.h>
 #include <stdcxx/math.h>
 #include <stdcxx/types.h>

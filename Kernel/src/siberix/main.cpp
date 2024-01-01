@@ -3,6 +3,7 @@
 #include <siberix/init/init-comp.h>
 #include <siberix/init/init-drvs.h>
 #include <siberix/main.h>
+#include <siberix/proc/svchost.h>
 #include <siberix/time/clocksource.h>
 #include <siberix/time/timersource.h>
 
@@ -19,34 +20,34 @@ namespace Kern::Main {
     bool isInitialized = false;
     BootConfigTable & _bootConfig;
 
-    Task::ITaskHost        hostedProcess;
-    Mem::IMemoryHost       hostedMemory;
+    Svc::MemSvcHost        svcMem;
+    Svc::TaskSvcHost*      svcTask;
     DeviceConnectivity*    hostedDevices;
     Io::VirtualFileSystem* fileSystem;
 
     uint64_t alloc4KPages(uint64_t amount)
     {
-        return hostedMemory.alloc4KPages(amount);
+        return svcMem.alloc4KPages(amount);
     }
 
     uint64_t alloc4KPages(uint64_t amount, Mem::AddressSpace* addressSpace)
     {
-        return hostedMemory.alloc4KPages(amount, addressSpace);
+        return svcMem.alloc4KPages(amount, addressSpace);
     }
 
     void free4KPages(uint64_t address, uint64_t amount)
     {
-        hostedMemory.free4KPages((void*)address, amount);
+        svcMem.free4KPages((void*)address, amount);
     }
 
     RefPtr<Task::Process> createProcess(Std::String<Utf8> name)
     {
-        return hostedProcess.getProcessFactory()->createProcess(name);
+        return svcTask->getProcessFactory()->createProcess(name);
     }
 
     RefPtr<Task::Process> createIdleProcess()
     {
-        return hostedProcess.getProcessFactory()->createIdleProcess();
+        return svcTask->getProcessFactory()->createIdleProcess();
     }
 
     RefPtr<Task::Process> createProcessEx(
@@ -55,7 +56,7 @@ namespace Kern::Main {
       Io::Directory*                 workingDirectory,
       Std::Array<Std::String<Utf8>>* launchArgs)
     {
-        return hostedProcess->getProcessFactory()->createProcessEx(
+        return svcTask->getProcessFactory()->createProcessEx(
           name, file, workingDirectory, launchArgs);
     }
 
@@ -75,6 +76,8 @@ namespace Kern::Main {
     {
         _bootConfig = bootConfig;
         setupArch();
-        hostedMemory = Mem::IMemoryHost();
+
+        svcMem  = Svc::MemSvcHost();
+        svcTask = new Svc::TaskSvcHost();
     }
 }

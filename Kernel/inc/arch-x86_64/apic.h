@@ -74,7 +74,7 @@ namespace Kern::Platform::X64::Apic {
 
     class ApicDevice
       : public Hal::ICpuHost
-      , public Device
+      , public IDevice
     {
     public:
         void     ioRegWrite(uint32_t reg, uint32_t data);

@@ -9,7 +9,7 @@ namespace Kern::Mem {
     {
         _kernMemAlloc = this;
         for (uint64_t i = 0; i < 12; i++) {
-            m_pools[i] = (KernMemAlloc::MemoryPool*)Kern::Main::alloc4KPages(1);
+            m_pools[i] = (KernMemAlloc::MemPool*)Main::alloc4KPages(1);
         }
     }
 

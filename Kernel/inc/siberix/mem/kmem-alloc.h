@@ -7,7 +7,7 @@ namespace Kern::Mem {
     {
     public:
         KernMemAlloc();
-        ~KernMemAlloc() = delete;
+        ~KernMemAlloc() = default;
 
         uint64_t alloc(uint64_t size) override;
         void     free(void* address) override;
@@ -19,7 +19,7 @@ namespace Kern::Mem {
          * Each cpu has its own record, and can only access its own
          * page list for thread safety.
          */
-        class MemoryPoolNode
+        class MemPoolNode
         {
         public:
             void**                   _freelist;
@@ -41,12 +41,12 @@ namespace Kern::Mem {
             Std::LinkedList<Page4K*> _partial;
         };
 
-        class MemoryPool
+        class MemPool
         {
         public:
-            MemoryPool(Std::String<Utf8> name,
-                       uint64_t          objSize,
-                       uint64_t          flags = 0)
+            MemPool(Std::String<Utf8> name,
+                    uint64_t          objSize,
+                    uint64_t          flags = 0)
               : m_name(name)
               , m_objSize(objSize)
               , m_flags(flags)
@@ -54,23 +54,23 @@ namespace Kern::Mem {
             }
 
         private:
-            Std::String<Utf8>          m_name;
-            uint64_t                   m_objSize;
-            uint64_t                   m_flags;
-            Std::Array<MemoryPoolNode> m_nodes;
+            Std::String<Utf8>       m_name;
+            uint64_t                m_objSize;
+            uint64_t                m_flags;
+            Std::Array<MemPoolNode> m_nodes;
         };
 
         template <typename T>
-        class ObjectPool : MemoryPool
+        class ObjectPool : MemPool
         {
         public:
             ObjectPool()
-              : MemoryPool(sizeof(T))
+              : MemPool(sizeof(T))
             {
             }
         };
 
-        Std::LinkedList<MemoryPool*> m_pools;
-        uint32_t                     m_poolSizes[12];
+        Std::LinkedList<MemPool*> m_pools;
+        uint32_t                  m_poolSizes[12];
     };
 }

@@ -5,7 +5,7 @@
 
 namespace Kern::Hal {
     AcpiPmDevice::AcpiPmDevice()
-      : Device(Std::String<Utf8>("ACPI Power Management Device"))
+      : IDevice(Std::String<Utf8>("ACPI Power Management Device"))
     {
         const char* sign        = "RSD PTR ";
         uint64_t    rsdpAddress = Mem::copyAsIoAddress(

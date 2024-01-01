@@ -1,3 +1,5 @@
+#pragma once
+
 #include <siberix/fs/file.h>
 #include <siberix/proc/process.h>
 #include <stdcxx/array.h>
@@ -7,25 +9,17 @@
 namespace Kern::Task {
     class Scheduler
     {
+    public:
+        Scheduler()
+          : m_nextPID(0)
+        {
+        }
+        ~Scheduler() = default;
+
+        uint32_t getNextPID() { return m_nextPID++; }
+
     private:
         uint32_t m_nextPID;
-    };
-
-    class ITaskHost
-    {
-    public:
-        virtual ~ITaskHost() = default;
-
-        Scheduler*      getScheduler() { return m_scheduler; }
-        ProcessFactory* getProcessFactory() { return m_processFactory; }
-        RefPtr<Process> getProcess(uint32_t pid) { return m_processes[pid]; }
-        RefPtr<Process> getProcess(Std::String<Utf8> name);
-        RefPtr<Process> getProcess(Std::UUID uuid);
-
-    private:
-        Scheduler*                  m_scheduler;
-        ProcessFactory*             m_processFactory;
-        Std::Array<RefPtr<Process>> m_processes;
     };
 
     class ProcessFactory
@@ -69,12 +63,6 @@ namespace Kern::Task {
         Thread* createIdleThread();
 
     private:
-        ProcessFactory(ITaskHost* host)
-          : m_host(host)
-        {
-        }
-
-        friend ITaskHost;
-        ITaskHost* m_host;
+        ProcessFactory() {}
     };
 }
