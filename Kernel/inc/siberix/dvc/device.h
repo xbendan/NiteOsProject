@@ -1,7 +1,11 @@
+#pragma once
+
 #include <stdcxx/copy.h>
 #include <stdcxx/linked-list.h>
 #include <stdcxx/string.h>
 #include <stdcxx/uuid.h>
+
+#define DEVICE_FLAG_LOADED 0x01
 
 namespace Kern {
     enum DeviceType
@@ -21,12 +25,13 @@ namespace Kern {
         PointerDevice,
         Printer,
         PowerSupply,
+        Processor,
         Security,
         SoftwareDevice,
-        Processor,
         SystemDevices,
-        USBController,
         Sensor,
+        TimerOrClock,
+        USBController,
 
         Unknown
     };
@@ -76,7 +81,7 @@ namespace Kern {
             return *this;
         }
 
-    private:
+    protected:
         Std::String<Utf8> m_name;
         Std::UUID         m_uuid;
         uint64_t          m_deviceId;

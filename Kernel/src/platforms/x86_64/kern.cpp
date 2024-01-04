@@ -1,7 +1,12 @@
 #include <arch-x86_64/hwinterrupts.h>
 #include <arch-x86_64/hwtypes.h>
+#include <drivers/acpi/device.h>
+#include <drivers/apic/device.h>
+#include <drivers/pci/enumerator.h>
 #include <siberix/main.h>
 #include <siberix/svc/svc-host.h>
+#include <siberix/svc/svc-loader.h>
+#include <xtra-logging/logger.h>
 
 extern "C"
 {
@@ -13,10 +18,19 @@ namespace Kern::Platform::X64 {
     extern IdtEntry idtEntry[256];
 }
 
+namespace Kern::Main {
+    extern Svc::MemSvcHost*       svcMem;
+    extern Svc::TaskSvcHost*      svcTask;
+    extern Logger*                logger;
+    extern DeviceConnectivity*    connectivity;
+    extern Io::VirtualFileSystem* fileSystem;
+}
+
 namespace Kern::Init {
     using namespace Kern::Platform::X64;
+    using namespace Kern::Hal;
 
-    CPUX64Impl cpu0;
+    CPUImplX64 cpu0;
 
     void setupArch()
     {
@@ -38,15 +52,30 @@ namespace Kern::Init {
             .base  = (uint64_t)&idtEntry,
         };
         _lidt((uint64_t)&cpu0.m_idtPtr);
-    }
 
-    Std::Array<Svc::SvcLoader<Svc::ISvcHost>*>* getLoaders()
+        static Svc::MemSvcHost _svcMem = Svc::MemSvcHost();
+        (Main::svcMem = &_svcMem)->onLoad();
+        (Main::svcTask = new Svc::TaskSvcHost())->onLoad();
+        (Main::logger = new Logger());
+        (Main::connectivity = new DeviceConnectivity(new Std::Array<IDevice*>(
+           {
+             new Hal::Impls::AcpiMgmtDevice(),
+             new Hal::Impls::ApicDevice(),
+             new Hal::Impls::PeriCompDeviceEnumerator(),
+           },
+           3)))
+          ->onLoad();
+    }
+}
+
+namespace Kern::Svc {
+    Std::Array<SvcLoader<ISvcHost>> getAllLoaders()
     {
-        static Std::Array<Svc::SvcLoader<Svc::ISvcHost>*> loaders = {
-            new Svc::SvcLoader<Svc::MemSvcHost>(),
-            new Svc::SvcLoader<Svc::TaskSvcHost>(),
-            new Svc::SvcLoader<Svc::IoSvcHost>(),
+        static SvcLoader<ISvcHost> svcLoaders[] = {
+            StaticSvcLoader<MemSvcHost>(),
+            SvcLoader<TaskSvcHost>(),
+            SvcLoader<DeviceConnectivity>(),
         };
-        return &loaders;
+        return Std::Array<SvcLoader<ISvcHost>>(svcLoaders, 3);
     }
 }

@@ -1,3 +1,4 @@
+#include <stdcxx/iterator.h>
 #include <stdcxx/types.h>
 
 namespace Std {
@@ -52,7 +53,7 @@ namespace Std {
             other.m_buffer = nullptr;
             other.m_length = 0;
         }
-        Array(T* buffer, uint64_t length)
+        Array(T buffer[], int length)
         {
             if (m_buffer != nullptr)
                 delete[] m_buffer;
@@ -90,7 +91,47 @@ namespace Std {
             other.m_buffer = nullptr;
             other.m_length = 0;
         }
-        uint64_t length() const { return m_length; }
+        void operator=(T* buffer)
+        {
+            if (m_buffer != nullptr)
+                delete[] m_buffer;
+
+            m_buffer = buffer;
+        }
+
+        ArrayIterator begin() { return ArrayIterator(*this, 0); }
+        ArrayIterator end() { return ArrayIterator(*this, m_length); }
+        uint64_t      length() const { return m_length; }
+
+        class ArrayIterator : public Iterator<T>
+        {
+        public:
+            ArrayIterator(Array<T>& array, uint64_t index)
+              : m_array(array)
+              , m_index(index)
+            {
+            }
+
+            ArrayIterator& operator++() override
+            {
+                ++m_index;
+                return *this;
+            }
+            ArrayIterator& operator--() override
+            {
+                --m_index;
+                return *this;
+            }
+            T&   operator*() override { return m_array[m_index]; }
+            bool operator==(Iterator<T>& other) override
+            {
+                return m_array[m_index] == other.operator*();
+            }
+
+        private:
+            Array<T>& m_array;
+            uint64_t  m_index;
+        };
 
     private:
         T*       m_buffer;
@@ -126,3 +167,5 @@ namespace Std {
         T m_buffer[Capacity];
     };
 }
+
+using Bytes = Std::Array<uint8_t>;

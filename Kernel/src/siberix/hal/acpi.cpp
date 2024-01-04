@@ -4,7 +4,7 @@
 #include <siberix/mem/range.h>
 
 namespace Kern::Hal {
-    AcpiPmDevice::AcpiPmDevice()
+    AcpiMgmtDevice::AcpiMgmtDevice()
       : IDevice(Std::String<Utf8>("ACPI Power Management Device"))
     {
         const char* sign        = "RSD PTR ";

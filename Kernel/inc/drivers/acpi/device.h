@@ -2,12 +2,17 @@
 #include <siberix/dvc/device.h>
 #include <stdcxx/type-traits.h>
 
-namespace Kern::Hal {
-    class AcpiPmDevice : public IDevice
+namespace Kern::Hal::Impls {
+    using namespace Specs;
+
+    class AcpiMgmtDevice : public Kern::IDevice
     {
     public:
-        AcpiPmDevice();
-        ~AcpiPmDevice();
+        AcpiMgmtDevice()
+          : Kern::IDevice("ACPI Management Device")
+        {
+        }
+        ~AcpiMgmtDevice();
 
         template <typename T>
             requires Std::IsBaseOf<AcpiTable, T>::Value

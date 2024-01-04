@@ -32,7 +32,7 @@ namespace Std {
             T _value;
         };
 
-        using IsObjectInherited = Std::IsBaseOf<Entry<T>, T>;
+        using IsObjectInherited = Std::IsBaseOf<Entry, T>;
 
         /* --- Constructors --- */
 
@@ -86,6 +86,12 @@ namespace Std {
                 _tail = elem;
             }
             _size++;
+        }
+
+        template <typename _T>
+            requires Std::IsBaseOf<Entry, _T>::value
+        void add(T*... value)
+        {
         }
 
         void remove(uint64_t i)

@@ -2,7 +2,7 @@
 #include <siberix/fs/partition.h>
 #include <stdcxx/linked-list.h>
 
-namespace Kern::Dvc {
+namespace Kern {
     class DiskDevice : public Device
     {
         virtual int64_t read(uint64_t offset, uint64_t size, void* buffer)  = 0;

@@ -1,6 +1,8 @@
-#include <siberix/proc/thread.h>
-#include <stdcxx/types.h>
+#pragma once
 
+#include <siberix/proc/thread.h>
+#include <siberix/svc/svc-host.h>
+#include <stdcxx/types.h>
 namespace Kern::Hal {
     class CPU
     {
@@ -25,8 +27,8 @@ namespace Kern::Hal {
 
         void sendSignal(Signal signal);
 
-        inline void enableInterrupts();
-        inline void disableInterrupts();
+        void enableInterrupts();
+        void disableInterrupts();
 
     private:
         CPU*                m_self;
@@ -35,15 +37,24 @@ namespace Kern::Hal {
         Kern::Task::Thread* m_idleThread;
     };
 
-    class ICpuHost
+    class SmpSvcHost : Svc::ISvcHost
     {
     public:
-        virtual ~ICpuHost() = default;
+        SmpSvcHost()
+          : ISvcHost("KERN.SMP", nullptr)
+        {
+        }
 
-        virtual uint32_t getCpuAmount()               = 0;
-        virtual CPU*     getCpu(uint32_t processorId) = 0;
-        virtual CPU*     getCpuCurrent()              = 0;
-        virtual void     launchAll()                  = 0;
+        virtual uint32_t getCPUAmount() { return m_cpuAmount; }
+        virtual CPU*     getCPUById(uint32_t processorId)
+        {
+            return m_cpus[processorId];
+        }
+        virtual CPU* current() = 0;
+
+    private:
+        uint32_t         m_cpuAmount;
+        Std::Array<CPU*> m_cpus;
     };
 
     class IPowerManagement

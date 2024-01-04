@@ -6,6 +6,7 @@
 #include <siberix/proc/svchost.h>
 #include <siberix/time/clocksource.h>
 #include <siberix/time/timersource.h>
+#include <xtra-logging/logger.h>
 
 const char* splash[] = {
     " _____  _  _                  _                            ",
@@ -20,24 +21,25 @@ namespace Kern::Main {
     bool isInitialized = false;
     BootConfigTable & _bootConfig;
 
-    Svc::MemSvcHost        svcMem;
+    Svc::MemSvcHost*       svcMem;
     Svc::TaskSvcHost*      svcTask;
-    DeviceConnectivity*    hostedDevices;
+    Logger*                logger;
+    DeviceConnectivity*    connectivity;
     Io::VirtualFileSystem* fileSystem;
 
     uint64_t alloc4KPages(uint64_t amount)
     {
-        return svcMem.alloc4KPages(amount);
+        return svcMem->alloc4KPages(amount);
     }
 
     uint64_t alloc4KPages(uint64_t amount, Mem::AddressSpace* addressSpace)
     {
-        return svcMem.alloc4KPages(amount, addressSpace);
+        return svcMem->alloc4KPages(amount, addressSpace);
     }
 
     void free4KPages(uint64_t address, uint64_t amount)
     {
-        svcMem.free4KPages((void*)address, amount);
+        svcMem->free4KPages((void*)address, amount);
     }
 
     RefPtr<Task::Process> createProcess(Std::String<Utf8> name)
@@ -77,7 +79,9 @@ namespace Kern::Main {
         _bootConfig = bootConfig;
         setupArch();
 
-        svcMem  = Svc::MemSvcHost();
+        static Svc::MemSvcHost _svcMem = Svc::MemSvcHost();
+        svcMem                         = &_svcMem;
+
         svcTask = new Svc::TaskSvcHost();
     }
 }

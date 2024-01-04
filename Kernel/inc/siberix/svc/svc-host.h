@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/array.h>
 #include <stdcxx/string.h>
 
@@ -5,7 +7,8 @@ namespace Kern::Svc {
     class ISvcHost
     {
     public:
-        ISvcHost(Std::String<Utf8> svcName, Std::String<Utf8>* svcDepends)
+        ISvcHost(Std::String<Utf8>  svcName,
+                 Std::String<Utf8>* svcDepends = nullptr)
           : m_svcName(svcName)
           , m_svcDepends(svcDepends)
         {

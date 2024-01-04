@@ -2,7 +2,7 @@
 #include <siberix/fs/vfs.h>
 #include <siberix/init/boot-info.h>
 #include <siberix/mem/mem.h>
-#include <siberix/proc/sched.h>
+#include <siberix/proc/svchost.h>
 
 extern "C" [[noreturn]] void
 kmain(Kern::Init::BootConfigTable& bootConfig);
@@ -19,8 +19,8 @@ namespace Kern::Main {
                                            Io::File*         file,
                                            Io::Directory*    workingDirectory,
                                            Std::Array<Std::String<Utf8>> args);
-    IDevice*                findDevice(Std::String<Utf8> name);
-    IDevice*                findDevice(Std::UUID uuid);
+    IDevice*               findDevice(Std::String<Utf8> name);
+    IDevice*               findDevice(Std::UUID uuid);
     void                   registerDevice(IDevice* device);
     void                   unregisterDevice(IDevice* device);
     Io::RootFsNode&        getFsRoot();
@@ -28,8 +28,8 @@ namespace Kern::Main {
     Io::VirtualFileSystem& vfs();
 
     Init::BootConfigTable* getBootConfig();
-    Mem::MemSvcHost*      getHostedMemory();
-    Task::TaskSvcHost*       getHostedProcess();
+    Svc::MemSvcHost*       getSvcMemory();
+    Svc::TaskSvcHost*      getSvcTask();
 
     [[noreturn]] void main(Init::BootConfigTable& bootConfig);
 }

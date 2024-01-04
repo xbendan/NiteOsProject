@@ -1,10 +1,3 @@
-#include <arch-x86_64/hwtypes.h>
-#include <drivers/acpi/spec.h>
-#include <siberix/dvc/device.h>
-#include <siberix/hwtypes.h>
-#include <stdcxx/linked-list.h>
-#include <stdcxx/types.h>
-
 #define LOCAL_APIC_ID 0x20            // APIC ID Register
 #define LOCAL_APIC_VERSION 0x30       // APIC Version Register
 #define LOCAL_APIC_TPR 0x80           // Task Priority Register
@@ -61,45 +54,3 @@
 #define IO_APIC_RED_TABLE_ENT(x) (0x10 + 2 * x)
 
 #define IO_RED_TBL_VECTOR(x) (x & 0xFF)
-
-namespace Kern::Platform::X64 {
-    class Interface
-    {
-    private:
-        uint8_t     m_apicId;
-        uint64_t    m_basePhys;
-        uint64_t    m_baseVirt;
-        CPUImplX64* m_cpu;
-    };
-
-    class ApicDevice
-      : public Hal::SmpSvcHost
-      , public IDevice
-    {
-    public:
-        void     ioRegWrite(uint32_t reg, uint32_t data);
-        uint32_t ioRegRead(uint32_t reg);
-        void     ioRedTblWrite(uint32_t index, uint64_t data);
-        uint64_t ioRedTblRead(uint32_t index);
-
-        void     localBaseWrite(uint64_t data);
-        uint64_t localBaseRead();
-        void     localRegWrite(uint32_t reg, uint32_t data);
-        uint32_t localRegRead(uint32_t reg);
-
-        void onLoad() override;
-        void onEnable() override;
-        void onDisable() override;
-
-        Hal::CPU* current() override;
-
-    private:
-        uint64_t                     m_ioBasePhys;
-        uint64_t                     m_ioBaseVirt;
-        uint32_t                     m_interrupts;
-        volatile uint32_t*           m_ioRegSel;
-        volatile uint32_t*           m_ioWindow;
-        Std::LinkedList<Interface*>* m_interfaces;
-        Std::LinkedList<MadtIso*>*   m_overrides;
-    };
-}

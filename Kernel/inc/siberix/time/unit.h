@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/types.h>
 
 namespace Kern {
