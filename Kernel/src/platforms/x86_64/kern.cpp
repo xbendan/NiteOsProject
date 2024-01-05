@@ -2,6 +2,7 @@
 #include <arch-x86_64/hwtypes.h>
 #include <drivers/acpi/device.h>
 #include <drivers/apic/device.h>
+#include <drivers/comm/device.h>
 #include <drivers/pci/enumerator.h>
 #include <siberix/main.h>
 #include <siberix/svc/svc-host.h>
@@ -59,23 +60,14 @@ namespace Kern::Init {
         (Main::logger = new Logger());
         (Main::connectivity = new DeviceConnectivity(new Std::Array<IDevice*>(
            {
+             new Hal::Impls::SerialPortDevice(),
              new Hal::Impls::AcpiMgmtDevice(),
              new Hal::Impls::ApicDevice(),
              new Hal::Impls::PeriCompDeviceEnumerator(),
            },
            3)))
           ->onLoad();
-    }
-}
-
-namespace Kern::Svc {
-    Std::Array<SvcLoader<ISvcHost>> getAllLoaders()
-    {
-        static SvcLoader<ISvcHost> svcLoaders[] = {
-            StaticSvcLoader<MemSvcHost>(),
-            SvcLoader<TaskSvcHost>(),
-            SvcLoader<DeviceConnectivity>(),
-        };
-        return Std::Array<SvcLoader<ISvcHost>>(svcLoaders, 3);
+        Main::fileSystem = new Io::VirtualFileSystem();
+        Main::connectivity->registerDevice
     }
 }

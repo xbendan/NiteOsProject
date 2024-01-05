@@ -1,7 +1,7 @@
 #include <siberix/dvc/device.h>
 #include <siberix/gfx/out.h>
 
-namespace Kern::Video {
+namespace Kern::Gfx {
     class IVideoOutputDevice
       : public IDevice
       , public ICanvas

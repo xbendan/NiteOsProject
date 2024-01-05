@@ -9,12 +9,12 @@ namespace Kern::Io {
         VirtualFileSystem();
         ~VirtualFileSystem();
 
-        RootFsNode& getRoot() { return m_root; }
+        RootFsNode* getRoot() { return m_root; }
         Volume*     getVolume(uint64_t volumeId);
         Volume*     getVolume(FsNode* mountPoint);
 
     private:
-        RootFsNode               m_root;
+        RootFsNode*              m_root;
         Std::LinkedList<Volume*> m_volumes;
     };
 }

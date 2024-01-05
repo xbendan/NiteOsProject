@@ -58,6 +58,21 @@ namespace Kern::Hal::Impls {
                 return *((volatile uint32_t*)(m_baseVirt + reg));
             }
 
+            void sendIpi(uint32_t vector)
+            {
+                regWrite(LOCAL_APIC_ICR_HIGH, ((uint32_t)m_apicId) << 24);
+                regWrite(LOCAL_APIC_ICR_LOW, vector);
+
+                while ((regRead((uint32_t)LOCAL_APIC_ICR_LOW) &
+                        LOCAL_APIC_ICR_PENDING) != 0)
+                    ;
+            }
+
+            void sendIpi(uint32_t dsh, uint32_t type, uint8_t vector)
+            {
+                sendIpi(dsh | type | ICR_VECTOR(vector));
+            }
+
             uint8_t getApicId() const { return m_apicId; }
 
         private:

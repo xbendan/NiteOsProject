@@ -14,6 +14,7 @@ namespace Kern::Hal {
             HALT  = 2,
             RESET = 3,
             SCHED = 4,
+            EOI   = 5
         };
 
         CPU() = delete;
@@ -25,10 +26,10 @@ namespace Kern::Hal {
         {
         }
 
-        void sendSignal(Signal signal);
+        virtual void sendSignal(Signal signal);
 
-        void enableInterrupts();
-        void disableInterrupts();
+        virtual void enableInterrupts();
+        virtual void disableInterrupts();
 
     private:
         CPU*                m_self;

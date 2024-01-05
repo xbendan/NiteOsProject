@@ -1,8 +1,8 @@
 #include <stdcxx/types.h>
 #include <stdcxx/uuid.h>
 
-namespace Gpt {
-    struct Header
+namespace Kern::Hal::Specs {
+    struct GuidPartTable
     {
         uint64_t  _signature;
         uint32_t  _revision;
@@ -20,7 +20,7 @@ namespace Gpt {
         uint32_t  _crc32PartitionArray;
     } __attribute__((packed));
 
-    struct Entry
+    struct GuidPartEntry
     {
         Std::UUID _partitionTypeGuid;
         Std::UUID _uniquePartitionGuid;

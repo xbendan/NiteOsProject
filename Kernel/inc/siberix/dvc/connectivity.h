@@ -32,6 +32,8 @@ namespace Kern {
         IDevice*                             findDevice(Std::String<Utf8> name);
         IDevice*                             findDevice(Std::UUID uuid);
         IDevice*                             findDevice(uint64_t deviceId);
+        void                                 registerDevice(IDevice* device);
+        void                                 unregisterDevice(IDevice* device);
         Std::LinkedList<IDevice*>*           getAllDevices();
         uint64_t                             count();
         Std::LinkedList<IDeviceEnumerator*>* getAllEnumerators();

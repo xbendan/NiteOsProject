@@ -1,7 +1,7 @@
 #include <stdcxx/types.h>
 #include <xtra-math/vec.h>
 
-namespace Kern::Video {
+namespace Kern::Gfx {
     template <uint8_t BitWidth>
     struct Pixel
     {
@@ -23,8 +23,12 @@ namespace Kern::Video {
         {
         }
 
-        uint32_t getWidth() const { return m_width; }
-        uint32_t getHeight() const { return m_height; }
+        virtual void setWidth(uint32_t width) { m_width = width; }
+        virtual void setHeight(uint32_t height) { m_height = height; }
+        uint32_t     getWidth() const { return m_width; }
+        uint32_t     getHeight() const { return m_height; }
+
+        virtual void drawPixel(Vector<uint32_t, 2> pos, Pixel8 pixel);
 
     protected:
         uint32_t m_width;
