@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/types.h>
 #include <xtra-concurrent/spinlock.h>
 
@@ -19,19 +21,19 @@ namespace Kern::Task {
         Thread(Process* process, uint32_t threadId);
         ~Thread() = default;
 
-        uint32_t   getThreadId() const { return m_threadId; }
+        uint32_t getThreadId() const { return m_threadId; }
         Process* getParent() const { return m_process; }
-        uint8_t    getPriority() { return m_priority; }
+        uint8_t  getPriority() { return m_priority; }
 
         ThreadState& state() { return m_state; }
 
     private:
-        uint32_t      m_threadId;
+        uint32_t    m_threadId;
         Process*    m_process;
         ThreadState m_state;
-        uint8_t       m_priority;
+        uint8_t     m_priority;
 
-        Xtra::Concurrent::Spinlock m_lock;
-        Xtra::Concurrent::Spinlock m_stateLock;
+        Spinlock m_lock;
+        Spinlock m_stateLock;
     };
 }

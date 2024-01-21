@@ -73,7 +73,7 @@ namespace Std {
         bool isEndWith(String const&) const;
         bool contains(String const&) const;
 
-        Unit const& operator[](uint64_t) const { return m_data[i]; }
+        Unit const& operator[](uint64_t i) const { return m_data[i]; }
 
         bool operator==(String const& other) const { return equals(other); }
         bool operator!=(String const&) const;

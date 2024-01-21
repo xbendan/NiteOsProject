@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/string.h>
 #include <stdcxx/types.h>
 

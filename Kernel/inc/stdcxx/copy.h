@@ -1,14 +1,16 @@
+#pragma once
+
 #include <stdcxx/reference.h>
 
 namespace Std {
     template <typename T>
-    T&& Forward(RemoveReference<T>::Type& p)
+    constexpr T&& Forward(RemoveReference<T>::Type& p) noexcept
     {
         return static_cast<Tp&&>(p);
     };
 
     template <typename T>
-    T&& Forward(RemoveReference<T>::Type&& p)
+    constexpr T&& Forward(RemoveReference<T>::Type&& p) noexcept
     {
         return static_cast<Tp&&>(p);
     };

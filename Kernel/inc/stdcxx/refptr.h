@@ -1,9 +1,17 @@
+#pragma once
+
 #include <stdcxx/types.h>
 
 template <typename T>
 class RefPtr
 {
 public:
+    RefPtr()
+      : m_ptr(nullptr)
+      , m_refCount(new unsigned(0))
+    {
+    }
+
     RefPtr(T* ptr)
       : m_ptr(ptr)
     {
@@ -54,6 +62,6 @@ private:
         }
     }
 
-    T*   m_ptr;
-    int* m_refCount;
+    T*            m_ptr;
+    unsigned int* m_refCount;
 };

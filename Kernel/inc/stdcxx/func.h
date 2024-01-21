@@ -1,5 +1,7 @@
-#include <stdcxx/type-traits.h>
+#pragma once
+
 #include <stdcxx/reference.h>
+#include <stdcxx/type-traits.h>
 
 namespace Std {
     template <typename>

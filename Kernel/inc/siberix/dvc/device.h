@@ -88,6 +88,6 @@ namespace Kern {
         uint64_t          m_flags;
 
         DeviceType                m_type;
-        Std::LinkedList<IDevice&> m_dependencies;
+        Std::LinkedList<IDevice*> m_dependencies;
     };
 }

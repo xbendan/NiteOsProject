@@ -1,4 +1,3 @@
-namespace Xtra::Concurrent {
-    class Mutex
-    {};
-}
+
+class Mutex
+{};

@@ -1,9 +1,11 @@
+#pragma once
+
 #include <stdcxx/iterator.h>
 #include <stdcxx/types.h>
 
 namespace Std {
     template <typename T>
-    class List : IIterable<T>
+    class List
     {
     public:
         virtual ~List() = default;

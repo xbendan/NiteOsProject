@@ -4,7 +4,6 @@
 #include <siberix/mem/kmem-alloc.h>
 #include <siberix/mem/page.h>
 #include <siberix/svc/svc-host.h>
-#include <siberix/svc/svc-loader.h>
 #include <stdcxx/types.h>
 #include <xtra-math/align.h>
 
@@ -19,7 +18,7 @@ namespace Kern {
             virtual void     free(void* address)  = 0;
         };
 
-        class IPageAlloc : public IMemAlloc
+        class IPageAlloc : virtual public IMemAlloc
         {
         public:
             virtual uint64_t allocatePhysMemory4K(uint64_t amount)      = 0;

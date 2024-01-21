@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/decltype.h>
 #include <stdcxx/types.h>
 
@@ -59,7 +61,8 @@ namespace Std {
     template <typename T> struct RemoveConstVolatile<volatile T> { using Value = T; };
     template <typename T> struct RemoveConstVolatile<const volatile T> { using Value = T; };
 
-    template <typename T> struct IsVoid : IsSame<void, RemoveConstVolatile<T>::Value> {};
+    template <typename T>
+    using IsVoid = IsSame<void, RemoveConstVolatile<T>::Value>;
     
     template <typename T> constexpr bool IsPointer = false;
     template <typename T> constexpr bool IsPointer<T*> = true;
@@ -76,11 +79,11 @@ namespace Std {
     template <typename T>
     struct IsClass : IntegralConstant<bool, __is_class(T)> {};
 
-    template <typename T> constexpr bool IsUnion = false;
-    template <typename T> constexpr bool IsUnion<T> = __is_union(T);
+    template <typename T>
+    struct IsUnion : IntegralConstant<bool, __is_union(T)> {};
 
-    template <typename T> constexpr bool IsEnum = false;
-    template <typename T> constexpr bool IsEnum<T> = __is_enum(T);
+    template <typename T>
+    struct IsEnum : IntegralConstant<bool, __is_enum(T)> {};
 
     namespace _ {
         template <typename> 

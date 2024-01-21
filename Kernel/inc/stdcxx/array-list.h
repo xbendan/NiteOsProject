@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/list.h>
 #include <stdcxx/type-traits.h>
 

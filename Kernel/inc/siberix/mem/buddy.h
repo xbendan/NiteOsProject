@@ -1,4 +1,5 @@
 #include <siberix/mem/page.h>
+#include <xtra-math/align.h>
 
 #define BUDDY_BOUND_UPPER 10
 #define BUDDY_BOUND_LOWER 0

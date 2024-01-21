@@ -61,8 +61,5 @@ namespace Kern::Task {
          */
         Thread* createThread(Process* process);
         Thread* createIdleThread();
-
-    private:
-        ProcessFactory() {}
     };
 }

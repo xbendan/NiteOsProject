@@ -1,3 +1,5 @@
+#pragma once
+
 namespace Std {
     template <typename T>
     class Iterator

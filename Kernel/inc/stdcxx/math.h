@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/type-traits.h>
 
 template <typename T>

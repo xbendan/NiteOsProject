@@ -1,36 +1,9 @@
+#pragma once
+
 #include <stdcxx/iterator.h>
 #include <stdcxx/types.h>
 
 namespace Std {
-    // template <typename T, uint64_t Capacity>
-    //     requires(Capacity > 0)
-    // class Array
-    // {
-    // public:
-    //     constexpr Array() = default;
-    //     constexpr Array(const T (&newArray)[Capacity])
-    //     {
-    //         for (uint64_t i = 0; i < Capacity; ++i) {
-    //             m_buffer[i] = newArray[i];
-    //         }
-    //     }
-
-    //     T&       operator[](uint64_t index) { return m_buffer[index]; }
-    //     T const& operator[](uint64_t index) const { return m_buffer[index]; }
-    //     void     operator=(Array const& other) = delete;
-    //     void     operator=(Array&& other)      = delete;
-    //     void     operator=(const T (&newArray)[Capacity])
-    //     {
-    //         for (uint64_t i = 0; i < Capacity; ++i) {
-    //             m_buffer[i] = newArray[i];
-    //         }
-    //     }
-
-    //     uint64_t length() const { return Capacity; }
-
-    // private:
-    //     T m_buffer[Capacity];
-    // };
 
     template <typename T>
     class Array
@@ -99,10 +72,6 @@ namespace Std {
             m_buffer = buffer;
         }
 
-        ArrayIterator begin() { return ArrayIterator(*this, 0); }
-        ArrayIterator end() { return ArrayIterator(*this, m_length); }
-        uint64_t      length() const { return m_length; }
-
         class ArrayIterator : public Iterator<T>
         {
         public:
@@ -132,6 +101,10 @@ namespace Std {
             Array<T>& m_array;
             uint64_t  m_index;
         };
+
+        ArrayIterator begin() { return ArrayIterator(*this, 0); }
+        ArrayIterator end() { return ArrayIterator(*this, m_length); }
+        uint64_t      length() const { return m_length; }
 
     private:
         T*       m_buffer;

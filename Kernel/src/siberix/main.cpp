@@ -18,8 +18,8 @@ const char* splash[] = {
 };
 
 namespace Kern::Main {
-    bool isInitialized = false;
-    BootConfigTable & _bootConfig;
+    bool                   isInitialized = false;
+    Init::BootConfigTable* _bootConfig;
 
     Svc::MemSvcHost*       svcMem;
     Svc::TaskSvcHost*      svcTask;
@@ -62,7 +62,7 @@ namespace Kern::Main {
           name, file, workingDirectory, launchArgs);
     }
 
-    Io::RootFsNode& getFsRoot()
+    Io::RootFsNode* getFsRoot()
     {
         return fileSystem->getRoot();
     }
@@ -74,14 +74,9 @@ namespace Kern::Main {
 
     using namespace Init;
 
-    [[noreturn]] void main(Init::BootConfigTable& bootConfig)
+    [[noreturn]] void main(Init::BootConfigTable* bootConfig)
     {
         _bootConfig = bootConfig;
         setupArch();
-
-        static Svc::MemSvcHost _svcMem = Svc::MemSvcHost();
-        svcMem                         = &_svcMem;
-
-        svcTask = new Svc::TaskSvcHost();
     }
 }

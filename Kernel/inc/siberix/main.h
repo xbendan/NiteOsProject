@@ -23,7 +23,7 @@ namespace Kern::Main {
     IDevice*               findDevice(Std::UUID uuid);
     void                   registerDevice(IDevice* device);
     void                   unregisterDevice(IDevice* device);
-    Io::RootFsNode&        getFsRoot();
+    Io::RootFsNode*        getFsRoot();
     Io::FsNode*            getFsNode(Std::String<Utf16> path);
     Io::VirtualFileSystem& vfs();
 

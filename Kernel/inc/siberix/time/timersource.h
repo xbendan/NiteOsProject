@@ -1,8 +1,10 @@
+#pragma once
+
 #include <siberix/time/date.h>
 #include <siberix/time/time.h>
 #include <stdcxx/types.h>
 
-namespace Kern::Time {
+namespace Kern {
     class ITimerSource
     {
     public:

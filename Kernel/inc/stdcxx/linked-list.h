@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/list.h>
 #include <stdcxx/type-traits.h>
 
@@ -8,10 +10,8 @@ namespace Std {
     public:
         struct Entry
         {
-            using EntryType = Entry<T>;
-
-            EntryType* _next;
-            EntryType* _previous;
+            Entry* _next;
+            Entry* _previous;
 
             constexpr Entry()
               : _next(nullptr)
@@ -19,20 +19,18 @@ namespace Std {
             {
             }
 
-            constexpr bool isLinked() { return _next || _previous; }
+            bool isLinked() { return _next || _previous; }
         };
 
-        struct Element : Entry<T>
+        struct Element : Entry
         {
             constexpr Element(T& t)
               : _value(Move(t))
-              , Entry<T>()
+              , Entry()
             {
             }
             T _value;
         };
-
-        using IsObjectInherited = Std::IsBaseOf<Entry, T>;
 
         /* --- Constructors --- */
 
@@ -58,7 +56,9 @@ namespace Std {
 
         void add(T const& value)
         {
-            Entry<T>* elem = IsObjectInherited ? &value : new Element<T>(value);
+            Entry* elem = Std::IsBaseOf<Entry, T>::Value
+                            ? const_cast<T*>(&value)
+                            : new Element(value);
             if (_size == 0) {
                 _head = elem;
                 _tail = elem;
@@ -72,10 +72,10 @@ namespace Std {
         }
 
         template <typename _T>
-            requires Std::IsBaseOf<Entry, _T>::value
+            requires Std::IsBaseOf<Entry, _T>::Value
         void add(T* value)
         {
-            Entry<T>* elem = value;
+            Entry* elem = value;
             if (_size == 0) {
                 _head = elem;
                 _tail = elem;
@@ -86,12 +86,6 @@ namespace Std {
                 _tail = elem;
             }
             _size++;
-        }
-
-        template <typename _T>
-            requires Std::IsBaseOf<Entry, _T>::value
-        void add(T*... value)
-        {
         }
 
         void remove(uint64_t i)
@@ -131,43 +125,38 @@ namespace Std {
             _size--;
         }
 
-        void remove(T const& value)
+        void remove(T const& value, bool del = true)
         {
             if (_size == 0) {
                 return;
             }
 
-            auto* elem = _head;
-            while (elem) {
-                if ((IsObjectInherited ? *elem : elem->_value) == value) {
-                    if (elem == head) {
-                        _head = _head->_next;
-                        if (_head) {
-                            _head->_previous = nullptr;
-                        } else {
-                            _tail = nullptr;
-                        }
-                    } else if (elem == _tail) {
-                        _tail = _tail->_previous;
-                        if (_tail) {
-                            _tail->_next = nullptr;
-                        } else {
-                            _head = nullptr;
-                        }
-                    } else {
-                        elem->_previous->_next = elem->_next;
-                        elem->_next->_previous = elem->_previous;
-                    }
+            Entry* elem = _head;
 
-                    auto* next = n->next;
-                    delete elem;
-                    elem = next;
-                    _size--;
+            while (elem) {
+                if (_size == 1) {
+                    _head = nullptr;
+                    _tail = nullptr;
+                } else if (elem == _head) {
+                    _head            = _head->_next;
+                    _head->_previous = nullptr;
+                } else if (elem == _tail) {
+                    _tail        = _tail->_previous;
+                    _tail->_next = nullptr;
                 } else {
-                    elem = elem->_next;
+                    elem->_previous->_next = elem->_next;
+                    elem->_next->_previous = elem->_previous;
                 }
+                Entry* n = elem->_next;
+                if (del) {
+                    delete elem;
+                }
+                elem = n;
+                _size--;
             }
         }
+
+        void remove(T const& value) { remove(value, true); }
 
         void clear()
         {
@@ -187,16 +176,17 @@ namespace Std {
             if (i >= _size) {
                 return nullptr;
             }
-            auto elem = _head;
+            Entry* elem = _head;
             for (uint64_t j = 0; j < i; j++) {
                 elem = elem->_next;
             }
-            return Std::IsBaseOf<Entry<T>, T> ? elem : &elem->_value;
+            return Std::IsBaseOf<Entry, T>::Value ? (T*)elem
+                                                  : &((Element*)elem)->_value;
         }
 
         T* takeFirst()
         {
-            auto ent = _head;
+            Entry* elem = _head;
             if (_head == _tail) {
                 _head = nullptr;
                 _tail = nullptr;
@@ -205,12 +195,13 @@ namespace Std {
                 _head->_previous = nullptr;
             }
             _size--;
-            return IsObjectInherited ? ent : &ent->_value;
+            return Std::IsBaseOf<Entry, T>::Value ? elem
+                                                  : &((Element*)elem)->_value;
         }
 
         T* takeLast()
         {
-            auto ent = _tail;
+            Entry* ent = _tail;
             if (_head == _tail) {
                 _head = nullptr;
                 _tail = nullptr;
@@ -220,31 +211,36 @@ namespace Std {
                 ent->_previous = nullptr;
             }
             _size--;
-            return IsObjectInherited ? ent : &ent->_value;
+            return Std::IsBaseOf<Entry, T>::Value ? (T*)ent
+                                                  : &((Element*)ent)->_value;
         }
 
         size_t size() { return _size; }
 
         /* --- Operators --- */
 
-        T& operator[](uint64_t i)
+        T& operator[](uint64_t _index)
         {
-            if (i >= _size) {
+            if (_index >= _size) {
                 // Panic;
             }
 
-            if (i < _size / 2) {
-                auto elem = _head;
-                for (uint64_t i = 0; i < i; i++) {
+            if (_index < _size / 2) {
+                Entry* elem = _head;
+                for (uint64_t i = 0; i < _index; i++) {
                     elem = elem->_next;
                 }
-                return (Std::IsBaseOf<Entry<T>, T>() ? *elem : elem->_value)
+                return (Std::IsBaseOf<Entry, T>::Value
+                          ? (T&)*elem
+                          : ((Element*)elem)->_value);
             } else {
-                auto elem = _tail;
-                for (uint64_t i = _size - 1; i > i; i--) {
+                Entry* elem = _tail;
+                for (uint64_t i = _size - 1; i > _index; i--) {
                     elem = elem->_previous;
                 }
-                return (Std::IsBaseOf<Entry<T>, T>() ? *elem : elem->_value)
+                return (Std::IsBaseOf<Entry, T>::Value
+                          ? (T&)*elem
+                          : ((Element*)elem)->_value);
             }
         }
 
@@ -260,8 +256,6 @@ namespace Std {
             }
             return *this;
         }
-
-        Iterator<T>& iterator() override { return Iterator<T>(_head); }
 
     private:
         Entry*   _head;

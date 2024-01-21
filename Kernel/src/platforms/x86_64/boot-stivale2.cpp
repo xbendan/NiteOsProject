@@ -72,5 +72,5 @@ kload_st2(stivale2_struct* stInfo)
             }
         }
     }
-    kmain(bootConfig);
+    kmain(&bootConfig);
 }

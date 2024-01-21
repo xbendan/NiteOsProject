@@ -6,7 +6,6 @@
 #include <drivers/pci/enumerator.h>
 #include <siberix/main.h>
 #include <siberix/svc/svc-host.h>
-#include <siberix/svc/svc-loader.h>
 #include <xtra-logging/logger.h>
 
 extern "C"
@@ -67,7 +66,6 @@ namespace Kern::Init {
            },
            3)))
           ->onLoad();
-        Main::fileSystem = new Io::VirtualFileSystem();
-        Main::connectivity->registerDevice
+        (Main::fileSystem = new Io::VirtualFileSystem());
     }
 }

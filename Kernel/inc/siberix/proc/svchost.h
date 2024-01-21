@@ -1,3 +1,5 @@
+#pragma once
+
 #include <siberix/proc/process.h>
 #include <siberix/proc/sched.h>
 #include <siberix/svc/svc-host.h>
@@ -11,7 +13,8 @@ namespace Kern::Svc {
         TaskSvcHost()
           : ISvcHost("KERN.TASK", nullptr)
           , m_scheduler(new Scheduler())
-          , m_processFactory(nullptr)
+          , m_processFactory(new ProcessFactory())
+          , m_processes(*(new Std::Array<RefPtr<Process>>(256)))
         {
         }
         virtual ~TaskSvcHost() = default;
@@ -21,14 +24,18 @@ namespace Kern::Svc {
         RefPtr<Process> getProcess(uint32_t pid) { return m_processes[pid]; }
         RefPtr<Process> getProcess(Std::String<Utf8> name);
         RefPtr<Process> getProcess(Std::UUID uuid);
+        void            addProcess(RefPtr<Process> process);
+        void            destroyProcess(uint32_t pid);
+
+        Std::Array<RefPtr<Process>>& all() { return m_processes; }
 
         void onLoad() override;
         void onEnable() override;
         void onDisable() override;
 
     private:
-        Scheduler*                  m_scheduler;
-        ProcessFactory*             m_processFactory;
-        Std::Array<RefPtr<Process>> m_processes;
+        Scheduler*                   m_scheduler;
+        ProcessFactory*              m_processFactory;
+        Std::Array<RefPtr<Process>>& m_processes;
     };
 }

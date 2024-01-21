@@ -25,12 +25,13 @@ LDFLAGS = \
 SOURCE_GENERIC := $(wildcard src/siberix/*.cpp) \
     $(wildcard src/siberix/audio/*.cpp) \
 	$(wildcard src/siberix/gfx/*.cpp) \
-	$(wildcard src/siberix/memory/*.cpp) \
+	$(wildcard src/siberix/mem/*.cpp) \
 	$(wildcard src/siberix/init/*.cpp) \
 	$(wildcard src/siberix/fs/*.cpp) \
 	$(wildcard src/siberix/net/*.cpp) \
 	$(wildcard src/siberix/proc/*.cpp) \
-	$(wildcard src/siberix/drivers/*.cpp)  
+	$(wildcard src/siberix/hal/*.cpp) \
+	$(wildcard src/impls/*.cpp)  
 # OBJECT_GENERIC := $(patsubst build/%.cpp, src/%.o, $(SOURCE_GENERIC))
 
 SOURCE_PLATFORM_X86_64 := $(wildcard src/platform/x86_64/*.cpp)

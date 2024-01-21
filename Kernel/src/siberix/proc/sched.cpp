@@ -1,10 +1,9 @@
-#include <siberix/proc/sched.h>
+#include <siberix/proc/svchost.h>
 
-namespace Kern::Task {
+namespace Kern::Svc {
     void TaskSvcHost::onLoad()
     {
-        m_processFactory = new ProcessFactory(this);
-        m_scheduler      = new Scheduler();
-        m_processes      = Std::Array<RefPtr<Process>>(256);
+        RefPtr<Process> kernelProcess =
+          getProcessFactory()->createProcess("Kernel", 0, );
     }
 }

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <siberix/time/unit.h>
 
 namespace Kern {
@@ -65,7 +67,18 @@ namespace Kern {
                    m_millisecond == other.m_millisecond;
         }
 
-        Time& operator+=(const Time& other) {}
+        Time& operator+=(const Time& other)
+        {
+            m_year        += other.m_year;
+            m_month       += other.m_month;
+            m_day         += other.m_day;
+            m_hour        += other.m_hour;
+            m_minute      += other.m_minute;
+            m_second      += other.m_second;
+            m_millisecond += other.m_millisecond;
+            fixOverflow();
+            return *this;
+        }
 
         void fixOverflow()
         {
