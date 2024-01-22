@@ -18,6 +18,12 @@
 #define AHCI_BOHC_BIOS_BUSY (1 << 4)    // BIOS Busy
 #define AHCI_BOHC_OS_OWNERSHIP (1 << 3) // OS Ownership Change
 
+#define ATA_CMD_READ_DMA_EX 0x25
+#define ATA_CMD_WRITE_DMA_EX 0x35
+#define ATA_CMD_IDENTIFY 0xec
+#define ATA_DEV_BUSY 0x80
+#define ATA_DEV_DRQ 0x08
+
 #define SATA_SIG_SATA 0x00000101  // SATA drive
 #define SATA_SIG_ATAPI 0xEB140101 // SATAPI drive
 #define SATA_SIG_SEMB 0xC33C0101  // Enclosure management bridge
@@ -33,14 +39,16 @@
 #define HBA_PxCMD_ICC (0xf << 28)
 #define HBA_PxCMD_ICC_ACTIVE (1 << 28)
 
+#define HBA_PxIS_TFES (1 << 30)
+
 #define HBA_PORT_IPM_ACTIVE 1
 
 #define HBA_PxSSTS_DET 0xfULL
 #define HBA_PxSSTS_DET_INIT 1
 #define HBA_PxSSTS_DET_PRESENT 3
 
-namespace AHCI {
-    enum Fis : uint8_t
+namespace Kern::Hal::Specs {
+    enum FisRegs : uint8_t
     {
         TYPE_REG_H2D   = 0x27,
         TYPE_REG_D2H   = 0x34,
@@ -58,9 +66,9 @@ namespace AHCI {
 
         uint8_t _portMultiplier : 4;
         uint8_t _reserved0 : 3;
-        uint8_t _command : 1;
+        uint8_t _mode : 1;
 
-        uint8_t _commandRegister;
+        uint8_t _command;
         uint8_t _featLow;
 
         union
@@ -95,7 +103,7 @@ namespace AHCI {
                 uint8_t _countLow;
                 uint8_t _countHigh;
                 uint8_t _icc;
-                uint8_t _controlRegister;
+                uint8_t _ctl;
             };
         };
 
@@ -260,7 +268,7 @@ namespace AHCI {
         uint32_t _reserved4;
     } __attribute__((packed));
 
-    volatile struct HbaPort
+    volatile struct HbaPortRegs
     {
         uint32_t _clb;
         uint32_t _clbu;
@@ -283,22 +291,22 @@ namespace AHCI {
         uint32_t _vendor[4];
     } __attribute__((packed));
 
-    volatile struct HbaMem
+    volatile struct HbaMemRegs
     {
-        uint32_t _cap;
-        uint32_t _ghc;
-        uint32_t _is;
-        uint32_t _pi;
-        uint32_t _vs;
-        uint32_t _ccc_ctl;
-        uint32_t _ccc_pts;
-        uint32_t _em_loc;
-        uint32_t _em_ctl;
-        uint32_t _cap2;
-        uint32_t _bohc;
-        uint8_t  _reserved0[0x74];
-        uint8_t  _vendor[0x60];
-        HbaPort  _ports[0x20];
+        uint32_t    _hostCapability;
+        uint32_t    _ghc;
+        uint32_t    _interruptStatus;
+        uint32_t    _portsImplemented;
+        uint32_t    _version;
+        uint32_t    _ccc_ctl;
+        uint32_t    _ccc_pts;
+        uint32_t    _em_loc;
+        uint32_t    _em_ctl;
+        uint32_t    _hostCapabilityExt;
+        uint32_t    _bohc;
+        uint8_t     _reserved0[0x74];
+        uint8_t     _vendor[0x60];
+        HbaPortRegs _ports[0x20];
     } __attribute__((packed));
 
     volatile struct HbaFis
@@ -366,4 +374,5 @@ namespace AHCI {
 
         HbaPrdtEntry _prdtEntry[1];
     } __attribute__((packed));
+
 }

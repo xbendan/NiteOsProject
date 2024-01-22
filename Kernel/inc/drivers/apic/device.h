@@ -11,7 +11,7 @@ namespace Kern::Hal::Impls {
 
     class ApicDevice
       : public SmpSvcHost
-      , public IDevice
+      , public Device
     {
     public:
         ApicDevice();

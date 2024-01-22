@@ -5,15 +5,15 @@
 #include <stdcxx/linked-list.h>
 
 namespace Kern {
-    class IDeviceEnumerator : public IDevice
+    class IDeviceEnumerator : public Device
     {
     public:
         IDeviceEnumerator(Std::String<Utf8> name)
-          : IDevice(name, DeviceType::SoftwareDevice)
+          : Device(name, DeviceType::SoftwareDevice)
         {
         }
 
-        virtual Std::Array<IDevice*>* scan() = 0;
+        virtual Std::Array<Device*>* scan() = 0;
     };
 
     class DeviceConnectivity : Svc::ISvcHost
@@ -23,18 +23,18 @@ namespace Kern {
           : Svc::ISvcHost("KERN.DEVICE")
         {
         }
-        DeviceConnectivity(Std::Array<IDevice*>* devices)
+        DeviceConnectivity(Std::Array<Device*>* devices)
           : Svc::ISvcHost("KERN.DEVICE")
         {
         }
         ~DeviceConnectivity() = default;
 
-        IDevice*                             findDevice(Std::String<Utf8> name);
-        IDevice*                             findDevice(Std::UUID uuid);
-        IDevice*                             findDevice(uint64_t deviceId);
-        void                                 registerDevice(IDevice* device);
-        void                                 unregisterDevice(IDevice* device);
-        Std::LinkedList<IDevice*>*           getAllDevices();
+        Device*                             findDevice(Std::String<Utf8> name);
+        Device*                             findDevice(Std::UUID uuid);
+        Device*                             findDevice(uint64_t deviceId);
+        void                                 registerDevice(Device* device);
+        void                                 unregisterDevice(Device* device);
+        Std::LinkedList<Device*>*           getAllDevices();
         uint64_t                             count();
         Std::LinkedList<IDeviceEnumerator*>* getAllEnumerators();
 
@@ -43,7 +43,7 @@ namespace Kern {
         void onDisable() override;
 
     private:
-        Std::LinkedList<IDevice*>           m_devices;
+        Std::LinkedList<Device*>           m_devices;
         Std::LinkedList<IDeviceEnumerator*> m_enumerators;
         bool                                m_isAutoConnect;
     };

@@ -78,5 +78,8 @@ namespace Kern::Main {
     {
         _bootConfig = bootConfig;
         setupArch();
+
+        while (true)
+            asm volatile("pause; hlt;");
     }
 }

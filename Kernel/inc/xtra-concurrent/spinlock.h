@@ -6,6 +6,12 @@
 class Spinlock
 {
 public:
+    Spinlock()
+      : m_lock(false)
+    {
+    }
+    ~Spinlock() = default;
+
     bool acquireTest()
     {
         bool result = m_lock.compareAndExchange(false, true);

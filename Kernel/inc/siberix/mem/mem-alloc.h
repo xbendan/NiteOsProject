@@ -10,24 +10,16 @@
 #include <xtra-math/align.h>
 
 namespace Kern::Mem {
-    // template <typename T>
-    //     requires Std::IsIntegral<T> or Std::IsSame<T, Page4K*>
-    // T AllocatePhysMemory4K(uint64_t amount);
-
-    // template <typename T>
-    //     requires Std::IsIntegral<T> or Std::IsSame<T, Page4K*>
-    // void FreePhysMemory4K(T waitForRelease);
-
     class BuddyAlloc : public IPageAlloc
     {
     public:
         BuddyAlloc();
         ~BuddyAlloc();
 
-        // uint64_t allocatePhysMemory4K(uint64_t amount) override;
-        // Page4K*  allocatePhysMemory4KPages(uint64_t amount) override;
-        // void     freePhysMemory4K(uint64_t address) override;
-        // void     freePhysMemory4KPages(Page4K* page) override;
+        uint64_t allocatePhysMemory4K(uint64_t amount) override;
+        Page4K*  allocatePhysMemory4KPages(uint64_t amount) override;
+        void     freePhysMemory4K(uint64_t address) override;
+        void     freePhysMemory4KPages(Page4K* page) override;
 
     private:
         /*

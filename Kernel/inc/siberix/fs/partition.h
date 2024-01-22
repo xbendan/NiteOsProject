@@ -1,4 +1,3 @@
-#include <siberix/dvc/disk-device.h>
 #include <stdcxx/types.h>
 
 namespace Kern::Io {
@@ -15,8 +14,7 @@ namespace Kern::Io {
         uint64_t write(uint64_t offset, uint64_t size, void* buffer);
 
     private:
-        DiskDevice* m_device;
-        uint64_t    m_lbaStart;
-        uint64_t    m_lbaEnd;
+        uint64_t m_lbaStart;
+        uint64_t m_lbaEnd;
     };
 }

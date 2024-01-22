@@ -9,8 +9,8 @@ namespace Kern::Mem {
         KernMemAlloc();
         ~KernMemAlloc() = default;
 
-        uint64_t alloc(uint64_t size) override;
-        void     free(void* address) override;
+        uint64_t alloc(uint64_t size) override {}
+        void     free(void* address) override {}
 
     protected:
         /**

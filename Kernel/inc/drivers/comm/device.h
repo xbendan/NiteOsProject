@@ -4,12 +4,12 @@
 
 namespace Kern::Hal::Impls {
     class SerialPortDevice
-      : public IDevice
+      : public Device
       , public Io::TextWriter
     {
     public:
         SerialPortDevice()
-          : IDevice("Serial Port Device", DeviceType::Firmware)
+          : Device("Serial Port Device", DeviceType::Firmware)
         {
         }
     };

@@ -3,11 +3,11 @@
 #include <stdcxx/type-traits.h>
 
 namespace Kern {
-    class ProcessorDevice : public IDevice
+    class ProcessorDevice : public Device
     {
     public:
         ProcessorDevice(uint32_t processorId, Hal::CPU* cpu)
-          : IDevice("Processor")
+          : Device("Processor")
           , m_processorId(processorId)
           , m_cpu(cpu)
         {

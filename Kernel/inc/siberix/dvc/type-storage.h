@@ -5,11 +5,17 @@
 namespace Kern {
     class DiskDevice : public Device
     {
+    public:
+        DiskDevice(Std::String<Utf8> name)
+          : Device(name, DeviceType::DiskDrive)
+        {
+        }
+
         virtual int64_t read(uint64_t offset, uint64_t size, void* buffer)  = 0;
         virtual int64_t write(uint64_t offset, uint64_t size, void* buffer) = 0;
 
     private:
-        Std::LinkedList<Partition*> m_partitions;
-        uint32_t                    m_blockSize;
+        Std::LinkedList<Io::Partition*> m_partitions;
+        uint32_t                        m_blockSize;
     };
 }

@@ -12,7 +12,7 @@ namespace Kern::Hal::Impls {
         }
         ~PeriCompDeviceEnumerator();
 
-        Std::Array<Kern::IDevice*>* scan() override;
+        Std::Array<Kern::Device*>* scan() override;
         bool     checkDevice(uint8_t bus, uint8_t slot, uint8_t func);
         bool     checkDevice(PCIInfo& info);
         PCIInfo* getDevice(uint16_t deviceId, uint16_t vendorId);
@@ -20,6 +20,6 @@ namespace Kern::Hal::Impls {
 
     private:
         Kern::DeviceConnectivity*        m_deviceHost;
-        Std::LinkedList<IPeriCompDevice> m_devices;
+        Std::LinkedList<PCIDevice> m_devices;
     };
 }

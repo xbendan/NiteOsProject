@@ -5,11 +5,11 @@
 namespace Kern::Hal::Impls {
     class ApicTimerDevice
       : Time::ITimerSource
-      , IDevice
+      , Device
     {
     public:
         ApicTimerDevice(ApicDevice::ApicLocal* local)
-          : IDevice("APIC Timer", DeviceType::TimerOrClock)
+          : Device("APIC Timer", DeviceType::TimerOrClock)
           , m_local(local)
         {
         }

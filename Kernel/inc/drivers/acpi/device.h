@@ -5,11 +5,11 @@
 namespace Kern::Hal::Impls {
     using namespace Specs;
 
-    class AcpiMgmtDevice : public Kern::IDevice
+    class AcpiMgmtDevice : public Kern::Device
     {
     public:
         AcpiMgmtDevice()
-          : Kern::IDevice("ACPI Management Device")
+          : Kern::Device("ACPI Management Device")
         {
         }
         ~AcpiMgmtDevice();

@@ -75,39 +75,41 @@
 #define PCI_CAP_MSI_CONTROL_MMC(x) ((x >> 1) & 0x7) // Multiple Message Capable
 #define PCI_CAP_MSI_CONTROL_ENABLE (1 << 0)         // MSI Enable
 
-enum class PCIConfigRegs : uint8_t
-{
-    VendorID                = 0x00,
-    DeviceID                = 0x02,
-    Command                 = 0x04,
-    Status                  = 0x06,
-    RevisionID              = 0x08,
-    ProgIF                  = 0x09,
-    Subclass                = 0x0A,
-    Class                   = 0x0B,
-    CacheLineSize           = 0x0C,
-    LatencyTimer            = 0x0D,
-    HeaderType              = 0x0E,
-    BIST                    = 0x0F,
-    BAR0                    = 0x10,
-    BAR1                    = 0x14,
-    BAR2                    = 0x18,
-    BAR3                    = 0x1C,
-    BAR4                    = 0x20,
-    BAR5                    = 0x24,
-    CardbusCISPointer       = 0x28,
-    SubsystemVendorID       = 0x2C,
-    SubsystemID             = 0x2E,
-    ExpansionROMBaseAddress = 0x30,
-    CapabilitiesPointer     = 0x34,
-    InterruptLine           = 0x3C,
-    InterruptPin            = 0x3D,
-    MinGrant                = 0x3E,
-    MaxLatency              = 0x3F
-};
+namespace Kern::Hal::Specs {
+    enum class PCIConfigRegs : uint8_t
+    {
+        VendorID                = 0x00,
+        DeviceID                = 0x02,
+        Command                 = 0x04,
+        Status                  = 0x06,
+        RevisionID              = 0x08,
+        ProgIF                  = 0x09,
+        Subclass                = 0x0A,
+        Class                   = 0x0B,
+        CacheLineSize           = 0x0C,
+        LatencyTimer            = 0x0D,
+        HeaderType              = 0x0E,
+        BIST                    = 0x0F,
+        BAR0                    = 0x10,
+        BAR1                    = 0x14,
+        BAR2                    = 0x18,
+        BAR3                    = 0x1C,
+        BAR4                    = 0x20,
+        BAR5                    = 0x24,
+        CardbusCISPointer       = 0x28,
+        SubsystemVendorID       = 0x2C,
+        SubsystemID             = 0x2E,
+        ExpansionROMBaseAddress = 0x30,
+        CapabilitiesPointer     = 0x34,
+        InterruptLine           = 0x3C,
+        InterruptPin            = 0x3D,
+        MinGrant                = 0x3E,
+        MaxLatency              = 0x3F
+    };
 
-enum PCIConfigAccessMode
-{
-    Legacy,
-    Enhanced
-};
+    enum PCIConfigAccessMode
+    {
+        Legacy,
+        Enhanced
+    };
+}

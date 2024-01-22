@@ -1,7 +1,7 @@
 #include <siberix/dvc/connectivity.h>
 #include <siberix/fs/vfs.h>
 #include <siberix/init/boot-info.h>
-#include <siberix/mem/mem.h>
+#include <siberix/mem/svchost.h>
 #include <siberix/proc/svchost.h>
 
 extern "C" [[noreturn]] void
@@ -19,10 +19,10 @@ namespace Kern::Main {
                                            Io::File*         file,
                                            Io::Directory*    workingDirectory,
                                            Std::Array<Std::String<Utf8>> args);
-    IDevice*               findDevice(Std::String<Utf8> name);
-    IDevice*               findDevice(Std::UUID uuid);
-    void                   registerDevice(IDevice* device);
-    void                   unregisterDevice(IDevice* device);
+    Device*               findDevice(Std::String<Utf8> name);
+    Device*               findDevice(Std::UUID uuid);
+    void                   registerDevice(Device* device);
+    void                   unregisterDevice(Device* device);
     Io::RootFsNode*        getFsRoot();
     Io::FsNode*            getFsNode(Std::String<Utf16> path);
     Io::VirtualFileSystem& vfs();

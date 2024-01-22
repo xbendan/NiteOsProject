@@ -61,8 +61,8 @@ namespace Std {
     template <typename T> struct RemoveConstVolatile<volatile T> { using Value = T; };
     template <typename T> struct RemoveConstVolatile<const volatile T> { using Value = T; };
 
-    template <typename T>
-    using IsVoid = IsSame<void, RemoveConstVolatile<T>::Value>;
+    template <typename T> constexpr bool IsVoid = false;
+    template <> constexpr bool IsVoid<void> = true;
     
     template <typename T> constexpr bool IsPointer = false;
     template <typename T> constexpr bool IsPointer<T*> = true;

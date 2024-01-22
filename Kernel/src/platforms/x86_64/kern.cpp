@@ -57,7 +57,7 @@ namespace Kern::Init {
         (Main::svcMem = &_svcMem)->onLoad();
         (Main::svcTask = new Svc::TaskSvcHost())->onLoad();
         (Main::logger = new Logger());
-        (Main::connectivity = new DeviceConnectivity(new Std::Array<IDevice*>(
+        (Main::connectivity = new DeviceConnectivity(new Std::Array<Device*>(
            {
              new Hal::Impls::SerialPortDevice(),
              new Hal::Impls::AcpiMgmtDevice(),

@@ -11,7 +11,7 @@ namespace Kern::Hal::Impls {
 
     ApicDevice::ApicDevice()
       : SmpSvcHost()
-      , IDevice("Advanced Programmable Interrupt Controller")
+      , Device("Advanced Programmable Interrupt Controller")
       , m_interfaces(new Std::LinkedList<ApicLocal*>())
       , m_overrides(new Std::LinkedList<MadtIso*>())
     {

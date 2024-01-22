@@ -24,9 +24,9 @@ namespace Std {
 
         struct Element : Entry
         {
-            constexpr Element(T& t)
-              : _value(Move(t))
-              , Entry()
+            constexpr Element(T const& t)
+              : Entry()
+              , _value(Move(t))
             {
             }
             T _value;
@@ -54,10 +54,10 @@ namespace Std {
 
         /* --- Methods --- */
 
-        void add(T const& value)
+        void add(T& value)
         {
-            Entry* elem = Std::IsBaseOf<Entry, T>::Value
-                            ? const_cast<T*>(&value)
+            Entry* elem = (Std::IsBaseOf<Entry, T>::Value)
+                            ? reinterpret_cast<Entry*>(&value)
                             : new Element(value);
             if (_size == 0) {
                 _head = elem;
@@ -125,7 +125,7 @@ namespace Std {
             _size--;
         }
 
-        void remove(T const& value, bool del = true)
+        void remove(T const& value, bool del)
         {
             if (_size == 0) {
                 return;

@@ -24,6 +24,6 @@ namespace Kern::Hal::Impls {
         uint32_t _memBufferStatus;
     } __attribute__((packed));
 
-    class NvmeControllerDevice : public IPeriCompDevice
+    class NvmeControllerDevice : public PCIDevice
     {};
 }

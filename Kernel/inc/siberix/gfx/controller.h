@@ -12,11 +12,11 @@ namespace Kern::Gfx {
                     // content, probably with different resolutions
     };
 
-    class GfxOutputControllerDevice : IDevice
+    class GfxOutputControllerDevice : Device
     {
     public:
         GfxOutputControllerDevice()
-          : IDevice("Siberix Basic Video Controller",
+          : Device("Siberix Basic Video Controller",
                     DeviceType::DisplayAdapter)
           , m_outputs(new Std::LinkedList<IVideoOutputDevice*>())
           , m_projection(VideoProjection::Primary)

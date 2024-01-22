@@ -46,8 +46,8 @@ namespace Kern::Task {
 
         struct
         {
-            Spinlock m_lock;
-            Spinlock m_handleLock;
+            Spinlock m_lock{};
+            Spinlock m_handleLock{};
         };
 
         Thread*                  m_mainThread;
