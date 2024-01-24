@@ -52,14 +52,18 @@ namespace Kern::Main {
         return svcTask->getProcessFactory()->createIdleProcess();
     }
 
-    RefPtr<Task::Process> createProcessEx(
-      Std::String<Utf8>              name,
-      Io::File*                      file,
-      Io::Directory*                 workingDirectory,
-      Std::Array<Std::String<Utf8>>* launchArgs)
+    template <typename... Args>
+    RefPtr<Task::Process> createProcessEx( //
+      Std::String<Utf8> name,
+      Io::File*         file,
+      Io::Directory*    workingDirectory,
+      Args... launchArgs)
     {
         return svcTask->getProcessFactory()->createProcessEx(
-          name, file, workingDirectory, launchArgs);
+          name,
+          file,
+          workingDirectory,
+          Std::Forward<decltype(launchArgs)>(launchArgs)...);
     }
 
     Io::RootFsNode* getFsRoot()

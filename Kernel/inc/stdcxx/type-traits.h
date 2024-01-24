@@ -66,6 +66,21 @@ namespace Std {
     
     template <typename T> constexpr bool IsPointer = false;
     template <typename T> constexpr bool IsPointer<T*> = true;
+    
+    template <typename T>
+    struct RemovePointer { using Type = T; };
+
+    template <typename T>
+    struct RemovePointer<T*> { using Type = T; };
+
+    template <typename T>
+    struct RemovePointer<T* const> { using Type = T; };
+
+    template <typename T>
+    struct RemovePointer<T* volatile> { using Type = T; };
+
+    template <typename T>
+    struct RemovePointer<T* const volatile> { using Type = T; };
 
     template <typename T> constexpr bool IsArray = false;
     template <typename T> constexpr bool IsArray<T[]> = true;
@@ -105,6 +120,9 @@ namespace Std {
     
     template <typename B, typename D>
     struct IsBaseOf : IntegralConstant<bool, __is_base_of(B, D)> {};
+
+    template <typename B, typename D>
+    concept Derived = IsBaseOf<B, D>::Value;
 
     // clang-format on
 }

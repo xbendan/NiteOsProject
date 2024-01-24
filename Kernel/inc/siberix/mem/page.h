@@ -13,7 +13,7 @@
 #define PAGE_FLAG_LOCK (1 << 3)
 #define PAGE_FLAG_DIRTY (1 << 4)
 #define PAGE_FLAG_SHARE (1 << 5)
-#define PAGE_PART_SIZE (PAGE_SIZE_1G / 8)
+#define PAGE_PART_SIZE (PAGE_SIZE_1G / 4)
 #define PAGE_PART_COUNT (PAGE_PART_SIZE / PAGE_SIZE_4K)
 
 namespace Kern::Mem {

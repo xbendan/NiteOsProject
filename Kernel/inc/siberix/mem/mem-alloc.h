@@ -1,3 +1,5 @@
+#pragma once
+
 #include <siberix/mem/buddy.h>
 #include <siberix/mem/mem.h>
 #include <siberix/mem/page.h>

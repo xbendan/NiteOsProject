@@ -3,6 +3,8 @@
 #include <siberix/proc/thread.h>
 #include <siberix/svc/svc-host.h>
 #include <stdcxx/types.h>
+#include <stdcxx/vector.h>
+
 namespace Kern::Hal {
     class CPU
     {
@@ -54,8 +56,8 @@ namespace Kern::Hal {
         virtual CPU* current() = 0;
 
     private:
-        uint32_t         m_cpuAmount;
-        Std::Array<CPU*> m_cpus;
+        uint32_t          m_cpuAmount;
+        Std::Vector<CPU*> m_cpus;
     };
 
     class IPowerManagement

@@ -9,8 +9,8 @@ namespace Kern::Mem {
         KernMemAlloc();
         ~KernMemAlloc() = default;
 
-        uint64_t alloc(uint64_t size) override {}
-        void     free(void* address) override {}
+        uint64_t alloc(uint64_t size) override;
+        void     free(void* address) override;
 
     protected:
         /**
@@ -54,10 +54,10 @@ namespace Kern::Mem {
             }
 
         private:
-            Std::String<Utf8>       m_name;
-            uint64_t                m_objSize;
-            uint64_t                m_flags;
-            Std::Array<MemPoolNode> m_nodes;
+            Std::String<Utf8>      m_name;
+            uint64_t               m_objSize;
+            uint64_t               m_flags;
+            Array<MemPoolNode, 12> m_nodes;
         };
 
         template <typename T>
@@ -71,6 +71,6 @@ namespace Kern::Mem {
         };
 
         Std::LinkedList<MemPool*> m_pools;
-        uint32_t                  m_poolSizes[12];
+        Array<uint32_t, 12>       m_poolSizes;
     };
 }

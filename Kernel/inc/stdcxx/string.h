@@ -45,27 +45,28 @@ namespace Std {
         String(String const&);
         String(String&&);
 
-        String& operator=(const char*);
-        String& operator=(String const&);
-        String& operator=(String&&);
+        String<E>& operator=(const char*);
+        String<E>& operator=(String<E> const&);
+        String<E>& operator=(String<E>&&);
 
-        bool equals(String const& other) const
+        bool equals(String<E> const& other) const
         {
-            if (m_length != other.m_length) {
-                return false;
-            } else {
-                if (Unit == other::Unit) {
-                    for (uint64_t i = 0; i < m_length; i++) {
-                        if (m_data[i] != other.m_data[i]) {
-                            return false;
-                        }
-                    }
-                    return true;
-                } else {
-                    // TODO: Implement
-                    return false;
-                }
-            }
+            return false;
+            // if (m_length != other.m_length) {
+            //     return false;
+            // } else {
+            //     if (sizeof(Unit) == sizeof(other.Unit)) {
+            //         for (uint64_t i = 0; i < m_length; i++) {
+            //             if (m_data[i] != other.m_data[i]) {
+            //                 return false;
+            //             }
+            //         }
+            //         return true;
+            //     } else {
+            //         // TODO: Implement
+            //         return false;
+            //     }
+            // }
         }
 
         bool equalsIgnoreCase(String const&) const;

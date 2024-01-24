@@ -48,18 +48,19 @@ namespace Kern::Task {
          * @param name
          * @return Process*
          */
-        RefPtr<Process> createProcessEx(
-          Std::String<Utf8>              name,
-          Io::File*                      file,
-          Io::Directory*                 workingDirectory,
-          Std::Array<Std::String<Utf8>>* launchArgs);
+        template <typename... Args>
+        RefPtr<Process> createProcessEx( //
+          Std::String<Utf8> name,
+          Io::File*         file,
+          Io::Directory*    workingDirectory,
+          Args&&... launchArgs);
         /**
          * @brief Create a thread with specified parent process
          *
          * @param process
          * @return Thread*
          */
-        Thread* createThread(Process* process);
-        Thread* createIdleThread();
+        Thread*         createThread(Process* process);
+        Thread*         createIdleThread();
     };
 }

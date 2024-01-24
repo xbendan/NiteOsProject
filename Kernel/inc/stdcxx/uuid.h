@@ -20,6 +20,6 @@ namespace Std {
                    this->_qwords[1] == uuid._qwords[1];
         }
 
-        String<Utf8> getAsString() {}
+        // String<Utf8> getAsString() {}
     };
 }

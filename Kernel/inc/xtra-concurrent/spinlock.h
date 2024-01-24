@@ -7,7 +7,7 @@ class Spinlock
 {
 public:
     Spinlock()
-      : m_lock(false)
+      : m_lock(Atomic<bool>(false))
     {
     }
     ~Spinlock() = default;
@@ -23,20 +23,33 @@ public:
         return result;
     }
 
-    bool acquire()
+    void acquire()
     {
-        while (!acquireTest()) {
-            // wait
-        }
+        while (m_lock.exchange(true, AtomicOpcode::Acquired))
+            asm volatile("pause");
     }
 
     void release()
     {
-        // Memory barrier
-        m_lock.store(false);
-        // Leave interrupt disabled
+        asm volatile("cli");
+        while (m_lock.exchange(false, AtomicOpcode::Acquired))
+            asm volatile("sti; pause; cli");
     }
 
 private:
     Atomic<bool> m_lock;
+};
+
+class ScopedSpinlock final
+{
+public:
+    ScopedSpinlock(Spinlock& lock)
+      : m_lock(lock)
+    {
+        lock.acquire();
+    }
+    ~ScopedSpinlock() { m_lock.release(); }
+
+private:
+    Spinlock& m_lock;
 };

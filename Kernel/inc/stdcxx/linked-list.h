@@ -1,11 +1,12 @@
 #pragma once
 
+#include <stdcxx/copy.h>
 #include <stdcxx/list.h>
 #include <stdcxx/type-traits.h>
 
 namespace Std {
     template <typename T>
-    class LinkedList : public List<T>
+    class LinkedList
     {
     public:
         struct Entry
@@ -26,7 +27,7 @@ namespace Std {
         {
             constexpr Element(T const& t)
               : Entry()
-              , _value(Move(t))
+              , _value(Std::Move(t))
             {
             }
             T _value;
@@ -54,11 +55,10 @@ namespace Std {
 
         /* --- Methods --- */
 
-        void add(T& value)
+        void add(T const& value)
         {
-            Entry* elem = (Std::IsBaseOf<Entry, T>::Value)
-                            ? reinterpret_cast<Entry*>(&value)
-                            : new Element(value);
+            Entry* elem = (Std::IsBaseOf<Entry, T>::Value) ? (Entry*)&value
+                                                           : new Element(value);
             if (_size == 0) {
                 _head = elem;
                 _tail = elem;
@@ -195,7 +195,7 @@ namespace Std {
                 _head->_previous = nullptr;
             }
             _size--;
-            return Std::IsBaseOf<Entry, T>::Value ? elem
+            return Std::IsBaseOf<Entry, T>::Value ? (T*)elem
                                                   : &((Element*)elem)->_value;
         }
 

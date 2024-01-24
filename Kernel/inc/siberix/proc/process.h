@@ -44,11 +44,8 @@ namespace Kern::Task {
         uint32_t           m_processId;
         Mem::AddressSpace* m_addressSpace;
 
-        struct
-        {
-            Spinlock m_lock{};
-            Spinlock m_handleLock{};
-        };
+        Spinlock m_lock{};
+        Spinlock m_handleLock{};
 
         Thread*                  m_mainThread;
         Std::LinkedList<Thread*> m_childrenThreadList;

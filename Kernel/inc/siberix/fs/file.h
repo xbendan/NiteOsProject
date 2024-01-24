@@ -72,6 +72,6 @@ namespace Kern::Io {
         Directory(Std::String<Utf16> fullpath);
         ~Directory();
 
-        Std::Array<FsNode*>* listFiles();
+        Std::ArrayList<FsNode*>* listFiles();
     };
 }

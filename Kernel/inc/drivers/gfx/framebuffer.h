@@ -2,12 +2,16 @@
 #include <stdcxx/buffer.h>
 
 namespace Kern::Video {
-    class FramebufferVODevice : public IVideoOutputDevice
+    using namespace Gfx;
+    class FramebufferDisplay : public LocalDisplay
     {
     public:
-        FramebufferVODevice(uint32_t width, uint32_t height) {}
+        FramebufferDisplay(uint32_t width, uint32_t height)
+          : LocalDisplay("Framebuffer Buffered Display", width, height)
+        {
+        }
 
     private:
-        Std::Buffered<Pixel<8>> m_buf;
+        Std::Buffer<Pixel<8>> m_buf;
     };
 }

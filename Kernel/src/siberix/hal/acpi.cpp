@@ -18,7 +18,7 @@ namespace Kern::Hal {
          */
         if (!rsdpAddress) {
             // TODO: Kernel panic
-            panic("ACPI: RSDP not found");
+            callPanic("ACPI: RSDP not found");
             return;
         } else {
             m_rsdp = reinterpret_cast<AcpiRsdp*>(rsdpAddress);

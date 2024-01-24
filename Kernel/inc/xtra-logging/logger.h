@@ -30,7 +30,7 @@ public:
     void printStackTrace(void* registers);
 
 private:
-    Std::LinkedList<Io::TextWriter*> m_writers;
+    Std::LinkedList<TextWriter*> m_writers;
 
     bool m_useTimestamps;
     bool m_useCaches;

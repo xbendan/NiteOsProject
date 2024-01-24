@@ -1,0 +1,3 @@
+namespace Kern::Hal::Spec {
+
+}

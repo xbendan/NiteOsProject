@@ -57,14 +57,11 @@ namespace Kern::Init {
         (Main::svcMem = &_svcMem)->onLoad();
         (Main::svcTask = new Svc::TaskSvcHost())->onLoad();
         (Main::logger = new Logger());
-        (Main::connectivity = new DeviceConnectivity(new Std::Array<Device*>(
-           {
-             new Hal::Impls::SerialPortDevice(),
-             new Hal::Impls::AcpiMgmtDevice(),
-             new Hal::Impls::ApicDevice(),
-             new Hal::Impls::PeriCompDeviceEnumerator(),
-           },
-           3)))
+        (Main::connectivity = new DeviceConnectivity( //
+           new Hal::Impls::SerialPortDevice(),
+           new Hal::Impls::AcpiMgmtDevice(),
+           new Hal::Impls::ApicDevice(),
+           new Hal::Impls::PeriCompDeviceEnumerator()))
           ->onLoad();
         (Main::fileSystem = new Io::VirtualFileSystem());
     }

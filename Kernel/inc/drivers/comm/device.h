@@ -5,12 +5,15 @@
 namespace Kern::Hal::Impls {
     class SerialPortDevice
       : public Device
-      , public Io::TextWriter
+      , public TextWriter
     {
     public:
         SerialPortDevice()
           : Device("Serial Port Device", DeviceType::Firmware)
         {
         }
+
+        void write(char c) override;
+        void write(Std::String<Utf8> str) override;
     };
 }

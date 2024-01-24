@@ -14,7 +14,7 @@ namespace Kern::Svc {
           : ISvcHost("KERN.TASK", nullptr)
           , m_scheduler(new Scheduler())
           , m_processFactory(new ProcessFactory())
-          , m_processes(*(new Std::Array<RefPtr<Process>>(256)))
+          , m_processes(*(new Array<RefPtr<Process>, 65536>()))
         {
         }
         virtual ~TaskSvcHost() = default;
@@ -27,15 +27,15 @@ namespace Kern::Svc {
         void            addProcess(RefPtr<Process> process);
         void            destroyProcess(uint32_t pid);
 
-        Std::Array<RefPtr<Process>>& all() { return m_processes; }
+        Array<RefPtr<Process>, 65536>& all() { return m_processes; }
 
         void onLoad() override;
         void onEnable() override;
         void onDisable() override;
 
     private:
-        Scheduler*                   m_scheduler;
-        ProcessFactory*              m_processFactory;
-        Std::Array<RefPtr<Process>>& m_processes;
+        Scheduler*                     m_scheduler;
+        ProcessFactory*                m_processFactory;
+        Array<RefPtr<Process>, 65536>& m_processes;
     };
 }

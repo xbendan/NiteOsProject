@@ -1,5 +1,11 @@
 #include <siberix/panic.h>
 
 namespace Kern {
-    [[noreturn]] void panic(Std::String<Utf8> msg) {}
+    [[noreturn]] void callPanic(Std::String<Utf8> msg)
+    {
+        asm volatile("cli");
+        while (true) {
+            asm volatile("hlt");
+        }
+    }
 }

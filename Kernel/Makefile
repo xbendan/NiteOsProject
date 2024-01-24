@@ -12,7 +12,6 @@ CXXFLAGS = \
 	-ffreestanding -fno-exceptions -fno-rtti -fno-stack-protector -fno-pic \
 	-mno-sse -mno-sse2 -mno-sse3 -mno-sse4 -mno-sse4.1 -mno-sse4.2 \
 	-mno-avx -mno-avx2 -mno-mmx \
-	-nostdlib \
 	-std=gnu++20 \
 	-mcmodel=kernel \
 	-mno-red-zone \

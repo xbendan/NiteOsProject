@@ -1,10 +1,9 @@
 #include <siberix/init/boot-info.h>
 #include <siberix/init/init-comp.h>
 #include <siberix/main.h>
-#include <siberix/mem/mem.h>
+#include <siberix/mem/kmem-alloc.h>
+#include <siberix/mem/mem-alloc.h>
 #include <xtra-math/div.h>
-
-#define PAGE_PART_SIZE (PAGE_SIZE_1G / 4)
 
 namespace Kern::Svc {
     Page4K** _pageSets;

@@ -1,6 +1,6 @@
 #pragma once
 
-enum AtomicOpMemOrder
+enum AtomicOpcode
 {
     Relaxed                = __ATOMIC_RELAXED,
     Consume                = __ATOMIC_CONSUME,
@@ -24,17 +24,16 @@ public:
     {
     }
 
-    T exchange(
-      T                desired,
-      AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+    T exchange(T            desired,
+               AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         return __atomic_exchange_n(&m_value, desired, order);
     }
 
     bool compareAndExchange(
-      T                expected,
-      T                desired,
-      AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+      T            expected,
+      T            desired,
+      AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         if (order == AcquireRelease || order == Relaxed)
             return __atomic_compare_exchange_n(
@@ -44,70 +43,57 @@ public:
           &m_value, &expected, desired, false, order, order);
     }
 
-    T fetchAdd(
-      T                val,
-      AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+    T fetchAdd(T val, AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         return __atomic_fetch_add(&m_value, val, order);
     }
 
-    T fetchSub(
-      T                val,
-      AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+    T fetchSub(T val, AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         return __atomic_fetch_sub(&m_value, val, order);
     }
 
-    T fetchAnd(
-      T                val,
-      AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+    T fetchAnd(T val, AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         return __atomic_fetch_and(&m_value, val, order);
     }
 
-    T fetchOr(T                val,
-              AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+    T fetchOr(T val, AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         return __atomic_fetch_or(&m_value, val, order);
     }
 
-    T fetchXor(
-      T                val,
-      AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+    T fetchXor(T val, AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         return __atomic_fetch_xor(&m_value, val, order);
     }
 
-    T fetchInc(
-      AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+    T fetchInc(AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         return __atomic_fetch_add(&m_value, 1, order);
     }
 
-    T fetchDec(
-      AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+    T fetchDec(AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         return __atomic_fetch_sub(&m_value, 1, order);
     }
 
-    void inc(AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+    void inc(AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         __atomic_add_fetch(&m_value, 1, order);
     }
 
-    void dec(AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+    void dec(AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         __atomic_sub_fetch(&m_value, 1, order);
     }
 
-    T load(AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+    T load(AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         return __atomic_load_n(&m_value, order);
     }
 
-    void store(
-      T                val,
-      AtomicOpMemOrder order = AtomicOpMemOrder::SequentiallyConsistent)
+    void store(T val, AtomicOpcode order = AtomicOpcode::SequentiallyConsistent)
     {
         __atomic_store_n(&m_value, val, order);
     }
