@@ -14,8 +14,8 @@ namespace Kern::Platform::X64 {
         Hal::Impls::ApicDevice::ApicLocal* m_apicLocal;
 
         CPUImplX64(uint32_t apicId, uint32_t processorId)
-          : m_apicId(apicId)
-          , CPU(processorId)
+          : CPU(processorId)
+          , m_apicId(apicId)
         {
         }
 

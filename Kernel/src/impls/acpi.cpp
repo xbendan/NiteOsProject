@@ -1,11 +1,11 @@
 #include <drivers/acpi/device.h>
-#include <siberix/panic.h>
 #include <siberix/mem/mem.h>
 #include <siberix/mem/range.h>
+#include <siberix/panic.h>
 
-namespace Kern::Hal {
+namespace Kern::Hal::Impls {
     AcpiMgmtDevice::AcpiMgmtDevice()
-      : IDevice(Std::String<Utf8>("ACPI Power Management Device"))
+      : Device(Std::String<Utf8>("ACPI Power Management Device"))
     {
         const char* sign        = "RSD PTR ";
         uint64_t    rsdpAddress = Mem::copyAsIoAddress(

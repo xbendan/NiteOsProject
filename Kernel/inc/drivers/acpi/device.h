@@ -8,10 +8,7 @@ namespace Kern::Hal::Impls {
     class AcpiMgmtDevice : public Kern::Device
     {
     public:
-        AcpiMgmtDevice()
-          : Kern::Device("ACPI Management Device")
-        {
-        }
+        AcpiMgmtDevice();
         ~AcpiMgmtDevice();
 
         template <typename T>

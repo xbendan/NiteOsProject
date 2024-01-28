@@ -44,7 +44,7 @@ namespace Std {
         }
 
         template <typename Func>
-            requires IsRValueRef<Func&&> and IsCallable<Func, Args...>
+            requires IsRvalueReference<Func&&> and IsCallable<Func, Args...>
         Function(Func&& func)
           : _funcWrap(new FuncWrapImpl<Func>(Move<Func>(func)))
         {
@@ -59,7 +59,7 @@ namespace Std {
         }
 
         template <typename Func>
-            requires IsRValueRef<Func&&> && IsCallable<Func, Args...>
+            requires IsRvalueReference<Func&&> && IsCallable<Func, Args...>
         Function& operator=(Func&& func)
         {
             _funcWrap = new FuncWrapImpl<Func>(Move<Func>(func));

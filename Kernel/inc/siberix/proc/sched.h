@@ -33,7 +33,9 @@ namespace Kern::Task {
          * @param name
          * @return Process* pointer to the created process
          */
-        RefPtr<Process> createProcess(Std::String<Utf8> name);
+        RefPtr<Process> createProcess(
+          Std::String<Utf8> name,
+          ProcessType       type = ProcessType::Background);
         /**
          * @brief Create an idle process
          * The idle process will be started immediately after it is created,
@@ -51,6 +53,7 @@ namespace Kern::Task {
         template <typename... Args>
         RefPtr<Process> createProcessEx( //
           Std::String<Utf8> name,
+          ProcessType       type,
           Io::File*         file,
           Io::Directory*    workingDirectory,
           Args&&... launchArgs);

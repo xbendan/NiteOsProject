@@ -4,7 +4,7 @@
 
 namespace Kern::Hal::Impls {
     SataDiskDevice::SataDiskDevice(int                   port,
-                                   HbaPortRegs*          portRegs,
+                                   HBAPortRegs*          portRegs,
                                    AHCIControllerDevice* controller)
       : DiskDevice("Unidentified SATA Hard Disk Drive")
       , m_portRegs(portRegs)
@@ -18,7 +18,7 @@ namespace Kern::Hal::Impls {
         portRegs->_fb  = (controller->fbPhys() & 0xFFFFFFFF) + (port << 8);
         portRegs->_fbu = (controller->fbPhys() >> 32);
 
-        m_commandList = reinterpret_cast<HbaCommandHeader*>(
+        m_commandList = reinterpret_cast<_HBACommandHeader*>(
           Mem::copyAsIoAddress(portRegs->_clb));
 
         for (int i = 0; i < 32; i++) {
@@ -30,7 +30,7 @@ namespace Kern::Hal::Impls {
             Mem::rangeOf((uint64_t)(m_commandList[i]._ctba), 256).clear();
 
             m_commandTable[i] =
-              reinterpret_cast<HbaCommandTable*>(Mem::copyAsIoAddress(phys));
+              reinterpret_cast<HBACommandTable*>(Mem::copyAsIoAddress(phys));
         }
 
         startCommand();
@@ -75,9 +75,10 @@ namespace Kern::Hal::Impls {
         if (slot == -1)
             return false;
 
-        m_portRegs->_serr = m_portRegs->_tfd = 0;
+        m_portRegs->_serr = 0;
+        m_portRegs->_tfd  = 0;
 
-        HbaCommandHeader* header = &m_commandList[slot];
+        HBACommandHeader* header = &m_commandList[slot];
         header->_cfl             = sizeof(RegHostToDevice) / sizeof(uint32_t);
         header->_a               = 0;
         header->_w               = write;
@@ -87,8 +88,8 @@ namespace Kern::Hal::Impls {
         header->_prdbc           = 0;
         header->_pmp             = 0;
 
-        HbaCommandTable* table = m_commandTable[slot];
-        Mem::rangeOf((uint64_t)table, sizeof(HbaCommandTable)).clear();
+        HBACommandTable* table = m_commandTable[slot];
+        Mem::rangeOf((uint64_t)table, sizeof(HBACommandTable)).clear();
         table->_prdtEntry[0]._dba  = physBuf & 0xFFFFFFFF;
         table->_prdtEntry[0]._dbau = (physBuf >> 32) & 0xFFFFFFFF;
         table->_prdtEntry[0]._dbc  = (count << 9) - 1;

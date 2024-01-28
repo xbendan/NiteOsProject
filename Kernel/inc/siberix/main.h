@@ -5,8 +5,8 @@
 #include <siberix/proc/svchost.h>
 #include <stdcxx/array-list.h>
 
-extern "C" [[noreturn]] void
-kmain(Kern::Init::BootConfigTable& bootConfig);
+// extern "C" [[noreturn]] void
+// kmain(Kern::Init::BootConfigTable& bootConfig);
 
 namespace Kern::Main {
     uint64_t              alloc4KPages(uint64_t amount);
@@ -33,5 +33,5 @@ namespace Kern::Main {
     Svc::MemSvcHost*       getSvcMemory();
     Svc::TaskSvcHost*      getSvcTask();
 
-    [[noreturn]] void main(Init::BootConfigTable& bootConfig);
+    [[noreturn]] void setupKernel(Init::BootConfigTable& bootConfig);
 }

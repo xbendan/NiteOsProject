@@ -38,9 +38,10 @@ namespace Kern::Platform::X64 {
     void StackSegmentFault(Registers* context);
     void GeneralProtectionFault(Registers* context);
     void PageFault(Registers* context);
+    void x87FloatingPointException(Registers* context);
     void AlignmentCheck(Registers* context);
     void MachineCheck(Registers* context);
-    void SIMDException(Registers* context);
+    void SIMDFloatingPointException(Registers* context);
     void VirtualizationException(Registers* context);
     void ControlProtectionException(Registers* context);
     void HypervisorInjectionException(Registers* context);

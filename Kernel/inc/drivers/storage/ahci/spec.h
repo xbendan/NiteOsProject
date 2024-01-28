@@ -268,7 +268,7 @@ namespace Kern::Hal::Specs {
         uint32_t _reserved4;
     } __attribute__((packed));
 
-    volatile struct HbaPortRegs
+    struct _HBAPortRegs
     {
         uint32_t _clb;
         uint32_t _clbu;
@@ -291,25 +291,29 @@ namespace Kern::Hal::Specs {
         uint32_t _vendor[4];
     } __attribute__((packed));
 
-    volatile struct HbaMemRegs
+    using HBAPortRegs = volatile _HBAPortRegs;
+
+    struct _HBAMemRegs
     {
-        uint32_t    _hostCapability;
-        uint32_t    _ghc;
-        uint32_t    _interruptStatus;
-        uint32_t    _portsImplemented;
-        uint32_t    _version;
-        uint32_t    _ccc_ctl;
-        uint32_t    _ccc_pts;
-        uint32_t    _em_loc;
-        uint32_t    _em_ctl;
-        uint32_t    _hostCapabilityExt;
-        uint32_t    _bohc;
-        uint8_t     _reserved0[0x74];
-        uint8_t     _vendor[0x60];
-        HbaPortRegs _ports[0x20];
+        uint32_t     _hostCapability;
+        uint32_t     _ghc;
+        uint32_t     _interruptStatus;
+        uint32_t     _portsImplemented;
+        uint32_t     _version;
+        uint32_t     _ccc_ctl;
+        uint32_t     _ccc_pts;
+        uint32_t     _em_loc;
+        uint32_t     _em_ctl;
+        uint32_t     _hostCapabilityExt;
+        uint32_t     _bohc;
+        uint8_t      _reserved0[0x74];
+        uint8_t      _vendor[0x60];
+        _HBAPortRegs _ports[0x20];
     } __attribute__((packed));
 
-    volatile struct HbaFis
+    using HBAMemRegs = volatile _HBAMemRegs;
+
+    struct _HBAFrameInfo
     {
         DmaSetup _dmaSetup;
         uint8_t  _reserved0[4];
@@ -327,7 +331,9 @@ namespace Kern::Hal::Specs {
         uint8_t reserved3[0x60];
     } __attribute__((packed));
 
-    volatile struct HbaCommandHeader
+    using HBAFrameInfo = volatile _HBAFrameInfo;
+
+    struct _HBACommandHeader
     {
         uint8_t _cfl : 5;
         uint8_t _a : 1;
@@ -342,7 +348,7 @@ namespace Kern::Hal::Specs {
 
         uint16_t _prdtl;
 
-        uint32_t _prdbc;
+        volatile uint32_t _prdbc;
 
         uint32_t _ctba;
 
@@ -350,6 +356,8 @@ namespace Kern::Hal::Specs {
 
         uint32_t _reserved1[4];
     } __attribute__((packed));
+
+    using HBACommandHeader = volatile _HBACommandHeader;
 
     struct HbaPrdtEntry
     {
@@ -364,7 +372,7 @@ namespace Kern::Hal::Specs {
         uint32_t _i : 1;
     } __attribute__((packed));
 
-    volatile struct HbaCommandTable
+    struct _HBACommandTable
     {
         uint8_t _cfis[64];
 
@@ -374,5 +382,7 @@ namespace Kern::Hal::Specs {
 
         HbaPrdtEntry _prdtEntry[1];
     } __attribute__((packed));
+
+    using HBACommandTable = volatile _HBACommandTable;
 
 }

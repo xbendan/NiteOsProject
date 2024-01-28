@@ -1,8 +1,11 @@
 #include <drivers/pci/spec.h>
+#include <siberix/hwports.h>
 #include <stdcxx/type-traits.h>
 #include <stdcxx/types.h>
 
 namespace Kern::Hal::Impls {
+    using namespace Specs;
+
     class PCIInfo
     {
     public:
@@ -11,7 +14,8 @@ namespace Kern::Hal::Impls {
                      Std::IsSame<T, uint32_t>)
         T read(uint8_t offset)
         {
-            portRegsWrite<uint32_t>(PCI_CONFIG_ADDRESS, address(offset));
+            portRegsWrite<uint32_t>(PCI_CONFIG_ADDRESS,
+                                    getAddressPackage(offset));
 
             T data = portRegsRead<uint32_t>(PCI_CONFIG_DATA);
             switch (sizeof(T)) {
@@ -36,7 +40,8 @@ namespace Kern::Hal::Impls {
                      Std::IsSame<T, uint32_t>)
         void write(uint8_t offset, T value)
         {
-            portRegsWrite<uint32_t>(PCI_CONFIG_ADDRESS, address(offset));
+            portRegsWrite<uint32_t>(PCI_CONFIG_ADDRESS,
+                                    getAddressPackage(offset));
 
             T data = portRegsRead<uint32_t>(PCI_CONFIG_DATA);
             switch (sizeof(T)) {
@@ -59,6 +64,13 @@ namespace Kern::Hal::Impls {
         void write(PCIConfigRegs reg, T value)
         {
             write<T>(static_cast<uint8_t>(reg), value);
+        }
+
+        uint64_t getAddressPackage(uint8_t offset)
+        {
+            return ((_bus << 16) | (_slot << 11) | (_func << 8) |
+                    (offset & 0xFC)) |
+                   0x80000000;
         }
 
         uint8_t getBus() { return _bus; }

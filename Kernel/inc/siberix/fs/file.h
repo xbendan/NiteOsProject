@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdcxx/array-list.h>
 #include <stdcxx/string.h>
 #include <stdcxx/types.h>
 #include <stdcxx/uuid.h>

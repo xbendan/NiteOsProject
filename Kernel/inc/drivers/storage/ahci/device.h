@@ -11,7 +11,7 @@ namespace Kern::Hal::Impls {
     {
     public:
         SataDiskDevice(int                   port,
-                       HbaPortRegs*          portRegs,
+                       HBAPortRegs*          portRegs,
                        AHCIControllerDevice* controller);
         ~SataDiskDevice();
 
@@ -29,11 +29,11 @@ namespace Kern::Hal::Impls {
         int findSlot();
 
     private:
-        HbaPortRegs*      m_portRegs;
-        HbaMemRegs*       m_memRegs;
-        HbaCommandHeader* m_commandList;
-        HbaCommandTable*  m_commandTable[8];
-        HbaFis*           m_fis;
+        HBAPortRegs*      m_portRegs;
+        HBAMemRegs*       m_memRegs;
+        HBACommandHeader* m_commandList;
+        HBACommandTable*  m_commandTable[8];
+        HBAFrameInfo*     m_fis;
         int               m_status;
 
         uint64_t m_physBuffer[8];
@@ -45,17 +45,17 @@ namespace Kern::Hal::Impls {
         AHCIControllerDevice(PCIInfo& info);
         ~AHCIControllerDevice();
 
-        HbaMemRegs* memRegs() { return m_memRegs; }
+        HBAMemRegs* memRegs() { return m_memRegs; }
 
-        uint64_t const clbPhys() { return m_clbPhys; }
-        uint64_t const fbPhys() { return m_fbPhys; }
-        uint64_t const ctbaPhys() { return m_ctbaPhys; }
+        uint64_t clbPhys() { return m_clbPhys; }
+        uint64_t fbPhys() { return m_fbPhys; }
+        uint64_t ctbaPhys() { return m_ctbaPhys; }
 
     private:
         uint64_t    m_clbPhys, m_fbPhys, m_ctbaPhys;
         uint64_t    m_addrBase;
         uint64_t    m_addrVirt;
-        HbaMemRegs* m_memRegs;
+        HBAMemRegs* m_memRegs;
 
         Std::LinkedList<SataDiskDevice*> m_diskList;
     };

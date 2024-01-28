@@ -9,12 +9,23 @@
 #include <xtra-concurrent/spinlock.h>
 
 namespace Kern::Task {
+    enum class ProcessType : uint8_t
+    {
+        Kernel = 0,
+        System,
+        Driver,
+        Service,
+        Background,
+        Application,
+    };
+
     class Process
     {
     public:
         Process() = default;
         Process(Std::String<Utf8>  name,
                 uint32_t           processId,
+                ProcessType        type,
                 Mem::AddressSpace* addressSpace)
           : m_name(name)
           , m_processId(0)
@@ -28,6 +39,7 @@ namespace Kern::Task {
         Std::String<Utf8>  getName() { return m_name; }
         uint32_t           getProcessId() { return m_processId; }
         void               setProcessId(uint32_t pid) { m_processId = pid; }
+        ProcessType        getType() { return m_type; }
         Mem::AddressSpace* getAddressSpace() { return m_addressSpace; }
         Thread*            getMainThread() { return m_mainThread; }
         Std::LinkedList<Thread*>& threads() { return m_childrenThreadList; }
@@ -42,6 +54,7 @@ namespace Kern::Task {
     private:
         Std::String<Utf8>  m_name;
         uint32_t           m_processId;
+        ProcessType        m_type;
         Mem::AddressSpace* m_addressSpace;
 
         Spinlock m_lock{};

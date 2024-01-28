@@ -12,30 +12,26 @@ namespace Kern::Mem {
 namespace Kern::Platform::X64 {
     using namespace Kern::Mem;
 
-    static inline PdirTable kPageDirs __attribute__((aligned(PAGE_SIZE_4K)));
-    static inline PdirTable kHeapDirs __attribute__((aligned(PAGE_SIZE_4K)));
-    static inline PdirTable kIoDirs[4] __attribute__((aligned(PAGE_SIZE_4K)));
-    static inline PageTable kHeapTables[TABLES_PER_DIR]
-      __attribute__((aligned(PAGE_SIZE_4K)));
-    static inline PageTable* kPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
+    MapLevel<2> kPageDirs;
+    MapLevel<2> kHeapDirs;
+    MapLevel<2> kIoDirs[4];
+    MapLevel<1> kHeapTables[TABLES_PER_DIR];
+    uint64_t    kHeapBitmap[0x1000];
 
-    X64Pages::X64Pages(Pdpt* pdptOfKern)
-      : _bitmap(new Std::BitmapDouble<uint64_t>(16384 / 8, 1024))
-      , _pml4Phys((uint64_t)&_pml4 - KERNEL_VIRTUAL_BASE)
+    static PageTable* kPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
+    static uint64_t   kHeapBitmap[0x1000];
+
+    X64Pages::X64Pages(MapLevel<3>* pdptOfKern)
+      : _pml4Phys((uint64_t)&_pml4 - KERNEL_VIRTUAL_BASE)
       , _pdptOfKern(pdptOfKern)
+      , _bitmap(new Std::BitmapDouble<uint64_t>(16384 / 8, 1024))
     {
         _pml4[0] //
-          .present()
-          .writable()
-          .user()
+          .setFlags(VmmFlags::Present | VmmFlags::Writable | VmmFlags::User)
           .address((uint64_t)&_pdpt - KERNEL_VIRTUAL_BASE);
         _pdpt[0] //
-          .present()
-          .writable()
-          .user()
+          .setFlags(VmmFlags::Present | VmmFlags::Writable | VmmFlags::User)
           .address((uint64_t)&_pageDirs[0] - KERNEL_VIRTUAL_BASE);
-        _pageDirs   = new PdirTable*[DIRS_PER_PDPT];
-        _pageTables = new PageTable**[DIRS_PER_PDPT];
 
         /*
             Pre-allocate 128 pages (0.5 MB) for loading executable files.
@@ -45,62 +41,76 @@ namespace Kern::Platform::X64 {
 
     X64Pages::~X64Pages()
     {
-        delete _bitmap;
-        for (uint16_t pageDirsOffset = 0;
-             pageDirsOffset < DIRS_PER_PDPT &&
-             pageDirsOffset * PAGE_SIZE_1G < m_bound;
-             pageDirsOffset++) {
-            delete _pageDirs[pageDirsOffset];
-            if (!_pageTables[pageDirsOffset]) {
+        for (int i = 0; i < MapLevel<2>::_len; i++) {
+            if (!_pageDirs[i]) {
+                break;
+            }
+            delete _pageDirs[i];
+            if (!_pageTables[i]) {
                 continue;
             }
-            for (uint16_t pageTableOffset = 0; pageTableOffset < TABLES_PER_DIR;
-                 pageTableOffset++) {
-                delete _pageTables[pageDirsOffset][pageTableOffset];
+            for (int j = 0; j < MapLevel<1>::_len; j++) {
+                if (!_pageTables[i][j]) {
+                    break;
+                }
+                delete _pageTables[i][j];
             }
         }
+        delete _bitmap;
         // Do we delete all the page tables?
         // I hate nested pointers.
     }
 
     uint64_t X64Pages::alloc4KPages(uint64_t amount,
-                                    bool     isWritable,
-                                    bool     isWriteThrough,
-                                    bool     isCacheDisabled,
-                                    bool     directMap2M)
+                                    bool     rw,
+                                    bool     pwt,
+                                    bool     pcd)
     {
-        if (!_bitmap) {
-            _bitmap = new Std::BitmapDouble<uint64_t>(16384 / 8, 1024);
-        }
         uint64_t bitmapIndex = _bitmap->findFree(amount);
-        uint64_t pageIndex   = 0;
-        uint64_t pdirIndex   = 0;
-        uint64_t pdptIndex   = 0;
+        uint16_t i, j, k;
         while (amount) {
-            pageIndex = bitmapIndex & 512;
-            pdirIndex = bitmapIndex >> 9;
-            pdptIndex = bitmapIndex >> 18;
-            if (!_pageDirs[pdptIndex]) {
-                _pageDirs[pdptIndex] =
-                  reinterpret_cast<PdirTable*>(new PdirEntry[DIRS_PER_PDPT]);
-                _pageTables[pdptIndex] = new PageTable*[DIRS_PER_PDPT];
-                (*_pageDirs[pdptIndex])[pdirIndex] //
+            i = (bitmapIndex >> 18) & 0x1ff;
+            j = (bitmapIndex >> 9) & 0x1ff;
+            k = bitmapIndex & 0x1ff;
+            if (!_pageDirs[i]) {
+                _pageDirs   = new MapLevel<2>();
+                _pageTables = new MapLevel<1>*[DIRS_PER_PDPT];
+                _pdpt[i] //
                   .present()
+                  .writable(rw)
                   .user()
-                  .writable()
-                  .address((uint64_t)&_pageTables[pdptIndex][pdirIndex] -
-                           KERNEL_VIRTUAL_BASE);
+                  .writeThrough(pwt)
+                  .cacheDisabled(pcd)
+                  .address((uint64_t)&_pageDirs[i] - KERNEL_VIRTUAL_BASE);
             }
 
-            if (!_pageTables[pdptIndex][pdirIndex]) {
-                _pageTables
+            if (!_pageTables[i][j]) {
+                _pageTables[i][j] = new MapLevel<1>();
+                (*_pageDirs[i])[j] //
+                  .present()
+                  .writable(rw)
+                  .user()
+                  .writeThrough(pwt)
+                  .cacheDisabled(pcd)
+                  .address((uint64_t)&_pageTables[i][j] - KERNEL_VIRTUAL_BASE);
             }
+
+            (*_pageTables[i][j])[k] //
+              .present()
+              .writable(rw)
+              .user()
+              .writeThrough(pwt)
+              .cacheDisabled(pcd)
+              .address(m_zeroPage);
+
+            amount--;
+            bitmapIndex++;
         }
     }
 
     void X64Pages::free4KPages(uint64_t address, uint64_t amount) {}
 
-    void X64Pages::map(uint64_t phys, uint64_t virt, uint64_t amount) {}
+    void X64Pages::map4KPages(uint64_t phys, uint64_t virt, uint64_t amount) {}
 
     bool X64Pages::isPagePresent(uint64_t address) {}
 
@@ -108,8 +118,8 @@ namespace Kern::Platform::X64 {
 
     X64KernelPages::X64KernelPages()
     {
-        rangeOf(&_pml4, sizeof(Pml4)).clear();
-        rangeOf(&_pdpt, sizeof(Pdpt)).clear();
+        rangeOf(&_pml4, sizeof(MapLevel<4>)).clear();
+        rangeOf(&_pdpt, sizeof(MapLevel<3>)).clear();
 
         _pml4[pml4IndexOf(KERNEL_VIRTUAL_BASE)] //
           .present()
@@ -163,11 +173,22 @@ namespace Kern::Platform::X64 {
     }
 
     uint64_t X64KernelPages::alloc4KPages(uint64_t amount,
-                                          bool     isWritable      = true,
-                                          bool     isWriteThrough  = false,
-                                          bool     isCacheDisabled = false,
-                                          bool     directMap2M     = true)
+                                          bool     isWritable,
+                                          bool     isWriteThrough,
+                                          bool     isCacheDisabled)
+    {
+        return 0;
+    }
+
+    void X64KernelPages::free4KPages(uint64_t address, uint64_t amount) {}
+
+    void X64KernelPages::map4KPages(uint64_t phys,
+                                    uint64_t virt,
+                                    uint64_t amount)
     {
     }
 
+    bool X64KernelPages::isPagePresent(uint64_t address) {}
+
+    uint64_t X64KernelPages::convertVirtToPhys(uint64_t address) {}
 }

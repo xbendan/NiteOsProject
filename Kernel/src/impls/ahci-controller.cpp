@@ -4,17 +4,17 @@
 namespace Kern::Hal::Impls {
     AHCIControllerDevice::AHCIControllerDevice(PCIInfo& info)
       : PCIDevice(info, "AHCI Controller Device", DeviceType::DiskController)
-      , m_addrBase(getBaseAddrRegs(5))
       , m_clbPhys(Main::alloc4KPages(8))
       , m_fbPhys(Main::alloc4KPages(2))
       , m_ctbaPhys(Main::alloc4KPages(64))
+      , m_addrBase(getBaseAddrRegs(5))
     {
         enableBusMastering();
         enableInterrupts();
         enableMemorySpace();
 
         m_addrVirt = Mem::copyAsIoAddress(m_addrBase);
-        m_memRegs  = reinterpret_cast<HbaMemRegs*>(m_addrVirt);
+        m_memRegs  = reinterpret_cast<HBAMemRegs*>(m_addrVirt);
 
         m_memRegs->_ghc             &= ~AHCI_GHC_IE;
         m_memRegs->_interruptStatus  = 0xFFFFFFFF;
@@ -24,7 +24,7 @@ namespace Kern::Hal::Impls {
                 continue;
             }
 
-            HbaPortRegs* portRegs = &m_memRegs->_ports[i];
+            HBAPortRegs* portRegs = &m_memRegs->_ports[i];
             uint32_t     ssts     = portRegs->_ssts;
             uint8_t      ipm = (ssts >> 8) & 0x0F, det = ssts & 0x0F;
             if (ipm != HBA_PxSSTS_DET_PRESENT || det != HBA_PORT_IPM_ACTIVE) {

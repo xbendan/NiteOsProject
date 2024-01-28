@@ -1,6 +1,8 @@
 #include <stdcxx/types.h>
 
 namespace Kern::Io {
+    class DiskDevice;
+
     class Partition
     {
     public:

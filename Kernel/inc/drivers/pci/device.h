@@ -28,15 +28,15 @@ namespace Kern::Hal::Impls {
 
         uint64_t getBaseAddrRegs(uint8_t i)
         {
-            if (i < 0 || i > 5) {
+            if (i > 5) {
                 return 0;
             }
 
             uint64_t bar = read<uint32_t>((uint8_t)PCIConfigRegs::BAR0 + i * 4);
             if (!(bar & 0x1) && (bar & 0x4) && (i < 5)) {
-                bar |=
-                  read<uint32_t>((uint8_t)PCIConfigRegs::BAR0 + (i + 1) * 4)
-                  << 32;
+                bar |= ((uint64_t)read<uint32_t>((uint8_t)PCIConfigRegs::BAR0 +
+                                                 (i + 1) * 4))
+                       << 32;
             }
 
             return (bar & 0x1) ? (bar & 0xFFFFFFFFFFFFFFFC)
@@ -45,7 +45,7 @@ namespace Kern::Hal::Impls {
 
         // clang-format off
 
-        inline bool     barIsIoPort(uint8_t i)          { read<uint32_t>((uint8_t)PCIConfigRegs::BAR0 + i * 4) & 0x1; }
+        inline bool     barIsIoPort(uint8_t i)          { return read<uint32_t>((uint8_t)PCIConfigRegs::BAR0 + i * 4) & 0x1; }
         inline uint8_t  getInterruptLine()              { return read<uint8_t>(PCIConfigRegs::InterruptLine); }
         inline void     setInterruptLine(uint8_t value) { write<uint8_t>(PCIConfigRegs::InterruptLine, value); }
         inline uint8_t  getInterruptPin()               { return read<uint8_t>(PCIConfigRegs::InterruptPin); }

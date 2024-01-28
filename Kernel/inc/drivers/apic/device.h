@@ -1,8 +1,11 @@
+#pragma once
+
 #include <drivers/acpi/spec.h>
 #include <drivers/apic/spec.h>
 #include <siberix/dvc/device.h>
 #include <siberix/dvc/type-processor.h>
 #include <siberix/hwtypes.h>
+#include <siberix/mem/mem.h>
 #include <stdcxx/linked-list.h>
 #include <stdcxx/types.h>
 
@@ -41,7 +44,7 @@ namespace Kern::Hal::Impls {
                       ProcessorDevice* processor)
               : m_apicId(apicId)
               , m_basePhys(apic->localBaseRead() & LOCAL_APIC_BASE)
-              , m_baseVirt(Kern::Mem::copyAsIoAddress(m_basePhys))
+              , m_baseVirt(Mem::copyAsIoAddress(m_basePhys))
               , m_processor(processor)
               , m_cpu(processor->getCPU())
             {

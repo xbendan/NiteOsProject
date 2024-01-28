@@ -1,12 +1,14 @@
 #pragma once
 
-#include <stdcxx/copy.h>
+#include <stdcxx/move.h>
 #include <stdcxx/iterator.h>
 #include <stdcxx/types.h>
 
 template <class T, uint64_t len>
 class Array
 {
+    using ArrayRef = T (&)[len];
+
 public:
     Array() = default;
     Array(const Array<T, len>& other)
@@ -21,19 +23,16 @@ public:
             m_buf[i] = other.m_buf[i];
         }
     }
+    Array(ArrayRef other)
+    {
+        for (uint64_t i = 0; i < len; ++i) {
+            m_buf[i] = other[i];
+        }
+    }
 
     template <typename... Args>
     Array(Args... args)
     {
-        int  i = 0;
-        auto add;
-        add = [&](auto&& first, auto&&... rest) {
-            m_buf[i++] = first;
-            if constexpr (sizeof...(rest) > 0) {
-                add(Std::Forward<decltype(rest)>(rest)...);
-            }
-        };
-        add(args...);
     }
     ~Array() = default;
 
@@ -43,7 +42,7 @@ public:
 
     size_t length() const { return len; }
 
-    T* data() { return m_buf; }
+    ArrayRef data() { return m_buf; }
 
     Array<T, len>& operator=(const Array<T, len>& other)
     {

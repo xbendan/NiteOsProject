@@ -55,12 +55,14 @@ namespace Kern::Main {
     template <typename... Args>
     RefPtr<Task::Process> createProcessEx( //
       Std::String<Utf8> name,
+      Task::ProcessType type,
       Io::File*         file,
       Io::Directory*    workingDirectory,
       Args... launchArgs)
     {
         return svcTask->getProcessFactory()->createProcessEx(
           name,
+          type,
           file,
           workingDirectory,
           Std::Forward<decltype(launchArgs)>(launchArgs)...);
@@ -78,7 +80,7 @@ namespace Kern::Main {
 
     using namespace Init;
 
-    [[noreturn]] void main(Init::BootConfigTable* bootConfig)
+    [[noreturn]] void setupKernel(Init::BootConfigTable* bootConfig)
     {
         _bootConfig = bootConfig;
         setupArch();

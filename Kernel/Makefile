@@ -12,7 +12,7 @@ CXXFLAGS = \
 	-ffreestanding -fno-exceptions -fno-rtti -fno-stack-protector -fno-pic \
 	-mno-sse -mno-sse2 -mno-sse3 -mno-sse4 -mno-sse4.1 -mno-sse4.2 \
 	-mno-avx -mno-avx2 -mno-mmx \
-	-std=gnu++20 \
+	-std=gnu++23 \
 	-mcmodel=kernel \
 	-mno-red-zone \
 	-O0 \
@@ -33,14 +33,19 @@ SOURCE_GENERIC := $(wildcard src/siberix/*.cpp) \
 	$(wildcard src/impls/*.cpp)  
 # OBJECT_GENERIC := $(patsubst build/%.cpp, src/%.o, $(SOURCE_GENERIC))
 
-SOURCE_PLATFORM_X86_64 := $(wildcard src/platform/x86_64/*.cpp)
-OBJECT_PLATFORM_X86_64 := $(patsubst src/%.cpp, build/%.o, $(SOURCE_PLATFORM_X86_64))
-OBJECT_GENERIC_X86_64 := $(patsubst src/%.cpp, build/%.o, $(SOURCE_GENERIC))
+SOURCE_PLATFORM_X86_64 := $(wildcard src/platforms/x86_64/*.cpp)  
+SOURCE_ASSEMBLY_X86_64 := $(wildcard src/platforms/x86_64/*.asm)  
+OBJECT_PLATFORM_X86_64 := $(patsubst src/%.cpp, build/%.o, $(SOURCE_PLATFORM_X86_64))  
+OBJECT_ASSEMBLY_X86_64 := $(patsubst src/%.asm, build/%.o, $(SOURCE_ASSEMBLY_X86_64))
+OBJECT_GENERIC_X86_64 := $(patsubst src/%.cpp, build/%.o, $(SOURCE_GENERIC))  
 
 # Rule to build the executable
 $(OBJECT_PLATFORM_X86_64): build/%.o: src/%.cpp  
 	mkdir -p $(dir $@)  
 	x86_64-elf-g++ -I inc $(CXXFLAGS) -c $< -o $@  
+$(OBJECT_ASSEMBLY_X86_64): build/%.o: src/%.asm  
+	mkdir -p $(dir $@)  
+	nasm -f elf64 $< -o $@
 $(OBJECT_GENERIC_X86_64): build/%.o: src/%.cpp  
 	mkdir -p $(dir $@)  
 	x86_64-elf-g++ -I inc $(CXXFLAGS) -c $< -o $@
@@ -48,22 +53,23 @@ $(OBJECT_GENERIC_X86_64): build/%.o: src/%.cpp
 # Default rule
 all: $(OBJECT_GENERIC) $(OBJECT_PLATFORM_X86_64)
 
-x64-all: $(OBJECT_GENERIC_X86_64) $(OBJECT_PLATFORM_X86_64)
+x64-all: $(OBJECT_GENERIC_X86_64) $(OBJECT_PLATFORM_X86_64) $(OBJECT_ASSEMBLY_X86_64)
 	$(eval PLATFORM := x86_64)
 	mkdir -p build/${PLATFORM}
 	mkdir -p dist/${PLATFORM}
-	# $(LD) $(LDFLAGS) -o dist/${PLATFORM}/$(PROJ_NAME).elf \
-	# 	-T target/LinkerScript-${PLATFORM}.ld \
-	# 	$(OBJECT_GENERIC_X86_64) \
-	# 	$(OBJECT_PLATFORM_X86_64)  
-	# cp dist/${PLATFORM}/$(PROJ_NAME).elf target/${PLATFORM}/iso_limine/$(PROJ_NAME).elf
-	# xorriso -as mkisofs -b limine-cd.bin \
-	# 	-no-emul-boot -boot-load-size 4 -boot-info-table \
-	# 	--efi-boot limine-cd-efi.bin \
-	# 	-efi-boot-part --efi-boot-image --protective-msdos-label \
-	# 	target/${PLATFORM}/iso-limine -o  dist/${PLATFORM}/$(PROJ_NAME).iso
-	# ../Thirdparty/limine/limine-deploy dist/${PLATFORM}/$(BUILD_NAME).iso
-	# cp dist/${PLATFORM}/$(BUILD_NAME).iso /mnt/c/Users/MejiroArdan/Codes/Cxxlang/$(BUILD_NAME).iso
+	$(LD) $(LDFLAGS) -o dist/${PLATFORM}/$(PROJ_NAME).elf \
+		-T target/LinkerScript-${PLATFORM}.ld \
+		$(OBJECT_GENERIC_X86_64) \
+		$(OBJECT_PLATFORM_X86_64) \
+		$(OBJECT_ASSEMBLY_X86_64)  
+	cp dist/${PLATFORM}/$(PROJ_NAME).elf target/${PLATFORM}/iso_limine/$(PROJ_NAME).elf
+	xorriso -as mkisofs -b limine-cd.bin \
+		-no-emul-boot -boot-load-size 4 -boot-info-table \
+		--efi-boot limine-cd-efi.bin \
+		-efi-boot-part --efi-boot-image --protective-msdos-label \
+		target/${PLATFORM}/iso-limine -o  dist/${PLATFORM}/$(PROJ_NAME).iso
+	../Thirdparty/limine/limine-deploy dist/${PLATFORM}/$(BUILD_NAME).iso
+	cp dist/${PLATFORM}/$(BUILD_NAME).iso /mnt/c/Users/MejiroArdan/Codes/Cxxlang/$(BUILD_NAME).iso
 
 
 x64-test: x64-all

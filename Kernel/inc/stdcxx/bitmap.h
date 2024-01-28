@@ -8,7 +8,9 @@ namespace Std {
     {
         uint8_t  _bits = sizeof(T) * 8;
         uint64_t _size;
-        T*     _data;
+        T*       _data;
+
+        constexpr Bitmap() {}
 
         constexpr Bitmap(uint64_t size)
           : _size(size)
@@ -16,7 +18,7 @@ namespace Std {
             _data = new T[size / _bits];
         }
 
-        ~Bitmap() { delete[] _data; }
+        virtual ~Bitmap() { delete[] _data; }
 
         virtual void set(uint64_t pos)
         {
@@ -27,7 +29,7 @@ namespace Std {
         {
             while (amount) {
                 uint8_t   bitsOffset = pos % _bits;
-                uint64_t& data       = getDataAt(pos);
+                uint64_t& data       = at(pos);
                 if (!bitsOffset && amount >= _bits) {
                     /*
                         Set all bits in the data
@@ -48,7 +50,7 @@ namespace Std {
         {
             while (amount) {
                 uint8_t   bitsOffset = pos % _bits;
-                uint64_t& data       = getDataAt(pos);
+                uint64_t& data       = at(pos);
                 if (!bitsOffset && amount >= _bits) {
                     /*
                         Clear all bits in the data
@@ -74,14 +76,14 @@ namespace Std {
             return _data[pos / _bits] & (1 << (pos % _bits));
         }
 
-        virtual T& getDataAt(uint64_t pos) { return _data[pos / _bits]; }
+        virtual T& at(uint64_t pos) { return _data[pos / _bits]; }
 
-        virtual uint64_t findFree(uint64_t amount)
+        [[nodiscard]] virtual uint64_t findFree(uint64_t amount)
         {
             uint64_t pos  = 0;
             uint64_t free = 0;
-            while (free < amount) {
-                uint64_t& data = getDataAt(pos);
+            while (free < amount && pos < _size) {
+                uint64_t& data = at(pos);
                 if (~data == 0) {
                     free  = 0;
                     pos  += _bits;
@@ -104,6 +106,7 @@ namespace Std {
                     return pos;
                 }
             }
+            return 0;
         }
     };
 
@@ -111,9 +114,9 @@ namespace Std {
         requires Std::IsIntegral<T>
     struct BitmapDouble : Bitmap<T>
     {
-        // uint8_t  _bits = sizeof(T) * 8;
+        uint8_t _bits = sizeof(T) * 8;
 
-        T**    _data;
+        T**      _data;
         uint32_t _dimensionL1;
         uint32_t _dimensionL2;
 
@@ -125,7 +128,7 @@ namespace Std {
             _data[0] = new T[_dimensionL1];
         }
 
-        ~BitmapDouble()
+        ~BitmapDouble() override
         {
             for (uint32_t i = 0; i < _dimensionL2; i++) {
                 delete[] _data[i];
@@ -133,24 +136,18 @@ namespace Std {
             delete[] _data;
         }
 
-        void set(uint64_t pos) override
-        {
-            getDataAt(pos) |= (1 << (pos & _bits));
-        }
+        void set(uint64_t pos) override { at(pos) |= (1 << (pos % _bits)); }
 
-        void clear(uint64_t pos) override
-        {
-            getDataAt(pos) &= ~(1 << (pos & _bits));
-        }
+        void clear(uint64_t pos) override { at(pos) &= ~(1 << (pos % _bits)); }
 
         bool test(uint64_t pos) override
         {
-            return getDataAt(pos) & (1 << (pos & _bits));
+            return at(pos) & (1 << (pos % _bits));
         }
 
-        T& getDataAt(uint64_t pos) override
+        T& at(uint64_t pos) override
         {
-            pos          /= _bits;
+            pos            /= _bits;
             uint32_t dimL1  = pos & _dimensionL1;
             uint32_t dimL2  = (pos / _dimensionL1) & _dimensionL2;
 

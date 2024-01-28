@@ -124,7 +124,7 @@ namespace Kern::Platform::X64 {
         asm volatile("cpuid"
                      : "=b"(regs[0]), "=d"(regs[1]), "=c"(regs[2])
                      : "a"(0));
-        for (int i = 0; i < 12; i)
+        for (int i = 0; i < 12; i++)
             id.vendor[i] = regs[i / 4] >> (i % 4 * 8) & 0xFF;
 
         asm volatile("cpuid"

@@ -15,6 +15,7 @@ kload_st2(stivale2_struct* stInfo)
     while (stTags) {
         switch (stTags->identifier) {
             case STIVALE2_STRUCT_TAG_CMDLINE_ID: {
+                break;
             }
             case STIVALE2_STRUCT_TAG_MEMMAP_ID: {
                 stivale2_struct_tag_memmap* tagMemmap =
@@ -58,6 +59,7 @@ kload_st2(stivale2_struct* stInfo)
                             break;
                     }
                 }
+                break;
             }
             case STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID: {
                 stivale2_struct_tag_framebuffer* tagFb =
@@ -69,8 +71,9 @@ kload_st2(stivale2_struct* stInfo)
                     ._pitch   = tagFb->framebuffer_pitch,
                     ._bpp     = tagFb->framebuffer_bpp,
                 };
+                break;
             }
         }
     }
-    kmain(&bootConfig);
+    Kern::Main::setupKernel(bootConfig);
 }

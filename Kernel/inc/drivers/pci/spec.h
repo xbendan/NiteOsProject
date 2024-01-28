@@ -75,6 +75,9 @@
 #define PCI_CAP_MSI_CONTROL_MMC(x) ((x >> 1) & 0x7) // Multiple Message Capable
 #define PCI_CAP_MSI_CONTROL_ENABLE (1 << 0)         // MSI Enable
 
+#define PCI_PACKAGE_ADDRESS(bus, slot, func, offset)                           \
+    ((bus << 16 | slot << 11 | func << 8 | offset & 0xFC | 0x80000000))
+
 namespace Kern::Hal::Specs {
     enum class PCIConfigRegs : uint8_t
     {

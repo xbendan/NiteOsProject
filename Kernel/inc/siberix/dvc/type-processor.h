@@ -1,3 +1,5 @@
+#pragma once
+
 #include <siberix/dvc/device.h>
 #include <siberix/hwtypes.h>
 #include <stdcxx/type-traits.h>
