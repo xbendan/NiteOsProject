@@ -18,8 +18,8 @@ namespace Kern::Platform::X64 {
     MapLevel<1> kHeapTables[TABLES_PER_DIR];
     uint64_t    kHeapBitmap[0x1000];
 
-    static PageTable* kPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
-    static uint64_t   kHeapBitmap[0x1000];
+    // static PageTable* kPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
+    static uint64_t kHeapBitmap[0x1000];
 
     X64Pages::X64Pages(MapLevel<3>* pdptOfKern)
       : _pml4Phys((uint64_t)&_pml4 - KERNEL_VIRTUAL_BASE)

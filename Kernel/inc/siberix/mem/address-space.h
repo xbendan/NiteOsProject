@@ -14,7 +14,7 @@ namespace Kern::Mem {
           , m_zeroPage(0)
         {
         }
-        ~AddressSpace() { delete m_zeroPage; }
+        ~AddressSpace() { delete (void*)m_zeroPage; }
 
         /**
          * @brief Allocate virtual 4K pages

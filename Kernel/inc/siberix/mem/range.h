@@ -41,6 +41,12 @@ namespace Kern::Mem {
             return 0;
         }
 
+        template <typename T>
+        uint64_t find(T* val, uint64_t size, uint64_t offset = 0x1)
+        {
+            return find((uint8_t*)val, size * sizeof(T), offset);
+        }
+
         void clone(AddressRange& other) {}
     };
 
