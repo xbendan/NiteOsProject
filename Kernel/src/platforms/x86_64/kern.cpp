@@ -30,10 +30,9 @@ namespace Kern::Init {
     using namespace Kern::Platform::X64;
     using namespace Kern::Hal;
 
-    CPUImplX64 cpu0;
-
     void setupArch()
     {
+        static CPUImplX64 cpu0(0, 0);
         cpu0.disableInterrupts();
 
         /* load global descriptor table */

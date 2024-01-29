@@ -5,7 +5,7 @@
 namespace Kern::Mem {
     uint64_t copyAsIoAddress(uint64_t address)
     {
-        // TODO: Implement
+        return IO_VIRTUAL_BASE + address;
     }
 }
 
@@ -18,8 +18,7 @@ namespace Kern::Platform::X64 {
     MapLevel<1> kHeapTables[TABLES_PER_DIR];
     uint64_t    kHeapBitmap[0x1000];
 
-    // static PageTable* kPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
-    static uint64_t kHeapBitmap[0x1000];
+    static MapLevel<1>* kPageTablePointers[DIRS_PER_PDPT][TABLES_PER_DIR];
 
     X64Pages::X64Pages(MapLevel<3>* pdptOfKern)
       : _pml4Phys((uint64_t)&_pml4 - KERNEL_VIRTUAL_BASE)
@@ -73,8 +72,8 @@ namespace Kern::Platform::X64 {
             j = (bitmapIndex >> 9) & 0x1ff;
             k = bitmapIndex & 0x1ff;
             if (!_pageDirs[i]) {
-                _pageDirs   = new MapLevel<2>();
-                _pageTables = new MapLevel<1>*[DIRS_PER_PDPT];
+                _pageDirs[i]   = new MapLevel<2>();
+                _pageTables[i] = new MapLevel<1>*[DIRS_PER_PDPT];
                 _pdpt[i] //
                   .present()
                   .writable(rw)
@@ -106,15 +105,24 @@ namespace Kern::Platform::X64 {
             amount--;
             bitmapIndex++;
         }
+        return bitmapIndex << 12;
     }
 
     void X64Pages::free4KPages(uint64_t address, uint64_t amount) {}
 
     void X64Pages::map4KPages(uint64_t phys, uint64_t virt, uint64_t amount) {}
 
-    bool X64Pages::isPagePresent(uint64_t address) {}
+    bool X64Pages::isPagePresent(uint64_t address)
+    {
+        // TODO: Implement
+        return false;
+    }
 
-    uint64_t X64Pages::convertVirtToPhys(uint64_t address) {}
+    uint64_t X64Pages::convertVirtToPhys(uint64_t address)
+    {
+        // TODO: Implement
+        return 0;
+    }
 
     X64KernelPages::X64KernelPages()
     {
@@ -188,7 +196,13 @@ namespace Kern::Platform::X64 {
     {
     }
 
-    bool X64KernelPages::isPagePresent(uint64_t address) {}
+    bool X64KernelPages::isPagePresent(uint64_t address)
+    {
+        return false;
+    }
 
-    uint64_t X64KernelPages::convertVirtToPhys(uint64_t address) {}
+    uint64_t X64KernelPages::convertVirtToPhys(uint64_t address)
+    {
+        return 0;
+    }
 }

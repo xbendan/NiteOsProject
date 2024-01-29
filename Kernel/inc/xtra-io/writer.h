@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdcxx/array.h>
 #include <stdcxx/string.h>
 

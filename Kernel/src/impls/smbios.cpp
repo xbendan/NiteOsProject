@@ -14,10 +14,10 @@ namespace Kern::Hal::Impls {
         uint64_t          address = Mem::copyAsIoAddress(0xF0000);
         Mem::AddressRange range(address, 0x10000);
 
-        if (address = range.find(__smbios_SignatureL2, 4, 0x10)) {
+        if ((address = range.find(__smbios_SignatureL2, 4, 0x10)) != 0) {
             m_majorVer   = 2;
             m_smbiosInfo = (void*)address;
-        } else if (address = range.find(__smbios_SignatureL3, 5, 0x10)) {
+        } else if ((address = range.find(__smbios_SignatureL3, 5, 0x10)) != 0) {
             m_majorVer   = 3;
             m_smbiosInfo = (void*)address;
         }

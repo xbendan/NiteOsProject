@@ -314,7 +314,7 @@ namespace Kern::Platform::X64 {
         Attribute      = 1 << 7,
         PageSize       = 1 << 7,
         Global         = 1 << 8,
-        DisableExecute = 1 << 63,
+        DisableExecute = 1ULL << 63,
     };
 
     template <uint8_t L>
@@ -405,7 +405,7 @@ namespace Kern::Platform::X64 {
             constexpr Entry& attribute(bool attribute = true)
             {
                 static_assert(L == 1);
-                _attribute = attribute;
+                _pageSize = attribute;
                 return *this;
             }
             constexpr Entry& global(bool global = true)
