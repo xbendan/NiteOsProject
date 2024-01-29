@@ -71,7 +71,7 @@ namespace Std {
 
         void add(T const& value) { pushBack(value); }
 
-        void add(T&& value) { pushBack(Std::Move(value)); }
+        void add(T&& value) { pushBack(Std::move(value)); }
 
         bool contains(T const& value) const
         {
@@ -131,17 +131,17 @@ namespace Std {
             }
 
             // do insert
-            new (&m_buffer[index]) T(Std::Forward(value));
+            new (&m_buffer[index]) T(Std::forward(value));
             m_length++;
         }
 
         void pushFront(T const& value) { insert(0, value); }
 
-        void pushFront(T&& value) { insert(0, Std::Move(value)); }
+        void pushFront(T&& value) { insert(0, Std::move(value)); }
 
         void pushBack(T const& value) { insert(m_length, value); }
 
-        void pushBack(T&& value) { insert(m_length, Std::Move(value)); }
+        void pushBack(T&& value) { insert(m_length, Std::move(value)); }
 
         void popBack()
         {

@@ -9,10 +9,11 @@ BUILD_NAME := $(PROJ_NAME)-v$(BUILD_VERSION)-$(PLATFORM)-$(BUILD_MODE)
 # Define compiling and linking flags
 CXXFLAGS = \
 	-Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wno-write-strings \
+	-Waddress-of-packed-member \
 	-ffreestanding -fno-exceptions -fno-rtti -fno-stack-protector -fno-pic \
 	-mno-sse -mno-sse2 -mno-sse3 -mno-sse4 -mno-sse4.1 -mno-sse4.2 \
 	-mno-avx -mno-avx2 -mno-mmx \
-	-std=gnu++23 \
+	-std=c++23 \
 	-mcmodel=kernel \
 	-mno-red-zone \
 	-O0 \

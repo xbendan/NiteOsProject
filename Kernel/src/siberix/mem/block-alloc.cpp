@@ -19,4 +19,13 @@ namespace Kern::Mem {
               alignDown(memmap._value._max, PAGE_SIZE_4K));
         }
     }
+
+    BlockAlloc::~BlockAlloc() {}
+
+    uint64_t BlockAlloc::allocatePhysMemory4K(uint64_t amount)
+    {
+        return 0;
+    }
+
+    void BlockAlloc::freePhysMemory4K(uint64_t address) {}
 }

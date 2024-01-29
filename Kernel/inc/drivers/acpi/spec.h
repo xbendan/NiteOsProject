@@ -31,6 +31,15 @@ namespace Kern::Hal::Specs {
         uint32_t _oemRevision;
         uint32_t _creatorId;
         uint32_t _creatorRevision;
+
+        uint8_t checksum()
+        {
+            uint64_t sum = 0;
+            uint8_t* ptr = (uint8_t*)this;
+            for (uint32_t i = 0; i < _length; i++)
+                sum += ptr[i];
+            return sum & 0xff;
+        }
     } __attribute__((packed));
 
     struct AcpiRsdt : public AcpiTable

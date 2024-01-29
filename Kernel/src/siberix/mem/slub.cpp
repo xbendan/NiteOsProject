@@ -1,9 +1,9 @@
 #include <siberix/main.h>
 #include <siberix/mem/kmem-alloc.h>
 
-namespace Kern::Mem {
-    IMemAlloc* _kernMemAlloc;
+Kern::Mem::IMemAlloc* _kernMemAlloc;
 
+namespace Kern::Mem {
     KernMemAlloc::KernMemAlloc()
       : m_poolSizes({ 8, 16, 24, 32, 64, 96, 128, 192, 256, 512, 1024, 2048 })
     {

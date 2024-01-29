@@ -1,7 +1,7 @@
 #pragma once
 
-#include <stdcxx/move.h>
 #include <stdcxx/linked-list.h>
+#include <stdcxx/move.h>
 #include <stdcxx/string.h>
 #include <stdcxx/uuid.h>
 
@@ -61,7 +61,7 @@ namespace Kern {
     public:
         Device(Std::String<Utf8> name, DeviceType type);
         Device(Std::String<Utf8> name);
-        Device(DeviceType type);
+        // Device(DeviceType type);
 
         inline Std::String<Utf8> getName() { return this->m_name; }
         inline uint64_t          getId() { return this->m_deviceId; }
@@ -72,11 +72,12 @@ namespace Kern {
         Device& operator=(Device&& other)
         {
             if (this != &other) {
-                m_name         = Std::Move(other.m_name);
+                m_name         = Std::move(other.m_name);
+                m_uuid         = Std::move(other.m_uuid);
                 m_deviceId     = other.m_deviceId;
                 m_flags        = other.m_flags;
                 m_type         = other.m_type;
-                m_dependencies = Std::Move(other.m_dependencies);
+                m_dependencies = Std::move(other.m_dependencies);
             }
             return *this;
         }

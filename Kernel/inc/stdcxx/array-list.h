@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdcxx/list.h>
+#include <stdcxx/move.h>
 #include <stdcxx/type-traits.h>
 
 #define DEFAULT_ARRAY_LIST_CAPACITY 8
@@ -61,7 +62,7 @@ namespace Std {
 
         /* --- Methods --- */
 
-        void add(T const& value) { _buffer[_length++] = Std::Move(value); }
+        void add(T const& value) { _buffer[_length++] = Std::move(value); }
 
         void remove(uint64_t i)
         {

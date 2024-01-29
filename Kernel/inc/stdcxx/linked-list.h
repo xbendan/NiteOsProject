@@ -27,7 +27,7 @@ namespace Std {
         {
             constexpr Element(T const& t)
               : Entry()
-              , _value(Std::Move(t))
+              , _value(Std::move(t))
             {
             }
             T _value;

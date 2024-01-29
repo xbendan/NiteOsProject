@@ -1,5 +1,6 @@
 #pragma once
 
+#include <initializer_list>
 #include <siberix/dvc/device.h>
 #include <siberix/svc/svc-host.h>
 #include <stdcxx/array-list.h>
@@ -32,8 +33,15 @@ namespace Kern {
         DeviceConnectivity(Args... args)
           : Svc::ISvcHost("KERN.DEVICE")
         {
-            for (auto& device : { args... }) {
-                registerDevice(device);
+            // for (Device* device : { args... }) {
+            //     registerDevice(device);
+            // }
+        }
+        DeviceConnectivity(std::initializer_list<Device*> initials)
+          : Svc::ISvcHost("KERN.DEVICE")
+        {
+            for (Device* dev : initials) {
+                registerDevice(dev);
             }
         }
         ~DeviceConnectivity() = default;

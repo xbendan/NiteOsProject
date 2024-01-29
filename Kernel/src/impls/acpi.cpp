@@ -4,8 +4,10 @@
 #include <siberix/panic.h>
 
 namespace Kern::Hal::Impls {
+    using namespace Specs;
+
     AcpiMgmtDevice::AcpiMgmtDevice()
-      : Device(Std::String<Utf8>("ACPI Power Management Device"))
+      : Device("ACPI Power Management Device", DeviceType::Firmware)
     {
         const char* sign        = "RSD PTR ";
         uint64_t    rsdpAddress = Mem::copyAsIoAddress(
@@ -57,5 +59,40 @@ namespace Kern::Hal::Impls {
         m_mcfg = findTable<PciMcfg>("MCFG");
 
         // TODO: Initialize ACPI timer
+    }
+
+    AcpiMgmtDevice::~AcpiMgmtDevice() {}
+
+    template <typename T>
+        requires Std::IsBaseOf<AcpiTable, T>::Value
+    T* AcpiMgmtDevice::findTable(Std::String<Utf8> name, int index)
+    {
+        if (!m_rsdp) {
+            return nullptr;
+        }
+
+        if (name.equals("DSDT")) {
+            return reinterpret_cast<T*>(Mem::copyAsIoAddress(m_fadt->_dsdt));
+        }
+
+        uint64_t entries =
+          m_rsdp->_revision
+            ? (m_xsdt->_length - sizeof(AcpiTable)) / sizeof(uint64_t)
+            : (m_rsdt->_length - sizeof(AcpiTable)) / sizeof(uint32_t);
+        int _index = 0;
+        for (int i = 0; i < entries; i++) {
+            uint64_t ent =
+              m_rsdp->_revision ? m_xsdt->_pointers[i] : m_rsdt->_pointers[i];
+            AcpiTable* table =
+              reinterpret_cast<AcpiTable*>(Mem::copyAsIoAddress(ent));
+
+            if (name.equals(table->_signature) && (_index++ == index)) {
+                if (table->checksum() != 0) {
+                    // TODO: Raise a warning
+                }
+                return reinterpret_cast<T*>(table);
+            }
+        }
+        return nullptr;
     }
 }

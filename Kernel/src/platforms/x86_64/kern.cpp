@@ -1,9 +1,11 @@
 #include <arch-x86_64/hwinterrupts.h>
+#include <arch-x86_64/hwmem.h>
 #include <arch-x86_64/hwtypes.h>
 #include <drivers/acpi/device.h>
 #include <drivers/apic/device.h>
 #include <drivers/comm/device.h>
 #include <drivers/pci/enumerator.h>
+#include <siberix/init/init-comp.h>
 #include <siberix/main.h>
 #include <siberix/svc/svc-host.h>
 #include <xtra-logging/logger.h>
@@ -29,6 +31,12 @@ namespace Kern::Main {
 namespace Kern::Init {
     using namespace Kern::Platform::X64;
     using namespace Kern::Hal;
+
+    Mem::AddressSpace* setupVirtMemory()
+    {
+        static X64KernelPages kernelPages;
+        return &kernelPages;
+    }
 
     void setupArch()
     {

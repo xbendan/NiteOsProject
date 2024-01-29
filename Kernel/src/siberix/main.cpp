@@ -1,7 +1,6 @@
 #include <siberix/hwtypes.h>
 #include <siberix/init/init-arch.h>
 #include <siberix/init/init-comp.h>
-#include <siberix/init/init-drvs.h>
 #include <siberix/main.h>
 #include <siberix/proc/svchost.h>
 #include <siberix/time/clocksource.h>
@@ -65,7 +64,27 @@ namespace Kern::Main {
           type,
           file,
           workingDirectory,
-          Std::Forward<decltype(launchArgs)>(launchArgs)...);
+          Std::forward<decltype(launchArgs)>(launchArgs)...);
+    }
+
+    Device* findDevice(Std::String<Utf8> name)
+    {
+        return connectivity->findDevice(name);
+    }
+
+    Device* findDevice(Std::UUID uuid)
+    {
+        return connectivity->findDevice(uuid);
+    }
+
+    void registerDevice(Device* device)
+    {
+        connectivity->registerDevice(device);
+    }
+
+    void unregisterDevice(Device* device)
+    {
+        connectivity->unregisterDevice(device);
     }
 
     Io::RootFsNode* getFsRoot()

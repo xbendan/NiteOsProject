@@ -34,6 +34,25 @@ namespace Kern::Svc {
         m_kmalloc                         = &_kernMemAlloc;
     }
 
+    uint64_t MemSvcHost::alloc4KPages(uint64_t count)
+    {
+        return m_physAlloc->allocatePhysMemory4K(count);
+    }
+
+    uint64_t MemSvcHost::alloc4KPages(uint64_t           amount,
+                                      Mem::AddressSpace* addressSpace)
+    {
+        return 0;
+    }
+
+    void MemSvcHost::free4KPages(void* address, uint64_t amount)
+    {
+        while (amount--) {
+            m_physAlloc->freePhysMemory4K((uint64_t)address);
+            address = (void*)((uint64_t)address + PAGE_SIZE_4K);
+        }
+    }
+
     Page4K* pageOf(uint64_t address)
     {
         // May have null pointer exception

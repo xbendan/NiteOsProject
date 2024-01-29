@@ -47,14 +47,14 @@ public:
     Array<T, len>& operator=(const Array<T, len>& other)
     {
         for (uint64_t i = 0; i < len; ++i) {
-            new (&m_buf[i]) T(Std::Move(other.m_buf[i]));
+            new (&m_buf[i]) T(Std::move(other.m_buf[i]));
         }
         return *this;
     }
     Array<T, len>& operator=(Array<T, len>&& other)
     {
         for (uint64_t i = 0; i < len; ++i) {
-            new (&m_buf[i]) T(Std::Move(other.m_buf[i]));
+            new (&m_buf[i]) T(Std::move(other.m_buf[i]));
         }
         return *this;
     }

@@ -64,6 +64,10 @@ namespace Kern::Task {
          * @return Thread*
          */
         Thread*         createThread(Process* process);
+        Thread*         createThreadEx(Process*          process,
+                                       Std::String<Utf8> name,
+                                       uint64_t          entryPoint,
+                                       uint64_t          stackSize);
         Thread*         createIdleThread();
     };
 }

@@ -22,12 +22,12 @@ namespace Kern::Svc {
         // Std::String<Utf8>  getSvcName() override { return "kern.mem\0"; }
         // Std::String<Utf8>* getSvcDepends() override { return nullptr; }
         void onLoad() override;
-        void onEnable() override;
-        void onDisable() override;
+        void onEnable() override {}
+        void onDisable() override {}
 
     private:
         IMemAlloc*    m_kmalloc;
-        IMemAlloc*    m_physAlloc;
+        IPageAlloc*   m_physAlloc;
         AddressSpace* m_addressSpaceKern;
         uint64_t      m_totalSize;
         uint64_t      m_usableSize;

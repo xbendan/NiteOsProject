@@ -30,8 +30,6 @@ namespace Kern::Svc {
         Array<RefPtr<Process>, 65536>& all() { return m_processes; }
 
         void onLoad() override;
-        void onEnable() override;
-        void onDisable() override;
 
     private:
         Scheduler*                     m_scheduler;

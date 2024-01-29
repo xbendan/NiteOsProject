@@ -3,6 +3,10 @@
 
 namespace Kern::Mem {
 
+    BuddyAlloc::BuddyAlloc() {}
+
+    BuddyAlloc::~BuddyAlloc() {}
+
     Page4K* BuddyAlloc::allocatePhysMemory4KPages(uint64_t amount)
     {
         if ((!amount) || (amount > (1 << BUDDY_BOUND_UPPER))) {

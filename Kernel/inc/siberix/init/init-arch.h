@@ -2,5 +2,4 @@
 
 namespace Kern::Init {
     void setupArch();
-    void setupArchSvcs();
 }

@@ -68,4 +68,5 @@ namespace Std {
 
         Ret operator()(Args... args) { return (*_funcWrap)(args...); }
     };
+
 }

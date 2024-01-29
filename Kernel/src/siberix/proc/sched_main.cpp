@@ -7,4 +7,5 @@ namespace Kern::Svc {
           getProcessFactory()->createProcess("Kernel", ProcessType::Kernel);
         m_processes[0] = kernelProcess;
     }
+
 }

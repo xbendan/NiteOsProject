@@ -40,36 +40,72 @@ namespace Std {
     public:
         String(const char* str)
           : m_data(reinterpret_cast<Unit*>(const_cast<char*>(str)))
-          , m_length(strlen(str)){};
+        {
+            int i = 0;
+            while (str[i] != '\0') {
+                i++;
+            }
+            m_length = i;
+        }
         String(Unit const*, uint64_t);
-        String(String const&);
-        String(String&&);
+        String(String const& other)
+          : m_data(other.m_data)
+          , m_length(other.m_length)
+        {
+        }
+        String(String&& other) noexcept
+          : m_data(other.m_data)
+          , m_length(other.m_length)
+        {
+            other.m_data   = nullptr;
+            other.m_length = 0;
+        }
 
-        String<E>& operator=(const char*);
-        String<E>& operator=(String<E> const&);
-        String<E>& operator=(String<E>&&);
+        String<E>& operator=(const char* str) { return *this = String<E>(str); }
+        String<E>& operator=(String<E> const& other)
+        {
+            m_data   = other.m_data;
+            m_length = other.m_length;
+            return *this;
+        }
+        String<E>& operator=(String<E>&& other)
+        {
+            m_data   = other.m_data;
+            m_length = other.m_length;
+
+            other.m_data   = nullptr;
+            other.m_length = 0;
+            return *this;
+        }
 
         bool equals(String<E> const& other) const
         {
-            return false;
-            // if (m_length != other.m_length) {
-            //     return false;
-            // } else {
-            //     if (sizeof(Unit) == sizeof(other.Unit)) {
-            //         for (uint64_t i = 0; i < m_length; i++) {
-            //             if (m_data[i] != other.m_data[i]) {
-            //                 return false;
-            //             }
-            //         }
-            //         return true;
-            //     } else {
-            //         // TODO: Implement
+            if (m_length != other.m_length || !m_data || !other.m_data) {
+                return false;
+            } else {
+                for (int i = 0; i < m_length; i++) {
+                    if (m_data[i] != other.m_data[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+
+        bool equalsIgnoreCase(String<E> const& other) const
+        {
+            if (m_length != other.length() || !m_data || !other.m_data) {
+                return false;
+            }
+            // for (int i = 0; i < m_length; i++) {
+            //     if (E::toLower(m_data[i]) != Utf8::toLower(other.m_data[i]))
+            //     {
             //         return false;
             //     }
             // }
+            return true;
         }
 
-        bool equalsIgnoreCase(String const&) const;
         bool isStartWith(String const&) const;
         bool isEndWith(String const&) const;
         bool contains(String const&) const;
