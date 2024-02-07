@@ -2,7 +2,7 @@
 
 #include <siberix/mem/address-space.h>
 #include <siberix/proc/thread.h>
-#include <stdcxx/linked-list.h>
+#include <stdcxx/linked_list.h>
 #include <stdcxx/refptr.h>
 #include <stdcxx/string.h>
 #include <stdcxx/types.h>
@@ -42,7 +42,7 @@ namespace Kern::Task {
         ProcessType        getType() { return m_type; }
         Mem::AddressSpace* getAddressSpace() { return m_addressSpace; }
         Thread*            getMainThread() { return m_mainThread; }
-        Std::LinkedList<Thread*>& threads() { return m_childrenThreadList; }
+        Std::LinkedList<Thread>& threads() { return m_childrenThreadList; }
 
         bool isThreadOwned(Thread* thread)
         {
@@ -60,8 +60,8 @@ namespace Kern::Task {
         Spinlock m_lock{};
         Spinlock m_handleLock{};
 
-        Thread*                  m_mainThread;
-        Std::LinkedList<Thread*> m_childrenThreadList;
+        Thread*                 m_mainThread;
+        Std::LinkedList<Thread> m_childrenThreadList;
 
         uint64_t m_entryPoint;
         uint64_t m_heap;

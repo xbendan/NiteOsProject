@@ -75,5 +75,5 @@ kload_st2(stivale2_struct* stInfo)
             }
         }
     }
-    Kern::Main::setupKernel(bootConfig);
+    Kern::Main::setupKernel(&bootConfig);
 }

@@ -7,7 +7,7 @@
 // ex: 9 with align = 8 -> 16
 // ex: 7 with align = 8 -> 0
 template <typename T, typename U>
-    requires Std::IsIntegral<T> and Std::IsIntegral<U>
+    requires Std::isIntegral<T> and Std::isIntegral<U>
 static inline T
 alignDown(T _addr, U _align)
 {
@@ -19,7 +19,7 @@ alignDown(T _addr, U _align)
 // ex: 9 with align = 8 -> 16
 // ex: 7 with align = 8 -> 8
 template <typename T, typename U>
-    requires Std::IsIntegral<T> and Std::IsIntegral<U>
+    requires Std::isIntegral<T> and Std::isIntegral<U>
 static inline T
 alignUp(T _addr, U _align)
 {
@@ -27,7 +27,7 @@ alignUp(T _addr, U _align)
 }
 
 template <typename T>
-    requires Std::IsIntegral<T>
+    requires Std::isIntegral<T>
 static inline T
 alignDownRef(T& _addr, T _align)
 {
@@ -35,7 +35,7 @@ alignDownRef(T& _addr, T _align)
 }
 
 template <typename T>
-    requires Std::IsIntegral<T>
+    requires Std::isIntegral<T>
 static inline T
 alignUpRef(T& _addr, T _align)
 {
@@ -43,7 +43,7 @@ alignUpRef(T& _addr, T _align)
 }
 
 template <typename T>
-    requires Std::IsIntegral<T>
+    requires Std::isIntegral<T>
 static inline T
 alignTwoExponent(T x)
 {

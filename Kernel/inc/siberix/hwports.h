@@ -5,7 +5,7 @@
 
 namespace Kern::Hal {
     template <typename T>
-        requires Std::IsIntegral<T>
+        requires Std::isIntegral<T>
     static inline T portRegsRead(uint16_t port)
     {
         T data;
@@ -14,7 +14,7 @@ namespace Kern::Hal {
     }
 
     template <typename T>
-        requires Std::IsIntegral<T>
+        requires Std::isIntegral<T>
     static inline void portRegsWrite(uint16_t port, T data)
     {
         asm volatile("out %0, %1" : : "a"(data), "d"(port));

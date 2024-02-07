@@ -12,7 +12,7 @@ namespace Kern::Hal::Impls {
         ~AcpiMgmtDevice();
 
         template <typename T>
-            requires Std::IsBaseOf<AcpiTable, T>::Value
+            requires Std::isBaseOf<AcpiTable, T>::value
         T* findTable(Std::String<Utf8> name, int index = 0);
 
     private:

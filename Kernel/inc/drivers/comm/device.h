@@ -13,7 +13,7 @@ namespace Kern::Hal::Impls {
         {
         }
 
-        void write(char c) override;
+        void write(uint8_t c) override;
         void write(Std::String<Utf8> str) override;
     };
 }

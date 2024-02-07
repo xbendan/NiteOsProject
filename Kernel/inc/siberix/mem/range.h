@@ -51,8 +51,8 @@ namespace Kern::Mem {
     };
 
     template <typename T, typename U>
-        requires((Std::IsIntegral<T> or Std::IsPointer<T>) and
-                 (Std::IsIntegral<U>))
+        requires((Std::isIntegral<T> or Std::isPointer<T>::value) and
+                 (Std::isIntegral<U>))
     AddressRange rangeOf(T base, U size)
     {
         return AddressRange{ ._base = (uint64_t)base, ._size = (uint64_t)size };

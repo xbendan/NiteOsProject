@@ -6,40 +6,45 @@
 namespace Std {
     // clang-format off
     template <class T, T t>
-    struct IntegralConstant {
-        static constexpr T Value = t;
+    struct Meta {
+        static constexpr T value = t;
         using ValueType = T;
-        using Type = IntegralConstant<T, t>;
-        constexpr operator ValueType() const noexcept { return Value; }
-        constexpr ValueType operator()() const noexcept { return Value; }
+        using Type = Meta<T, t>;
+        constexpr operator ValueType() const noexcept { return value; }
+        constexpr ValueType operator()() const noexcept { return value; }
     };
 
-    struct TrueType {
-        static constexpr bool Value = true;
+    using True = Meta<bool, true>;
+    using False = Meta<bool, false>;
+
+    template <typename T>
+    struct TypeIdentity {
+        using type = T;
     };
 
-    struct FalseType {
-        static constexpr bool Value = false;
-    };
+    template <typename T, size_t = sizeof(T)>
+    constexpr True __isCompleteOrUnbounded(TypeIdentity<T>) {
+        return {};
+    }
 
-    template <typename T> constexpr bool IsIntegral = false;
-    template <> constexpr bool IsIntegral<unsigned char> = true;
-    template <> constexpr bool IsIntegral<unsigned short> = true;
-    template <> constexpr bool IsIntegral<unsigned int> = true;
-    template <> constexpr bool IsIntegral<unsigned long> = true;
-    template <> constexpr bool IsIntegral<unsigned long long> = true;
-    template <> constexpr bool IsIntegral<char> = true;
-    template <> constexpr bool IsIntegral<short> = true;
-    template <> constexpr bool IsIntegral<int> = true;
-    template <> constexpr bool IsIntegral<long> = true;
-    template <> constexpr bool IsIntegral<long long> = true;
+    template <typename T> constexpr bool isIntegral = false;
+    template <> constexpr bool isIntegral<unsigned char> = true;
+    template <> constexpr bool isIntegral<unsigned short> = true;
+    template <> constexpr bool isIntegral<unsigned int> = true;
+    template <> constexpr bool isIntegral<unsigned long> = true;
+    template <> constexpr bool isIntegral<unsigned long long> = true;
+    template <> constexpr bool isIntegral<char> = true;
+    template <> constexpr bool isIntegral<short> = true;
+    template <> constexpr bool isIntegral<int> = true;
+    template <> constexpr bool isIntegral<long> = true;
+    template <> constexpr bool isIntegral<long long> = true;
 
-    template <typename T> constexpr bool IsFloatingPoint = false;
-    template <> constexpr bool IsFloatingPoint<float> = true;
-    template <> constexpr bool IsFloatingPoint<double> = true;
-    template <> constexpr bool IsFloatingPoint<long double> = true;
+    template <typename T> constexpr bool isFloatingPoint = false;
+    template <> constexpr bool isFloatingPoint<float> = true;
+    template <> constexpr bool isFloatingPoint<double> = true;
+    template <> constexpr bool isFloatingPoint<long double> = true;
 
-    template <typename T> constexpr bool IsArithmetic = IsIntegral<T> || IsFloatingPoint<T>;
+    template <typename T> constexpr bool IsArithmetic = isIntegral<T> || isFloatingPoint<T>;
 
     template <typename T1, typename T2> constexpr bool IsSame = false;
     template <typename T1> constexpr bool IsSame<T1, T1> = true;
@@ -61,11 +66,14 @@ namespace Std {
     template <typename T> struct RemoveConstVolatile<volatile T> { using Value = T; };
     template <typename T> struct RemoveConstVolatile<const volatile T> { using Value = T; };
 
-    template <typename T> constexpr bool IsVoid = false;
-    template <> constexpr bool IsVoid<void> = true;
+    template <typename T> constexpr bool isVoid = false;
+    template <> constexpr bool isVoid<void> = true;
     
-    template <typename T> constexpr bool IsPointer = false;
-    template <typename T> constexpr bool IsPointer<T*> = true;
+    template <typename T>
+    struct isPointer : Meta<bool, false> {};
+
+    template <typename T>
+    struct isPointer<T*> : Meta<bool, true> {};
     
     template <typename T>
     struct RemovePointer { using Type = T; };
@@ -92,25 +100,44 @@ namespace Std {
     template <typename F, typename... Args> concept IsCallable = requires(F f) { f(declval<Args>()...); };
 
     template <typename T>
-    struct IsClass : IntegralConstant<bool, __is_class(T)> {};
+    struct isClass : Meta<bool, __is_class(T)> {};
 
     template <typename T>
-    struct IsUnion : IntegralConstant<bool, __is_union(T)> {};
+    struct isUnion : Meta<bool, __is_union(T)> {};
 
     template <typename T>
-    struct IsEnum : IntegralConstant<bool, __is_enum(T)> {};
+    struct isEnum : Meta<bool, __is_enum(T)> {};
 
-    namespace _ {
-        template <typename> 
-        FalseType TestPtrConversion(const volatile void*);
-        template <typename T>
-        TrueType TestPtrConversion(const volatile T*);
+    template <typename T>
+    struct isTrivial : Meta<bool, __is_trivial(T)>
+    {
+        static_assert(__isCompleteOrUnbounded(TypeIdentity<T>{}), 
+            "template argument must be a complete class or an unbounded array");
+    };
 
-        template <typename, typename>
-        auto TestIsBaseOf(...) -> TrueType;
-        template <typename Base, typename Derived>
-        auto TestIsBaseOf(int) -> decltype(TestPtrConversion<Base>(declval<Derived*>(nullptr)));
-    }
+    template <typename T, bool = isTrivial<T>::value>
+    struct Trivial {
+        using type = T*;
+    };
+
+    template <typename T>
+    struct Trivial<T, true> {
+        using type = T;
+    };
+
+    template <typename T>
+    struct isTriviallyCopyable : Meta<bool, __is_trivially_copyable(T)>
+    {
+        static_assert(__isCompleteOrUnbounded(TypeIdentity<T>{}), 
+            "template argument must be a complete class or an unbounded array");
+    };
+
+    template <typename T>
+    struct isStandardLayout : Meta<bool, __is_standard_layout(T)>
+    {
+        static_assert(__isCompleteOrUnbounded(TypeIdentity<T>{}), 
+            "template argument must be a complete class or an unbounded array");
+    };
 
     // template <typename B, typename D>
     // using IsBaseOf = 
@@ -119,10 +146,13 @@ namespace Std {
     //     decltype(_::TestIsBaseOf<B, D>(0));
     
     template <typename B, typename D>
-    struct IsBaseOf : IntegralConstant<bool, __is_base_of(B, D)> {};
+    struct isBaseOf : Meta<bool, __is_base_of(B, D)> {};
 
     template <typename B, typename D>
-    concept Derived = IsBaseOf<B, D>::Value;
+    concept Derived = isBaseOf<B, D>::Value;
+
+    template <typename T, typename U>
+    struct isConvertible : Meta<bool, __is_convertible(T, U)> {};
 
     // clang-format on
 }

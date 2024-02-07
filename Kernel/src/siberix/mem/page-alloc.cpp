@@ -23,10 +23,10 @@ namespace Kern::Mem {
             return nullptr;
         }
 
-        Page4K* page = m_pageLists[ord].takeFirst();
+        Page4K* page = m_pageLists[ord].pop();
         while ((1 << ord) > amount) {
             ord--;
-            m_pageLists[ord].add(*page->split());
+            m_pageLists[ord].push(page->split());
         }
 
         page->_flags &= ~PAGE_FLAG_FREE;
@@ -61,8 +61,8 @@ namespace Kern::Mem {
             Page4K*  newPage = pageOf(newAddr);
 
             if (newPage->_flags & PAGE_FLAG_FREE) {
-                if (newPage->isLinked()) {
-                    m_pageLists[newPage->_order].remove(*newPage);
+                if (newPage->_previous || newPage->_next) {
+                    m_pageLists[newPage->_order].takeAway(newPage);
                 }
 
                 Page4K* result = page->merge(newPage);
@@ -73,7 +73,7 @@ namespace Kern::Mem {
             } else
                 break;
         }
-        m_pageLists[page->_order].add(*page);
+        m_pageLists[page->_order].push(page);
     }
 
     void BuddyAlloc::freePhysMemory4K(uint64_t address) {}

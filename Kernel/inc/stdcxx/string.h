@@ -61,7 +61,16 @@ namespace Std {
             other.m_length = 0;
         }
 
-        String<E>& operator=(const char* str) { return *this = String<E>(str); }
+        String<E>& operator=(const char* str)
+        {
+            m_data = reinterpret_cast<Unit*>(const_cast<char*>(str));
+            int i  = 0;
+            while (str[i] != '\0') {
+                i++;
+            }
+            m_length = i;
+            return *this;
+        }
         String<E>& operator=(String<E> const& other)
         {
             m_data   = other.m_data;

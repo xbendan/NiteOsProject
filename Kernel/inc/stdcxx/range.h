@@ -5,7 +5,7 @@
 
 namespace Std {
     template <typename N>
-        requires IsIntegral<N>
+        requires isIntegral<N>
     struct Range
     {
         N _min;

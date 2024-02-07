@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdcxx/linked-list.h>
+#include <stdcxx/linked_list.h>
 #include <stdcxx/move.h>
 #include <stdcxx/string.h>
 #include <stdcxx/uuid.h>
@@ -64,6 +64,7 @@ namespace Kern {
         // Device(DeviceType type);
 
         inline Std::String<Utf8> getName() { return this->m_name; }
+        inline Std::UUID&        getUniqueId() { return this->m_uuid; }
         inline uint64_t          getId() { return this->m_deviceId; }
         // inline DeviceBus         getBus() { return this->m_bus; }
         inline DeviceType        getType() { return this->m_type; }
@@ -88,7 +89,7 @@ namespace Kern {
         uint64_t          m_deviceId;
         uint64_t          m_flags;
 
-        DeviceType               m_type;
-        Std::LinkedList<Device*> m_dependencies;
+        DeviceType                m_type;
+        Std::LinkedList<uint64_t> m_dependencies;
     };
 }

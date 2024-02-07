@@ -13,7 +13,7 @@ namespace Kern::Hal::Impls {
         SataDiskDevice(int                   port,
                        HBAPortRegs*          portRegs,
                        AHCIControllerDevice* controller);
-        ~SataDiskDevice();
+        ~SataDiskDevice() override = default;
 
         int64_t read(uint64_t offset, uint64_t size, void* buffer) override;
         int64_t write(uint64_t offset, uint64_t size, void* buffer) override;
@@ -57,6 +57,6 @@ namespace Kern::Hal::Impls {
         uint64_t    m_addrVirt;
         HBAMemRegs* m_memRegs;
 
-        Std::LinkedList<SataDiskDevice*> m_diskList;
+        Std::LinkedList<SataDiskDevice> m_diskList;
     };
 }

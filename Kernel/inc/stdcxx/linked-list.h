@@ -1,7 +1,8 @@
 #pragma once
 
-#include <stdcxx/move.h>
 #include <stdcxx/list.h>
+#include <stdcxx/move.h>
+#include <stdcxx/stream.h>
 #include <stdcxx/type-traits.h>
 
 namespace Std {
@@ -19,8 +20,6 @@ namespace Std {
               , _previous(nullptr)
             {
             }
-
-            bool isLinked() { return _next || _previous; }
         };
 
         struct Element : Entry
@@ -38,28 +37,42 @@ namespace Std {
         LinkedList()
           : _head(nullptr)
           , _tail(nullptr)
-          , _size(0)
+          , m_size(0)
         {
         }
 
         LinkedList(LinkedList<T> const& other)
         {
-            if (!other._size) {
+            if (!other.m_size) {
                 return;
             }
-            _head = other._head;
-            _tail = other._tail;
-            _size = other._size;
+            _head  = other._head;
+            _tail  = other._tail;
+            m_size = other.m_size;
         }
+
+        LinkedList(LinkedList<T>&& other)
+        {
+            if (!other.m_size) {
+                return;
+            }
+            _head        = other._head;
+            _tail        = other._tail;
+            m_size       = other.m_size;
+            other._head  = nullptr;
+            other._tail  = nullptr;
+            other.m_size = 0;
+        }
+
         ~LinkedList() = default;
 
         /* --- Methods --- */
 
         void add(T const& value)
         {
-            Entry* elem = (Std::IsBaseOf<Entry, T>::Value) ? (Entry*)&value
+            Entry* elem = (Std::isBaseOf<Entry, T>::Value) ? (Entry*)&value
                                                            : new Element(value);
-            if (_size == 0) {
+            if (m_size == 0) {
                 _head = elem;
                 _tail = elem;
             } else {
@@ -68,15 +81,15 @@ namespace Std {
 
                 _tail = elem;
             }
-            _size++;
+            m_size++;
         }
 
         template <typename _T>
-            requires Std::IsBaseOf<Entry, _T>::Value
+            requires Std::isBaseOf<Entry, _T>::Value
         void add(T* value)
         {
             Entry* elem = value;
-            if (_size == 0) {
+            if (m_size == 0) {
                 _head = elem;
                 _tail = elem;
             } else {
@@ -85,12 +98,12 @@ namespace Std {
 
                 _tail = elem;
             }
-            _size++;
+            m_size++;
         }
 
         void remove(uint64_t i)
         {
-            if (i >= _size) {
+            if (i >= m_size) {
                 return;
             }
 
@@ -103,7 +116,7 @@ namespace Std {
                     _tail = nullptr;
                 }
                 delete elem;
-            } else if (i == _size - 1) {
+            } else if (i == m_size - 1) {
                 auto elem = _tail;
                 _tail     = _tail->_previous;
                 if (_tail) {
@@ -122,19 +135,19 @@ namespace Std {
                 delete elem;
             }
 
-            _size--;
+            m_size--;
         }
 
         void remove(T const& value, bool del)
         {
-            if (_size == 0) {
+            if (m_size == 0) {
                 return;
             }
 
             Entry* elem = _head;
 
             while (elem) {
-                if (_size == 1) {
+                if (m_size == 1) {
                     _head = nullptr;
                     _tail = nullptr;
                 } else if (elem == _head) {
@@ -152,7 +165,7 @@ namespace Std {
                     delete elem;
                 }
                 elem = n;
-                _size--;
+                m_size--;
             }
         }
 
@@ -166,21 +179,21 @@ namespace Std {
                 delete elem;
                 elem = next;
             }
-            _head = nullptr;
-            _tail = nullptr;
-            _size = 0;
+            _head  = nullptr;
+            _tail  = nullptr;
+            m_size = 0;
         }
 
         T* get(uint64_t i)
         {
-            if (i >= _size) {
+            if (i >= m_size) {
                 return nullptr;
             }
             Entry* elem = _head;
             for (uint64_t j = 0; j < i; j++) {
                 elem = elem->_next;
             }
-            return Std::IsBaseOf<Entry, T>::Value ? (T*)elem
+            return Std::isBaseOf<Entry, T>::Value ? (T*)elem
                                                   : &((Element*)elem)->_value;
         }
 
@@ -194,8 +207,8 @@ namespace Std {
                 _head            = _head->_next;
                 _head->_previous = nullptr;
             }
-            _size--;
-            return Std::IsBaseOf<Entry, T>::Value ? (T*)elem
+            m_size--;
+            return Std::isBaseOf<Entry, T>::Value ? (T*)elem
                                                   : &((Element*)elem)->_value;
         }
 
@@ -210,35 +223,48 @@ namespace Std {
                 _tail->_next   = nullptr;
                 ent->_previous = nullptr;
             }
-            _size--;
-            return Std::IsBaseOf<Entry, T>::Value ? (T*)ent
+            m_size--;
+            return Std::isBaseOf<Entry, T>::Value ? (T*)ent
                                                   : &((Element*)ent)->_value;
         }
 
-        size_t size() { return _size; }
+        size_t size() { return m_size; }
+
+        [[nodiscard]] Stream<T>* stream()
+        {
+            Stream<T>* stream = new Stream<T>(m_size);
+            Entry*     ent    = _head;
+            for (int i = 0; i < m_size; i++) {
+                stream->m_buffer[i] = WeakRef<T>(Std::isBaseOf<Entry, T>::Value
+                                                   ? *(T*)ent
+                                                   : ((Element*)ent)->_value);
+                ent                 = ent->_next;
+            }
+            return stream;
+        }
 
         /* --- Operators --- */
 
         T& operator[](uint64_t _index)
         {
-            if (_index >= _size) {
+            if (_index >= m_size) {
                 // Panic;
             }
 
-            if (_index < _size / 2) {
+            if (_index < m_size / 2) {
                 Entry* elem = _head;
                 for (uint64_t i = 0; i < _index; i++) {
                     elem = elem->_next;
                 }
-                return (Std::IsBaseOf<Entry, T>::Value
+                return (Std::isBaseOf<Entry, T>::Value
                           ? (T&)*elem
                           : ((Element*)elem)->_value);
             } else {
                 Entry* elem = _tail;
-                for (uint64_t i = _size - 1; i > _index; i--) {
+                for (uint64_t i = m_size - 1; i > _index; i--) {
                     elem = elem->_previous;
                 }
-                return (Std::IsBaseOf<Entry, T>::Value
+                return (Std::isBaseOf<Entry, T>::Value
                           ? (T&)*elem
                           : ((Element*)elem)->_value);
             }
@@ -247,12 +273,12 @@ namespace Std {
         LinkedList& operator=(LinkedList<T> const& other)
         {
             if (this != &other) {
-                if (!other._size) {
+                if (!other.m_size) {
                     return *this;
                 }
-                _head = other._head;
-                _tail = other._tail;
-                _size = other._size;
+                _head  = other._head;
+                _tail  = other._tail;
+                m_size = other.m_size;
             }
             return *this;
         }
@@ -260,6 +286,6 @@ namespace Std {
     private:
         Entry*   _head;
         Entry*   _tail;
-        uint64_t _size;
+        uint64_t m_size;
     };
 }

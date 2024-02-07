@@ -67,12 +67,12 @@ namespace Kern::Main {
           Std::forward<decltype(launchArgs)>(launchArgs)...);
     }
 
-    Device* findDevice(Std::String<Utf8> name)
+    Opt<Device> findDevice(Std::String<Utf8> name)
     {
         return connectivity->findDevice(name);
     }
 
-    Device* findDevice(Std::UUID uuid)
+    Opt<Device> findDevice(Std::UUID uuid)
     {
         return connectivity->findDevice(uuid);
     }
@@ -90,6 +90,11 @@ namespace Kern::Main {
     Io::RootFsNode* getFsRoot()
     {
         return fileSystem->getRoot();
+    }
+
+    Io::FsNode* getFsPath(Std::String<Utf16> path)
+    {
+        return fileSystem->getPath(path);
     }
 
     Init::BootConfigTable* getBootConfig()

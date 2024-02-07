@@ -1,6 +1,6 @@
 #include <drivers/pci/device.h>
 #include <siberix/dvc/connectivity.h>
-#include <stdcxx/linked-list.h>
+#include <stdcxx/linked_list.h>
 
 namespace Kern::Hal::Impls {
     class PeriCompDeviceEnumerator : public Kern::IDeviceEnumerator

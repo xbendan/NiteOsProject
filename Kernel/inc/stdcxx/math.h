@@ -27,7 +27,7 @@ max(T a, T b)
 }
 
 template <typename T, typename U>
-    requires Std::IsArithmetic<T> and Std::IsIntegral<U>
+    requires Std::IsArithmetic<T> and Std::isIntegral<U>
 inline T
 pow(T base, U exp)
 {

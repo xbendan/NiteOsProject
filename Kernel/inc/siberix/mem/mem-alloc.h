@@ -4,7 +4,7 @@
 #include <siberix/mem/mem.h>
 #include <siberix/mem/page.h>
 #include <siberix/mem/range.h>
-#include <stdcxx/linked-list.h>
+#include <stdcxx/linked_list.h>
 #include <stdcxx/list.h>
 #include <stdcxx/string.h>
 #include <stdcxx/type-traits.h>
@@ -28,7 +28,7 @@ namespace Kern::Mem {
             The page list contains pages of 2^order size. Like the pages in
             freePages[0] is 2^0 = 1 pages.
          */
-        Std::LinkedList<Page4K> m_pageLists[BUDDY_BOUND_UPPER + 1];
+        Page4KFifoQueue m_pageLists[BUDDY_BOUND_UPPER + 1];
     };
 
     class BlockAlloc : public IPageAlloc

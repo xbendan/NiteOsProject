@@ -1,6 +1,6 @@
 #include <siberix/dvc/device.h>
 #include <siberix/gfx/device.h>
-#include <stdcxx/linked-list.h>
+#include <stdcxx/linked_list.h>
 
 namespace Kern::Gfx {
     enum class VideoProjection
@@ -16,16 +16,15 @@ namespace Kern::Gfx {
     {
     public:
         GfxOutputControllerDevice()
-          : Device("Siberix Basic Video Controller",
-                    DeviceType::DisplayAdapter)
-          , m_outputs(new Std::LinkedList<IVideoOutputDevice*>())
+          : Device("Siberix Basic Video Controller", DeviceType::DisplayAdapter)
+          , m_outputs(new Std::LinkedList<IVideoOutputDevice>())
           , m_projection(VideoProjection::Primary)
         {
         }
 
     private:
-        Std::LinkedList<IVideoOutputDevice*>* m_outputs;
-        IVideoOutputDevice*                   m_primaryOutput;
-        VideoProjection                       m_projection;
+        Std::LinkedList<IVideoOutputDevice>* m_outputs;
+        IVideoOutputDevice*                  m_primaryOutput;
+        VideoProjection                      m_projection;
     };
 }

@@ -6,7 +6,7 @@
 #include <siberix/dvc/type-processor.h>
 #include <siberix/hwtypes.h>
 #include <siberix/mem/mem.h>
-#include <stdcxx/linked-list.h>
+#include <stdcxx/linked_list.h>
 #include <stdcxx/types.h>
 
 namespace Kern::Hal::Impls {
@@ -20,8 +20,10 @@ namespace Kern::Hal::Impls {
         ApicDevice();
         ~ApicDevice() = default;
 
-        void     ioRegWrite(uint32_t reg, uint32_t data);
-        uint32_t ioRegRead(uint32_t reg);
+        void     ioRegWrite32(uint32_t reg, uint32_t data);
+        uint32_t ioRegRead32(uint32_t reg);
+        void     ioRegWrite64(uint32_t reg, uint64_t data);
+        uint64_t ioRegRead64(uint32_t reg);
         void     ioRedTblWrite(uint32_t index, uint64_t data);
         uint64_t ioRedTblRead(uint32_t index);
 
@@ -31,8 +33,6 @@ namespace Kern::Hal::Impls {
         uint32_t localRegRead(uint32_t reg);
 
         void onLoad() override;
-        void onEnable() override;
-        void onDisable() override;
 
         Hal::CPU* current() override;
 
@@ -87,12 +87,12 @@ namespace Kern::Hal::Impls {
         };
 
     private:
-        uint64_t                     m_ioBasePhys;
-        uint64_t                     m_ioBaseVirt;
-        uint32_t                     m_interrupts;
-        volatile uint32_t*           m_ioRegSel;
-        volatile uint32_t*           m_ioWindow;
-        Std::LinkedList<ApicLocal*>* m_interfaces;
-        Std::LinkedList<MadtIso*>*   m_overrides;
+        uint64_t                    m_ioBasePhys;
+        uint64_t                    m_ioBaseVirt;
+        uint32_t                    m_interrupts;
+        volatile uint32_t*          m_ioRegSel;
+        volatile uint32_t*          m_ioWindow;
+        Std::LinkedList<ApicLocal>* m_interfaces;
+        Std::LinkedList<MadtIso*>*  m_overrides;
     };
 }

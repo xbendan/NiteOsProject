@@ -1,7 +1,7 @@
 #include <stdcxx/type-traits.h>
 
 template <typename T, typename U>
-    requires Std::IsIntegral<T> and Std::IsIntegral<U>
+    requires Std::isIntegral<T> and Std::isIntegral<U>
 T
 divCeil(T a, T b)
 {

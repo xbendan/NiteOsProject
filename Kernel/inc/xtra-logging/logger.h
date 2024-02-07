@@ -1,4 +1,4 @@
-#include <stdcxx/linked-list.h>
+#include <stdcxx/linked_list.h>
 #include <stdcxx/string.h>
 #include <xtra-io/writer.h>
 #include <xtra-logging/level.h>
@@ -30,7 +30,7 @@ public:
     void printStackTrace(void* registers);
 
 private:
-    Std::LinkedList<TextWriter*> m_writers;
+    Std::LinkedList<TextWriter> m_writers;
 
     bool m_useTimestamps;
     bool m_useCaches;

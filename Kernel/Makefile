@@ -23,6 +23,7 @@ LDFLAGS = \
 
 # Source files
 SOURCE_GENERIC := $(wildcard src/siberix/*.cpp) \
+	$(wildcard src/siberix/dvc/*.cpp) \
     $(wildcard src/siberix/audio/*.cpp) \
 	$(wildcard src/siberix/gfx/*.cpp) \
 	$(wildcard src/siberix/mem/*.cpp) \

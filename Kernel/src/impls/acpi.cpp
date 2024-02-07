@@ -64,7 +64,7 @@ namespace Kern::Hal::Impls {
     AcpiMgmtDevice::~AcpiMgmtDevice() {}
 
     template <typename T>
-        requires Std::IsBaseOf<AcpiTable, T>::Value
+        requires Std::isBaseOf<AcpiTable, T>::value
     T* AcpiMgmtDevice::findTable(Std::String<Utf8> name, int index)
     {
         if (!m_rsdp) {

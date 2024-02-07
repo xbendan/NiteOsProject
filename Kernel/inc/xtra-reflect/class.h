@@ -2,7 +2,7 @@
 #include <stdcxx/type-traits.h>
 
 template <class T>
-    requires Std::IsClass<T>::value
+    requires Std::isClass<T>::value
 class Class
 {
 public:
@@ -16,7 +16,7 @@ public:
 };
 
 template <class T>
-    requires Std::IsClass<T>::value
+    requires Std::isClass<T>::value
 Class<T>
 classOf()
 {

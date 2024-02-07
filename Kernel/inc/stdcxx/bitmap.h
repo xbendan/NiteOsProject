@@ -3,7 +3,7 @@
 namespace Std {
 
     template <typename T>
-        requires Std::IsIntegral<T>
+        requires Std::isIntegral<T>
     struct Bitmap
     {
         uint8_t  _bits = sizeof(T) * 8;
@@ -111,7 +111,7 @@ namespace Std {
     };
 
     template <typename T>
-        requires Std::IsIntegral<T>
+        requires Std::isIntegral<T>
     struct BitmapDouble : Bitmap<T>
     {
         uint8_t _bits = sizeof(T) * 8;

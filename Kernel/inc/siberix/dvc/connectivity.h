@@ -4,7 +4,8 @@
 #include <siberix/dvc/device.h>
 #include <siberix/svc/svc-host.h>
 #include <stdcxx/array-list.h>
-#include <stdcxx/linked-list.h>
+#include <stdcxx/linked_list.h>
+#include <stdcxx/opt.h>
 
 namespace Kern {
     class IDeviceEnumerator : public Device
@@ -20,7 +21,7 @@ namespace Kern {
 
     template <typename T>
     concept Devices =
-      Std::IsBaseOf<Device, typename Std::RemovePointer<T>::Type>::Value;
+      Std::isBaseOf<Device, typename Std::RemovePointer<T>::Type>::Value;
 
     class DeviceConnectivity : Svc::ISvcHost
     {
@@ -29,14 +30,14 @@ namespace Kern {
           : Svc::ISvcHost("KERN.DEVICE")
         {
         }
-        template <Devices... Args>
-        DeviceConnectivity(Args... args)
-          : Svc::ISvcHost("KERN.DEVICE")
-        {
-            // for (Device* device : { args... }) {
-            //     registerDevice(device);
-            // }
-        }
+        // template <Devices... Args>
+        // DeviceConnectivity(Args... args)
+        //   : Svc::ISvcHost("KERN.DEVICE")
+        // {
+        //     for (Device* device : { args... }) {
+        //         registerDevice(device);
+        //     }
+        // }
         DeviceConnectivity(std::initializer_list<Device*> initials)
           : Svc::ISvcHost("KERN.DEVICE")
         {
@@ -46,21 +47,19 @@ namespace Kern {
         }
         ~DeviceConnectivity() = default;
 
-        Device*                              findDevice(Std::String<Utf8> name);
-        Device*                              findDevice(Std::UUID uuid);
-        Device*                              findDevice(uint64_t deviceId);
-        void                                 registerDevice(Device* device);
-        void                                 unregisterDevice(Device* device);
-        Std::LinkedList<Device*>*            getAllDevices();
-        uint64_t                             count();
-        Std::LinkedList<IDeviceEnumerator*>* getAllEnumerators();
+        Opt<Device>                         findDevice(Std::String<Utf8> name);
+        Opt<Device>                         findDevice(Std::UUID uuid);
+        Opt<Device>                         findDevice(uint64_t deviceId);
+        void                                registerDevice(Device* device);
+        void                                unregisterDevice(Device* device);
+        Std::LinkedList<Device>*            getAllDevices();
+        uint64_t                            count();
+        Std::LinkedList<IDeviceEnumerator>* getAllEnumerators();
 
         void onLoad() override;
-        void onEnable() override;
-        void onDisable() override;
 
     private:
-        Std::LinkedList<Device*>            m_devices;
+        Std::LinkedList<Device>             m_devices;
         Std::LinkedList<IDeviceEnumerator*> m_enumerators;
         bool                                m_isAutoConnect;
     };

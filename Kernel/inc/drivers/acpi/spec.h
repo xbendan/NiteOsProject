@@ -18,7 +18,7 @@ namespace Kern::Hal::Specs {
         uint64_t _xsdtAddress;
         uint8_t  _checksumEx;
         uint8_t  _reserved[3];
-    };
+    } __attribute__((packed));
 
     struct AcpiTable
     {
@@ -75,7 +75,7 @@ namespace Kern::Hal::Specs {
         uint8_t  _bitOffset;
         uint8_t  _accessSize;
         uint64_t _address;
-    };
+    } __attribute__((packed));
 
     struct MadtEntry
     {
@@ -145,7 +145,7 @@ namespace Kern::Hal::Specs {
         uint8_t     _hpetNumber;
         uint16_t    _minTick;
         uint8_t     _pageProtection;
-    };
+    } __attribute__((packed));
 
     struct McfgAddress
     {
@@ -154,13 +154,13 @@ namespace Kern::Hal::Specs {
         uint8_t  _busStart;
         uint8_t  _busEnd;
         uint32_t __reserved__;
-    };
+    } __attribute__((packed));
 
     struct PciMcfg : public AcpiTable
     {
         uint64_t    __reserved__;
         McfgAddress _baseAddresses[];
-    };
+    } __attribute__((packed));
 
     struct AcpiFadt /* Fixed ACPI Description Table */ : public AcpiTable
     {
@@ -222,17 +222,18 @@ namespace Kern::Hal::Specs {
         AcpiAddress x_pmtTimerBlock;
         AcpiAddress x_gpe0Block;
         AcpiAddress x_gpe1Block;
-    };
+    } __attribute__((packed));
 
     struct AcpiFacs /* Firmware ACPI Control Structure */
-    {};
+    {
+    } __attribute__((packed));
 
     struct AcpiSbst /* Smart Battery Description Table */ : public AcpiTable
     {
         uint32_t _warningEnergyLevel;
         uint32_t _lowEnergyLevel;
         uint32_t _criticalEnergyLevel;
-    };
+    } __attribute__((packed));
 
     struct AcpiEcdt /* Embedded Controller Boot Resources Table */
       : public AcpiTable
@@ -242,7 +243,7 @@ namespace Kern::Hal::Specs {
         uint32_t    _uid;
         uint8_t     _gpeBit;
         uint8_t     _ecId[];
-    };
+    } __attribute__((packed));
 
     struct AcpiDsdt /* Differentiated System Description Table */
       : public AcpiTable

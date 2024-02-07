@@ -12,17 +12,20 @@ namespace Kern::Hal::Impls {
     ApicDevice::ApicDevice()
       : SmpSvcHost()
       , Device("Advanced Programmable Interrupt Controller")
-      , m_interfaces(new Std::LinkedList<ApicLocal*>())
+      , m_interfaces(new Std::LinkedList<ApicLocal>())
       , m_overrides(new Std::LinkedList<MadtIso*>())
     {
     }
 
     void ApicDevice::onLoad()
     {
-        AcpiMgmtDevice* acpi = static_cast<AcpiMgmtDevice*>(
-          Main::findDevice("ACPI Management Device"));
-        Madt* madt;
-        if (!acpi || !(madt = acpi->findTable<Madt>("APIC"))) {
+        Opt<Device> opt = Main::findDevice("ACPI Management Device");
+        if (opt.isEmpty()) {
+            return;
+        }
+        AcpiMgmtDevice* acpi = static_cast<AcpiMgmtDevice*>(opt.get());
+        Madt*           madt;
+        if (!(madt = acpi->findTable<Madt>("APIC"))) {
             // TODO: log
             return;
         }
@@ -83,11 +86,69 @@ namespace Kern::Hal::Impls {
         m_ioBaseVirt = Kern::Mem::copyAsIoAddress(m_ioBasePhys);
         m_ioRegSel   = (uint32_t*)(m_ioBaseVirt + IO_APIC_REGSEL);
         m_ioWindow   = (uint32_t*)(m_ioBaseVirt + IO_APIC_WIN);
-        m_interrupts = ioRegRead(IO_APIC_REGISTER_VER) >> 16;
+        m_interrupts = ioRegRead32(IO_APIC_REGISTER_VER) >> 16;
 
         if (rdmsr(0x1b) != 0) {
         }
 
         m_flags |= DEVICE_FLAG_LOADED;
+    }
+
+    void ApicDevice::ioRegWrite32(uint32_t reg, uint32_t data)
+    {
+        *m_ioRegSel = reg;
+        *m_ioWindow = data;
+    }
+
+    uint32_t ApicDevice::ioRegRead32(uint32_t reg)
+    {
+        *m_ioRegSel = reg;
+        return *m_ioWindow;
+    }
+
+    void ApicDevice::ioRegWrite64(uint32_t reg, uint64_t data)
+    {
+        uint32_t low  = data & 0xFFFFFFFF;
+        uint32_t high = data >> 32;
+
+        ioRegWrite32(reg, low);
+        ioRegWrite32(reg + 1, high);
+    }
+
+    uint64_t ApicDevice::ioRegRead64(uint32_t reg)
+    {
+        uint32_t low  = ioRegRead32(reg);
+        uint32_t high = ioRegRead32(reg + 1);
+        return low | ((uint64_t)(high) << 32);
+    }
+
+    void ApicDevice::ioRedTblWrite(uint32_t index, uint64_t data)
+    {
+        ioRegWrite64(IO_APIC_RED_TABLE_ENT(index), data);
+    }
+
+    uint64_t ApicDevice::ioRedTblRead(uint32_t index)
+    {
+        return ioRegRead64(IO_APIC_RED_TABLE_ENT(index));
+    }
+
+    void ApicDevice::localBaseWrite(uint64_t data)
+    {
+        wrmsr(0x1b, data);
+    }
+
+    uint64_t ApicDevice::localBaseRead()
+    {
+        return rdmsr(0x1b);
+    }
+
+    void ApicDevice::localRegWrite(uint32_t reg, uint32_t data)
+    {
+        *((volatile uint32_t*)(m_ioBaseVirt + reg)) = data;
+    }
+
+    uint32_t ApicDevice::localRegRead(uint32_t reg)
+    {
+        return *((volatile uint32_t*)(m_ioBaseVirt + reg));
     }
 }

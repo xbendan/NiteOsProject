@@ -65,3 +65,18 @@ private:
     T*            m_ptr;
     unsigned int* m_refCount;
 };
+
+template <typename T>
+class WeakRef
+{
+public:
+    WeakRef(T& ref)
+      : m_ref(ref)
+    {
+    }
+
+    T& get() { return m_ref; }
+
+private:
+    T& m_ref;
+};

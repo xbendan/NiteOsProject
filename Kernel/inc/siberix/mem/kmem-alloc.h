@@ -52,6 +52,7 @@ namespace Kern::Mem {
               , m_flags(flags)
             {
             }
+            ~MemPool() = default;
 
         private:
             Std::String<Utf8>      m_name;
@@ -70,7 +71,7 @@ namespace Kern::Mem {
             }
         };
 
-        Std::LinkedList<MemPool*> m_pools;
-        Array<uint32_t, 12>       m_poolSizes;
+        Array<MemPool*, 12> m_pools;
+        Array<uint32_t, 12> m_poolSizes;
     };
 }

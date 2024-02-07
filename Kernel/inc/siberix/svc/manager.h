@@ -5,7 +5,7 @@ namespace Kern::Svc {
     {};
 
     template <typename T>
-        requires Std::IsBaseOf<ISvcHost, T>::value
+        requires Std::isBaseOf<ISvcHost, T>::value
     class ServiceLoader
     {
     public:
@@ -13,7 +13,7 @@ namespace Kern::Svc {
     };
 
     template <typename T>
-        requires Std::IsBaseOf<ISvcHost, T>::value
+        requires Std::isBaseOf<ISvcHost, T>::value
     class RegisteredServiceLoader : public ServiceLoader<T>
     {};
 }

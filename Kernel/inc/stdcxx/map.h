@@ -4,7 +4,7 @@
 
 namespace Std {
     template <class K, class V>
-        requires Std::IsBaseOf<IHashCode, K>::value
+        requires Std::isBaseOf<IHashCode, K>::value
     class HashMap
     {
     public:

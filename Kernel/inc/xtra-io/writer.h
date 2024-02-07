@@ -6,11 +6,11 @@
 class Writer
 {
 public:
-    virtual void write(char c) = 0;
+    virtual void write(uint8_t) = 0;
 };
 
-class TextWriter : public Writer
+class TextWriter : virtual public Writer
 {
 public:
-    virtual void write(Std::String<Utf8> str) = 0;
+    virtual void write(Std::String<Utf8>) = 0;
 };
