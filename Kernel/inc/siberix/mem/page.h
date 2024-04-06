@@ -17,6 +17,8 @@
 #define PAGE_PART_COUNT (PAGE_PART_SIZE / PAGE_SIZE_4K)
 
 namespace Kern::Mem {
+    Page4K* copyAsPage(uint64_t address);
+
     struct Page4K
     {
         Page4K* _next;
@@ -149,6 +151,4 @@ namespace Kern::Mem {
         Page4K*  _pages;
         uint32_t _modelId;
     };
-
-    Page4K* pageOf(uint64_t address);
 }

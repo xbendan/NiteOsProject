@@ -1,33 +1,32 @@
----
-Language:        Cpp
+Language: Cpp
 BasedOnStyle:  Mozilla
 AccessModifierOffset: -4
 # AlignAfterOpenBracket: Align
 # AlignArrayOfStructures: Left
-AlignConsecutiveAssignments:
-  Enabled:         true
-  AcrossEmptyLines: false
-  AcrossComments:  true
-  AlignCompound:   true
-  PadOperators:    true
-AlignConsecutiveBitFields:
-  Enabled:         false
-  AcrossEmptyLines: false
-  AcrossComments:  false
-  AlignCompound:   false
-  PadOperators:    false
-AlignConsecutiveDeclarations:
-  Enabled:         true
-  AcrossEmptyLines: false
-  AcrossComments:  true
-  AlignCompound:   false
-  PadOperators:    false
-AlignConsecutiveMacros:
-  Enabled:         false
-  AcrossEmptyLines: false
-  AcrossComments:  false
-  AlignCompound:   false
-  PadOperators:    false
+AlignConsecutiveAssignments:  
+    Enabled:         true
+    AcrossEmptyLines: false
+    AcrossComments:  true
+    AlignCompound:   true
+    PadOperators:    true
+AlignConsecutiveBitFields:  
+    Enabled:         false
+    AcrossEmptyLines: false
+    AcrossComments:  false
+    AlignCompound:   false
+    PadOperators:    false
+AlignConsecutiveDeclarations:  
+    Enabled:         true
+    AcrossEmptyLines: false
+    AcrossComments:  true
+    AlignCompound:   false
+    PadOperators:    false
+AlignConsecutiveMacros:  
+    Enabled: false
+    AcrossEmptyLines: false
+    AcrossComments:  false
+    AlignCompound:   false
+    PadOperators:    false
 # AlignEscapedNewlines: Left
 # AlignOperands:   Align
 # AlignTrailingComments:
@@ -54,7 +53,7 @@ AlignConsecutiveMacros:
 # BitFieldColonSpacing: Both
 BraceWrapping:
   AfterCaseLabel:  false
-  AfterClass:      true
+  AfterClass: true
   AfterControlStatement: Never
   AfterEnum:       false
   AfterExternBlock: false

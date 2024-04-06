@@ -57,6 +57,8 @@ namespace Kern {
         Std::LinkedList<IDeviceEnumerator>* getAllEnumerators();
 
         void onLoad() override;
+        void onEnable() override {}
+        void onDisable() override {}
 
     private:
         Std::LinkedList<Device>             m_devices;
