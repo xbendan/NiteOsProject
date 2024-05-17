@@ -1,3 +1,3 @@
-#include <xtra-concurrent/mutex.h>
-#include <xtra-concurrent/rwlock.h>
-#include <xtra-concurrent/spinlock.h>
+#include <mixins/concurrent/mutex.h>
+#include <mixins/concurrent/rwlock.h>
+#include <mixins/concurrent/spinlock.h>

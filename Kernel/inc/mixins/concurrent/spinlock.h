@@ -1,5 +1,8 @@
 #pragma once
 
+#include <mixins/concurrent/atomic.h>
+#include <mixins/types.h>
+
 #include <stdcxx/types.h>
 #include <xtra-concurrent/atomic.h>
 

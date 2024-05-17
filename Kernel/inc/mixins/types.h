@@ -16,3 +16,6 @@ using dword = unsigned int;
 using qword = unsigned long long;
 
 using size_t = long unsigned int;
+
+using float32_t = float;
+using float64_t = double;

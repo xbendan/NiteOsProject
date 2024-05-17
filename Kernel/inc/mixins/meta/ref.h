@@ -1,17 +1,17 @@
 #include <mixins/std/type_traits.h>
 
 template <typename _Tp>
-    requires(!isTrivial<_Tp>::value)
-class Ref
+    requires(!mixins::std::isTrivial<_Tp>::value)
+class RefPtr
 {
 public:
     /* --- Constructors --- */
-    Ref()
+    RefPtr()
       : m_ptr(nullptr)
       , m_refCount(new unsigned(0))
     {
     }
-    Ref(_Tp* ptr)
+    RefPtr(_Tp* ptr)
       : m_ptr(ptr)
     {
         if (m_ptr) {
@@ -20,7 +20,7 @@ public:
             m_refCount = nullptr;
         }
     }
-    Ref(const Ref& other)
+    RefPtr(const RefPtr& other)
       : m_ptr(other.m_ptr)
       , m_refCount(other.m_refCount)
     {
@@ -29,7 +29,7 @@ public:
         }
     }
 
-    ~Ref() { release(); }
+    ~RefPtr() { release(); }
 
     /* --- Methods --- */
 
@@ -37,7 +37,7 @@ public:
 
     /* --- Operators --- */
 
-    Ref& operator=(const Ref& other)
+    RefPtr& operator=(const RefPtr& other)
     {
         if (this != &other) {
             release();
@@ -66,6 +66,6 @@ private:
         }
     }
 
-    _Tp* m_ptr;
+    _Tp*      m_ptr;
     unsigned* m_refCount;
 };
